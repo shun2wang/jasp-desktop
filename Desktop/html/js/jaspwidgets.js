@@ -14,7 +14,12 @@ if(insideJASP)
 	// See https://github.com/quilljs/quill/issues/262
 	var Link = Quill.import('formats/link');
 	Link.sanitize = function(url) {
-	return url;
+        // Check if the url contains the protocol, otherwise add it automatically
+        var checkUrl = url.match(/^(http|https):\/\//i); 
+        if (!checkUrl) {
+            url = "https://" + url;
+          }
+        return url;
 	}
 }
 
@@ -487,6 +492,7 @@ JASPWidgets.NoteBox = JASPWidgets.View.extend({
 		var options = {
 			theme: 'snow',
 			modules: {
+				formula: true,
 				toolbar: toolbarOptions,
 				keyboard: {
 					bindings: {
@@ -533,11 +539,19 @@ JASPWidgets.NoteBox = JASPWidgets.View.extend({
 		let quillEditorElement = this.$el.find(".ql-editor").get(0);
 		
 		this.$quillTooltip     = this.$el.find(".ql-tooltip");
-        	var quillTooltipTheme  = this.$quill.theme.tooltip;
+        var quillTooltipTheme  = this.$quill.theme.tooltip;
 
-        	// Change example link from quilljs.com to a sample link
-        	var linkInput = quillTooltipTheme.root.querySelector('input[data-link]');
-        	linkInput.dataset.link = 'https://jasp-stats.org';
+        // Change example link from quilljs.com to a sample link
+        var linkInput = quillTooltipTheme.root.querySelector('input[data-link]');
+        linkInput.dataset.link = 'https://jasp-stats.org';
+
+		// Render the formula correctly in the exported html file, must add stylesheet and script into html file,
+        // Note that this requires access to the network when user opening html
+        this.$formulaBotton = this.$el.find(".ql-formula")
+        this.$formulaBotton.on('click', function (){
+            headLinkStuff = "<link rel='stylesheet' href= 'https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.css' crossorigin=''>\n"
+                          + "<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.js' crossorigin= ''></script>\n"
+                           });
 
 		// Add tooltips to the toolbar buttons
 		// Quilljs website mentions changing the toolbar html element (https://quilljs.com/playground/#snow-toolbar-tooltips),
