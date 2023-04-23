@@ -545,7 +545,7 @@ JASPWidgets.NoteBox = JASPWidgets.View.extend({
         var linkInput = quillTooltipTheme.root.querySelector('input[data-link]');
         linkInput.dataset.link = 'https://jasp-stats.org';
 		
-		// Render the formula correctly in the exported html file, must add stylesheet and script into html file,
+        // Render the formula correctly in the exported html file, must add stylesheet and script into html file,
         // Note that this requires access to the network when user opening html
         this.$formulaBotton = this.$el.find(".ql-formula")
         this.$formulaBotton.on('click', function (){
