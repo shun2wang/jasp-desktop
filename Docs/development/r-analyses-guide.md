@@ -1351,16 +1351,16 @@ The end result is an image in the results, enjoy!
 
 ADDENDUM Ⅳ - Math
 ---------------------------------------------------------
-Math expressions will clearly show the analysis method or pretty displaying in the output.If you need to add it in R code, you just need to wrap your [TeX](https://en.wikipedia.org/wiki/TeX)/[LaTex](https://www.latex-project.org/help/) code with the built-in function `jaspBase::mathExpression()`.
+Math expressions will clearly show the analysis method or pretty displaying in the output. If you want them showing in output just add your [TeX](https://en.wikipedia.org/wiki/TeX)/[LaTex](https://www.latex-project.org/help/) code with the built-in `jaspBase::mathExpression()` function.
 - Escape the backslash character for TeX/LaTeX code
 ```r
-jaspBase::mathExpression("\\alpha + \\beta")
+jaspBase::mathExpression("\\alpha ^ \\beta")
 ```
 - Use the raw character constant without too many escape
 ```r
-jaspBase::mathExpression(r"{\alpha + \beta}")
+jaspBase::mathExpression(r"{\alpha ^ \beta}")
 ```
-So we will get math expressions showing like this $\alpha + \beta$ inline.
+So we will get math expressions showing like this $\alpha^\beta$ inline.
 - If you need to render a block math expression, just set inline=FALSE
 ```r
 jaspBase::mathExpression(r"{ \bar{x} = \frac{\sum_i^n x_i}{n} }", inline = FALSE)
