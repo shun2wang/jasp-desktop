@@ -1361,11 +1361,11 @@ jaspBase::mathExpression("\\alpha ^ \\beta")
 jaspBase::mathExpression(r"{\alpha ^ \beta}")
 ```
 So we will get math expressions showing like this $\alpha^\beta$ inline.
-- If you need to render a block math expression, just set inline=FALSE
+- If you need to render a block math expression, just set `inline=FALSE`:
 ```r
 jaspBase::mathExpression(r"{ \bar{x} = \frac{\sum_i^n x_i}{n} }", inline = FALSE)
 ```
-so we will get math expression as
+then we will get math expression as
 $$\bar{x} = \frac{\sum_i^n x_i}{n}$$
 showing for display mode.
 
