@@ -217,11 +217,11 @@ endif()
 
   install(FILES ${CMAKE_SOURCE_DIR}/Tools/flatpak/64/org.jaspstats.JASP.png
           DESTINATION ${JASP_INSTALL_PREFIX}/icons/hicolor/64x64/mimetypes
-          RENAME application-x-jaspstats-jasp.svg)
+          RENAME application-x-jaspstats-jasp.png)
 
   install(FILES ${CMAKE_SOURCE_DIR}/Tools/flatpak/128/org.jaspstats.JASP.png
           DESTINATION ${JASP_INSTALL_PREFIX}/icons/hicolor/128x128/mimetypes
-          RENAME application-x-jaspstats-jasp.svg)
+          RENAME application-x-jaspstats-jasp.png)
 
   install(FILES ${CMAKE_SOURCE_DIR}/Tools/flatpak/org.jaspstats.JASP.appdata.xml
           DESTINATION ${JASP_INSTALL_PREFIX}/share/metainfo)
