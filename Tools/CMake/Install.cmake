@@ -212,15 +212,15 @@ endif()
 
   # mime type .jasp icon
   install(FILES ${CMAKE_SOURCE_DIR}/Tools/flatpak/org.jaspstats.JASP.svg
-          DESTINATION ${JASP_INSTALL_PREFIX}/icons/hicolor/scalable/mimetypes
+          DESTINATION ${JASP_INSTALL_PREFIX}/share/icons/hicolor/scalable/mimetypes
           RENAME application-x-jaspstats-jasp.svg)
 
   install(FILES ${CMAKE_SOURCE_DIR}/Tools/flatpak/64/org.jaspstats.JASP.png
-          DESTINATION ${JASP_INSTALL_PREFIX}/icons/hicolor/64x64/mimetypes
+          DESTINATION ${JASP_INSTALL_PREFIX}/share/icons/hicolor/64x64/mimetypes
           RENAME application-x-jaspstats-jasp.png)
 
   install(FILES ${CMAKE_SOURCE_DIR}/Tools/flatpak/128/org.jaspstats.JASP.png
-          DESTINATION ${JASP_INSTALL_PREFIX}/icons/hicolor/128x128/mimetypes
+          DESTINATION ${JASP_INSTALL_PREFIX}/share/icons/hicolor/128x128/mimetypes
           RENAME application-x-jaspstats-jasp.png)
 
   install(FILES ${CMAKE_SOURCE_DIR}/Tools/flatpak/org.jaspstats.JASP.appdata.xml
