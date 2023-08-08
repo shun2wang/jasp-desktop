@@ -3,6 +3,6 @@
     <mime-type type="application/x-jaspstats-jasp">
         <comment>JASP file</comment>
         <glob pattern="*.jasp"/>
-        <icon name="application-x-jaspstats-jasp"/>
+        <generic-icon name="application-x-jaspstats-jasp"/>
     </mime-type>
 </mime-info>
