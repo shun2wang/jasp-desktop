@@ -25,4 +25,4 @@ CMakeDeps
 CMakeToolchain
 
 [options]
-brotli:shared=True
+brotli/*:shared=True

@@ -44,9 +44,12 @@ if(USE_CONAN)
         COMMAND_ECHO STDOUT
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMAND
-          conan install ${CONAN_FILE_PATH} -s build_type=${CMAKE_BUILD_TYPE} -s
-          os.version=${CMAKE_OSX_DEPLOYMENT_TARGET} -s os.sdk=macosx -s
-          arch=${CONAN_ARCH} -s arch_build=${CONAN_ARCH} --build=missing)
+          conan install ${CONAN_FILE_PATH} --output-folder=${CMAKE_BINARY_DIR}/conan_build
+          -s build_type=${CMAKE_BUILD_TYPE}
+          -s os.version=${CMAKE_OSX_DEPLOYMENT_TARGET}
+          -s arch=${CONAN_ARCH}
+          -s arch_build=${CONAN_ARCH}
+          --build=missing)
 
     else()
 
@@ -54,15 +57,16 @@ if(USE_CONAN)
         COMMAND_ECHO STDOUT
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMAND
-          conan install ${CONAN_FILE_PATH} -s build_type=${CMAKE_BUILD_TYPE} -s
-          os.version=${CMAKE_OSX_DEPLOYMENT_TARGET} -s os.sdk=macosx
+          conan install ${CONAN_FILE_PATH} --output-folder=${CMAKE_BINARY_DIR}/conan_build
+          -s build_type=${CMAKE_BUILD_TYPE}
+          -s os.version=${CMAKE_OSX_DEPLOYMENT_TARGET}
           --build=missing)
 
     endif()
 
   endif()
 
-  if(EXISTS ${CMAKE_BINARY_DIR}/conan_build/conanbuild.bat)
+  if(EXISTS ${CMAKE_BINARY_DIR}/conan_build/conan_toolchain.cmake)
     message(CHECK_PASS "successful")
   else()
     message(CHECK_FAIL "unsuccessful")
