@@ -1,9 +1,8 @@
 name: Windows
 
 on:
-  push:
-    branches:
-      - github-action-debug
+   pull_request:
+   workflow_dispatch:
 
 jobs:
   qt:
