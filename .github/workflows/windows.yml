@@ -13,7 +13,6 @@ jobs:
       - name: Cache Qt
         uses: actions/cache@v3  # not v2!
         with:
-          path: ../Qt/6.5.3
           key: ${{ runner.os }}-QtCache-Qt6-2
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -25,7 +24,7 @@ jobs:
           install-deps: 'true'
           cached: 'true'
           setup-python: 'true'
-          modules: 'qtpositioning qtwebchannel qtwebengine qtwebsockets qtwebview debug_info qt5compat qtshadertools qtwaylandcompositor'
+          modules: 'qtpositioning qtwebchannel qtwebengine qtwebsockets qtwebview debug_info qt5compat qtshadertools'
           tools: 'tools_qtcreator,qt.tools.qtcreator tools_ninja tools_cmake'
           set-env: 'true'
           
