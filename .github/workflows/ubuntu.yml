@@ -69,6 +69,6 @@ jobs:
 
       - name: Build JASP desktop
         run: |
-            cmake --build jasp-build --target all -DLINUX_LOCAL_BUILD=ON
+            cmake --build jasp-build --target all
         env:
             JASP_TEST_BUILD: ON
