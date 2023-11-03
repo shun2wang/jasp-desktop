@@ -1,9 +1,8 @@
 name: Windows
 
 on:
-  push:
-    branches:
-      - github-action-debug
+   pull_request:
+   workflow_dispatch:
 
 jobs:
   qt:
@@ -12,24 +11,24 @@ jobs:
 
     steps:
       - name: Cache Qt
-        uses: actions/cache@v1  # not v2!
+        uses: actions/cache@v3  # not v2!
         with:
-          path: ../Qt/6.2.4
+          path: ../Qt/6.5.3
           key: ${{ runner.os }}-QtCache-Qt6-2
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
-          version: '6.2.4'
+          version: '6.5.*'
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
           install-deps: 'true'
-          modules: 'qtwebengine'
-          cached: ${{ steps.cache-qt-6-2.outputs.cache-hit }}
+          cached: 'true'
           setup-python: 'true'
-          tools: ''
+          modules: 'qtpositioning qtwebchannel qtwebengine qtwebsockets qtwebview debug_info qt5compat qtshadertools qtwaylandcompositor'
+          tools: 'tools_qtcreator,qt.tools.qtcreator tools_ninja tools_cmake'
           set-env: 'true'
-          tools-only: 'false'
+          
       - name: Installing Conan
         run: |
           pip install wheel setuptools
@@ -37,12 +36,12 @@ jobs:
           conan --version
       - name: Configuring Conan Profile
         run: |
-          conan profile new default --detect
-          conan profile show default
+          conan profile detect --name default
+          conan profile show
       - uses: actions/checkout@v2
       - name: Configure
         run: |
           git submodule update --init
-          cmake -S . -B build -DGITHUB_PAT=${{ secrets.GPAT_FOR_JASP }} -DGITHUB_BUILD=ON
+          cmake -S . -B jasp_build -DGITHUB_PAT=${{ secrets.GPAT_FOR_JASP }} -DGITHUB_BUILD=ON -DJASP_TEST_BUILD=ON
       - name: Building JASP
-        run: cmake --build build
+        run: cmake --build jasp_build
