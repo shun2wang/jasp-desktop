@@ -222,6 +222,9 @@ div.jasp-image-image.no-data.error {
   color:  	#bd93f9;
 }
 
+mjx-container img {
+    filter:     invert(1)
+}
 
 /* Track */
 ::-webkit-scrollbar-track {
