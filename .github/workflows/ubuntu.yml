@@ -67,9 +67,10 @@ jobs:
             BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
             Boost_INCLUDE_DIR: "${{steps.install-boost.outputs.BOOST_ROOT}}/include"
             Boost_LIBRARY_DIRS: "${{steps.install-boost.outputs.BOOST_ROOT}}/lib"
-            JASP_TEST_BUILD: "ON"
-            LINUX_LOCAL_BUILD: "ON"
 
       - name: Build JASP desktop
         run: |
             cmake --build jasp-build --target all
+        env:
+            JASP_TEST_BUILD: "ON"
+            LINUX_LOCAL_BUILD: "ON"
