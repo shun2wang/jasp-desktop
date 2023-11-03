@@ -72,5 +72,5 @@ jobs:
         run: |
             cmake --build jasp-build --target all
         env:
-            JASP_TEST_BUILD: "ON"
-            LINUX_LOCAL_BUILD: "ON"
+            JASP_TEST_BUILD: ON
+            LINUX_LOCAL_BUILD: ON
