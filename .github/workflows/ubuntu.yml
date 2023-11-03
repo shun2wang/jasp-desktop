@@ -1,7 +1,7 @@
 name: 'Ubuntu'
 
 on:
-   push:
+   pull_request:
    workflow_dispatch:
 
 jobs:
@@ -39,7 +39,6 @@ jobs:
             sudo apt install libcurl4-openssl-dev #required by curl R packages
             sudo apt install libmpfr-dev #required by rmpfr packages
             sudo apt install jags
-            sudo dpkg -L jags
             
       - name: Install boost
         uses: MarkusJx/install-boost@v2.4.4
