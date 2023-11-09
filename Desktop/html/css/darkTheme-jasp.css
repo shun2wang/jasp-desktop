@@ -198,7 +198,6 @@ mjx-container {
 }
 
 
-
 .jasp-notes-border {
   border-top:     1px solid #5c5c5c;
 }
@@ -225,6 +224,7 @@ mjx-container {
 .jasp-rsyntax-container .hljs-string {
   color:  	#bd93f9;
 }
+
 
 /* Track */
 ::-webkit-scrollbar-track {
