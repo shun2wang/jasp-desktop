@@ -4308,12 +4308,12 @@ msgstr "更改 R 筛选器"
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Create a computed column with name '%1"
+msgid "Create a computed column with name '%1'"
 msgstr "创建名为 “%1” 的计算列"
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Set code to computed column with name '%1"
+msgid "Set code to computed column with name '%1'"
 msgstr "将代码设置为名为 “%1” 的计算列"
 
 msgctxt "MainWindow|"
@@ -4657,91 +4657,81 @@ msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Add column"
-msgstr ""
+msgstr "添加列"
 
 msgctxt "PrefsData|"
 msgid "Reset with standard values"
-msgstr ""
+msgstr "重置为标准值"
 
 msgctxt "PrefsData|"
 msgid "Reset missing values with the standard JASP missing values"
-msgstr ""
+msgstr "重置缺失值为 JASP 标准缺失值"
 
 msgctxt "PrefsData|"
 msgid "Show workspace missing values"
-msgstr ""
+msgstr "显示此工作空间的缺失值"
 
 msgctxt "PrefsMissingValues|"
 msgid "Add a missing value"
-msgstr ""
+msgstr "添加缺失值"
 
 msgctxt "PrefsMissingValues|"
 msgid "Set current workspace with these values"
-msgstr ""
+msgstr "将这些值设置到当前工作空间"
 
 msgctxt "PrefsMissingValues|"
 msgid "Set the current workspace missing values with these values"
-msgstr ""
+msgstr "将这些值设置为当前工作空间的缺失值"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Edit the labels here or choose which values should be filtered out."
 msgstr "在此处编辑标签或选择应过滤掉哪些值。"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Filter"
 msgstr "筛选"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Value"
 msgstr "值"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Label"
 msgstr "标签"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Move selected labels up"
 msgstr "上移所选标签"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Move selected labels down"
 msgstr "下移所选标签"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Reverse order of all labels"
 msgstr "倒置所有标签的顺序"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Reset all filter checkmarks for this column"
 msgstr "重置此列的所有过滤器复选标记"
 
-#, fuzzy
 msgctxt "LabelEditorWindow|"
 msgid "Reset all filter checkmarks for all columns"
 msgstr "重置所有列的所有筛选器复选标记"
 
 msgctxt "MainPage|"
 msgid "Image"
-msgstr ""
+msgstr "插入图片"
 
 msgctxt "ModulesMenu|"
 msgid "Workspace settings"
-msgstr ""
+msgstr "工作空间设置"
 
 #, qt-format
 msgctxt "ModulesMenu|"
 msgid "Name: %1"
-msgstr ""
+msgstr "名称： %1"
 
-#, fuzzy
 msgctxt "ModulesMenu|"
 msgid "Description: "
 msgstr "说明： "
@@ -4856,17 +4846,17 @@ msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Use custom empty values for column '%1"
+msgid "Use custom empty values for column '%1'"
 msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Use default empty values for column '%1"
+msgid "Use default empty values for column '%1'"
 msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Set empty values for column '%1"
+msgid "Set empty values for column '%1'"
 msgstr ""
 
 msgctxt "QObject|"

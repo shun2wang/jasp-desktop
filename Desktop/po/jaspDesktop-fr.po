@@ -4268,7 +4268,7 @@ msgstr "Enlever un retrait"
 
 msgctxt "MainPage|"
 msgid "Font Size"
-msgstr "Taille caractère"
+msgstr "Taille de police"
 
 msgctxt "MainPage|"
 msgid "Clear Formatting"
@@ -4292,7 +4292,7 @@ msgstr "Code LaTeX copié dans le presse-papier"
 
 msgctxt "MainPage|"
 msgid "Introduction:"
-msgstr ""
+msgstr "Introduction:"
 
 msgctxt "MainPage|"
 msgid "Conclusion:"
@@ -4341,101 +4341,103 @@ msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Paste"
-msgstr ""
+msgstr "Coller"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+V"
-msgstr ""
+msgstr "%1+V"
 
 msgctxt "DataTableView|"
 msgid "Clear cells"
-msgstr ""
+msgstr "Effacer les cellules"
 
 msgctxt "DataTableView|"
 msgid "Del"
-msgstr ""
+msgstr "Del"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "Undo: %1"
-msgstr ""
+msgstr "Annuler: %1"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+Z"
-msgstr ""
+msgstr "%1+Z"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "Redo: %1"
-msgstr ""
+msgstr "Refaire: %1"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+Shift+Z"
-msgstr ""
+msgstr "%1+Shift+Z"
 
 msgctxt "DataTableView|"
 msgid "Select column"
-msgstr ""
+msgstr "Selectionner la colonne"
 
 msgctxt "DataTableView|"
 msgid "Insert column before"
-msgstr ""
+msgstr "Insérer une colonne avant"
 
 msgctxt "DataTableView|"
 msgid "Insert column after"
-msgstr ""
+msgstr "Insérer une colonne après"
 
 msgctxt "DataTableView|"
 msgid "Delete column"
-msgstr ""
+msgstr "Supprimer la colonne"
 
 msgctxt "DataTableView|"
 msgid "Select row"
-msgstr ""
+msgstr "Sélectionner la ligne"
 
 msgctxt "DataTableView|"
 msgid "Delete row"
-msgstr ""
+msgstr "Supprimer la ligne"
 
 msgctxt "DataTableView|"
 msgid "Click here to select the row, hold shift for selecting multiple."
 msgstr ""
+"Cliquez ici pour sélectionner la ligne, appuyez sur majuscule pour une "
+"sélection multiple."
 
 msgctxt "FilterWindow|"
 msgid "Close filter window"
-msgstr ""
+msgstr "Fermer la fenêtre de filtre"
 
 msgctxt "RenameColumnDialog|"
 msgid "Rename column"
-msgstr ""
+msgstr "Renommer la colonne"
 
 msgctxt "RenameColumnDialog|"
 msgid "Rename"
-msgstr ""
+msgstr "Renommer"
 
 #, qt-format
 msgctxt "RenameColumnDialog|"
 msgid "Rename column %1 to %2"
-msgstr ""
+msgstr "Renommer colonne  %1 à %2"
 
 msgctxt "RenameColumnDialog|"
 msgid "Close without renaming column"
-msgstr ""
+msgstr "Fermer sans renommer la colonne"
 
 msgctxt "VariablesWindow|"
 msgid "Name: "
-msgstr ""
+msgstr "Nom: "
 
 msgctxt "VariablesWindow|"
 msgid "Long name: "
-msgstr ""
+msgstr "Nom au long: "
 
 msgctxt "VariablesWindow|"
 msgid "Description: "
-msgstr ""
+msgstr "Description: "
 
 msgctxt "VariablesWindow|"
 msgid "Close variable window"
@@ -4454,37 +4456,37 @@ msgstr "Étiquette"
 #, qt-format
 msgctxt "DataSetPackage|"
 msgid "Column %1"
-msgstr ""
+msgstr "Colonne %1"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Set value to '%1' at row %2 column '%3'"
-msgstr ""
+msgstr "Définir la valeur à '%1' à la ligne %2 colonne '%3'"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Insert computed column '%1'"
-msgstr ""
+msgstr "Insérer la colonne calculée '%1'"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Insert column '%1'"
-msgstr ""
+msgstr "Insérer la colonne '%1'"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Insert row %1"
-msgstr ""
+msgstr "Insérer la ligne %1"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Remove column '%1'"
-msgstr ""
+msgstr "Supprimer la colonne '%1'"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Remove row %1"
-msgstr ""
+msgstr "Supprimer la ligne %1"
 
 #, qt-format
 msgctxt "QObject|"
@@ -4546,12 +4548,12 @@ msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Create a computed column with name '%1"
+msgid "Create a computed column with name '%1'"
 msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Set code to computed column with name '%1"
+msgid "Set code to computed column with name '%1'"
 msgstr ""
 
 msgctxt "MainWindow|"
@@ -4569,25 +4571,30 @@ msgctxt "QObject|"
 msgid "Waiting for initialization (of the engine) of module: %1"
 msgstr ""
 
+#, fuzzy
 msgctxt "RibbonModel|"
 msgid "Insert column before"
-msgstr ""
+msgstr "Insérer une colonne avant"
 
+#, fuzzy
 msgctxt "RibbonModel|"
 msgid "Insert column after"
-msgstr ""
+msgstr "Insérer une colonne après"
 
+#, fuzzy
 msgctxt "RibbonModel|"
 msgid "Delete column"
-msgstr ""
+msgstr "Supprimer la colonne"
 
+#, fuzzy
 msgctxt "RibbonModel|"
 msgid "Delete row"
-msgstr ""
+msgstr "Supprimer la ligne"
 
+#, fuzzy
 msgctxt "RibbonModel|"
 msgid "Clear cells"
-msgstr ""
+msgstr "Effacer les cellules"
 
 msgctxt "RibbonModel|"
 msgid "Undo"
@@ -4951,9 +4958,10 @@ msgctxt "ModulesMenu|"
 msgid "Name: %1"
 msgstr ""
 
+#, fuzzy
 msgctxt "ModulesMenu|"
 msgid "Description: "
-msgstr ""
+msgstr "Description: "
 
 msgctxt "ModulesMenu|"
 msgid "Reset missing values with the ones set in Data Preferences"
@@ -5036,7 +5044,7 @@ msgstr ""
 
 msgctxt "ColumnModel|"
 msgid "Missing Values"
-msgstr ""
+msgstr "Valeurs manquantes"
 
 #, qt-format
 msgctxt "QObject|"
@@ -5065,17 +5073,17 @@ msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Use custom empty values for column '%1"
+msgid "Use custom empty values for column '%1'"
 msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Use default empty values for column '%1"
+msgid "Use default empty values for column '%1'"
 msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
-msgid "Set empty values for column '%1"
+msgid "Set empty values for column '%1'"
 msgstr ""
 
 msgctxt "QObject|"

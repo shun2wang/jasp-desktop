@@ -226,10 +226,6 @@ mjx-container {
   color:  	#bd93f9;
 }
 
-mjx-container img {
-    filter:     invert(1)
-}
-
 /* Track */
 ::-webkit-scrollbar-track {
  background:    #000;
