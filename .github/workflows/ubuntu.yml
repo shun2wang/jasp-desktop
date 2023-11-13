@@ -27,6 +27,7 @@ jobs:
             host: 'linux'
             target: 'desktop'
             arch: 'gcc_64'
+            cache: 'true'
             modules: 'qtpositioning qtwebchannel qtwebengine qtwebsockets qtwebview debug_info qt5compat qtshadertools qtwaylandcompositor'
             tools: 'tools_qtcreator,qt.tools.qtcreator tools_ninja tools_cmake'
             
@@ -61,13 +62,13 @@ jobs:
       - name: Configure JASP desktop
         run: |
             git submodule update --init
-            cmake -S . -B jasp-build
+            cmake -S . -B jasp-build -DJASP_TEST_BUILD=ON
         env:
             BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
             Boost_INCLUDE_DIR: "${{steps.install-boost.outputs.BOOST_ROOT}}/include"
             Boost_LIBRARY_DIRS: "${{steps.install-boost.outputs.BOOST_ROOT}}/lib"
-            JASP_TEST_BUILD: ON
-
+            
       - name: Build JASP desktop
         run: |
             cmake --build jasp-build --target all
+            ls -a jasp-build
