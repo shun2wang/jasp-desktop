@@ -33,8 +33,8 @@ jobs:
             
       - name: Install dependencies of build system
         run: |     
-            sudo apt install libboost-dev libjsoncpp25 libjsoncpp-dev libarchive13 libarchive-dev
-            sudo apt install libxcb-xkb-dev libxcb-xkb1 libxcb-xinerama0 libxkbcommon-dev libxkbcommon-x11-dev autoconf zlib1g zlib1g-dev cmake
+            sudo apt install libboost-dev libjsoncpp25 libjsoncpp-dev libarchive13 libarchive-dev autoconf zlib1g zlib1g-dev cmake
+            sudo apt install libxcb-xkb-dev libxcb-xkb1 libxcb-xinerama0 libxkbcommon-dev libxkbcommon-x11-dev libxcb-cursor0
             sudo apt install gfortran build-essential flex libssl-dev libgl1-mesa-dev libsqlite3-dev r-base
             sudo apt install libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev #required by some r packgaes
             sudo apt install libcurl4-openssl-dev #required by curl R packages
