@@ -74,6 +74,5 @@ jobs:
 
       - name: JASP files unit-tests
         run: |
-             ls -a jasp-build/Desktop
-             jasp-build/Desktop/JASP --unitTest jasp-build/Resources/Data\ Sets/Data\ Library/3.\ANOVA/Bugs.jasp
+             jasp-build/Desktop/JASP --unitTestRecursive jasp-build/Resources/Data\ Sets/Data\ Library/
              
