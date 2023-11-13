@@ -71,4 +71,9 @@ jobs:
       - name: Build JASP desktop
         run: |
             cmake --build jasp-build --target all
-            ls -a jasp-build
+
+      - name: JASP files unit-tests
+        run: |
+             ls -a jasp-build/Desktop
+             jasp-build/Desktop/JASP --unitTest jasp-build/Resources/Data\ Sets/Data\ Library/3.\ANOVA/Bugs.jasp
+             
