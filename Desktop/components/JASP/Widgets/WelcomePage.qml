@@ -266,11 +266,12 @@ FocusScope
 				height:				downloadNewJASP.height * 1.5
 				width:				downloadNewJASP.width  * 1.2
 				visible:			mainWindow.downloadNewJASPUrl !== ""
+				z: 					1
 
 				anchors
 				{
 					top:					openADataFile.bottom
-					topMargin:				(openADataFile.height * 2) - (height / 2)
+					topMargin:				(openADataFile.height * 2) - (height)
 					horizontalCenter:		openADataFile.horizontalCenter
 				}
 
@@ -278,7 +279,7 @@ FocusScope
 				{
 					id:						downloadNewJASP
 					anchors.centerIn:		parent
-					text:					qsTr("Click to get latest version").replace(/, /g, ",&nbsp;")
+					text:					qsTr("Newer version is available, click to get").replace(/, /g, ",&nbsp;")
 					font.family:			jaspTheme.font
 					font.pixelSize:			openADataFile.font.pixelSize + (downloadMouseArea.containsMouse ? 4 * welcomeRoot.scaler : 0)
 					font.weight:			Font.Bold
