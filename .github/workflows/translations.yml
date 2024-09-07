@@ -17,5 +17,5 @@ jobs:
     steps:
       #- uses: jasp-stats/jasp-actions/wlcLock@master
 
-      - uses: jasp-stats/jasp-actions/translations@testI18n
+      - uses: shun2wang/jasp-actions/translations@testI18n
 
