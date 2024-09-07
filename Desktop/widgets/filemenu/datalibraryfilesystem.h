@@ -31,6 +31,8 @@ public:
 	~DataLibraryFileSystem();
 	void refresh() OVERRIDE;
 	static const QString rootelementname; //Root element in index.json
+
+	QString			getTranslate(QString str);
 	
 private:
 	void			loadRootElements();
