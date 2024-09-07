@@ -92,6 +92,8 @@ void DataLibraryFileSystem::loadRootElements()
 #ifndef JASP_DEBUG
 		if (debug.toLower() == "true") continue;		
 #endif	
+
+		std::cout << "描述description1: --- " << description << std::endl;
 		QString associated_datafile = file_or_folder["associated_datafile"].toString();
 		if (isFolder(type))
 		{
@@ -104,6 +106,8 @@ void DataLibraryFileSystem::loadRootElements()
 			if (associated_datafile != "") associated_datafile = _dataLibraryRootPath + associated_datafile;
 			_entries.append(createEntry(path, name, description, FileSystemEntry::getEntryTypeFromPath(path), associated_datafile));
 		}
+
+		std::cout << "描述description2: --- " << description << std::endl;
 	}
 
 	emit entriesChanged();
@@ -164,6 +168,12 @@ void DataLibraryFileSystem::loadFilesAndFolders(const QString &docpath)
 #ifndef JASP_DEBUG
 			if (debug.toLower() == "true") continue;		
 #endif		
+
+
+
+			description = getTranslate(description);
+			std::cout << "描述description3: --- " << description << std::endl;
+
 			if (isFolder(type))
 			{
 				path = _path + QDir::separator()  + path;
@@ -180,6 +190,20 @@ void DataLibraryFileSystem::loadFilesAndFolders(const QString &docpath)
 
 	emit entriesChanged();
 
+}
+
+QString DataLibraryFileSystem::getTranslate(QString str)
+{
+
+	//static const char *strs = QT_TR_NOOP(str);
+
+	str = QT_TR_NOOP(str);
+	// static const char *greeting_strings[] = {
+	// 	QT_TR_NOOP("Hello"),
+	// 	QT_TR_NOOP("Goodbye")
+	// };
+
+	return tr(str.toStdString().c_str());
 }
 
 QJsonDocument *DataLibraryFileSystem::getJsonDocument()
