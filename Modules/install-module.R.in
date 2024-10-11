@@ -36,7 +36,10 @@ options("JASP_RENV_INSTALL_OPTIONS" = list(
   ragg     = list(before = setMakeFlagsToOne, after  = defaultMakeFlags),
   V8       = list(before = setMakeFlagsToOne, after  = defaultMakeFlags)
 ))
-options(renv.config.install.verbose = TRUE)
+options(
+	renv.config.install.verbose = TRUE,
+ 	renv.config.pak.enabled = TRUE
+)
 configureVars = NULL
 
 if (@IS_LINUX_LOCAL_BUILD@) {
