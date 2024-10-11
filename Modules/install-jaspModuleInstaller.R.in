@@ -37,6 +37,11 @@ TOOLS                  <- file.path("@PROJECT_SOURCE_DIR@", "Tools")
 
 modulePkg     <- file.path("@PROJECT_SOURCE_DIR@", "Engine", "jaspModuleInstaller")
 
+options(
+	renv.config.install.verbose = TRUE,
+ 	renv.config.pak.enabled = TRUE
+)
+
 cat("Restoring pkgdepends\n")
 setupRenv(PKGDEPENDS_LIBRARY)
 renv::restore(
