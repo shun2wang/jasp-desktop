@@ -405,7 +405,8 @@ VariablesListBase
 				property bool	containsDragItem:		variablesList.itemContainingDrag === itemRectangle
 				property bool	isVirtual:				(typeof model.type !== "undefined") && model.type.includes("virtual")
 				property bool	isVariable:				(typeof model.type !== "undefined") && model.type.includes("variable")
-				property string	preview:				!isVariable || (typeof model.preview === "undefined") ? "" : model.preview
+				property string	preview:				!isVariable || (typeof model.preview     === "undefined") ? "" : model.preview.trim()
+				property string	toolTip:				formatToolTip(itemRectangle.typeChangeable, colName.truncated, model.description.trim(), preview)
 				property bool	isLayer:				(typeof model.type !== "undefined") && model.type.includes("layer")
 				property bool	draggable:				variablesList.draggable && model.selectable
 				property string	columnType:				isVariable && (typeof model.columnType !== "undefined") ? model.columnType : ""
@@ -413,6 +414,26 @@ VariablesListBase
 				property bool	typeChangeable:			variablesList.allowTypeChange && (allowedTypeIcons.count === 0 || allowedTypeIcons.count > 1) && icon.visible
 
 				enabled: !variablesList.draggable || model.selectable
+				
+				function formatToolTip(typeChangeAble, colNameTrunc, descriptionV, previewV)
+				{
+					var stringList = []
+					
+					if(colNameTrunc)
+						stringList.push(model.name)
+					
+					if(typeChangeAble)
+						stringList.push(qsTr("Click icon to change column type"))
+					
+					if(descriptionV !== "")
+						stringList.push(qsTr("Column description: ") + descriptionV)
+
+					if(previewV !== "")
+						stringList.push(previewV)
+					
+					return stringList.join("\n\n");
+					
+				}
 
 				function setRelative(draggedRect)
 				{
@@ -438,10 +459,10 @@ VariablesListBase
 				Drag.hotSpot.y:	itemRectangle.height / 2
 				
 				// Use the ToolTip Attached property to avoid creating ToolTip object for each item
-				QTCONTROLS.ToolTip.visible: mouseArea.containsMouse && !itemRectangle.containsDragItem && (preview != "" ||  (model.name && colName.truncated))
-				QTCONTROLS.ToolTip.delay: 300
-				QTCONTROLS.ToolTip.text: colName.truncated ? (model.name + (preview != "" ? "\n\n" + preview : "")) : preview
-				
+				QTCONTROLS.ToolTip.visible:		mouseArea.containsMouse && !itemRectangle.containsDragItem && toolTip.trim() !== ""
+				QTCONTROLS.ToolTip.timeout:		jaspTheme.toolTipTimeout
+				QTCONTROLS.ToolTip.delay:		jaspTheme.toolTipDelay
+				QTCONTROLS.ToolTip.text:		toolTip
 				Component.onCompleted:
 				{
 					if (extraItem)
@@ -464,7 +485,7 @@ VariablesListBase
 					visible:				sourceVar !== ""
 					mipmap:					true
 					smooth:					true
-					scale:					itemRectangle.typeChangeable && mouseArea.containsMouse && mouseArea.mouseX < icon.width ? 1.2 : 1
+					scale:					itemRectangle.typeChangeable && mouseArea.containsMouse && mouseArea.mouseX < icon.width ? jaspTheme.columnTypeScaleHovered : 1
 
 					//So Im pushing this through a property because it seems to results in "undefined" during loading and this adds a ton of warnings to the output which is not helpful. I tried less heavyhanded approaches first but this works perfectly fine.
 					property var sourceVar:	variablesList.showVariableTypeIcon && itemRectangle.isVariable ? (enabled ? model.columnTypeIcon : model.columnTypeDisabledIcon) : ""
@@ -537,7 +558,7 @@ VariablesListBase
 
 					drag.target:	itemRectangle.draggable ? parent : null
 					hoverEnabled:	true
-					cursorShape:	Qt.PointingHandCursor
+					cursorShape:	itemRectangle.typeChangeable && mouseX < icon.width ? Qt.PointingHandCursor : Qt.OpenHandCursor
 
 					onDoubleClicked: (mouse)=>
 					{

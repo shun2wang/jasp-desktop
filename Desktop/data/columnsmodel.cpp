@@ -55,6 +55,11 @@ QString ColumnsModel::getColumnIcon(columnType colType) const
 	return VariableInfo::getIconFile(colType, VariableInfo::DefaultIconType);
 }
 
+QString ColumnsModel::getColumnDescription(const QString &name) const
+{
+	return provideInfo(VariableInfo::ColumnDescription, name).toString().trimmed();
+}
+
 QString ColumnsModel::getColumnIconTransform(int colType) const
 {
 	return getColumnIconTransform(columnType(colType));
@@ -168,6 +173,7 @@ QVariant ColumnsModel::provideInfo(VariableInfo::InfoType info, const QString& c
 		case VariableInfo::PreviewScale:				return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::previewScale));
 		case VariableInfo::PreviewOrdinal:				return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::previewOrdinal));
 		case VariableInfo::PreviewNominal:				return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::previewNominal));
+		case VariableInfo::ColumnDescription:			return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::description));
 		case VariableInfo::DataSetPointer:				return	QVariant::fromValue<void*>(DataSetPackage::pkg()->dataSet());
 		}
 	}
