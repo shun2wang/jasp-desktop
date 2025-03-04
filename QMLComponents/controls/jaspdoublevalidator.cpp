@@ -18,6 +18,7 @@
 
 #include "jaspdoublevalidator.h"
 #include <math.h>
+#include "columnutils.h"
 
 
 QValidator::State JASPDoubleValidator::validate(QString& s, int& pos) const
@@ -31,28 +32,28 @@ QValidator::State JASPDoubleValidator::validate(QString& s, int& pos) const
 	if (s.startsWith("-") && bottom() >= 0)
 		return QValidator::Invalid; 
 	
+	// check range of value
+	double value;
+	bool isNumber	= QColumnUtils::getDoubleValue(	s, value);
+	
 	// check length of decimal places
-    QString point = locale().decimalPoint();
-	int indexPoint = s.indexOf(point);
+	int indexPoint = s.indexOf(QColumnUtils::decimalPoint());
 
 	if (indexPoint != -1)
 	{
 		if (decimals() == 0)
 			return QValidator::Invalid;
+		
 		int lengthDecimals = s.length() - indexPoint - 1;
 		if (lengthDecimals > decimals())
 			return QValidator::Invalid;
 	}
-	// check range of value
-	bool isNumber;
-	double value = locale().toDouble(s, &isNumber);
+	
+
 	if (!isNumber)
 	{
-		if (s.length() == 1 && s[0] == point)
-		{
-			isNumber = true;
+		if (s == QColumnUtils::decimalPoint())
 			value = 0;
-		}
 		else
 			return QValidator::Invalid;
 	}
