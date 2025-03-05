@@ -155,12 +155,12 @@ void BoundControlRlangTextArea::_setBoundValues()
 	boundValue["columns"] = columns;
 
 	Json::Value prefixedColumns(Json::objectValue);
-	for(auto& prefixSet : _prefixedUsedColumnNames)
-		for (const std::string& column : prefixSet.second) 
-		{
-			prefixedColumns[prefixSet.first] = Json::Value(Json::arrayValue);
+	for(auto& prefixSet : _prefixedUsedColumnNames) {
+		prefixedColumns[prefixSet.first] = Json::Value(Json::arrayValue);
+		for (const std::string& column : prefixSet.second) {
 			prefixedColumns[prefixSet.first].append(ColumnEncoder::columnEncoder()->encode(column));
 		}
+	}
 	boundValue["prefixedColumns"] = prefixedColumns;
 
 	setBoundValue(boundValue, !_control->form()->wasUpgraded());
