@@ -36,7 +36,7 @@
 
 //Im having problems getting the proxy models to play nicely with beginRemoveRows etc
 //So just reset the whole thing as that is what happens in datasetview
-//#define ROUGH_RESET
+#define ROUGH_RESET
 
 DataSetPackage * DataSetPackage::_singleton = nullptr;
 
