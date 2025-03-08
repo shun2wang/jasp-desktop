@@ -2531,10 +2531,6 @@ msgid "Percentage Field"
 msgstr "Campo de Porcentaje"
 
 msgctxt "TextInputBase|"
-msgid "Integers Field"
-msgstr "Campo de Enteros"
-
-msgctxt "TextInputBase|"
 msgid "Doubles Field"
 msgstr "Campo de Dobles Precisiones"
 
@@ -2984,10 +2980,6 @@ msgstr "Esquema oscuro de colores"
 msgctxt "PrefsUI|"
 msgid "Preferred language"
 msgstr "Idioma preferido"
-
-msgctxt "PrefsUI|"
-msgid "Choose language  "
-msgstr "Escoger idioma  "
 
 msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
@@ -3656,14 +3648,6 @@ msgstr "Mostrar los procedimientos"
 msgctxt "Modules::DynamicModules|"
 msgid "Select an exisiting folder"
 msgstr "Seleccionar una carpeta ya existente"
-
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"To install a development module you need to select and existing folder, you "
-"selected '$1' but it doesn't exist."
-msgstr ""
-"Para instalar un módulo de desarrollo, necesitas seleccionar una carpeta ya "
-"existente; escogiste '$1' pero no existe."
 
 msgctxt "AnalysisFormExpander|"
 msgid "Show R syntax"
@@ -5483,10 +5467,6 @@ msgctxt "JASPColumn|"
 msgid "Click icon to change column type"
 msgstr "Haga clic en el icono para cambiar el tipo de columna"
 
-msgctxt "JASPColumn|"
-msgid "Transformed to"
-msgstr "Transformado en"
-
 msgctxt "FilterModel|"
 msgid ""
 "Above you see the code that JASP generates for both value filtering and the "
@@ -5633,3 +5613,43 @@ msgstr "Establecer la escala de altura de la cinta."
 msgctxt "TabView|"
 msgid "Double click to edit this name"
 msgstr "Haga doble clic para editar este nombre"
+
+msgctxt "PrefsUI|"
+msgid "Choose language"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Use an alternative language and territory dependent display for numbers"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Use the locale specified below for display of numbers and currency."
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Alt. language"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Alt. territory"
+msgstr ""
+
+msgctxt "JASPColumn|"
+msgid "Column description: "
+msgstr ""
+
+#, fuzzy
+msgctxt "VariablesList|"
+msgid "Click icon to change column type"
+msgstr "Haga clic en el icono para cambiar el tipo de columna"
+
+msgctxt "VariablesList|"
+msgid "Column description: "
+msgstr ""
+
+#, qt-format
+msgctxt "Modules::DynamicModules|"
+msgid ""
+"To install a development module you need to select and existing folder, you "
+"selected '%1' but it doesn't exist."
+msgstr ""

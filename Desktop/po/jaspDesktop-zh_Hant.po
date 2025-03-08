@@ -1,15 +1,9 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-03-05 11:51+0000\n"
-"Last-Translator: 陳寬裕 <pf.kuan.yu.chen@gmail.com>\n"
-"Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
-"projects/jasp/jaspdesktop/zh_Hant/>\n"
-"Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.10.3-dev\n"
 "X-Language: zh_Hant\n"
 "X-Qt-Contexts: true\n"
 
@@ -2415,10 +2409,6 @@ msgid "Percentage Field"
 msgstr "百分比欄位"
 
 msgctxt "TextInputBase|"
-msgid "Integers Field"
-msgstr "整數欄位"
-
-msgctxt "TextInputBase|"
 msgid "Doubles Field"
 msgstr "小數位數"
 
@@ -2848,10 +2838,6 @@ msgstr "深色主題"
 msgctxt "PrefsUI|"
 msgid "Preferred language"
 msgstr "語言偏好"
-
-msgctxt "PrefsUI|"
-msgid "Choose language  "
-msgstr "選擇語言  "
 
 msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
@@ -3478,12 +3464,6 @@ msgstr "載入升級時出現以下錯誤：%1"
 msgctxt "Modules::DynamicModules|"
 msgid "Select an exisiting folder"
 msgstr "選擇現有資料夾"
-
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"To install a development module you need to select and existing folder, you "
-"selected '$1' but it doesn't exist."
-msgstr "要安裝開發模組，您需要選擇現有資料夾，您選擇了“$1”，但它不存在。"
 
 msgctxt "Reporter|"
 msgid "No datafile"
@@ -5217,10 +5197,6 @@ msgctxt "JASPColumn|"
 msgid "Click icon to change column type"
 msgstr ""
 
-msgctxt "JASPColumn|"
-msgid "Transformed to"
-msgstr ""
-
 msgctxt "TextInputBase|"
 msgid "Column-name-is-free field"
 msgstr ""
@@ -5343,4 +5319,43 @@ msgstr "設定頂部分析功能列的高度尺寸。"
 
 msgctxt "TabView|"
 msgid "Double click to edit this name"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Choose language"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Use an alternative language and territory dependent display for numbers"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Use the locale specified below for display of numbers and currency."
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Alt. language"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Alt. territory"
+msgstr ""
+
+msgctxt "JASPColumn|"
+msgid "Column description: "
+msgstr ""
+
+msgctxt "VariablesList|"
+msgid "Click icon to change column type"
+msgstr ""
+
+msgctxt "VariablesList|"
+msgid "Column description: "
+msgstr ""
+
+#, qt-format
+msgctxt "Modules::DynamicModules|"
+msgid ""
+"To install a development module you need to select and existing folder, you "
+"selected '%1' but it doesn't exist."
 msgstr ""

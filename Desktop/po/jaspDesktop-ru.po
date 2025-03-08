@@ -1,16 +1,10 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-03-07 02:27+0000\n"
-"Last-Translator: Alexander Matveev <avmcsmu@gmail.com>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/jasp/jaspdesktop/"
-"ru/>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.10.3-dev\n"
 "X-Language: ru\n"
 "X-Qt-Contexts: true\n"
 
@@ -2506,10 +2500,6 @@ msgid "Percentage Field"
 msgstr "Процентное поле"
 
 msgctxt "TextInputBase|"
-msgid "Integers Field"
-msgstr "Поле целых чисел"
-
-msgctxt "TextInputBase|"
 msgid "Doubles Field"
 msgstr "Парное поле"
 
@@ -2967,10 +2957,6 @@ msgstr "Темная тема"
 msgctxt "PrefsUI|"
 msgid "Preferred language"
 msgstr "Язык"
-
-msgctxt "PrefsUI|"
-msgid "Choose language  "
-msgstr "Выберите язык  "
 
 msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
@@ -3635,14 +3621,6 @@ msgstr "Загрузка обновлений привела к ошибке(а�
 msgctxt "Modules::DynamicModules|"
 msgid "Select an exisiting folder"
 msgstr "Выберите существующую папку"
-
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"To install a development module you need to select and existing folder, you "
-"selected '$1' but it doesn't exist."
-msgstr ""
-"Чтобы установить модуль разработки, вам нужно выбрать существующую папку, вы "
-"выбрали «$ 1», но ее не существует."
 
 msgctxt "Reporter|"
 msgid "No datafile"
@@ -5381,10 +5359,6 @@ msgctxt "JASPColumn|"
 msgid "Click icon to change column type"
 msgstr ""
 
-msgctxt "JASPColumn|"
-msgid "Transformed to"
-msgstr ""
-
 msgctxt "TextInputBase|"
 msgid "Column-name-is-free field"
 msgstr ""
@@ -5507,4 +5481,43 @@ msgstr ""
 
 msgctxt "TabView|"
 msgid "Double click to edit this name"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Choose language"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Use an alternative language and territory dependent display for numbers"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Use the locale specified below for display of numbers and currency."
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Alt. language"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Alt. territory"
+msgstr ""
+
+msgctxt "JASPColumn|"
+msgid "Column description: "
+msgstr ""
+
+msgctxt "VariablesList|"
+msgid "Click icon to change column type"
+msgstr ""
+
+msgctxt "VariablesList|"
+msgid "Column description: "
+msgstr ""
+
+#, qt-format
+msgctxt "Modules::DynamicModules|"
+msgid ""
+"To install a development module you need to select and existing folder, you "
+"selected '%1' but it doesn't exist."
 msgstr ""
