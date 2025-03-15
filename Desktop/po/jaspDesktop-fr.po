@@ -5596,3 +5596,18 @@ msgid ""
 "To install a development module you need to select and existing folder, you "
 "selected '%1' but it doesn't exist."
 msgstr ""
+
+msgctxt "MainPage|"
+msgid "Remove this note"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid ""
+"No log files are available. To get more information, please turn logging on. "
+"For this: open the file menu (the blue hamburger button left top), navigate "
+"to Advanced Preferences and check the 'Log to file' checkbox."
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Please drag and drop these log files into this issue: "
+msgstr ""
