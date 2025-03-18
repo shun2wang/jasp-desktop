@@ -5,14 +5,14 @@
 #include "databaseinterface.h"
 
 Filter::Filter(DataSet * data)
-	: DataSetBaseNode(dataSetBaseNodeType::filter, data), _data(data)
+	: DataSetBaseNode(dataSetBaseNodeType::filter, data), _data(data), _name(DEFAULT_FILTER_NAME)
 { }
 
 Filter::Filter(DataSet * data, const std::string & name, bool createIfMissing)
 	: DataSetBaseNode(dataSetBaseNodeType::filter), _data(data), _name(name)
 {
 	assert(_name != "");
-
+	
 	if(db().filterGetId(_name) > -1)	dbLoad();
 	else if(createIfMissing)			dbCreate();
 	else								throw std::runtime_error("Filter by name '" + _name + "' but it doesnt exist and createIfMissing=false!\nAre you sure this filter should exist?");

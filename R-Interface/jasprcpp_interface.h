@@ -43,14 +43,15 @@
 extern "C" {
 
 struct RBridgeColumn {
-  char*   name;
-  bool    isScale;
-  bool    isOrdinal;
-  double* doubles;
-  int*    ints;
-  char**  labels;
-  size_t  nbRows;
-  size_t  nbLabels;
+  char*		name;
+  bool		isScale;
+  bool		isOrdinal;
+  bool		dropLevels;
+  double*	doubles;
+  int*		ints;
+  char**	labels;
+  size_t	nbRows;
+  size_t	nbLabels;
 } ;
 
 struct RBridgeColumnDescription {
@@ -89,6 +90,7 @@ typedef bool						(STDCALL *ShouldEnDecodeDef)			(const char *);
 typedef const char *				(STDCALL *systemDef)					(const char *);
 typedef void						(STDCALL *libraryFixerDef)				(const char *);
 typedef const char **				(STDCALL *getColNames)					(size_t &  names, bool encoded);
+typedef const char*					(STDCALL *RequestStringRBridge)        ();
 
 struct RBridgeCallBacks {
 	ReadDataSetCB					readDataSetCB;
@@ -96,13 +98,14 @@ struct RBridgeCallBacks {
 	ReadDataColumnNamesCB			readDataColumnNamesCB;
 	ReadDataSetDescriptionCB		readDataSetDescriptionCB;
 	RequestPredefinedFileSourceCB	requestStateFileSourceCB;
-	RequestTempFileNameCB			requestTempFileNameCB;
-	RequestTempFileNameCB			requestSpecificFileNameCB;
+	RequestTempFileNameCB			requestTempFileNameCB,
+									requestSpecificFileNameCB;
 	RequestTempRootNameCB			requestTempRootNameCB;
 	RunCallbackCB					runCallbackCB;
-	ReadADataSetCB					readFullDataSetCB;
-	ReadADataSetCB					readFullFilteredDataSetCB;
-	ReadADataSetCB					readFilterDataSetCB;
+	ReadADataSetCB					readFullDataSetCB,
+									readFullFilteredDataSetCB,
+									readFilterDataSetCB,
+									readCompColDataSetCB;
 	RequestPredefinedFileSourceCB	requestJaspResultsFileSourceCB;
 	GetColumnType					dataSetGetColumnType;
 	CreateColumn					dataSetCreateColumn;
@@ -119,6 +122,7 @@ struct RBridgeCallBacks {
 	ShouldEnDecodeDef				shouldEncode,
 									shouldDecode;
 	getColNames						columnNames;
+	RequestStringRBridge			computedColumnFilter;
 };
 
 typedef void			(*sendFuncDef)			(const char *);
@@ -151,6 +155,7 @@ RBRIDGE_TO_JASP_INTERFACE const char*	STDCALL jaspRCPP_getLastErrorMsg();
 RBRIDGE_TO_JASP_INTERFACE void			STDCALL jaspRCPP_resetErrorMsg();
 RBRIDGE_TO_JASP_INTERFACE void			STDCALL jaspRCPP_setErrorMsg(const char* msg);
 RBRIDGE_TO_JASP_INTERFACE void			STDCALL jaspRCPP_purgeGlobalEnvironment();
+RBRIDGE_TO_JASP_INTERFACE void			STDCALL jaspRCPP_setShouldDropLevels(bool dropPlease);
 
 RBRIDGE_TO_JASP_INTERFACE void			STDCALL jaspRCPP_junctionHelper(bool collectNotRestore, const char * modulesFolder, const char * linkFolder, const char * junctionsFilePath);
 

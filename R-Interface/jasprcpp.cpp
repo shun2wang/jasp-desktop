@@ -28,7 +28,8 @@ ReadADataSetFilterCB			readDataSetRequestedCB;
 RunCallbackCB					runCallbackCB;
 ReadADataSetCB					readFullDataSetCB,
 								readFullFilteredDataSetCB,
-								readFilterDataSetCB;
+								readFilterDataSetCB,
+								readCompColDataSetCB;
 ReadDataColumnNamesCB			readDataColumnNamesCB;
 RequestTempFileNameCB			requestTempFileNameCB,
 								requestSpecificFileNameCB;
@@ -55,6 +56,7 @@ ShouldEnDecodeDef				shouldEncodeColumnName,
 								shouldDecodeColumnName;
 
 getColNames						getAllColumnNames;
+RequestStringRBridge			computedColumnFilterCB;
 
 static logFlushDef				_logFlushFunction		= nullptr;
 static logWriteDef				_logWriteFunction		= nullptr;
@@ -99,13 +101,15 @@ void STDCALL jaspRCPP_init(const char* buildYear, const char* version, RBridgeCa
 	requestStateFileSourceCB					= callbacks->requestStateFileSourceCB;
 	readDataSetDescriptionCB					= callbacks->readDataSetDescriptionCB;
 	readDataSetRequestedCB						= callbacks->readDataSetRequestedCB;
+	computedColumnFilterCB						= callbacks->computedColumnFilter;
 	requestTempRootNameCB						= callbacks->requestTempRootNameCB;
 	requestTempFileNameCB						= callbacks->requestTempFileNameCB;
 	readDataColumnNamesCB						= callbacks->readDataColumnNamesCB;
 	dataSetGetColumnType						= callbacks->dataSetGetColumnType;
+	readCompColDataSetCB						= callbacks->readCompColDataSetCB;
+	readFilterDataSetCB							= callbacks->readFilterDataSetCB;
 	dataSetCreateColumn							= callbacks->dataSetCreateColumn;
 	dataSetDeleteColumn							= callbacks->dataSetDeleteColumn;
-	readFilterDataSetCB							= callbacks->readFilterDataSetCB;
 	readFullDataSetCB							= callbacks->readFullDataSetCB;
 	dataSetRowCount								= callbacks->dataSetRowCount;
 	runCallbackCB								= callbacks->runCallbackCB;
@@ -142,6 +146,7 @@ void STDCALL jaspRCPP_init(const char* buildYear, const char* version, RBridgeCa
 	rInside[".allColumnNamesDataset"]			= Rcpp::InternalFunction(&jaspRCPP_allColumnNamesDataset);
 	rInside[".readDatasetToEndNative"]			= Rcpp::InternalFunction(&jaspRCPP_readDataSetSEXP);
 	rInside[".readFilterDatasetToEnd"]			= Rcpp::InternalFunction(&jaspRCPP_readFilterDataSet);
+	rInside[".readCompColDatasetToEnd"]			= Rcpp::InternalFunction(&jaspRCPP_readCompColDataSet);
 	rInside[".setColumnDataAsOrdinal"]			= Rcpp::InternalFunction(&jaspRCPP_setColumnDataAsOrdinal);
 	rInside[".setColumnDataAsNominal"]			= Rcpp::InternalFunction(&jaspRCPP_setColumnDataAsNominal);
 	rInside[".readDataSetHeaderNative"]			= Rcpp::InternalFunction(&jaspRCPP_readDataSetHeaderSEXP);
@@ -1009,6 +1014,17 @@ Rcpp::DataFrame jaspRCPP_readFilterDataSet()
 	return jaspRCPP_convertRBridgeColumns_to_DataFrame(colResults, colMax);
 }
 
+Rcpp::DataFrame jaspRCPP_readCompColDataSet()
+{
+	size_t			colMax		= 0;
+	RBridgeColumn * colResults	= readCompColDataSetCB(&colMax);
+
+	if(colMax == 0)
+		return Rcpp::DataFrame();
+
+	return jaspRCPP_convertRBridgeColumns_to_DataFrame(colResults, colMax);
+}
+
 Rcpp::DataFrame jaspRCPP_readDataSetSEXP(SEXP columns, SEXP columnsAsNumeric, SEXP columnsAsOrdinal, SEXP columnsAsNominal, SEXP allColumns)
 {
 	size_t				colMax				= 0;
@@ -1044,7 +1060,7 @@ Rcpp::DataFrame jaspRCPP_convertRBridgeColumns_to_DataFrame(const RBridgeColumn*
 			columnNames[i] = colResult.name;
 
 			if (colResult.isScale)			list[i] =						Rcpp::NumericVector(colResult.doubles,	colResult.doubles	+ colResult.nbRows);
-			else							list[i] = jaspRCPP_makeFactor(	Rcpp::IntegerVector(colResult.ints,		colResult.ints		+ colResult.nbRows), colResult.labels, colResult.nbLabels, colResult.isOrdinal);
+			else							list[i] = jaspRCPP_makeFactor(	Rcpp::IntegerVector(colResult.ints,		colResult.ints		+ colResult.nbRows), colResult.labels, colResult.nbLabels, colResult.isOrdinal, colResult.dropLevels);
 
 		}
 
@@ -1089,7 +1105,7 @@ Rcpp::DataFrame jaspRCPP_readDataSetHeaderSEXP(SEXP columns, SEXP columnsAsNumer
 
 }
 
-Rcpp::IntegerVector jaspRCPP_makeFactor(Rcpp::IntegerVector v, char** levels, int nbLevels, bool ordinal)
+Rcpp::IntegerVector jaspRCPP_makeFactor(Rcpp::IntegerVector v, char** levels, int nbLevels, bool ordinal, bool dropLevels)
 {
 /*#ifdef JASP_DEBUG
 	std::cout << "jaspRCPP_makeFactor:\n\tlevels:\n\t\tnum: " << nbLevels << "\n\t\tstrs:\n";
@@ -1118,8 +1134,13 @@ Rcpp::IntegerVector jaspRCPP_makeFactor(Rcpp::IntegerVector v, char** levels, in
 	if(v.size() == 0)
 		return v;
 
-	static Rcpp::Function droplevels("droplevels");
-	return droplevels(Rcpp::_["x"] = v);
+	if(dropLevels)
+	{
+		static Rcpp::Function droplevels("droplevels");
+		return droplevels(Rcpp::_["x"] = v);
+	}
+	else 
+		return v;
 }
 
 void jaspRCPP_crashPlease() { shouldCrashSoon = true; }

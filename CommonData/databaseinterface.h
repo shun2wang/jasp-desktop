@@ -125,17 +125,19 @@ public:
 
 	//id stuff:
 	int			columnGetDataSetId(			int columnId);
-	void		columnDelete(				int columnId, bool cleanUpRest = true);			///< Also makes sure indices stay as contiguous and correct as before. disable cleanUpRest to just clear from Columns
-	void		columnSetType(				int columnId, columnType colType);
-	void		columnSetAutoSort(			int columnId, bool sort);
-	void		columnSetInvalidated(		int columnId, bool invalidated);
-	void		columnSetName(				int columnId, const std::string & name);
-	void		columnSetTitle(				int columnId, const std::string & title);
-	void		columnSetEmptyVals(			int columnId, const std::string & emptyValsJson);
-	void		columnSetDescription(		int columnId, const std::string & description);
-	void		columnGetBasicInfo(			int columnId,		std::string & name, std::string & title, std::string & description, columnType & colType, int & revision, Json::Value & emptyValuesJson, bool & autoSort);
-	void		columnSetComputedInfo(		int columnId, int analysisId,  bool   invalidated, computedColumnType   codeType, const	std::string & rCode, const	std::string & error, const	std::string & constructorJson);
-	void		columnGetComputedInfo(		int columnId, int &analysisId, bool & invalidated, computedColumnType & codeType,		std::string & rCode,		std::string & error,		Json::Value & constructorJson);
+	void		columnDelete(				int columnId, bool					cleanUpRest = true);			///< Also makes sure indices stay as contiguous and correct as before. disable cleanUpRest to just clear from Columns
+	void		columnSetType(				int columnId, columnType			colType);
+	void		columnSetAutoSort(			int columnId, bool					sort);
+	void		columnSetInvalidated(		int columnId, bool					invalidated);
+	void		columnSetDropLevels(		int columnId, int					dropLevels);
+	void		columnSetName(				int columnId, const std::string &	name);
+	void		columnSetTitle(				int columnId, const std::string &	title);
+	void		columnSetEmptyVals(			int columnId, const std::string &	emptyValsJson);
+	void		columnSetDescription(		int columnId, const std::string &	description);
+	void		columnSetComputeFilter(		int columnId, const std::string &	computeFilter);
+	void		columnGetBasicInfo(			int columnId,		std::string &	name, std::string & title, std::string & description, columnType & colType, int & revision, Json::Value & emptyValuesJson, bool & autoSort, int & dropLevels);
+	void		columnSetComputedInfo(		int columnId, int analysisId,  bool   invalidated, computedColumnType   codeType, const	std::string & rCode, const	std::string & error, const	std::string & constructorJson, const std::string & computeFilter);
+	void		columnGetComputedInfo(		int columnId, int &analysisId, bool & invalidated, computedColumnType & codeType,		std::string & rCode,		std::string & error,		Json::Value & constructorJson, std::string & computeFilter);
 	void		columnSetValues(			int columnId, const intvec	  & ints, const doublevec & dbls);
 	void		columnSetValue(				int columnId, size_t row, int valueInt, double valueDbl);
 	intvec		columnGetLabelIds(			int columnId);

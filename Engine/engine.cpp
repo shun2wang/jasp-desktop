@@ -370,10 +370,12 @@ void Engine::updateOptionsAccordingToMeta(Json::Value & encodedOptions)
 void Engine::runFilter(const std::string & filter, const std::string & generatedFilter, int filterRequestId)
 {
 	try
-	{
-		std::string strippedFilter		= stringUtils::stripRComments(filter);
-		std::vector<bool> filterResult	= rbridge_applyFilter(strippedFilter, generatedFilter);
-		std::string RPossibleWarning	= jaspRCPP_getLastErrorMsg();
+	{		
+		
+		
+		std::string		strippedFilter		= stringUtils::stripRComments(filter);
+		boolvec			filterResult		= rbridge_applyFilter(strippedFilter, generatedFilter);
+		std::string		RPossibleWarning	= jaspRCPP_getLastErrorMsg();
 
 		Log::log() << "Engine::runFilter ran:\n\t" << strippedFilter << "\n\tRPossibleWarning='" << RPossibleWarning << "'\n\t\tfor revision " << _dataSet->filter()->revision() << std::endl;
 
@@ -455,6 +457,8 @@ void Engine::receiveRCodeMessage(const Json::Value & jsonRequest)
 // Evaluating arbitrary R code (as string) which returns a string
 void Engine::runRCode(const std::string & rCode, int rCodeRequestId, bool whiteListed)
 {
+	provideAndUpdateDataSet();
+	
 
 	std::string rCodeResult = whiteListed ? rbridge_evalRCodeWhiteListed(rCode.c_str(), true) : jaspRCPP_evalRCode(rCode.c_str(), true);
 
@@ -475,6 +479,8 @@ void Engine::runRCodeCommander(std::string rCode)
 
 	if(thereIsSomeData)
 	{
+		
+		
 		rCode = ColumnEncoder::encodeAll(rCode);
 		jaspRCPP_runScript((rCmdDataName + "<- .readFullDatasetToEnd();").c_str());
 		jaspRCPP_runScript((rCmdFiltered + "<- .readFullFilteredDatasetToEnd();").c_str());
@@ -558,10 +564,16 @@ void Engine::runComputeColumn(const std::string & computeColumnName, const std::
 		{
 			std::string computeColumnNameEnc = ColumnEncoder::columnEncoder()->encode(computeColumnName);
 			computeColumnResponse["columnName"]		= computeColumnNameEnc;
+			
+			Column * compCol = _dataSet->column(computeColumnName);
+			
+			
 
-			std::string computeColumnResultStr		= rbridge_evalRComputedColumn(
-						computeColumnCode, 
-						"toString("+ setColumnFunction.at(computeColumnType) + "('" + computeColumnNameEnc +"', .calcedVals))");
+			std::string useThisFilter				= compCol->computeFilter(),
+						computeColumnResultStr		= rbridge_evalRComputedColumn(
+							computeColumnCode, 
+							"toString("+ setColumnFunction.at(computeColumnType) + "('" + computeColumnNameEnc +"', .calcedVals))",
+							useThisFilter);
 	
 			computeColumnResponse["result"]			= computeColumnResultStr;
 			computeColumnResponse["error"]			= jaspRCPP_getLastErrorMsg();
@@ -739,7 +751,7 @@ void Engine::runAnalysis()
 	default:	break;
 	}
 
-	   provideAndUpdateDataSet();
+	provideAndUpdateDataSet();
 	Log::log() << "Analysis will be run now." << std::endl;
 
 	Json::Value encodedAnalysisOptions = _analysisOptions;

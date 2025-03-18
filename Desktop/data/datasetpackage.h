@@ -234,9 +234,11 @@ public:
 				stringvec					getColumnDataStrs(					size_t				columnIndex);
 				void						setColumnName(						size_t				columnIndex, const std::string	& newName);
 				void						setColumnTitle(						size_t				columnIndex, const std::string	& newTitle);
+				void						setColumnDropLevels(				size_t					columnIndex, dropLevelsType dropLevels);
 				void						setColumnDescription(				size_t				columnIndex, const std::string	& newDescription);
 				void						setColumnComputedType(				size_t				columnIndex, computedColumnType	type);
 				void						setColumnComputedType(				const std::string &	columnName,	computedColumnType	type);
+				void						setColumnComputeFilter(				size_t columnIndex, const std::string &newFilter);
 				void						setColumnHasCustomEmptyValues(		size_t				columnIndex, bool				  hasCustomEmptyValue);
 				void						setColumnCustomEmptyValues(			size_t				columnIndex, const stringset	& customEmptyValues);
 				void						columnsReverseValues(				intset				columnIndex);
@@ -271,9 +273,9 @@ public:
 				std::string					freeNewColumnName(size_t startHere);
 				void						dbDelete();
 				void						resetVariableTypes();
-
-
-
+				void						emitColumnChanged(const QString &colName); //temporary until ColumnQ exists
+				
+				
 signals:
 				void				datasetChanged(	QStringList				changedColumns,
 													QStringList				missingColumns,
@@ -313,6 +315,9 @@ signals:
 				void				columnsBeingRemoved(				int columnIndex, int count);
 				void				workspaceEmptyValuesChanged();
 				void				descriptionChanged();
+				void				refreshAllAnalyses();
+				void				refreshAllCompCols();
+				void				setDataMode(bool mode);
 
 public slots:
 				void				refresh()							{ beginResetModel(); endResetModel(); }

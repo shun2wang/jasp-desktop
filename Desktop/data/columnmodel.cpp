@@ -88,7 +88,6 @@ QVariantList ColumnModel::columnTypeValues() const
 	};
 }
 
-
 QString ColumnModel::columnNameQ()
 {
 	if (_virtual) return _dummyColumn.name;
@@ -109,9 +108,10 @@ void ColumnModel::setColumnNameQ(QString newColumnName)
 			_undoStack->pushCommand(new InsertColumnCommand(_dataSetTableModel, colNr));
 
 		QMap<QString, QVariant> props;
-		props["name"] = newColumnName;
-		props["type"] = int(_dummyColumn.type);
-		props["computed"] = int(_dummyColumn.computedType);
+		props["name"]			= newColumnName;
+		props["type"]			= int(_dummyColumn.type);
+		props["computed"]		= int(_dummyColumn.computedType);
+		props["computeFilter"]	= _dummyColumn.computeFilter;
 		_undoStack->endMacro(new InsertColumnCommand(_dataSetTableModel, _currentColIndex, props));
 	}
 	else if(column())
@@ -137,11 +137,36 @@ void ColumnModel::setColumnTitle(const QString & newColumnTitle)
 		_undoStack->pushCommand(new SetColumnPropertyCommand(this, newColumnTitle, SetColumnPropertyCommand::ColumnProperty::Title));
 }
 
+void ColumnModel::setDropLevels(QString dropLevels)
+{
+	if (_beingRefreshed)
+		return;
+
+	dropLevelsType dropEm = dropLevelsType::drop;
+	
+	try { dropEm = dropLevelsTypeFromQString(dropLevels); } catch(...){} 
+
+	if(column())
+		_undoStack->pushCommand(new SetColumnPropertyCommand(this, dropLevelsTypeToQString(dropEm), SetColumnPropertyCommand::ColumnProperty::DropLevels));
+}
+
+
 QString ColumnModel::columnDescription() const
 {
 	if (_virtual) return _dummyColumn.description;
 
-	return QString::fromStdString(column() ? column()->description() : "");
+	return tq(column() ? column()->description() : "");
+}
+
+QString ColumnModel::computeFilter() const
+{
+	if (_virtual) 
+		return _dummyColumn.computeFilter;
+	
+	if(column())
+		return tq(column()->computeFilter());
+	
+	return "";
 }
 
 
@@ -187,6 +212,11 @@ int ColumnModel::rowsTotal() const
 	return rowCount();	
 }
 
+QString ColumnModel::dropLevels() const
+{
+	return dropLevelsTypeToQString(_virtual || !column() || column()->dropLevels() == dropLevelsType::noChoice ? dropLevelsType::drop : column()->dropLevels());
+}
+
 bool ColumnModel::hasSeveralNumericValues() const
 {
 	if(!column())
@@ -214,6 +244,7 @@ void ColumnModel::setCustomEmptyValues(const QStringList& customEmptyValues)
 
 	_undoStack->pushCommand(new SetCustomEmptyValuesCommand(this, customEmptyValues));
 }
+
 
 void ColumnModel::addEmptyValue(const QString & value)
 {
@@ -318,7 +349,22 @@ void ColumnModel::setComputedType(QString type)
 	if (_virtual)
 		_dummyColumn.computedType = cType;
 	else if(column())
-		_undoStack->pushCommand(new SetColumnPropertyCommand(this, int(cType), SetColumnPropertyCommand::ColumnProperty::ComputedColumn));
+		_undoStack->pushCommand(new SetColumnPropertyCommand(this, int(cType), SetColumnPropertyCommand::ColumnProperty::ComputedColumnType));
+
+	emit ComputedColumnModel::singleton()->refreshProperties();
+	emit tabsChanged();
+}
+
+void ColumnModel::setComputeFilter(const QString &newComputeFilter)
+{
+	if(_beingRefreshed || !column() || column()->computeFilter() == fq(newComputeFilter))
+		return;
+
+	if (_virtual)
+		_dummyColumn.computeFilter = newComputeFilter;
+	
+	else if(column())
+		_undoStack->pushCommand(new SetColumnPropertyCommand(this, newComputeFilter, SetColumnPropertyCommand::ColumnProperty::ComputeFilter));
 
 	emit ComputedColumnModel::singleton()->refreshProperties();
 	emit tabsChanged();
@@ -595,9 +641,11 @@ void ColumnModel::refresh()
 	endResetModel();
 
 	emit autoSortChanged();
+	emit dropLevelsChanged();
 	emit columnNameChanged();
 	emit columnTitleChanged();
 	emit nameEditableChanged();
+	emit computeFilterChanged();
 	emit columnDescriptionChanged();
 	emit computedTypeValuesChanged();
 	emit hasSeveralNumericValuesChanged();
@@ -688,7 +736,7 @@ void ColumnModel::removeAllSelected()
 		if (mapValueToRow.contains(selectedValue))
 		{
 			int selectedRow = int(mapValueToRow[selectedValue]);
-			emit dataChanged(ColumnModel::index(selectedRow, 0), ColumnModel::index(selectedRow, 0), {int(DataSetPackage::specialRoles::selected)});
+            emit dataChanged(ColumnModel::index(selectedRow, 0), ColumnModel::index(selectedRow, 0), {int(DataSetPackage::specialRoles::selected)});
 		}
 	}
 }
@@ -703,24 +751,26 @@ void ColumnModel::setSelected(int row, int modifier)
 		{
 			QString rowValue = data(index(i, 0), int(DataSetPackage::specialRoles::value)).toString();
 			_selected.insert(rowValue);
-			emit dataChanged(ColumnModel::index(i, 0), ColumnModel::index(i, 0), {int(DataSetPackage::specialRoles::selected)});
+            emit dataChanged(ColumnModel::index(i, 0), ColumnModel::index(i, 0), {int(DataSetPackage::specialRoles::selected)});
 		}
 	}
 	else if (modifier & Qt::ControlModifier)
 	{
 		QString rowValue = data(index(row, 0), int(DataSetPackage::specialRoles::value)).toString();
 		_selected.insert(rowValue);
-		emit dataChanged(ColumnModel::index(row, 0), ColumnModel::index(row, 0), {int(DataSetPackage::specialRoles::selected)});
+        emit dataChanged(ColumnModel::index(row, 0), ColumnModel::index(row, 0), {int(DataSetPackage::specialRoles::selected)});
 	}
 	else
 	{
 		QString rowValue = data(index(row, 0), int(DataSetPackage::specialRoles::value)).toString();
 		bool disableCurrent = _selected.count(rowValue) > 0;
 		removeAllSelected();
+		
 		if (!disableCurrent)	_selected.insert(rowValue);
 		else					_selected.erase(rowValue);
-		emit dataChanged(ColumnModel::index(row, 0), ColumnModel::index(row, 0), {int(DataSetPackage::specialRoles::selected)});
+        emit dataChanged(ColumnModel::index(row, 0), ColumnModel::index(row, 0), {int(DataSetPackage::specialRoles::selected)});
 	}
+	
 	_lastSelected = row;
 
 }
@@ -729,7 +779,7 @@ void ColumnModel::unselectAll()
 {
 	_selected.clear();
 	_lastSelected = -1;
-	emit dataChanged(ColumnModel::index(0, 0), ColumnModel::index(rowCount(), 0), {int(DataSetPackage::specialRoles::selected)});
+	refresh(); //emit dataChanged(ColumnModel::index(0, 0), ColumnModel::index(rowCount(), 0), {int(DataSetPackage::specialRoles::selected)});
 }
 
 bool ColumnModel::setChecked(int rowIndex, bool checked)
@@ -738,6 +788,8 @@ bool ColumnModel::setChecked(int rowIndex, bool checked)
 	
 	if(_beingRefreshed || checked == data(index(rowIndex,0), int(DataSetPackage::specialRoles::filter)).toBool())
 		return true; //Its already that value
+	
+	setSelected(rowIndex, true);
 
 	_editing = true;
 	_undoStack->pushCommand(new FilterLabelCommand(this, rowIndex, checked));
@@ -774,6 +826,45 @@ void ColumnModel::setLabel(int rowIndex, QString label)
 	_editing = false;
 }
 
+void ColumnModel::deleteLabel(int rowIndex)
+{
+	_undoStack->pushCommand(new DeleteLabelCommand(this, rowIndex));
+}
+
+void ColumnModel::addLabel(QString value, QString label)
+{
+	_undoStack->pushCommand(new AddLabelCommand(this, value, label));
+}
+
+void ColumnModel::_addLabel(QString value, QString label)
+{
+	if(!column())
+		return;
+	
+	column()->labelsAdd(fq(label), fq(value));
+	
+	if(column()->dropLevels() == dropLevelsType::noChoice) //No choice was made yet, but the user added a label, so I guess they want all labels
+		column()->setDropLevels(dropLevelsType::keep);
+	
+	column()->incRevision();
+	refresh();
+	DataSetPackage::pkg()->emitColumnChanged(columnNameQ());
+	DataSetPackage::pkg()->setDataMode(true);
+}
+
+void ColumnModel::_deleteLabel(int labelIndex)
+{
+	if(!column())
+		return;
+	
+	column()->labelsRemove(labelIndex);
+	column()->incRevision();
+	refresh();
+	DataSetPackage::pkg()->emitColumnChanged(columnNameQ());
+	DataSetPackage::pkg()->setDataMode(true);
+}
+
+
 bool ColumnModel::columnIsFiltered() const
 {
 	if(column())
@@ -794,6 +885,7 @@ void ColumnModel::clearVirtual()
 	_dummyColumn.description.clear();
 	_dummyColumn.name.clear();
 	_dummyColumn.title.clear();
+	_dummyColumn.computeFilter.clear();
 
 	_dummyColumn.type			= columnType::scale;
 	_dummyColumn.computedType	= computedColumnType::notComputed;
@@ -819,4 +911,8 @@ void ColumnModel::languageChangedHandler()
 	emit computedTypeValuesChanged();
 	emit tabsChanged();
 }
+
+
+
+
 

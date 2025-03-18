@@ -19,6 +19,7 @@ ComputedColumnModel::ComputedColumnModel()
 	connect(this,					&ComputedColumnModel::refreshProperties,		this,					&ComputedColumnModel::computeColumnUsesRCodeChanged		);
 	connect(this,					&ComputedColumnModel::refreshProperties,		this,					&ComputedColumnModel::computeColumnIconSourceChanged	);
 	connect(this,					&ComputedColumnModel::refreshProperties,		this,					&ComputedColumnModel::columnTypeChanged					);
+	connect(this,					&ComputedColumnModel::refreshProperties,		this,					&ComputedColumnModel::computeFilterChanged				);
 	
 	connect(this,					&ComputedColumnModel::refreshColumn,			DataSetPackage::pkg(),	&DataSetPackage::refreshColumn,								Qt::QueuedConnection);
 	connect(this,					&ComputedColumnModel::refreshData,				DataSetPackage::pkg(),	&DataSetPackage::refresh,									Qt::QueuedConnection);
@@ -57,6 +58,11 @@ QString ComputedColumnModel::computeColumnJson()
 	QString json = !_selectedColumn ? "" : tq(_selectedColumn->constructorJsonStr());
 
 	return json;
+}
+
+QString ComputedColumnModel::computeFilter()
+{
+	return !_selectedColumn ? "" : tq(_selectedColumn->computeFilter());
 }
 
 int ComputedColumnModel::computedColumnColumnType()
@@ -135,6 +141,7 @@ void ComputedColumnModel::emitSendComputeCode(Column * column)
 		emit sendComputeCode(tq(column->name()), tq(code), column->type());
 }
 
+
 void ComputedColumnModel::sendCode(const QString & code, const QString & json)
 {
 	DataSetPackage::pkg()->undoStack()->push(new SetComputedColumnCodeCommand(DataSetPackage::pkg(), _selectedColumn->name(), code, json));
@@ -155,6 +162,25 @@ void ComputedColumnModel::validate(const QString & columnName)
 
 	emitHeaderDataChanged(columnName);
 }
+
+void ComputedColumnModel::invalidateAllColumns()
+{
+	for(Column * col : dataSet()->computedColumns())
+		if(	col->codeType() != computedColumnType::analysis				&&
+			col->codeType() != computedColumnType::analysisNotComputed)
+		{
+			col->invalidate();
+			emitHeaderDataChanged(tq(col->name()));
+		}
+	
+	for(Column * col : dataSet()->computedColumns())
+		if(	col->codeType() != computedColumnType::analysis				&&
+			col->codeType() != computedColumnType::analysisNotComputed	&&
+			col->iShouldBeSentAgain()
+		)
+			emitSendComputeCode(col);
+}
+
 
 void ComputedColumnModel::invalidate(const QString & columnName)
 {

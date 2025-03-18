@@ -16,11 +16,11 @@ class ColumnModel : public DataSetTableProxy
 {
 	Q_OBJECT
 
-	Q_PROPERTY(int			filteredOut					READ filteredOut												NOTIFY filteredOutChanged				)
+    Q_PROPERTY(int			filteredOut					READ filteredOut                                                NOTIFY filteredOutChanged				)
 	Q_PROPERTY(int			chosenColumn				READ chosenColumn				WRITE setChosenColumn			NOTIFY chosenColumnChanged				)
-	Q_PROPERTY(bool			visible						READ visible					WRITE setVisible				NOTIFY visibleChanged					)
-	Q_PROPERTY(QString		columnName					READ columnNameQ				WRITE setColumnNameQ			NOTIFY columnNameChanged				)
-	Q_PROPERTY(QString		columnTitle					READ columnTitle				WRITE setColumnTitle			NOTIFY columnTitleChanged				)
+    Q_PROPERTY(bool			visible						READ visible                    WRITE setVisible                NOTIFY visibleChanged					)
+    Q_PROPERTY(QString		columnName					READ columnNameQ                WRITE setColumnNameQ            NOTIFY columnNameChanged				)
+    Q_PROPERTY(QString		columnTitle					READ columnTitle                WRITE setColumnTitle            NOTIFY columnTitleChanged				)
 	Q_PROPERTY(QString		columnDescription			READ columnDescription			WRITE setColumnDescription		NOTIFY columnDescriptionChanged			)
 	Q_PROPERTY(double		rowWidth					READ rowWidth					WRITE setRowWidth				NOTIFY rowWidthChanged					)
 	Q_PROPERTY(double		valueMaxWidth				READ valueMaxWidth												NOTIFY valueMaxWidthChanged				)
@@ -33,13 +33,15 @@ class ColumnModel : public DataSetTableProxy
 	Q_PROPERTY(QString		currentColumnType			READ currentColumnType			WRITE setColumnType				NOTIFY columnTypeChanged				)
 	Q_PROPERTY(QVariantList	columnTypeValues			READ columnTypeValues											NOTIFY columnTypeValuesChanged			)
 	Q_PROPERTY(bool			useCustomEmptyValues		READ useCustomEmptyValues		WRITE setUseCustomEmptyValues	NOTIFY useCustomEmptyValuesChanged		)
-	Q_PROPERTY(QStringList	emptyValues					READ emptyValues				WRITE setCustomEmptyValues		NOTIFY emptyValuesChanged				)
+    Q_PROPERTY(QStringList	emptyValues					READ emptyValues                WRITE setCustomEmptyValues		NOTIFY emptyValuesChanged				)
 	Q_PROPERTY(QVariantList	tabs						READ tabs														NOTIFY tabsChanged						)
-	Q_PROPERTY(bool 		isVirtual					READ isVirtual													NOTIFY isVirtualChanged					)
-	Q_PROPERTY(bool			compactMode					READ compactMode				WRITE setCompactMode			NOTIFY compactModeChanged				)
+    Q_PROPERTY(bool         isVirtual					READ isVirtual													NOTIFY isVirtualChanged					)
+    Q_PROPERTY(bool			compactMode					READ compactMode                WRITE setCompactMode            NOTIFY compactModeChanged				)
 	Q_PROPERTY(bool			autoSort					READ autoSort					WRITE setAutoSort				NOTIFY autoSortChanged					)
-	Q_PROPERTY(bool			hasSeveralNumericValues		READ hasSeveralNumericValues									NOTIFY hasSeveralNumericValuesChanged	) //Only works when autosort is on
+    Q_PROPERTY(bool			hasSeveralNumericValues		READ hasSeveralNumericValues                                    NOTIFY hasSeveralNumericValuesChanged	) //Only works when autosort is on
 	Q_PROPERTY(int			rowsTotal					READ rowsTotal													NOTIFY rowsTotalChanged					)
+	Q_PROPERTY(QString		computeFilter				READ computeFilter				WRITE setComputeFilter			NOTIFY computeFilterChanged				)
+    Q_PROPERTY(QString		dropLevels					READ dropLevels					WRITE setDropLevels				NOTIFY dropLevelsChanged                )
 
 public:
 	ColumnModel(DataSetTableModel* dataSetTableModel);
@@ -60,6 +62,9 @@ public:
 	QStringList		emptyValues()					const;
 	bool			hasSeveralNumericValues()		const;
 	int				rowsTotal()						const;
+	QString			dropLevels()					const;
+	bool			autoSort()						const;
+	QString			computeFilter()					const;
 
 
 	bool			setData(const QModelIndex & index, const QVariant & value,	int role = Qt::EditRole)			override;
@@ -83,6 +88,8 @@ public:
 	Q_INVOKABLE bool setChecked(int rowIndex, bool checked);
 	Q_INVOKABLE void setValue(int rowIndex, const QString & value);
 	Q_INVOKABLE void setLabel(int rowIndex, QString label);
+	Q_INVOKABLE void deleteLabel(int rowIndex);
+	Q_INVOKABLE void addLabel(QString value, QString label); ///< Via UndoStack
 	Q_INVOKABLE void addEmptyValue(		const QString & value);
 	Q_INVOKABLE void removeEmptyValue(	const QString & value);
 	Q_INVOKABLE void resetEmptyValues();
@@ -93,13 +100,16 @@ public:
 	double valueMaxWidth()		const	{ return _valueMaxWidth;	}
 	double labelMaxWidth()		const	{ return _labelMaxWidth;	}
 
-	void setColumnTitle(const QString & newColumnTitle);
-	void setColumnDescription(const QString & newColumnDescription);
-	void setComputedType(QString computedType);
-	void setColumnType(QString type);
+	void setColumnTitle(			const QString &		newColumnTitle);
+	void setColumnDescription(		const QString &		newColumnDescription);
+	void setComputedType(			QString				computedType);
+	void setColumnType(				QString				type);
 	void setLabelMaxWidth();
-	void setUseCustomEmptyValues(bool useCustomMissingValues);
-	void setCustomEmptyValues(const QStringList& customMissingValues);
+	void setUseCustomEmptyValues(	bool				useCustomMissingValues);
+	void setCustomEmptyValues(		const QStringList&	customMissingValues);
+	void setDropLevels(				QString				dropLevels);
+	void setAutoSort(				bool				newAutoSort);
+	void setComputeFilter(			const QString &		newComputeFilter);
 
 	QVariantList tabs()		const;
 
@@ -108,8 +118,6 @@ public:
 	bool compactMode()		const;
 	
 	
-	bool autoSort() const;
-	void setAutoSort(bool newAutoSort);
 	
 public slots:
 	void filteredOutChangedHandler(int col);
@@ -130,19 +138,22 @@ public slots:
 	void checkCurrentColumn( QStringList changedColumns, QStringList missingColumns, QMap<QString, QString>	changeNameColumns, bool rowCountChanged, bool hasNewColumns);
 	void setCompactMode(bool newCompactMode);
 	void languageChangedHandler();
+	void _addLabel(QString value, QString label); ///< Directly actually add it!
+	void _deleteLabel(int labelIndex);
 
 signals:
 	void visibleChanged(bool visible);
 	void filteredOutChanged();
 	void columnNameChanged();
 	void allFiltersReset();
-	void labelFilterChanged();
 	void rowWidthChanged();
+	void dropLevelsChanged();
+	void labelFilterChanged();
 	void valueMaxWidthChanged();
+	void columnDescriptionChanged();
 	void labelMaxWidthChanged();
 	void chosenColumnChanged();
 	void columnTitleChanged();
-	void columnDescriptionChanged();
 	void computedTypeChanged();
 	void computedTypeEditableChanged();
 	void computedTypeValuesChanged();
@@ -159,15 +170,16 @@ signals:
 	void compactModeChanged();
 	void autoSortChanged();
 	void hasSeveralNumericValuesChanged();
+	void computeFilterChanged();
 	
 private:
-	std::vector<size_t>	getSortedSelection()					const;
+	std::vector<size_t>		getSortedSelection()					const;
 	void					setValueMaxWidth();
 	void					clearVirtual();
 
 	struct
 	{
-		QString				name, title, description;
+		QString				name, title, description, computeFilter;
 		columnType			type = columnType::scale;
 		computedColumnType	computedType = computedColumnType::notComputed;
 	} _dummyColumn;

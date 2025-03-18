@@ -51,6 +51,20 @@ void DatabaseInterface::upgradeDBFromVersion(Version originalVersion)
 
 	if(originalVersion < "0.19.2" && !tableHasColumn("Filters", "name"))
 		runStatements("ALTER TABLE Filters  ADD COLUMN name		TEXT;");
+	
+	if(originalVersion <= "0.19.3")
+	{
+		if(!tableHasColumn("Columns", "dropLevels"))
+		{
+			runStatements("ALTER TABLE Columns  ADD COLUMN dropLevels		INT;");
+			runStatements("UPDATE Columns SET dropLevels = 1;"); //Previously dropLevels was always on, so loading an older jasp-file should have this enabled
+		}
+		
+		runStatements(std::string("UPDATE Filters SET name = '") + DEFAULT_FILTER_NAME + "' WHERE name = '';"); //Previously the "default filter" didnt have a name, but this is actually not very practical for computeFilter, so lets set it to something on load. Filters will always have a name now.
+
+		if(!tableHasColumn("Columns", "computeFilter"))
+			runStatements("ALTER TABLE Columns  ADD COLUMN computeFilter		TEXT DEFAULT \"\";");
+	}
 
 	transactionWriteEnd();
 }
@@ -965,6 +979,16 @@ void DatabaseInterface::columnSetInvalidated(int columnId, bool invalidated)
 	});
 }
 
+void DatabaseInterface::columnSetDropLevels(int columnId, int dropLevels)
+{
+	JASPTIMER_SCOPE(DatabaseInterface::columnSetDropLevels);
+	runStatements("UPDATE Columns SET dropLevels=? WHERE id=?;", [&](sqlite3_stmt * stmt)
+	{
+		sqlite3_bind_int(stmt,	1,	dropLevels);
+		sqlite3_bind_int(stmt,	2,	columnId);
+	});
+}
+
 void DatabaseInterface::columnSetIndex(int columnId, int index)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::columnSetIndex);
@@ -1041,11 +1065,21 @@ void DatabaseInterface::columnSetDescription(int columnId, const std::string & d
 	});
 }
 
-void DatabaseInterface::columnSetComputedInfo(int columnId, int analysisId, bool invalidated, computedColumnType codeType, const std::string & rCode, const std::string & error, const std::string & constructorJsonStr)
+void DatabaseInterface::columnSetComputeFilter(int columnId, const std::string &filter)
+{
+	JASPTIMER_SCOPE(DatabaseInterface::columnSetComputeFilter);
+	runStatements("UPDATE Columns SET computeFilter=? WHERE id=?;", [&](sqlite3_stmt * stmt)
+	{
+		sqlite3_bind_text(stmt, 1, filter.c_str(), filter.length(), SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt,	2, columnId);
+	});
+}
+
+void DatabaseInterface::columnSetComputedInfo(int columnId, int analysisId, bool invalidated, computedColumnType codeType, const std::string & rCode, const std::string & error, const std::string & constructorJsonStr, const std::string & computeFilter)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::columnSetComputedInfo);
 
-	runStatements("UPDATE Columns SET invalidated=?, codeType=?, rCode=?, error=?, constructorJson=?, analysisId=? WHERE id=?;", [&](sqlite3_stmt * stmt)
+	runStatements("UPDATE Columns SET invalidated=?, codeType=?, rCode=?, error=?, constructorJson=?, analysisId=?, computeFilter=? WHERE id=?;", [&](sqlite3_stmt * stmt)
 	{
 		std::string codeT = computedColumnTypeToString(codeType);
 
@@ -1055,11 +1089,12 @@ void DatabaseInterface::columnSetComputedInfo(int columnId, int analysisId, bool
 		sqlite3_bind_text(stmt, 4, error.c_str(),				error.length(),					SQLITE_TRANSIENT);
 		sqlite3_bind_text(stmt, 5, constructorJsonStr.c_str(),	constructorJsonStr.length(),	SQLITE_TRANSIENT);
 		sqlite3_bind_int(stmt,  6, analysisId);
-		sqlite3_bind_int(stmt,  7, columnId);
+		sqlite3_bind_text(stmt, 7, computeFilter.c_str(),		computeFilter.length(),			SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt,  8, columnId);
 	});
 }
 
-void DatabaseInterface::columnGetBasicInfo(int columnId, std::string &name, std::string &title, std::string &description, columnType &colType, int & revision, Json::Value & emptyValuesJson, bool & autoSort)
+void DatabaseInterface::columnGetBasicInfo(int columnId, std::string &name, std::string &title, std::string &description, columnType &colType, int & revision, Json::Value & emptyValuesJson, bool & autoSort, int & dropLevels)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::columnGetBasicInfo);
 	
@@ -1074,7 +1109,7 @@ void DatabaseInterface::columnGetBasicInfo(int columnId, std::string &name, std:
 	{
 		int colCount = sqlite3_column_count(stmt);
 
-		assert(colCount == 7);
+		assert(colCount == 8);
 					name			= _wrap_sqlite3_column_text(stmt, 0);
 					title			= _wrap_sqlite3_column_text(stmt, 1);
 					description		= _wrap_sqlite3_column_text(stmt, 2);
@@ -1082,13 +1117,15 @@ void DatabaseInterface::columnGetBasicInfo(int columnId, std::string &name, std:
 					revision		= sqlite3_column_int(		stmt, 4);
 		std::string	emptyValuesStr	= _wrap_sqlite3_column_text(stmt, 5);
 					autoSort		= sqlite3_column_int(		stmt, 6);
+					dropLevels		= sqlite3_column_int(		stmt, 7);
+					
 
 		colType = colTypeStr.empty() ? columnType::unknown : columnTypeFromString(colTypeStr);
 		
 		Json::Reader().parse(emptyValuesStr, emptyValuesJson);
 	};
 
-	runStatements("SELECT name, title, description, columnType, revision, emptyValuesJson, autoSortByValue FROM Columns WHERE id = ?;", prepare, processRow);
+	runStatements("SELECT name, title, description, columnType, revision, emptyValuesJson, autoSortByValue, dropLevels FROM Columns WHERE id = ?;", prepare, processRow);
 }
 
 
@@ -1100,7 +1137,7 @@ std::string DatabaseInterface::_wrap_sqlite3_column_text(sqlite3_stmt * stmt, in
 	return !col ? "" : std::string(reinterpret_cast<const char*>(col));	
 }
 
-void DatabaseInterface::columnGetComputedInfo(int columnId, int &analysisId, bool &invalidated, computedColumnType &codeType, std::string &rCode, std::string &error, Json::Value &constructorJson)
+void DatabaseInterface::columnGetComputedInfo(int columnId, int &analysisId, bool &invalidated, computedColumnType &codeType, std::string &rCode, std::string &error, Json::Value &constructorJson, std::string & computeFilter)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::columnGetComputedInfo);
 
@@ -1113,7 +1150,7 @@ void DatabaseInterface::columnGetComputedInfo(int columnId, int &analysisId, boo
 	{
 		int colCount = sqlite3_column_count(stmt);
 
-		assert(colCount == 6);
+		assert(colCount == 7);
 
 					invalidated			= sqlite3_column_int(		stmt,	0);
 		std::string codeTypeStr			= _wrap_sqlite3_column_text(stmt,	1);
@@ -1121,6 +1158,7 @@ void DatabaseInterface::columnGetComputedInfo(int columnId, int &analysisId, boo
 					error				= _wrap_sqlite3_column_text(stmt,	3);
 		std::string constructorJsonStr	= _wrap_sqlite3_column_text(stmt,	4);
 					analysisId			= sqlite3_column_int(		stmt,	5);
+					computeFilter		= _wrap_sqlite3_column_text(stmt,	6);
 
 		codeType = computedColumnType::notComputed;
 		if (!codeTypeStr.empty())
@@ -1133,7 +1171,7 @@ void DatabaseInterface::columnGetComputedInfo(int columnId, int &analysisId, boo
 		Json::Reader().parse(constructorJsonStr, constructorJson);
 	};
 
-	runStatements("SELECT invalidated, codeType, rCode, error, constructorJson, analysisId FROM Columns WHERE id = ?;", prepare, processRow);
+	runStatements("SELECT invalidated, codeType, rCode, error, constructorJson, analysisId, computeFilter FROM Columns WHERE id = ?;", prepare, processRow);
 }
 
 void DatabaseInterface::labelsClear(int columnId)

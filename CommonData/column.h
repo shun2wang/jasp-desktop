@@ -65,14 +65,16 @@ public:
 			columnTypeChangeResult	changeType(			columnType			colType			);
 			void					setCodeType(		computedColumnType	codeType		);
 			void					setDescription(		const std::string & description		);
+			void					setComputeFilter(	const std::string & filter = ""		);
 			bool					setConstructorJson(	const Json::Value & constructorJson	);
 			bool					setConstructorJson(	const std::string & constructorJson	);
 			void					setAutoSortByValue(	bool				sort			);
 			void					setAnalysisId(		int					analysisId		);
 			void					setIndex(			int					index			);
 			void					setInvalidated(		bool				invalidated		);
-			void					setCompColStuff(	bool				invalidated, bool forceSourceColType, computedColumnType   codeType, const	std::string & rCode, const	std::string & error, const	Json::Value & constructorJson);
+			void					setCompColStuff(	bool				invalidated, computedColumnType   codeType, const	std::string & rCode, const	std::string & error, const	Json::Value & constructorJson);
 			void					setDefaultValues(	enum columnType		columnType = columnType::unknown);
+			void					setDropLevels(		dropLevelsType		dropEm);
 
 			bool					setAsNominalOrOrdinal(	const intvec	& values,									bool	is_ordinal = false);
 			bool					setAsNominalOrOrdinal(	const intvec	& values, intstrmap uniqueValues,			bool	is_ordinal = false);
@@ -91,6 +93,8 @@ public:
 			int						id()					const	{ return _id;				}
 			int						analysisId()			const	{ return _analysisId;		}
 			bool					isComputed()			const	{ return _codeType != computedColumnType::notComputed && _codeType != computedColumnType::analysisNotComputed;	}
+			dropLevelsType			dropLevels()			const	{ return _dropLevels;		}
+			bool					shouldDropLevels()		const	{ return _dropLevels != dropLevelsType::keep; }
 			bool					invalidated()			const	{ return _invalidated;		}
 			bool					autoSortByValue()		const	{ return _autoSortByValue;	}
 			computedColumnType		codeType()				const	{ return _codeType;			}
@@ -99,6 +103,7 @@ public:
 			const std::string	&	error()					const	{ return _error;			}
 			const std::string	&	rCode()					const	{ return _rCode;			}
 			const std::string	&	description()			const	{ return _description;		}
+			const std::string	&	computeFilter()			const	{ return _computeFilter;		}
 				  std::string		rCodeStripped()			const	{ return stringUtils::stripRComments(_rCode);	}
 				  std::string		constructorJsonStr()	const	{ return _constructorJson.toStyledString();	}
 			const Json::Value	&	constructorJson()		const	{ return _constructorJson;	}
@@ -112,8 +117,10 @@ public:
 			void					labelsClear(bool doIncRevision=true);
 			int						labelsAdd(			int display);
 			int						labelsAdd(			const std::string & display);
+			int						labelsAdd(			const std::string &display, const std::string &value);
 			int						labelsAdd(			const std::string & display, const std::string & description, const Json::Value & originalValue);
 			int						labelsAdd(			int value, const std::string & display, bool filterAllows, const std::string & description, const Json::Value & originalValue, int order=-1, int id=-1);
+			void					labelsRemove(		int labelIndex);
 			int						labelsSet(int lbId,	int value, const std::string & display, bool filterAllows, const std::string & description, const Json::Value & originalValue, int order=-1, int id=-1);
 			void					labelsRemoveByIntsId(	intset valuesToRemove, bool updateOrder = true);
 			strintmap				labelsResetValues(	int & maxValue);
@@ -267,12 +274,14 @@ private:
 			int						_nonFilteredNumericsCount	= -1;
 			bool					_invalidated		= false,
 									_autoSortByValue;
+			dropLevelsType			_dropLevels			= dropLevelsType::noChoice;
 			computedColumnType		_codeType			= computedColumnType::notComputed;
 			std::string				_name,
 									_title,
 									_description,
 									_error,
-									_rCode;
+									_rCode,
+									_computeFilter;
 			Json::Value				_constructorJson	= Json::objectValue;
 			doublevec				_dbls;
 			intvec					_ints;

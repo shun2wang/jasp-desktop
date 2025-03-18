@@ -310,7 +310,12 @@ void UndoModelCommandMultipleColumns::undo()
 	
 	for(int col : _cols)
 		if(!_serializedColumns[col].isNull())
+        {
+            QString oldName = tq(DataSetPackage::pkg()->dataSet()->column(col)->name());
 			DataSetPackage::pkg()->dataSet()->column(col)->deserialize(_serializedColumns[col]);
+            DataSetPackage::pkg()->emitColumnChanged(oldName);
+            DataSetPackage::pkg()->emitColumnChanged(tq(DataSetPackage::pkg()->dataSet()->column(col)->name()));
+        }
 
 	
 	DataSetPackage::pkg()->refresh();
@@ -330,17 +335,30 @@ SetColumnPropertyCommand::SetColumnPropertyCommand(QAbstractItemModel *model, QV
 			_oldValue = columnName();
 			setText(QObject::tr("Change column name of '%1' from '%2' to '%3'").arg(columnName(), _oldValue.toString(), _newValue.toString()));
 			break;
+		
 		case ColumnProperty::Title:
 			_oldValue = columnModel->columnTitle();
 			setText(QObject::tr("Change column title of '%1' from '%2' to '%3'").arg(columnName(), _oldValue.toString(), _newValue.toString()));
 			break;
+		
 		case ColumnProperty::Description:
 			_oldValue = columnModel->columnDescription();
 			setText(QObject::tr("Change column description of '%1' from '%2' to '%3'").arg(columnName(), _oldValue.toString(), _newValue.toString()));
 			break;
-		case ColumnProperty::ComputedColumn:
+		
+		case ColumnProperty::ComputedColumnType:
 			_oldValue = int(computedColumnTypeFromQString(columnModel->computedType()));
 			setText(QObject::tr("Set computed type of '%1' from '%2' to '%3'").arg(columnName(), friendlyColumnType(_oldValue.toInt()), friendlyColumnType(_newValue.toInt())));
+			break;
+			
+		case ColumnProperty::ComputeFilter:
+			_oldValue = columnModel->computeFilter();
+			setText(QObject::tr("Change column compute filter of '%1' from '%2' to '%3'").arg(columnName(), _oldValue.toString(), _newValue.toString()));
+			break;
+			
+		case ColumnProperty::DropLevels:
+			_oldValue = columnModel->dropLevels();
+			setText(QObject::tr("Change column drop levels of '%1' from '%2' to '%3'").arg(columnName(), _oldValue.toString(), _newValue.toString()));
 			break;
 		}
 	}
@@ -360,14 +378,25 @@ void SetColumnPropertyCommand::undo()
 		// As the column can be also recognize with its name, use it.
 		DataSetPackage::pkg()->setColumnName(DataSetPackage::pkg()->getColumnIndex(_newValue.toString()), fq(_oldValue.toString()));
 		break;
+		
 	case ColumnProperty::Title:
 		DataSetPackage::pkg()->setColumnTitle(_colId, fq(_oldValue.toString()));
 		break;
+		
+	case ColumnProperty::ComputeFilter:
+		DataSetPackage::pkg()->setColumnComputeFilter(_colId, fq(_oldValue.toString()));
+		break;
+		
 	case ColumnProperty::Description:
 		DataSetPackage::pkg()->setColumnDescription(_colId, fq(_oldValue.toString()));
 		break;
-	case ColumnProperty::ComputedColumn:
+
+	case ColumnProperty::ComputedColumnType:
 		DataSetPackage::pkg()->setColumnComputedType(_colId, computedColumnType(_oldValue.toInt()));
+		break;
+		
+	case ColumnProperty::DropLevels:
+		DataSetPackage::pkg()->setColumnDropLevels(_colId, dropLevelsTypeFromQString(_oldValue.toString()));
 		break;
 	}
 }
@@ -379,14 +408,25 @@ void SetColumnPropertyCommand::redo()
 	case ColumnProperty::Name:
 		DataSetPackage::pkg()->setColumnName(DataSetPackage::pkg()->getColumnIndex(_oldValue.toString()), fq(_newValue.toString()));
 		break;
+		
 	case ColumnProperty::Title:
 		DataSetPackage::pkg()->setColumnTitle(_colId, fq(_newValue.toString()));
 		break;
+		
+	case ColumnProperty::ComputeFilter:
+		DataSetPackage::pkg()->setColumnComputeFilter(_colId, fq(_newValue.toString()));
+		break;
+		
 	case ColumnProperty::Description:
 		DataSetPackage::pkg()->setColumnDescription(_colId, fq(_newValue.toString()));
 		break;
-	case ColumnProperty::ComputedColumn:
+		
+	case ColumnProperty::ComputedColumnType:
 		DataSetPackage::pkg()->setColumnComputedType(_colId, computedColumnType(_newValue.toInt()));
+		break;
+		
+	case ColumnProperty::DropLevels:
+		DataSetPackage::pkg()->setColumnDropLevels(_colId, dropLevelsTypeFromQString(_newValue.toString()));
 		break;
 	}
 
@@ -423,49 +463,8 @@ void SetWorkspacePropertyCommand::redo()
 		DataSetPackage::pkg()->setDescription(_newValue.toString());
 }
 
-
-UndoModelCommandLabelChange::UndoModelCommandLabelChange(QAbstractItemModel *model)
-	: UndoModelCommand(model)
-{
-	_columnModel = qobject_cast<ColumnModel*>(model);
-	if (_columnModel)
-	{
-		_colId			= _columnModel->chosenColumn();
-		Column * col	= _columnModel->column();
-		_oldLabels		= col ? col->serializeLabels() : Json::nullValue;
-	}
-	else
-	{
-		Log::log() << "Try to set a label name with a wrong model!" << std::endl;
-		setObsolete(true);
-	}
-}
-
-void UndoModelCommandLabelChange::undo()
-{
-	if(_oldLabels.isNull())
-		return;
-	
-	assert(_columnModel && _model);
-	_columnModel->setChosenColumn(_colId);
-	
-	Column * col = _columnModel->column();
-	
-	if(col)
-	{
-		col->deserializeLabelsForRevert(_oldLabels);
-		DataSetPackage::pkg()->refresh();
-	}
-}
-
-void UndoModelCommandLabelChange::redo()
-{
-	if(_columnModel && (!_columnModel->column() || _columnModel->column()->id() != _colId))
-		_columnModel->setChosenColumn(_colId);	
-}
-
 SetLabelCommand::SetLabelCommand(QAbstractItemModel *model, int labelIndex, QString newLabel)
-	: UndoModelCommandLabelChange(model), _labelIndex{labelIndex}, _newLabel{newLabel}
+    : UndoModelCommandSingleColumn(model), _labelIndex{labelIndex}, _newLabel{newLabel}
 {
 	if (_columnModel)
 	{
@@ -482,13 +481,13 @@ SetLabelCommand::SetLabelCommand(QAbstractItemModel *model, int labelIndex, QStr
 
 void SetLabelCommand::redo()
 {
-	UndoModelCommandLabelChange::redo();
+    UndoModelCommandSingleColumn::redo(); //Makes sure we select the right column first
 	_model->setData(_model->index(_labelIndex, 0), _newLabel, int(DataSetPackage::specialRoles::label));
 	_columnModel->setLabelMaxWidth();
 }
 
 SetLabelOriginalValueCommand::SetLabelOriginalValueCommand(QAbstractItemModel *model, int labelIndex, QString originalValue)
-	: UndoModelCommandLabelChange(model), _labelIndex{labelIndex}, _newOriginalValue{originalValue}
+    : UndoModelCommandSingleColumn(model), _labelIndex{labelIndex}, _newOriginalValue{originalValue}
 {
 	if (_columnModel)
 	{
@@ -505,12 +504,34 @@ SetLabelOriginalValueCommand::SetLabelOriginalValueCommand(QAbstractItemModel *m
 
 void SetLabelOriginalValueCommand::redo()
 {
-	UndoModelCommandLabelChange::redo();
+    UndoModelCommandSingleColumn::redo(); //Makes sure we select the right column first
 	_model->setData(_model->index(_labelIndex, 0), _newOriginalValue, int(DataSetPackage::specialRoles::value));
 	_columnModel->setLabelMaxWidth();
 }
 
+DeleteLabelCommand::DeleteLabelCommand(QAbstractItemModel *model, int labelIndex)
+	: UndoModelCommandSingleColumn(model), _labelIndex(labelIndex)
+{
+	setText(QObject::tr("Delete label %1 of column '%2'").arg(_labelIndex).arg(columnName()));
+}
 
+void DeleteLabelCommand::redo()
+{
+    UndoModelCommandSingleColumn::redo(); //Makes sure we select the right column first
+	_columnModel->_deleteLabel(_labelIndex);
+}
+
+AddLabelCommand::AddLabelCommand(QAbstractItemModel *model, QString value, QString label)
+: UndoModelCommandSingleColumn(model), _value(value), _label(label)
+{
+	setText(QObject::tr("Adding value + label '%1' + '%2' to column '%3'").arg(_value).arg(_label).arg(columnName()));
+}
+
+void AddLabelCommand::redo()
+{
+    UndoModelCommandSingleColumn::redo(); //Makes sure we select the right column first
+	_columnModel->_addLabel(_value, _label);
+}
 
 FilterLabelCommand::FilterLabelCommand(QAbstractItemModel *model, int labelIndex, bool checked)
 	: UndoModelCommand(model), _labelIndex{labelIndex}, _checked{checked}
@@ -546,10 +567,12 @@ void FilterLabelCommand::redo()
 }
 
 MoveLabelCommand::MoveLabelCommand(QAbstractItemModel *model, const std::vector<size_t> &indexes, bool up)
-	: UndoModelCommandLabelChange(model), _up{up}
+    : UndoModelCommandSingleColumn(model), _up{up}
 {
-	if (_columnModel)
-	{
+
+    if (_columnModel)
+    {
+        _colId = _columnModel->chosenColumn();
 		_labels.clear();
 
 		QStringList allLabels = DataSetPackage::pkg()->getColumnLabelsAsStringList(_colId);
@@ -598,7 +621,7 @@ std::vector<size_t> MoveLabelCommand::_getIndexes()
 
 void MoveLabelCommand::redo()
 {
-	_columnModel->setChosenColumn(_colId);
+    UndoModelCommandSingleColumn::redo(); //Makes sure we select the right column first
 	std::vector<size_t> indexes = _getIndexes(); // The indexes must be recalculated each time
 	DataSetPackage::pkg()->labelMoveRows(_colId, indexes, _up); //through DataSetPackage to make sure signals get sent
 }
@@ -860,3 +883,29 @@ QString UndoModelCommand::rowName(int rowIndex) const
 	return result;
 }
 
+
+
+UndoModelCommandSingleColumn::UndoModelCommandSingleColumn(QAbstractItemModel *model)
+	: UndoModelCommandMultipleColumns(model, {qobject_cast<ColumnModel*>(model)->chosenColumn()} )
+{
+	_columnModel = qobject_cast<ColumnModel*>(model);
+	
+	if(!_columnModel)
+		throw std::runtime_error("UndoModelCommandSingleColumn needs to get passed a ColumnModel!");
+
+    _colId = _columnModel->chosenColumn();
+}
+
+void UndoModelCommandSingleColumn::redo()
+{
+    if(_columnModel)
+        _columnModel->setChosenColumn(_colId);
+}
+
+void UndoModelCommandSingleColumn::undo()
+{
+    UndoModelCommandMultipleColumns::undo();
+
+    if(_columnModel)
+        _columnModel->setChosenColumn(_colId);
+}

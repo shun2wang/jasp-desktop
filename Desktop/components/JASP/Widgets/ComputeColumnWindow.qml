@@ -296,13 +296,29 @@ FocusScope
 
 				text:				qsTr("Compute column") 
 				anchors.left:		showGeneratedRCode.right
-				anchors.right:		helpButton.left
+				anchors.right:		computeFilterDropDown.left
 				centerTextParent:	true
 				anchors.bottom:		parent.bottom
 				anchors.top:		helpButton.top
 				onClicked:			{ forceActiveFocus(); computedColumnContainer.applyComputedColumn() }
 				toolTip:			qsTr("Click to compute column")
-				
+			}
+			
+			JaspControls.DropDown
+			{
+				id:					computeFilterDropDown
+				values:				filterModel.filterDropDownList
+				startValue:			""
+				currentValue:		columnModel.computeFilter
+				onValueChanged:		{
+					columnModel.computeFilter = currentValue
+					computedColumnContainer.applyComputedColumn()
+					
+				}
+				anchors.right:		helpButton.left
+				anchors.bottom:		parent.bottom
+				toolTip:			qsTr("Select a filter to use for this computed column")
+				control.height:		applyComputedColumnButton.height
 			}
 
 			JaspControls.RectangularButton

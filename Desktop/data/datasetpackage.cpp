@@ -1037,14 +1037,21 @@ bool DataSetPackage::setLabelAllowFilter(const QModelIndex & index, bool newAllo
 
 		bool before = column->hasFilter();
 		labels[row]->setFilterAllows(newAllowValue);
-
-		if(before != column->hasFilter())
-			notifyColumnFilterStatusChanged(col); //basically resetModel now
+		
+		notifyColumnFilterStatusChanged(col); //basically resetModel now
 
 		emit labelFilterChanged();
 		QModelIndex columnParentNode = indexForSubNode(column);
-		emit dataChanged(DataSetPackage::index(row, 0, columnParentNode),	DataSetPackage::index(row, columnCount(columnParentNode), columnParentNode), { int(specialRoles::filter) });
+		//emit dataChanged(DataSetPackage::index(row, 0, columnParentNode),	DataSetPackage::index(row, columnCount(columnParentNode), columnParentNode), { int(specialRoles::filter) });
 		emit filteredOutChanged(col);
+		
+		if(column->dropLevels() == dropLevelsType::noChoice && !newAllowValue) //No choice was made yet, but the user disabled a label, so I guess they dont want all labels
+		{
+			column->setDropLevels(dropLevelsType::drop);
+			//To be sure everything is updated:
+			emit refreshAllCompCols();
+			emit refreshAllAnalyses();
+		}
 
 		return true;
 	}
@@ -1381,6 +1388,11 @@ void DataSetPackage::endSynchingData(	const stringvec	&	changedColumns,
 	setManualEdits(false);
 }
 
+void DataSetPackage::emitColumnChanged(const QString & colName)
+{
+	emit datasetChanged({colName}, {}, {}, false, false);
+}
+
 
 void DataSetPackage::beginLoadingData(bool informEngines)
 {
@@ -1673,6 +1685,21 @@ void DataSetPackage::setColumnTitle(size_t columnIndex, const std::string & newT
 	refresh();
 }
 
+void DataSetPackage::setColumnComputeFilter(size_t columnIndex, const std::string & newFilter)
+{
+	if(!_dataSet)
+		return;
+
+	Column* column = _dataSet->column(columnIndex);
+	
+	if (!column)
+		return;
+
+	column->setComputeFilter(newFilter);
+	
+	refresh();
+}
+
 void DataSetPackage::setColumnDescription(size_t columnIndex, const std::string & newDescription)
 {
 	if(!_dataSet)
@@ -1703,6 +1730,24 @@ void DataSetPackage::setColumnComputedType(size_t columnIndex, computedColumnTyp
 
 	refresh();
 }
+
+void DataSetPackage::setColumnDropLevels(size_t columnIndex, dropLevelsType dropLevels)
+{
+	if(!_dataSet)
+		return;
+
+	Column* column = _dataSet->column(columnIndex);
+	if (!column)
+		return;
+
+	column->setDropLevels(dropLevels);
+
+	refresh();
+	
+	emit refreshAllCompCols();
+	emit refreshAllAnalyses();
+}
+
 
 void DataSetPackage::setColumnComputedType(const std::string & columnName, computedColumnType type)
 {
@@ -2056,9 +2101,10 @@ QString DataSetPackage::insertColumnSpecial(int columnIndex, const QMap<QString,
 	
 	Column * column = _dataSet->column(columnIndex);
 
-	column->setName(			props.contains("name")		? fq(props["name"].toString())					: freeNewColumnName(columnIndex)	);
-	column->setDefaultValues(	props.contains("type")		? columnType(props["type"].toInt())				: columnType::scale					);
-	column->setCodeType(		props.contains("computed")	? computedColumnType(props["computed"].toInt())	: computedColumnType::notComputed	);
+	column->setName(			props.contains("name")			? fq(props["name"].toString())					: freeNewColumnName(columnIndex)	);
+	column->setDefaultValues(	props.contains("type")			? columnType(props["type"].toInt())				: columnType::scale					);
+	column->setCodeType(		props.contains("computed")		? computedColumnType(props["computed"].toInt())	: computedColumnType::notComputed	);
+	column->setComputeFilter(fq(props.contains("computeFilter")	? props["computeFilter"].toString()				: ""								));
 
 	_dataSet->incRevision();
 

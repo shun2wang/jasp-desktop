@@ -8,7 +8,7 @@
 
 #define DEFAULT_FILTER_JSON	"{\"formulas\":[]}"
 #define DEFAULT_FILTER_GEN	"generatedFilter <- rep(TRUE, rowcount)"
-
+#define DEFAULT_FILTER_NAME "DEFAULT_FILTER"
 
 class DataSet;
 class DatabaseInterface;
@@ -43,6 +43,7 @@ public:
 	void				setName(			const std::string	& name)				{ _name				= name;				dbUpdate(); }
 	bool				setFilterVector(	const boolvec		& filterResult);
 	void				setFilterValueNoDB(	size_t	row, bool val);
+	
 	void				setRowCount(		size_t	rows);
 	void				setId(				int		id)			{ _id = id; }
 

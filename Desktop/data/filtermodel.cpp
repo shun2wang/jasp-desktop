@@ -2,6 +2,7 @@
 #include "jsonutilities.h"
 #include "columnencoder.h"
 #include "timers.h"
+#include <QMap>
 
 FilterModel::FilterModel(labelFilterGenerator * labelFilterGenerator)
 	: QObject(DataSetPackage::pkg()), _labelFilterGenerator(labelFilterGenerator)
@@ -15,6 +16,7 @@ FilterModel::FilterModel(labelFilterGenerator * labelFilterGenerator)
 }
 
 QString FilterModel::rFilter()			const	{ return !DataSetPackage::filter() ? defaultRFilter()		: tq(DataSetPackage::filter()->rFilter());					}
+
 QString FilterModel::constructorR()		const	{ return !DataSetPackage::filter() ? ""						: tq(DataSetPackage::filter()->constructorR());				}
 QString FilterModel::filterErrorMsg()	const	{ return !DataSetPackage::filter() ? ""						: tq(DataSetPackage::filter()->errorMsg());					}
 QString FilterModel::generatedFilter()	const	{ return !DataSetPackage::filter() ? DEFAULT_FILTER_GEN		: tq(DataSetPackage::filter()->generatedFilter());			}
@@ -36,6 +38,11 @@ const char * FilterModel::defaultRFilter()
 	return defaultFilter.c_str();
 }
 
+bool FilterModel::isJustGeneratedFilter() const
+{
+	return rFilter() == defaultRFilter() && constructorJson() == DEFAULT_FILTER_JSON;
+}
+
 void FilterModel::reset()
 {
 	_setGeneratedFilter(DEFAULT_FILTER_GEN	);
@@ -44,6 +51,8 @@ void FilterModel::reset()
 
 	if(DataSetPackage::pkg()->dataRowCount() > 0)
 		sendGeneratedAndRFilter();
+	
+	emit filterDropDownListChanged();
 }
 
 void FilterModel::dataSetPackageResetDone()
@@ -59,6 +68,8 @@ void FilterModel::modelInit()
 		sendGeneratedAndRFilter();
 
 	DataSetPackage::pkg()->setFilterShouldRunInit(true); //Make sure next time we come here (because of computed columns or something) we do actually run the filter
+	
+	emit filterDropDownListChanged();
 }
 
 void FilterModel::setRFilter(QString newRFilter)
@@ -179,12 +190,15 @@ void FilterModel::processFilterResult(int requestId)
 
 	if(!(DataSetPackage::pkg()->dataSet() || DataSetPackage::pkg()->dataSet()->filter()))
 		return;
+	
+	
 
 	//Load new filter values from database
 	if(DataSetPackage::pkg()->dataSet()->filter()->dbLoadResultAndError())
 	{
 		emit filterErrorMsgChanged();
 		emit refreshAllAnalyses();
+		emit refreshAllCompCols();
 		emit filterUpdated();
 		updateStatusBar();
 	}
@@ -290,4 +304,18 @@ void FilterModel::datasetChanged(	QStringList             changedColumns,
 
 	if(invalidateMe)
 		sendGeneratedAndRFilter();
+}
+
+
+QVariantList FilterModel::filterDropDownList() const
+{
+	typedef QMap<QString, QVariant> localMap;
+	
+	QVariantList out = { localMap({std::make_pair("value", ""), std::make_pair("label", QObject::tr("No filter"))}) };
+	
+	//Right now we only have 1 filter, but later we can add support here for multiple filters, or of filters from analyses (such as from ListModelFilteredDataEntry)
+	if(DataSetPackage::filter())
+		out.append(localMap{std::make_pair("value", tq(DataSetPackage::filter()->name())), std::make_pair("label", QObject::tr("Use filter"))});
+	
+	return out;
 }
