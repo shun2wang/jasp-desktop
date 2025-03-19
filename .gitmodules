@@ -161,6 +161,8 @@
 [submodule "Modules/jaspBfpack"]
 	path = Modules/jaspBfpack
 	url = https://github.com/jasp-stats/jaspBfpack
-[submodule "Modules/jaspesci"]
-	path = Modules/jaspesci
-	url = https://github.com/jasp-stats/jaspesci
+	branch = master
+[submodule "Modules/jaspEsci"]
+	path = Modules/jaspEsci
+	url = https://github.com/jasp-stats/jaspEsci
+	branch = master
