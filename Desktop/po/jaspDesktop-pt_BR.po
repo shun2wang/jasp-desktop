@@ -2866,10 +2866,6 @@ msgid "Formula Field"
 msgstr "Campo de Fórmula"
 
 msgctxt "TextInputBase|"
-msgid "Formulas Field"
-msgstr "Campo de Fórmulas"
-
-msgctxt "TextInputBase|"
 msgid "Text Field"
 msgstr "Campo de Texto"
 
@@ -5491,4 +5487,73 @@ msgstr ""
 
 msgctxt "MainWindow|"
 msgid "Please drag and drop these log files into this issue: "
+msgstr ""
+
+msgctxt "ComputeColumnWindow|"
+msgid "Select a filter to use for this computed column"
+msgstr ""
+
+#, fuzzy
+msgctxt "LabelEditorWindow|"
+msgid "Remove"
+msgstr "Remover"
+
+msgctxt "LabelEditorWindow|"
+msgid "Add new level:"
+msgstr ""
+
+msgctxt "LabelEditorWindow|"
+msgid "Add a level that's missing from the data"
+msgstr ""
+
+msgctxt "LabelEditorWindow|"
+msgid ""
+"Keeping levels, so all levels are passed to the analysis, both filtered out "
+"ones and those added later manually."
+msgstr ""
+
+msgctxt "LabelEditorWindow|"
+msgid ""
+"Dropping levels, so only those levels in the (possibly filtered) data get "
+"sent to the analysis."
+msgstr ""
+
+msgctxt "LabelEditorWindow|"
+msgid "Turn automatically ordering off to reverse order of all labels"
+msgstr ""
+
+msgctxt "LabelEditorWindow|"
+msgid "Turn automatically ordering off to move labels up manually"
+msgstr ""
+
+msgctxt "LabelEditorWindow|"
+msgid "Turn automatically ordering off to move labels down manually"
+msgstr ""
+
+msgctxt "QObject|"
+msgid "No filter"
+msgstr ""
+
+msgctxt "QObject|"
+msgid "Use filter"
+msgstr ""
+
+#, qt-format
+msgctxt "QObject|"
+msgid "Change column compute filter of '%1' from '%2' to '%3'"
+msgstr ""
+
+#, qt-format
+msgctxt "QObject|"
+msgid "Change column drop levels of '%1' from '%2' to '%3'"
+msgstr ""
+
+#, qt-format
+msgctxt "QObject|"
+msgid "Delete label %1 of column '%2'"
+msgstr ""
+
+#, qt-format
+msgctxt "QObject|"
+msgid "Adding value + label '%1' + '%2' to column '%3'"
 msgstr ""
