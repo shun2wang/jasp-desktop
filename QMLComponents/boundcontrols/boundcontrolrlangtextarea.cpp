@@ -157,6 +157,7 @@ void BoundControlRlangTextArea::_setBoundValues()
 	boundValue["columns"]	= columns;
 	boundValue["value"]		= value;
 	boundValue["types"]		= terms.types();
+	boundValue["optionKey"] = "value";
 
 	Json::Value prefixedColumns(Json::objectValue);
 	for(auto& prefixSet : _prefixedUsedColumnNames) {
