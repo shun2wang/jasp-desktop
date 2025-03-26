@@ -9,6 +9,7 @@
 #include "emptyvalues.h"
 #include "preferencesmodelbase.h"
 #include <QQuickWindow>
+#include "githubpat.h"
 
 using namespace std;
 
@@ -220,7 +221,7 @@ QString PreferencesModel::languageCode() const
 QString PreferencesModel::githubPatResolved() const
 {
 	if(githubPatUseDefault())
-		return QProcessEnvironment::systemEnvironment().value("GITHUB_PAT", "@GITHUB_PAT_DEF@");
+		return QProcessEnvironment::systemEnvironment().value("GITHUB_PAT", GITHUB_PAT_DEFINED);
 
 	return githubPatCustom();
 }

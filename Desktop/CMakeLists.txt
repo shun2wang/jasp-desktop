@@ -24,9 +24,9 @@ if(APPLE)
                  ${CMAKE_BINARY_DIR}/Info.plist)
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/gui/preferencesmodel.cpp.in
-	           ${CMAKE_CURRENT_LIST_DIR}/gui/preferencesmodel.cpp)
-message(STATUS "preferencesmodel.cpp is successfully generated...")
+configure_file(${CMAKE_CURRENT_LIST_DIR}/gui/githubpat.h.in
+               ${CMAKE_CURRENT_LIST_DIR}/gui/githubpat.h)
+message(STATUS "githubpat.h is successfully generated...")
 
 
 file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
