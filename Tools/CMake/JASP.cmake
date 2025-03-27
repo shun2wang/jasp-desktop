@@ -126,7 +126,7 @@ if(R_PKG_CELLAR_DOWNLOAD_REMOTE AND R_PKG_CELLAR_PATH STREQUAL "${CMAKE_BINARY_D
       SET(CELLAR_HASH "887273842d7cdfa4c86ddde020b663184ba68fcbe77415b503165519490250ba")
       if(CMAKE_OSX_ARCHITECTURES STREQUAL "arm64")
         SET(R_PKG_CELLAR_REMOTE "https://static.jasp-stats.org/development/cellars/cellar_macOS_arm64_latest.tar.gz")
-        SET(CELLAR_HASH "caf7c013f1aa72566e922bee622c3f3b049221415b7bca2d51e85ececa108646")
+        SET(CELLAR_HASH "4579070baf2df190c816e68fa0fa93e66675d9295a41c23789b4dfbc45216c6e")
       endif()
     elseif(WIN32)
       SET(R_PKG_CELLAR_REMOTE "https://static.jasp-stats.org/development/cellars/cellar_Windows_x86_64_latest.tar.gz")
