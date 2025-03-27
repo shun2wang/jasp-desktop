@@ -26,6 +26,7 @@ Window
 	id:					mainWindowRoot
 	title:				mainWindow.windowTitle
 	visible:			true
+	visibility:			Window.Maximized
 	width:				1280
 	height:				720
 	flags:				Qt.Window | Qt.WindowFullscreenButtonHint
