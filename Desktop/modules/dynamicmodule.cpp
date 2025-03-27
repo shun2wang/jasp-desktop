@@ -947,14 +947,46 @@ QString DynamicModule::patchLibPathHelperFunc(QString libpath) {
 	const std::string devMod = Settings::value(Settings::DIRECT_DEVMOD_NAME).toString().toStdString();
 	if(devMod.empty())
 		throw std::runtime_error("No development module name set!");
+
+
+	//remove pkgs no longer present in libpath from our patched libpath
+	auto patchedPath = std::filesystem::temp_directory_path() / devMod;
+	if(!std::filesystem::exists(patchedPath))
+		std::filesystem::create_directory(patchedPath);
+
+	std::filesystem::path stdLibpath{libpath.toStdString()};
+	for (auto const& pkg : std::filesystem::directory_iterator{patchedPath}) {
+		auto libpathDirEntry = stdLibpath / pkg.path().filename();
+		if(!std::filesystem::exists(libpathDirEntry)) { //not in libpath so should not exist in patchlibpath
+			std::filesystem::remove_all(pkg.path());
+		}
+	}
+
 	
-	auto path = std::filesystem::temp_directory_path() / devMod;
-	if(std::filesystem::exists(path))
-		for (const auto& entry : std::filesystem::directory_iterator(path)) 
-			std::filesystem::remove_all(entry.path());
-	copy(libpath.toStdString(), path, std::filesystem::copy_options::recursive);
-	_moduleLibraryFixer(path, true, true, true);
-	return tq(path.generic_string());
+	//find the changed/new dirs/pkgs in libpath
+	std::vector<std::filesystem::path> pkgPatchList;
+	for (auto const& pkg : std::filesystem::directory_iterator{stdLibpath}) {
+		auto libpathModified = std::filesystem::last_write_time(pkg.path());
+
+		auto patchedDirEntry = patchedPath / pkg.path().filename();
+		if(!std::filesystem::exists(patchedDirEntry)) { //new pkg
+			pkgPatchList.push_back(pkg.path());
+			continue;
+		}
+
+		auto patchModified = std::filesystem::last_write_time(patchedDirEntry);
+		if(patchModified < libpathModified) //modified since last time
+			pkgPatchList.push_back(pkg.path());
+
+	}
+
+	for (const auto& pkg : pkgPatchList) {
+		std::filesystem::remove_all(patchedPath / pkg.filename());
+		copy(pkg, patchedPath / pkg.filename(), std::filesystem::copy_options::recursive);
+		_moduleLibraryFixer(patchedPath, true, true, true);
+	}
+
+	return tq(patchedPath.generic_string());
 #else
 	return libpath;
 #endif
