@@ -1,10 +1,12 @@
 var currentLocale	= new Intl.Locale("en");
 var currentLocaleId = "en"
+var useThousandsSeparators = true
 
-function setCurrentLocaleID(id)
+function setCurrentLocaleID(id, useThousandsSeps)
 {
-	currentLocale	= new Intl.Locale(id)
-	currentLocaleId = id
+	currentLocale			= new Intl.Locale(id)
+	currentLocaleId			= id
+	useThousandsSeparators	= useThousandsSeps
 }
 
 /*
@@ -16,28 +18,31 @@ function formatFixed(value, fixIt)
 
 function formatMoney(_currency='EUR', amount) {
 	const formatter = new Intl.NumberFormat(currentLocaleId, {
-	  style: 'currency',
-	  currency: _currency,
-	  trailingZeroDisplay: 'stripIfInteger'
+		style: 'currency',
+		currency: _currency,
+		trailingZeroDisplay: 'stripIfInteger',
+		useGrouping: useThousandsSeparators
 	});
 	
 	return amount == "." ? amount : formatter.format(amount)
 }
 
 function formatFixed(number, digitsFrac) {
-	const formatter = new Intl.NumberFormat(currentLocaleId, { minimumFractionDigits: digitsFrac });
+	if(isNaN(digitsFrac))
+		digitsFrac = 0
+	const formatter = new Intl.NumberFormat(currentLocaleId, { minimumFractionDigits: digitsFrac, maximumFractionDigits: digitsFrac, useGrouping: useThousandsSeparators});
 	
 	return formatter.format(number)
 }
 
 function formatPrecision(number, precision) {
-	const formatter = new Intl.NumberFormat(currentLocaleId, { minimumSignificantDigits: precision, maximumSignificantDigits: precision });
+	const formatter = new Intl.NumberFormat(currentLocaleId, { minimumSignificantDigits: precision, maximumSignificantDigits: precision, useGrouping: useThousandsSeparators });
 	
 	return formatter.format(number)
 }
 
 function formatNumber(number) {
-	const formatter = new Intl.NumberFormat(currentLocaleId, { });
+	const formatter = new Intl.NumberFormat(currentLocaleId, { useGrouping: useThousandsSeparators });
 	
 	return formatter.format(number)
 }
@@ -82,7 +87,7 @@ function formatColumn(column, type, format, alignNumbers, combine, modelFootnote
 			let cell		= column[rowNo];
 			let content		= cell.content;
 			let contentNum	= parseFloat(content)
-			let isNumber	= !isNaN(contentNum)
+			let isNumber	= !isNaN(contentNum) && clazz == "number"
 			let formatted	= { content: (isNumber ? formatNumber(contentNum) : content) }
 			let combined	= false;
 			
@@ -129,8 +134,7 @@ function formatColumn(column, type, format, alignNumbers, combine, modelFootnote
 	let sf			= NaN;
 	let pc			= false;
 	let approx		= false;
-	let log10		= false;
-	let fixDecimals = (typeof dp === 'number') && (dp % 1 === 0);
+	let fixDecimals = typeof dp === 'number' && dp >= 0;
 	let currency	= ""
 	let moneyFmt	= "monetary" 
 	
@@ -142,7 +146,7 @@ function formatColumn(column, type, format, alignNumbers, combine, modelFootnote
 			if (window.globSet.pExact) {
 				sf = 4;
 			} else {
-				p = f.substring(2);
+				p = Number(f.substring(2));
 			}
 		}
 		
@@ -160,19 +164,31 @@ function formatColumn(column, type, format, alignNumbers, combine, modelFootnote
 		}
 
 		if (f.indexOf("dp:") != -1 && !fixDecimals)
-			dp = f.substring(3);
+			dp = Number(f.substring(3));
 
 		if (f.indexOf("sf:") != -1)
-			sf = f.substring(3);
+			sf = Number(f.substring(3));
 
-		if (f.indexOf("pc") != -1)
+		if (f.indexOf("pc") != -1 || f.indexOf("percentage") != -1)
+		{
 			pc = true;
+
+			if(!fixDecimals)
+				dp = 2	
+
+			let colonPos 	= f.indexOf(":") 
+			
+			if(colonPos != -1)
+			{
+				let pcDP = f.substr(colonPos + 1);
+
+				if(!isNaN(parseFloat(pcDP)))
+					dp = parseFloat(pcDP)
+			}
+		}
 
 		if (f.indexOf("~") != -1)
 			approx = true;
-
-		if (f.indexOf("log10") != -1)
-			log10 = true;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,16 +221,11 @@ function formatColumn(column, type, format, alignNumbers, combine, modelFootnote
 			if (isNaN(parseFloat(content)))  // isn't a number
 				continue
 	
-			let fsd = log10 ? content : fSD(content) // position of first significant digit
+			let fsd =fSD(content) // position of first significant digit
 			let lsd = fsd - sf
 			let fsdoe
 	
-			if (log10) 
-			{
-				if (content >= 6 || content <= -dp) 
-					fsdoe = fSD(content)
-			} 
-			else if (Math.abs(content) >= upperLimit || Math.abs(content) <= Math.pow(10, -dp)) 
+			if (Math.abs(content) >= upperLimit || Math.abs(content) <= Math.pow(10, -dp))
 				fsdoe = fSDOE(content)   // first significant digit of exponent
 			
 			if (fsdoe > maxFSDOE)
@@ -270,7 +281,7 @@ function formatColumn(column, type, format, alignNumbers, combine, modelFootnote
 				case "percentage":
 				{
 					if (!isNaN(parseFloat(content)))
-						formatted["content"] = "" + (100 * formatFixed(content, 0)) + (html ? "&thinsp;%" : "%")
+						formatted["content"] = "" + (formatFixed(content * 100, dp)) + (html ? "&thinsp;%" : "%")
 					break;
 				}
 	
@@ -287,56 +298,11 @@ function formatColumn(column, type, format, alignNumbers, combine, modelFootnote
 						formatted["class"]		= "p-value"
 						isNumber = false
 					}
-					else if (content == 0) 
+					else if (content == 0)
 					{
-						let number = log10 ? 0 : 1
-						formatted["content"] = isFinite(dp) ? formatFixed(number, dp) : formatPrecision(number, sf)
+						formatted["content"] = isFinite(dp) ? formatFixed(content, dp) : formatPrecision(content, sf)
 					}
-					else if (log10) 
-					{
-						if (content < (Math.log(upperLimit) / Math.log(10)) && content > -dp) 
-						{
-							let pow = Math.pow(10, content)
-							formatted["content"] = alignNumbers || fixDecimals ? formatFixed(pow, -minLSD) : formatPrecision(pow, sf)
-							if(html)
-								formatted["content"] = formatted["content"].replace(/-/g, "&minus;")
-						}
-						else 
-						{
-							// var paddingNeeded = Math.max(maxFSDOE - fSD(content), 0)
-							let paddingNeeded 	= 0
-							let exponent 		= Math.abs(Math.floor(content))
-							let exp 			= ""
-		
-							while (exponent > 0) {
-								var digit 	= exponent % 10
-								exponent 	= Math.floor(exponent / 10)
-								exp 		= "" + digit + exp
-							}
-	
-							exponent = Number(exp == "" ? 1 : exp)
-		
-							let mantissa =  Math.pow(10, (content % 1) + (content > 0 ? 0 : 1))
-							if (mantissa > 9.99999999) 
-							{
-								mantissa = 1
-								exponent--
-							}
-							mantissa = fixDecimals ? formatFixed(mantissa, dp) : formatPrecision(mantissa, sf)
-		
-							let sign 	= content >= 0 		? "+" 	: "-"
-							let padding = !paddingNeeded 	? ''	: '<span class="do-not-copy" style="visibility: hidden;">' + Array(paddingNeeded + 1).join("0") + '</span>'
-							
-							let reassembled  = mantissa;
-								reassembled += !window.globSet.normalizedNotation ? "e" : (html ? "&times;10" : "×10") + "<sup>"
-								reassembled += html ? padding : ""
-								reassembled += sign + exponent
-								reassembled += !window.globSet.normalizedNotation ? "" : "</sup>"
-							
-								formatted["content"] = reassembled
-						}
-					}
-					else if (Math.abs(content) >= upperLimit || Math.abs(content) < Math.pow(10, -dp)) 
+					else if (Math.abs(content) >= upperLimit || Math.abs(content) < Math.pow(10, -dp))
 					{
 						let decimalsExpon 		= fixDecimals ? dp : sf - 1;
 						let paddingNeeded 		= 0 									// var paddingNeeded = Math.max(maxFSDOE - fSDOE(content), 0)

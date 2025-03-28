@@ -25,6 +25,7 @@ class LanguageModel : public QAbstractListModel
 	Q_PROPERTY(QString		currentAltLanguage		READ currentAltLanguage			WRITE setCurrentAltLanguage			NOTIFY currentAltLanguageChanged	)
 	Q_PROPERTY(QString		currentAltTerritory		READ currentAltTerritory		WRITE setCurrentAltTerritory		NOTIFY currentAltTerritoryChanged	)
 	Q_PROPERTY(QString		exampleFormatting		READ exampleFormatting												NOTIFY exampleFormattingChanged		)
+	Q_PROPERTY(bool			useThousandSeps			READ useThousandSeps			WRITE setUseThousandSeps			NOTIFY useThousandSepsChanged		)
 
 	struct LanguageInfo
 	{
@@ -67,7 +68,7 @@ public:
 
 	QString									currentLanguageCode()											const	{ return _currentLanguageCode; }
 	QString									currentLanguage()												const;
-	QLocale									currentLocale()													const;
+	const QLocale &							currentLocale()													const;
 	bool									hasDefaultLanguage()											const;
 	bool									useAlternativeLocale()											const { return _useAlternativeLocale; }
 	QString									currentAltLanguage()											const;
@@ -83,6 +84,9 @@ public:
 	void									setApplicationEngine(QQmlApplicationEngine	 * ae) { _qml = ae; }
 	void									setDefaultLocaleFromCurrent();
 	
+	bool useThousandSeps() const;
+	void setUseThousandSeps(bool newUseThousandSeps);
+	
 public slots:
 	void									setCurrentLanguage(QString language);
 	void									setUseAlternativeLocale(bool useIt);
@@ -93,7 +97,7 @@ public slots:
 
 signals:
 	void									currentLanguageChanged();
-	void									currentLocaleChanged(QString);
+	void									currentLocaleChanged(QString, bool);
 	void									currentAltLanguageChanged();
 	void									currentAltTerritoryChanged();
 	void									useAlternativeLocaleChanged();
@@ -104,6 +108,8 @@ signals:
 	void									pauseEngines(bool unloadData = false);
 	void									stopEngines();
 	void									resumeEngines();
+	
+	void useThousandSepsChanged();
 	
 private:
 	static LanguageModel *					_singleton;
@@ -126,16 +132,15 @@ private:
 											_qmLocation,
 											_currentAltLanguage,
 											_currentAltTerritory;
-	QMap<QString, LanguageInfo>				_languages;
+	std::map<QString, LanguageInfo>			_languages;
 	QVector<QTranslator *>					_translators;
 	bool									_shouldEmitLanguageChanged	= false,
-											_useAlternativeLocale;
+											_useAlternativeLocale,
+											_useThousandSeps;
 	QStringList								_altLanguages,
 											_altTerritories;
 	std::map<QString,QLocale::Language>		_nativeLanguageNameToEnum;
 	std::map<QString,QLocale::Territory>	_nativeTerritoryNameToEnum;
-	
-	
 };
 
 

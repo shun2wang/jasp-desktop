@@ -122,27 +122,19 @@ void ResultsJsInterface::setNormalizedNotationHandler(bool normalized)
 
 void ResultsJsInterface::setFixDecimalsHandler(QString numDecimals)
 {
-	if (numDecimals == "")
-		numDecimals = "\"\"";
-	QString js = "window.globSet.decimals = " + numDecimals + "; window.reRenderAnalyses();";
-	runJavaScript(js);
+	runJavaScript("window.globSet.decimals = " + numDecimals + "; window.reRenderAnalyses();");
 }
 
 void ResultsJsInterface::setGlobalJsValues()
 {
-	bool exactPValues = Settings::value(Settings::EXACT_PVALUES).toBool();
-	QString exactPValueString = (exactPValues ? "true" : "false");
-	
-	bool normalizedNotation = Settings::value(Settings::NORMALIZED_NOTATION).toBool();
-	QString normalizedNotationString = (normalizedNotation ? "true" : "false");
+	QString exactPValueString			= PreferencesModel::prefs()->exactPValues() ? "true" : "false",
+			normalizedNotationString	= PreferencesModel::prefs()->normalizedNotation() ? "true" : "false",
+			tempFolder					= "file://" + tq(TempFiles::sessionDirName());
 
-	QString numDecimals = Settings::value(Settings::NUM_DECIMALS).toString();
-	QString tempFolder = "file://" + tq(TempFiles::sessionDirName());
-
-	QString js = "window.globSet.pExact = " + exactPValueString;
-	js += "; window.globSet.normalizedNotation = " + normalizedNotationString;
-	js += "; window.globSet.decimals = " + (numDecimals.isEmpty() ? "\"\"" : numDecimals);
-	js += "; window.globSet.tempFolder = \"" + tempFolder + "/\"";
+	QString js =	"  window.globSet.pExact = "				+ exactPValueString;
+					"; window.globSet.normalizedNotation = "	+ normalizedNotationString;
+					"; window.globSet.decimals = "				+ PreferencesModel::prefs()->fixedDecimalsForJS();
+					"; window.globSet.tempFolder = '"			+ tempFolder + "/'";
 	runJavaScript(js);
 }
 
@@ -434,9 +426,9 @@ void ResultsJsInterface::setFontFamily()
 	}
 }
 
-void ResultsJsInterface::setLocale(QString localeId)
+void ResultsJsInterface::setLocale(QString localeId, bool thousandSeps)
 {
-	runJavaScript("window.setLocale(\"" + escapeJavascriptString(localeId) + "\");");
+	runJavaScript("window.setLocale('" + escapeJavascriptString(localeId) + "', " + (thousandSeps ? "true" : "false") + ");");
 }
 
 void ResultsJsInterface::runJavaScript(const QString & js)

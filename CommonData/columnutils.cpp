@@ -20,6 +20,15 @@ std::string				ColumnUtils::_decimalPoint			= ".";
 std::string				ColumnUtils::_currentQLocaleId		= "C";
 ColumnUtils::toDoubleF	ColumnUtils::_extraStringToDouble;
 ColumnUtils::toIntF		ColumnUtils::_extraStringToInt;
+ColumnUtils::doubleF	ColumnUtils::_alternativeDoubleToString;
+ColumnUtils::currencyF	ColumnUtils::_alternativeCurrencyToString;
+
+
+void ColumnUtils::setAlternativeDoubleToString(doubleF newDoubleFunc, currencyF newCurrencyFunc)
+{
+	_alternativeDoubleToString		= newDoubleFunc;
+	_alternativeCurrencyToString	= newCurrencyFunc;
+}
 
 void ColumnUtils::setExtraStringToNumber(toDoubleF newDoubleFunc, toIntF newIntFunc)
 {
@@ -231,20 +240,21 @@ std::string ColumnUtils::deEuropeaniseForImport(std::string value)
 	return value;
 }
 
-std::string ColumnUtils::doubleToStringMaxPrec(double dbl)
+std::string ColumnUtils::doubleToStringMaxPrec(double dbl, bool sepas)
 {
 	constexpr auto max_precision{std::numeric_limits<long double>::digits10 + 1};
-	return 	doubleToString(dbl, max_precision);
+	return 	doubleToString(dbl, sepas, max_precision);
 }
 
-ColumnUtils::doubleF ColumnUtils::_alternativeDoubleToString;
-
-void ColumnUtils::setAlternativeDoubleToString(doubleF newDoubleFunc)
+string ColumnUtils::currencyString(double money, const std::string &symbol, bool sepas)
 {
-	_alternativeDoubleToString = newDoubleFunc;
+	if(!_alternativeCurrencyToString)
+		return doubleToString(money, sepas);
+	
+	return _alternativeCurrencyToString(money, symbol, sepas);
 }
 
-std::string ColumnUtils::doubleToString(double dbl, int precision)
+std::string ColumnUtils::doubleToString(double dbl, bool sepas, int precision)
 {
 	JASPTIMER_SCOPE(ColumnUtils::doubleToString);
 	
@@ -252,7 +262,7 @@ std::string ColumnUtils::doubleToString(double dbl, int precision)
 	if (dbl < std::numeric_limits<double>::lowest())	return "-∞";
 	
 	if(_alternativeDoubleToString)
-		return _alternativeDoubleToString(dbl, precision); //Use QString for translations
+		return _alternativeDoubleToString(dbl, precision, sepas); //Use QString for translations
 	
 	std::stringstream conv; //Use this instead of std::to_string to make sure there are no trailing zeroes (and to get full precision)
 	
@@ -260,7 +270,6 @@ std::string ColumnUtils::doubleToString(double dbl, int precision)
 	conv << dbl;
 	return conv.str();
 }
-
 
 // hex should be 4 hexadecimals characters
 std::string ColumnUtils::_convertEscapedUnicodeToUTF8(std::string hex)
