@@ -1,131 +1,140 @@
 msgid ""
 msgstr ""
+"PO-Revision-Date: 2025-03-28 12:20+0000\n"
+"Last-Translator: Marko Bojović <bojovicmarko@outlook.com>\n"
+"Language-Team: Serbian <https://hosted.weblate.org/projects/jasp/jaspdesktop/"
+"sr/>\n"
+"Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Language: eo\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.11-dev\n"
 "X-Qt-Contexts: true\n"
 
 msgctxt "ComponentsList|"
 msgid "Add a row"
-msgstr "Aldoni vicon"
+msgstr "Додајте ред"
 
 msgctxt "ComponentsList|"
 msgid "Remove a row"
-msgstr "Forigi vicon"
+msgstr "Уклоните ред"
 
 msgctxt "FileSelector|"
 msgid "Save file to:"
-msgstr "Konservi dosieron ĉe:"
+msgstr "Сачувај датотеку на:"
 
 msgctxt "FileSelector|"
 msgid "Load file from:"
-msgstr "Ŝargi dosieron de:"
+msgstr "Учитај датотеку са:"
 
 msgctxt "FileSelector|"
 msgid "Select file to save"
-msgstr ""
+msgstr "Изаберите датотеку коју желите да сачувате"
 
 msgctxt "FileSelector|"
 msgid "Select file to load"
-msgstr ""
+msgstr "Изаберите датотеку за учитавање"
 
 msgctxt "FileSelector|"
 msgid "Browse"
-msgstr "Foliumi"
+msgstr "Преглед"
 
 msgctxt "Form|"
 msgid ""
 "This analysis was created with an older version of JASP (or a dynamic module)"
 msgstr ""
+"Ова анализа је направљена у старијеј верзији JASP-а (или динамичком модулу)"
 
 msgctxt "Form|"
 msgid ", refreshing could give a slightly different result."
-msgstr ""
+msgstr ", освежавање може дати мало другачији резултат."
 
 msgctxt "Form|"
 msgid ""
 ", to keep your notes where they are it is highly recommended to first "
 "refresh your analyses!"
 msgstr ""
+", како бисте задржали своје белешке где су, веома се препоручује да прво "
+"освежите анализе!"
 
 msgctxt "InputListView|"
 msgid "New Value"
-msgstr "Nova Valoro"
+msgstr "Нова вредност"
 
 msgctxt "ModelTermsList|"
 msgid "Model Terms"
-msgstr ""
+msgstr "Услови за модел"
 
 msgctxt "ModelTermsList|"
 msgid "Add to null model"
-msgstr ""
+msgstr "Додај у нулти модел"
 
 msgctxt "TableView|"
 msgid "Row #"
-msgstr ""
+msgstr "Ред #"
 
 msgctxt "TabView|"
 msgid "Add a tab"
-msgstr "Aldoni langeton"
+msgstr "Додај картицу"
 
 msgctxt "TabView|"
 msgid "Remove this tab"
-msgstr "Forigi ĉi tiun langeton"
+msgstr "Уклони ову картицу"
 
 msgctxt "TabView|"
 msgid "New tab"
-msgstr "Nova langeto"
+msgstr "Нова картица"
 
 msgctxt "TextArea|"
 msgid "⌘ + Enter to apply"
-msgstr ""
+msgstr "⌘ + Enter за применити"
 
 msgctxt "TextArea|"
 msgid "Ctrl + Enter to apply"
-msgstr ""
+msgstr "Ctrl + Enter за применити"
 
 #, qt-format
 msgctxt "TextField|"
 msgid "Restoring last correct value: %1"
-msgstr ""
+msgstr "Враћање последње тачне вредности: %1"
 
 msgctxt "AboutWindow|"
 msgid "About JASP"
-msgstr "Pri JASP"
+msgstr "О JASP-у"
 
 msgctxt "AboutWindow|"
 msgid "Version:"
-msgstr "Versio:"
+msgstr "Верзија:"
 
 msgctxt "AboutWindow|"
 msgid "Built on:"
-msgstr ""
+msgstr "Направљено на:"
 
 msgctxt "AboutWindow|"
 msgid "Source:"
-msgstr "Fonto:"
+msgstr "Извор:"
 
 msgctxt "AboutWindow|"
 msgid "Access the sources here"
-msgstr ""
+msgstr "Приступите изворима овде"
 
 msgctxt "AboutWindow|"
 msgid "Download:"
-msgstr "Elŝuti:"
+msgstr "Преузми:"
 
 msgctxt "AboutWindow|"
 msgid "Citation:"
-msgstr "Referenco:"
+msgstr "Цитирање:"
 
 msgctxt "AboutWindow|"
 msgid "Select All"
-msgstr "Elekti Ĉion"
+msgstr "Означи све"
 
 msgctxt "AboutWindow|"
 msgid "Copy Selection"
-msgstr ""
+msgstr "Копирај означено"
 
 msgctxt "AboutWindow|"
 msgid "BibTeX"
@@ -133,45 +142,47 @@ msgstr "BibTeX"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Drag to reorder the analyses"
-msgstr ""
+msgstr "Превуците да бисте променили редослед анализа"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Edit the title of this analysis"
-msgstr ""
+msgstr "Измените наслов ове анализе"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Duplicate this analysis"
-msgstr ""
+msgstr "Дуплирај ову анализу"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Show info for this analysis"
-msgstr ""
+msgstr "Прикажи информације за ову анализу"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Remove this analysis"
-msgstr ""
+msgstr "Уклони ову анализу"
 
 msgctxt "BasicThreeButtonTableView|"
 msgid "Add"
-msgstr "Aldoni"
+msgstr "Додај"
 
 msgctxt "BasicThreeButtonTableView|"
 msgid "Delete"
-msgstr "Forigi"
+msgstr "Избриши"
 
 msgctxt "BasicThreeButtonTableView|"
 msgid "Reset"
-msgstr ""
+msgstr "Ресетуј"
 
 msgctxt "BayesFactorType|"
 msgid "Bayes Factor"
-msgstr "Bayes-Faktoro"
+msgstr "Бајесов фактор"
 
 msgctxt "BayesFactorType|"
 msgid ""
 "Bayes factor to quantify evidence for the alternative hypothesis relative to "
 "the null hypothesis."
 msgstr ""
+"Бајесов фактор за квантификацију доказа у прилог алтернативне хипотезе у "
+"односу на нулту хипотезу."
 
 msgctxt "BayesFactorType|"
 msgid ""
@@ -181,246 +192,265 @@ msgstr ""
 
 msgctxt "BayesFactorType|"
 msgid "Natural logarithm of BF10."
-msgstr "Natura logaritmo de BF₁₀."
+msgstr ""
 
 msgctxt "Chi2TestTableView|"
 msgid "Add Column"
-msgstr "Aldoni Kolumnon"
+msgstr "Додај колону"
 
 msgctxt "Chi2TestTableView|"
 msgid "Delete Column"
-msgstr "Forigi Kolumnon"
+msgstr "Избриши колону"
 
 msgctxt "Chi2TestTableView|"
 msgid "Reset"
-msgstr ""
+msgstr "Ресетуј"
 
 msgctxt "ComputeColumnWindow|"
 msgid "absolute value"
-msgstr "absoluta valoro"
+msgstr "апсолутна вредност"
 
 msgctxt "ComputeColumnWindow|"
 msgid "standard deviation"
-msgstr "norma devio"
+msgstr "стандардна девијација"
 
 msgctxt "ComputeColumnWindow|"
 msgid "variance"
-msgstr "varianco"
+msgstr "варијанца"
 
 msgctxt "ComputeColumnWindow|"
 msgid "summation"
-msgstr "sumado"
+msgstr "сумирање"
 
 msgctxt "ComputeColumnWindow|"
 msgid "product of values"
-msgstr "produto de valoroj"
+msgstr "производ вредности"
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns minimum of values"
-msgstr ""
+msgstr "враћа минимум вредности"
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns maximum of values"
-msgstr ""
+msgstr "враћа максимум вредности"
 
 msgctxt "ComputeColumnWindow|"
 msgid "mean"
-msgstr "aritmetika meznombro"
+msgstr "аритметичка средина"
 
 msgctxt "ComputeColumnWindow|"
 msgid "rounds y to n decimals"
-msgstr ""
+msgstr "заокружује y на n децимале"
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns number of elements in y"
-msgstr ""
+msgstr "враћа број елемената на y"
 
 msgctxt "ComputeColumnWindow|"
 msgid "median"
-msgstr "mediano"
+msgstr "медијана"
 
 msgctxt "ComputeColumnWindow|"
 msgid "natural logarithm"
-msgstr "natura logaritmo"
+msgstr "природни логаритам"
 
 msgctxt "ComputeColumnWindow|"
 msgid "base 2 logarithm"
-msgstr "dubaza logaritmo"
+msgstr "логаритам са основом 2"
 
 msgctxt "ComputeColumnWindow|"
 msgid "base 10 logarithm"
-msgstr "dekbaza logaritmo"
+msgstr "логаритам са основом 10"
 
 msgctxt "ComputeColumnWindow|"
 msgid "logarithm of y in 'base'"
-msgstr "logaritmo de y en 'bazo'"
+msgstr "логаритам са основом y"
 
 msgctxt "ComputeColumnWindow|"
 msgid "exponential"
-msgstr "eksponencialo"
+msgstr "експоненцијална"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "Fisher's Z-transform (i.e., the inverse hyperbolic tangent) to transform "
 "correlations, numbers between -1 and 1 to the real line"
 msgstr ""
+"Фишерова Z-трансформација (тј. инверзни хиперболички тангенс) за "
+"трансформацију корелација, бројева између -1 и 1 на реалну праву"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "Inverse Fisher's Z-transform (i.e., the hyperbolic tangent) to transform "
 "real numbers to numbers between -1 and 1"
 msgstr ""
+"Инверзна Фишерова Z-трансформација (тј. хиперболички тангенс) за "
+"трансформацију реалних бројева у бројеве између -1 и 1"
 
 msgctxt "ComputeColumnWindow|"
 msgid "break your data up in numBreaks levels"
-msgstr ""
+msgstr "подели податке на numBreaks нивое"
 
 msgctxt "ComputeColumnWindow|"
 msgid "replace any missing values (NA) in column by the value in replaceWith"
-msgstr ""
+msgstr "замени све недостајуће вредности (NA) у колони вредношћу у replaceWith"
 
 msgctxt "ComputeColumnWindow|"
 msgid "if-else statement"
-msgstr "se-alie-ordono"
+msgstr "if-else наредба"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a Gaussian distribution with specified mean and standard "
 "deviation sd"
 msgstr ""
+"генерише податке из Гаусове расподеле са одређеном средњом вредношћу и "
+"стандардном девијацијом sd"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from t distribution with degrees of freedom df and non-"
 "centrality parameter ncp"
 msgstr ""
+"генерише податке из t расподеле са степенима слободе df и параметром "
+"нецентралности ncp"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a chi-squared distribution with degrees of freedom df "
 "and non-centrality parameter ncp"
 msgstr ""
+"генерише податке из хи-квадрат расподеле са степенима слободе df и "
+"параметром нецентралности ncp"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from an F distribution with specified degrees of freedoms "
 "df1, df2 and non-centrality parameter ncp"
 msgstr ""
+"генерише податке из F расподеле са одређеним степенима слободе df1, df2 и "
+"параметром нецентралности ncp"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a binomial distribution with specified trials and "
 "probability prob"
 msgstr ""
+"генерише податке из биномне расподеле са одређеним бројем покушаја и "
+"вероватноћом"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a negative binomial distribution with specified trials "
 "and probability prob"
 msgstr ""
+"генерише податке из негативне биномне расподеле са одређеним бројем покушаја "
+"и вероватноћом"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a geometric distribution with specified probability prob"
-msgstr ""
+msgstr "генерише податке из геометријске расподеле са одређеном вероватноћом"
 
 msgctxt "ComputeColumnWindow|"
 msgid "generates data from a Poisson distribution with specified rate lambda"
-msgstr ""
+msgstr "генерише податке из Пуассонове расподеле са одређеном стопом lambda"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a beta distribution with specified shapes alpha and beta"
-msgstr ""
+msgstr "генерише податке из beta расподеле са одређеним облицима alpha и beta"
 
 msgctxt "ComputeColumnWindow|"
 msgid "generates data from a uniform distribution between min and max"
-msgstr ""
+msgstr "генерише податке из униформне расподеле између минимума и максимума"
 
 msgctxt "ComputeColumnWindow|"
 msgid "generates data from a gamma distribution with specified shape and scale"
-msgstr ""
+msgstr "генерише податке из gamma расподеле са одређеним обликом и скалом"
 
 msgctxt "ComputeColumnWindow|"
 msgid "generates data from an exponential distribution with specified rate"
-msgstr ""
+msgstr "генерише податке из експоненцијалне расподеле са одређеном стопом"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a log-normal distribution with specified logarithmic "
 "mean meanLog and standard deviation sdLog"
 msgstr ""
+"генерише податке из логнормалне расподеле са одређеном логаритамском средњом "
+"вредношћу meanLog и стандардном девијацијом sdLog"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a Weibull distribution with specified shape and scale"
 msgstr ""
+"генерише податке из Вајбулове (Weibull) расподеле са одређеним обликом и "
+"скалом"
 
 msgctxt "ComputeColumnWindow|"
 msgid "Show generated R code"
-msgstr ""
+msgstr "Прикажи генерисани R код"
 
 msgctxt "ComputeColumnWindow|"
 msgid "Compute column"
-msgstr "Komputi kolumnon"
+msgstr "Израчунај колону"
 
 msgctxt "ComputeColumnWindow|"
 msgid "Click to compute column"
-msgstr ""
+msgstr "Кликни да израчунаш колону"
 
-#, fuzzy
 msgctxt "ComputeColumnWindow|"
 msgid "Open Documentation"
-msgstr "Malfermi Dokumentaron"
+msgstr "Отвори документацију"
 
 msgctxt "ContrastsList|"
 msgid "none"
-msgstr ""
+msgstr "ништа"
 
 msgctxt "ContrastsList|"
 msgid "deviation"
-msgstr "devio"
+msgstr "одступање"
 
 msgctxt "ContrastsList|"
 msgid "simple"
-msgstr "simpla"
+msgstr "једноставан"
 
 msgctxt "ContrastsList|"
 msgid "difference"
-msgstr "diferenco"
+msgstr "разлика"
 
 msgctxt "ContrastsList|"
 msgid "Helmert"
-msgstr "Helmert"
+msgstr "Хелмерт"
 
 msgctxt "ContrastsList|"
 msgid "repeated"
-msgstr ""
+msgstr "поновљено"
 
 msgctxt "ContrastsList|"
 msgid "polynomial"
-msgstr "polinomo"
+msgstr "полином"
 
 msgctxt "ContrastsList|"
 msgid "custom"
-msgstr "propra"
+msgstr "прилагођено"
 
 msgctxt "ContrastsList|"
 msgid "Factors"
-msgstr "Faktoroj"
+msgstr "Фактори"
 
 #, qt-format
 msgctxt "ContrastsList|"
 msgid "Custom for %1"
-msgstr ""
+msgstr "Прилагођено за %1"
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Create Computed Column"
-msgstr ""
+msgstr "Направите израчунату колону"
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Name:"
-msgstr "Nomo:"
+msgstr "Име:"
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Column name is already used, please choose a different one."
@@ -448,61 +478,61 @@ msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Text"
-msgstr "Teksto"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Open Documentation"
-msgstr "Malfermi Dokumentaron"
+msgstr "Отвори документацију"
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Create Column"
-msgstr "Krei Kolumnon"
+msgstr "Креирај колону"
 
 #, qt-format
 msgctxt "CreateComputeColumnDialog|"
 msgid "Click here to create your new computed column '%1'"
-msgstr ""
+msgstr "Кликните овде да креирате нову израчунату колону '%1'"
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Enter a valid (unused) name for computed column"
-msgstr ""
+msgstr "Унесите важеће (неискоришћено) име за израчунату колону"
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Close without creating a computed column"
-msgstr ""
+msgstr "Затвори без креирања израчунате колоне"
 
 msgctxt "CustomContrastsTableView|"
 msgid "Add Contrast"
-msgstr ""
+msgstr "Додај контраст"
 
 msgctxt "CustomContrastsTableView|"
 msgid "Delete Contrast"
-msgstr ""
+msgstr "Обриши контраст"
 
 msgctxt "CustomContrastsTableView|"
 msgid "Reset"
-msgstr ""
+msgstr "Ресетуј"
 
 msgctxt "DataTableView|"
 msgid "Hide filter"
-msgstr "Kaŝi filtrilon"
+msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Show filter"
-msgstr "Montri filtrilon"
+msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Add computed column"
-msgstr "Aldoni komputitan kolumnon"
+msgstr ""
 
 #, qt-format
 msgctxt "BreadCrumbs|"
 msgid "Back to %1"
-msgstr "Reen al %1"
+msgstr ""
 
 msgctxt "BreadCrumbs|"
 msgid "You are here"
-msgstr "Vi estas ĉi tie"
+msgstr ""
 
 msgctxt "Computer|"
 msgid "Recent Folders"
@@ -510,7 +540,7 @@ msgstr ""
 
 msgctxt "Computer|"
 msgid "Browse"
-msgstr "Foliumi"
+msgstr "Преглед"
 
 msgctxt "CurrentFile|"
 msgid "Current data file for synchronization"
@@ -518,7 +548,7 @@ msgstr ""
 
 msgctxt "DataLibrary|"
 msgid "Data Library"
-msgstr "Datenbiblioteko"
+msgstr ""
 
 msgctxt "ListItem|"
 msgid "Synchronize with this Data File"
@@ -530,15 +560,15 @@ msgstr ""
 
 msgctxt "ListItem|"
 msgid "Open JASP file"
-msgstr "Malfermi JASP-dosieron"
+msgstr "Отвори JASP фајл"
 
 msgctxt "ListItem|"
 msgid "Open data file"
-msgstr "Malfermi datendosieron"
+msgstr "Отворите фајл са подацима"
 
 msgctxt "MenuHeader|"
 msgid "Show info about these preferences"
-msgstr ""
+msgstr "Прикажи информације о овим преференцама"
 
 msgctxt "OSF|"
 msgid "Open Science Framework"
@@ -546,23 +576,23 @@ msgstr "Open Science Framework"
 
 msgctxt "OSF|"
 msgid "Logout"
-msgstr "Adiaŭi"
+msgstr "Одјава"
 
 msgctxt "OSF|"
 msgid "Create Folder"
-msgstr "Krei Dosierujon"
+msgstr "Креирај фасциклу"
 
 msgctxt "OSF|"
 msgid "Foldername"
-msgstr "Nomo de dosierujo"
+msgstr "Име фолдера"
 
 msgctxt "OSF|"
 msgid "Filename"
-msgstr "Nomo de dosiero"
+msgstr "Име фајла"
 
 msgctxt "OSF|"
 msgid "Save"
-msgstr "Konservi"
+msgstr "Сачувај"
 
 msgctxt "OSFLogin|"
 msgid "OSF"
@@ -570,31 +600,31 @@ msgstr "OSF"
 
 msgctxt "OSFLogin|"
 msgid "Sign in with your OSF account to continue"
-msgstr ""
+msgstr "За наставак пријавите се са својим OSF налогом"
 
 msgctxt "OSFLogin|"
 msgid "Sign in"
-msgstr "Saluti"
+msgstr "Пријавите се"
 
 msgctxt "OSFLogin|"
 msgid "Remember me"
-msgstr "Memorigi pri mi"
+msgstr "Запамти ме"
 
 msgctxt "OSFLogin|"
 msgid "About the OSF"
-msgstr "Pri OSF"
+msgstr "О OSF-у"
 
 msgctxt "OSFLogin|"
 msgid "Register"
-msgstr "Registriĝi"
+msgstr "Региструјте се"
 
 msgctxt "PrefsAdvanced|"
 msgid "Advanced Preferences"
-msgstr ""
+msgstr "Напредна подешавања"
 
 msgctxt "PrefsAdvanced|"
 msgid "Modules options"
-msgstr "Opcioj pri moduloj"
+msgstr "Опције модула"
 
 msgctxt "PrefsAdvanced|"
 msgid ""
@@ -625,7 +655,7 @@ msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Logging options"
-msgstr "Opcioj pri protokolado"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Log to file"
@@ -641,7 +671,7 @@ msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Show logs"
-msgstr "Montri protokolojn"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Engine options"
@@ -661,35 +691,35 @@ msgstr ""
 
 msgctxt "PrefsMissingValues|"
 msgid "Missing Value List"
-msgstr ""
+msgstr "Листа вредности која недостаје"
 
 msgctxt "PrefsMissingValues|"
 msgid "Remove missing value"
-msgstr ""
+msgstr "Уклоните недостајућу вредност"
 
 msgctxt "PrefsMissingValues|"
 msgid "Reset"
-msgstr ""
+msgstr "Ресетуј"
 
 msgctxt "PrefsResults|"
 msgid "Results Preferences"
-msgstr ""
+msgstr "Подешавања резултата"
 
 msgctxt "PrefsResults|"
 msgid "Table options"
-msgstr "Opcioj pri tabelo"
+msgstr "Опције табеле"
 
 msgctxt "PrefsResults|"
 msgid "Display exact p-values"
-msgstr ""
+msgstr "Прикажи тачне p-вредности"
 
 msgctxt "PrefsResults|"
 msgid "Fix the number of decimals"
-msgstr ""
+msgstr "Поправи број децимала"
 
 msgctxt "PrefsResults|"
 msgid "Plot options"
-msgstr ""
+msgstr "Опције графикона"
 
 msgctxt "PrefsResults|"
 msgid "Use PPI of screen in plots: "
@@ -709,7 +739,7 @@ msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "White"
-msgstr "Blanko"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid ""
@@ -729,54 +759,58 @@ msgstr ""
 
 msgctxt "PrefsUI|"
 msgid "Fonts"
-msgstr "Tiparoj"
+msgstr "Фонтови"
 
 msgctxt "PrefsUI|"
 msgid "Interface:"
-msgstr "Fasado:"
+msgstr "Изглед:"
 
 #, qt-format
 msgctxt "PrefsUI|"
 msgid "default: %1"
-msgstr "implicite: %1"
+msgstr "подразумевано: %1"
 
 msgctxt "PrefsUI|"
 msgid "Themes"
-msgstr "Etosoj"
+msgstr "Теме"
 
 msgctxt "PrefsUI|"
 msgid ""
 "Switches to a light theme, this is the default and original flavour of JASP."
 msgstr ""
+"Пребацује на светлу тему, ово је подразумевани и оригинални изглед JASP-а."
 
 msgctxt "PrefsUI|"
 msgid ""
 "Switches to a dark theme, makes JASP a lot easier on the eyes for those "
 "night owls out there."
 msgstr ""
+"Пребацује на тамну тему, чини JASP много пријатнијим за очи ноћним совама."
 
 msgctxt "PrefsUI|"
 msgid "Miscellaneous options"
-msgstr ""
+msgstr "Разне опције"
 
 msgctxt "PrefsUI|"
 msgid "Zoom (%): "
-msgstr "Zomo (%): "
+msgstr "Зумирање (%): "
 
 msgctxt "PrefsUI|"
 msgid ""
 "Increase or decrease the size of the interface elements (text, buttons, etc)."
 msgstr ""
+"Повећајте или смањите величину елемената интерфејса (текст, дугмад, итд.)."
 
 msgctxt "PrefsUI|"
 msgid "Scroll speed (pix/s): "
-msgstr ""
+msgstr "Брзина померања (пикс/с): "
 
 msgctxt "PrefsUI|"
 msgid ""
 "Set the speed with which you can scroll in the options, dataviewer and other "
 "places."
 msgstr ""
+"Подесите брзину којом се крећете кроз опције, приказ података и друге делове."
 
 msgctxt "PrefsUI|"
 msgid ""
@@ -785,15 +819,23 @@ msgid ""
 "glitches, cannot see results or anything even) might fix them.\n"
 "Analyses will still be just as fast though."
 msgstr ""
+"Пребацује на „сигурнији“ режим за графику, познат и као софтверско "
+"рендеровање.\n"
+"То ће учинити ваш интерфејс споријим, али ако имате неке проблеме (чудне "
+"грешке, немогућност приказивања резултата или било шта слично), ово их може "
+"решити.\n"
+"Анализе ће и даље бити подједнако брзе."
 
 msgctxt "PrefsUI|"
 msgid ""
 "Turns off all animations, this is implied when \"Safe Graphics Mode\" is on."
 msgstr ""
+"Искључује све анимације, што је подразумевано када је укључен „Сигурни "
+"графички режим“."
 
 msgctxt "PrefsUI|"
 msgid "Already disabled animations because \"Safe Graphics Mode\" is on"
-msgstr ""
+msgstr "Анимације су већ искључене јер је укључен „Сигурни графички режим“"
 
 msgctxt "PrefsUI|"
 msgid ""
@@ -994,61 +1036,53 @@ msgctxt "OperatorSelectorComputedColumns|"
 msgid "Not: %1"
 msgstr ""
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "absolute value"
-msgstr "absoluta valoro"
+msgstr "апсолутна вредност"
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "standard deviation"
-msgstr "norma devio"
+msgstr "стандардна девијација"
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "variance"
-msgstr "varianco"
+msgstr "варијанца"
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "summation"
-msgstr "sumado"
+msgstr "сумирање"
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "product of values"
-msgstr "produto de valoroj"
+msgstr "производ вредности"
 
 msgctxt "FilterWindow|"
 msgid "returns minimum of values"
-msgstr ""
+msgstr "враћа минимум вредности"
 
 msgctxt "FilterWindow|"
 msgid "returns maximum of values"
-msgstr ""
+msgstr "враћа максимум вредности"
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "mean"
-msgstr "aritmetika meznombro"
+msgstr "аритметичка средина"
 
 msgctxt "FilterWindow|"
 msgid "rounds y to n decimals"
-msgstr ""
+msgstr "заокружује y на n децимале"
 
 msgctxt "FilterWindow|"
 msgid "returns number of elements in y"
-msgstr ""
+msgstr "враћа број елемената на y"
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "median"
-msgstr "mediano"
+msgstr "медијана"
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "if-else statement"
-msgstr "se-alie-ordono"
+msgstr "if-else наредба"
 
 msgctxt "FilterWindow|"
 msgid "Filter Changed"
@@ -1086,15 +1120,13 @@ msgctxt "FilterWindow|"
 msgid "Filter is already applied"
 msgstr ""
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "Open Documentation"
-msgstr "Malfermi Dokumentaron"
+msgstr "Отвори документацију"
 
-#, fuzzy
 msgctxt "FilterWindow|"
 msgid "Hide filter"
-msgstr "Kaŝi filtrilon"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Reset all checkmarks on all labels"
@@ -1126,7 +1158,7 @@ msgstr ""
 
 msgctxt "JagsTableView|"
 msgid "Reset"
-msgstr ""
+msgstr "Ресетуј"
 
 msgctxt "MainPage|"
 msgid "Hide data"
@@ -1275,19 +1307,17 @@ msgctxt "SetSeed|"
 msgid "Set seed:"
 msgstr ""
 
-#, fuzzy
 msgctxt "SimpleTableView|"
 msgid "Add Column"
-msgstr "Aldoni Kolumnon"
+msgstr ""
 
-#, fuzzy
 msgctxt "SimpleTableView|"
 msgid "Delete Column"
-msgstr "Forigi Kolumnon"
+msgstr ""
 
 msgctxt "SimpleTableView|"
 msgid "Reset"
-msgstr ""
+msgstr "Ресетуј"
 
 msgctxt "SortMenuButton|"
 msgid "Sort the items"
@@ -1692,10 +1722,9 @@ msgctxt "MessageForwarder|"
 msgid "Cancel"
 msgstr ""
 
-#, fuzzy
 msgctxt "MessageForwarder|"
 msgid "Save"
-msgstr "Konservi"
+msgstr ""
 
 msgctxt "MessageForwarder|"
 msgid "Don't Save"
@@ -2068,10 +2097,9 @@ msgctxt "ActionButtons|"
 msgid "Open"
 msgstr ""
 
-#, fuzzy
 msgctxt "ActionButtons|"
 msgid "Save"
-msgstr "Konservi"
+msgstr ""
 
 msgctxt "ActionButtons|"
 msgid "Save As"
@@ -2089,10 +2117,9 @@ msgctxt "ActionButtons|"
 msgid "Sync Data"
 msgstr ""
 
-#, fuzzy
 msgctxt "ActionButtons|"
 msgid "Close"
-msgstr "Fermi"
+msgstr ""
 
 msgctxt "ActionButtons|"
 msgid "Preferences"
@@ -2239,15 +2266,13 @@ msgctxt "ResourceButtons|"
 msgid "Computer"
 msgstr ""
 
-#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "OSF"
-msgstr "OSF"
+msgstr ""
 
-#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "Data Library"
-msgstr "Datenbiblioteko"
+msgstr ""
 
 msgctxt "ResourceButtons|"
 msgid "Data"
@@ -2423,7 +2448,7 @@ msgstr ""
 
 msgctxt "PlotEditingAxis|"
 msgid "Title"
-msgstr "Titolo"
+msgstr ""
 
 msgctxt "PlotEditingAxis|"
 msgid "Specify sequence"
@@ -2431,43 +2456,44 @@ msgstr ""
 
 msgctxt "PlotEditingAxis|"
 msgid "from"
-msgstr "de"
+msgstr ""
 
 msgctxt "PlotEditingAxis|"
 msgid "to"
-msgstr "ĝis"
+msgstr "до"
 
+#, fuzzy
 msgctxt "PlotEditingAxis|"
 msgid "steps"
-msgstr ""
+msgstr "степенице"
 
 msgctxt "PlotEditingAxis|"
 msgid "Based on data"
-msgstr ""
+msgstr "На основу података"
 
 msgctxt "PlotEditingAxis|"
 msgid "Based on ticks"
-msgstr ""
+msgstr "На основу означеног"
 
 msgctxt "PlotEditingAxis|"
 msgid "Set manually"
-msgstr ""
+msgstr "Подесите ручно"
 
 msgctxt "PlotEditingAxis|"
 msgid "Lower limit"
-msgstr ""
+msgstr "Доња граница"
 
 msgctxt "PlotEditingAxis|"
 msgid "Upper limit"
-msgstr ""
+msgstr "Горња граница"
 
 msgctxt "PlotEditor|"
 msgid "x-axis"
-msgstr "x-akso"
+msgstr "x-оса"
 
 msgctxt "PlotEditor|"
 msgid "y-axis"
-msgstr "y-akso"
+msgstr "y-оса"
 
 #, qt-format
 msgctxt "EngineRepresentation|"
@@ -2480,11 +2506,18 @@ msgid ""
 "If the problem persists, please report the message above at: https://jasp-"
 "stats.org/bug-reports"
 msgstr ""
+"Нажалост, графикон није могао бити измењен.\n"
+"\n"
+"Порука о грешци:\n"
+"%1\n"
+"\n"
+"Ако се проблем настави, пријавите горњу поруку на: https://jasp-stats.org/"
+"bug-reports"
 
 #, qt-format
 msgctxt "Modules::DynamicModule|"
 msgid "Loading upgrades for module %1 failed"
-msgstr ""
+msgstr "Учитавање надоградњи за модул %1 није успело"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2528,7 +2561,7 @@ msgstr ""
 
 msgctxt "Modules::DynamicModules|"
 msgid "Select a folder"
-msgstr "Elekti dosierujon"
+msgstr ""
 
 msgctxt "Modules::DynamicModules|"
 msgid ""
@@ -2576,7 +2609,7 @@ msgstr ""
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "Missing %1"
-msgstr "Mankanta %1"
+msgstr ""
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2610,7 +2643,7 @@ msgstr ""
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "Missing folder %1"
-msgstr "Mankanta dosierujo %1"
+msgstr ""
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2678,7 +2711,7 @@ msgstr ""
 
 msgctxt "JASPControl|"
 msgid "Factor Level List"
-msgstr "Listo de Faktorniveloj"
+msgstr ""
 
 msgctxt "VariablesFormBase|"
 msgid "Only 1 Available Variables list can be set in a VariablesForm"
@@ -2690,41 +2723,18 @@ msgstr ""
 
 msgctxt "FactorLevelList|"
 msgid "Factor"
-msgstr "Faktoro"
+msgstr ""
 
 msgctxt "FactorLevelList|"
 msgid "Level"
-msgstr "Nivelo"
+msgstr "Ниво"
 
 msgctxt "FactorLevelList|"
 msgid "New Factor"
-msgstr "Nova Faktoro"
+msgstr ""
 
 msgctxt "FactorLevelList|"
 msgid "New Level"
-msgstr "Nova Nivelo"
-
-msgctxt "TableView|"
-msgid "Add to the left"
-msgstr ""
-
-msgctxt "TableView|"
-msgid "Add to the right"
-msgstr ""
-
-#, fuzzy
-msgctxt "TableView|"
-msgid "Delete"
-msgstr "Forigi"
-
-msgctxt "ComputeColumnWindow|"
-msgid "returns the sign of values"
-msgstr ""
-
-msgctxt "OSFLogin|"
-msgid ""
-"<sup>*</sup>OSF account login only, ORCID or institutional login are not "
-"supported."
 msgstr ""
 
 msgctxt "PrefsAdvanced|"
@@ -2743,26 +2753,6 @@ msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Private GITHUB_PAT:"
-msgstr ""
-
-msgctxt "PrefsAdvanced|"
-msgid "Clear installed modules and packages"
-msgstr ""
-
-msgctxt "PrefsAdvanced|"
-msgid "This will erase the 'renv' and 'Modules' folders in the appdata."
-msgstr ""
-
-msgctxt "PrefsData|"
-msgid "Windows workaround"
-msgstr ""
-
-msgctxt "PrefsData|"
-msgid "See documentation for more information "
-msgstr ""
-
-msgctxt "PrefsUI|"
-msgid "User Interface Options"
 msgstr ""
 
 msgctxt "PrefsUI|"
@@ -2797,32 +2787,8 @@ msgctxt "PrefsUI|"
 msgid "Use native file dialogs"
 msgstr ""
 
-msgctxt "FilterWindow|"
-msgid "returns the sign of values"
-msgstr ""
-
 msgctxt "ModulesMenu|"
 msgid "Select a developer module by clicking here"
-msgstr ""
-
-msgctxt "PlotEditingAxis|"
-msgid "Label"
-msgstr ""
-
-msgctxt "PlotEditingAxis|"
-msgid "Tick #"
-msgstr ""
-
-msgctxt "PlotEditingAxis|"
-msgid "Insert tick left"
-msgstr ""
-
-msgctxt "PlotEditingAxis|"
-msgid "Insert tick right"
-msgstr ""
-
-msgctxt "PlotEditingAxis|"
-msgid "Delete tick"
 msgstr ""
 
 msgctxt "RibbonBar|"
@@ -2887,26 +2853,6 @@ msgid ""
 "the JASP team for assistance."
 msgstr ""
 
-msgctxt "MainWindow|"
-msgid "Clean user installed modules and pkgs"
-msgstr ""
-
-msgctxt "MainWindow|"
-msgid ""
-"Cleaning up your modules and packages will make sure you only use those "
-"bundled with JASP. \n"
-"\n"
-"Make sure to restart JASP afterwards!"
-msgstr ""
-
-msgctxt "MainWindow|"
-msgid "Clean"
-msgstr ""
-
-msgctxt "MainWindow|"
-msgid "Cancel"
-msgstr ""
-
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
@@ -2916,6 +2862,10 @@ msgstr ""
 
 msgctxt "MainWindow|"
 msgid "Generate Data File as CSV"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Cancel"
 msgstr ""
 
 msgctxt "Modules::DynamicModules|"
@@ -2952,6 +2902,88 @@ msgstr ""
 
 msgctxt "RibbonModel|"
 msgid "Execute R code in a console"
+msgstr ""
+
+msgctxt "TableView|"
+msgid "Add to the left"
+msgstr ""
+
+msgctxt "TableView|"
+msgid "Add to the right"
+msgstr ""
+
+msgctxt "TableView|"
+msgid "Delete"
+msgstr "Избриши"
+
+msgctxt "ComputeColumnWindow|"
+msgid "returns the sign of values"
+msgstr ""
+
+msgctxt "OSFLogin|"
+msgid ""
+"<sup>*</sup>OSF account login only, ORCID or institutional login are not "
+"supported."
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Clear installed modules and packages"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "This will erase the 'renv' and 'Modules' folders in the appdata."
+msgstr ""
+
+msgctxt "PrefsData|"
+msgid "Windows workaround"
+msgstr ""
+
+msgctxt "PrefsData|"
+msgid "See documentation for more information "
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "User Interface Options"
+msgstr ""
+
+msgctxt "FilterWindow|"
+msgid "returns the sign of values"
+msgstr ""
+
+msgctxt "PlotEditingAxis|"
+msgid "Label"
+msgstr ""
+
+msgctxt "PlotEditingAxis|"
+msgid "Tick #"
+msgstr ""
+
+msgctxt "PlotEditingAxis|"
+msgid "Insert tick left"
+msgstr ""
+
+msgctxt "PlotEditingAxis|"
+msgid "Insert tick right"
+msgstr ""
+
+msgctxt "PlotEditingAxis|"
+msgid "Delete tick"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Clean user installed modules and pkgs"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid ""
+"Cleaning up your modules and packages will make sure you only use those "
+"bundled with JASP. \n"
+"\n"
+"Make sure to restart JASP afterwards!"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Clean"
 msgstr ""
 
 msgctxt "PrefsData|"
@@ -3018,10 +3050,9 @@ msgctxt "EngineRepresentation|"
 msgid "Error editing plot"
 msgstr ""
 
-#, fuzzy
 msgctxt "PlotEditor|"
 msgid "Open Documentation"
-msgstr "Malfermi Dokumentaron"
+msgstr "Отвори документацију"
 
 msgctxt "AboutWindow|"
 msgid "Open Source Components"
@@ -3082,10 +3113,9 @@ msgctxt "Database|"
 msgid "Name"
 msgstr ""
 
-#, fuzzy
 msgctxt "Database|"
 msgid "Browse"
-msgstr "Foliumi"
+msgstr "Преглед"
 
 msgctxt "Database|"
 msgid "Username"
@@ -3095,10 +3125,9 @@ msgctxt "Database|"
 msgid "Password"
 msgstr ""
 
-#, fuzzy
 msgctxt "Database|"
 msgid "Remember me"
-msgstr "Memorigi pri mi"
+msgstr ""
 
 msgctxt "Database|"
 msgid "Connect to database"
@@ -3540,10 +3569,9 @@ msgctxt "Form|"
 msgid "Generate Wrapper"
 msgstr ""
 
-#, fuzzy
 msgctxt "Computer|"
 msgid "Save"
-msgstr "Konservi"
+msgstr ""
 
 msgctxt "Computer|"
 msgid "JASP Files"
@@ -3581,10 +3609,9 @@ msgctxt "JASPListControl|"
 msgid "<no choice>"
 msgstr ""
 
-#, fuzzy
 msgctxt "ListModelInputValue|"
 msgid "New Value"
-msgstr "Nova Valoro"
+msgstr "Нова вредност"
 
 #, qt-format
 msgctxt "ListModelTableViewBase|"
@@ -3756,10 +3783,9 @@ msgctxt "DataTableView|"
 msgid "Ctrl"
 msgstr ""
 
-#, fuzzy
 msgctxt "DataTableView|"
 msgid "Select All"
-msgstr "Elekti Ĉion"
+msgstr ""
 
 #, qt-format
 msgctxt "DataTableView|"
@@ -4159,15 +4185,17 @@ msgctxt "Supporters|"
 msgid "JASP is supported by the following institutions:"
 msgstr ""
 
-#, fuzzy
+msgctxt "Supporters|"
+msgid "Suggest your institution joins the JASP Community"
+msgstr ""
+
 msgctxt "WavyWindow|"
 msgid "About JASP"
-msgstr "Pri JASP"
+msgstr ""
 
-#, fuzzy
 msgctxt "WavyWindow|"
 msgid "Close"
-msgstr "Fermi"
+msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
@@ -4318,6 +4346,10 @@ msgctxt "ColumnModel|"
 msgid "Label editor"
 msgstr ""
 
+msgctxt "ColumnModel|"
+msgid "Missing values"
+msgstr ""
+
 #, qt-format
 msgctxt "QObject|"
 msgid "Change column name of '%1' from '%2' to '%3'"
@@ -4389,10 +4421,6 @@ msgstr ""
 
 msgctxt "CommunityWindow|"
 msgid "JASP Community"
-msgstr ""
-
-msgctxt "Supporters|"
-msgid "Suggest your institution joins the JASP Community"
 msgstr ""
 
 #, qt-format
@@ -4540,10 +4568,9 @@ msgctxt "FactorsForm|"
 msgid "Remove last %1"
 msgstr ""
 
-#, fuzzy
 msgctxt "FactorsFormBase|"
 msgid "Factor"
-msgstr "Faktoro"
+msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Insert constructor column before"
@@ -4734,10 +4761,6 @@ msgstr ""
 #, qt-format
 msgctxt "ExpandDataProxyModel|"
 msgid "Remove %1 columns"
-msgstr ""
-
-msgctxt "ColumnModel|"
-msgid "Missing values"
 msgstr ""
 
 #, qt-format
@@ -5019,6 +5042,17 @@ msgctxt "JASPColumn|"
 msgid "Click icon to change column type"
 msgstr ""
 
+msgctxt "FilterModel|"
+msgid ""
+"Above you see the code that JASP generates for both value filtering and the "
+"drag&drop filter.\n"
+"This default result is stored in 'generatedFilter' and can be replaced or "
+"combined with a custom filter.\n"
+"To combine you can append clauses using '&': 'generatedFilter & customFilter "
+"& perhapsAnotherFilter'\n"
+"Click the (i) icon in the lower right corner for further help.\n"
+msgstr ""
+
 msgctxt "TextInputBase|"
 msgid "Column-name-is-free field"
 msgstr ""
@@ -5035,17 +5069,6 @@ msgstr ""
 
 msgctxt "LabelEditorWindow|"
 msgid "Automatically order labels by their value"
-msgstr ""
-
-msgctxt "FilterModel|"
-msgid ""
-"Above you see the code that JASP generates for both value filtering and the "
-"drag&drop filter.\n"
-"This default result is stored in 'generatedFilter' and can be replaced or "
-"combined with a custom filter.\n"
-"To combine you can append clauses using '&': 'generatedFilter & customFilter "
-"& perhapsAnotherFilter'\n"
-"Click the (i) icon in the lower right corner for further help.\n"
 msgstr ""
 
 #, qt-format
@@ -5203,7 +5226,7 @@ msgstr ""
 
 msgctxt "LabelEditorWindow|"
 msgid "Remove"
-msgstr ""
+msgstr "Уклони"
 
 msgctxt "LabelEditorWindow|"
 msgid "Add new level:"
