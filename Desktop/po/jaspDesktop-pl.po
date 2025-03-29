@@ -5636,3 +5636,82 @@ msgstr ""
 msgctxt "QObject|"
 msgid "Adding value + label '%1' + '%2' to column '%3'"
 msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Sandbox engines"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Strengthen security on Windows by isolating Engines running R-code"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Use thousands separators"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Disable to remove thousands separators from all numbers."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Select a file..."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Select a folder..."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Select a R-library..."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Safe Graphics mode changed"
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid ""
+"You've changed the Safe Graphics mode of JASP, for this option to take "
+"effect you need to restart JASP"
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Text rendering setting changed"
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid ""
+"The textrendering setting has been changed, this will only take full effect "
+"after JASP is restarted."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Engine Sandbox setting changed"
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid ""
+"The Engine Sandbox setting has been changed, this will only take full effect "
+"after JASP is restarted."
+msgstr ""
+
+msgctxt "MessageForwarder|"
+msgid "Sandbox warning"
+msgstr ""
+
+msgctxt "MessageForwarder|"
+msgid ""
+"You want to save a file outside of the sandbox directory! We will correct "
+"the path to: "
+msgstr ""
+
+msgctxt "MessageForwarder|"
+msgid ""
+"You want to load a file outside of the sandbox directory! This will fail "
+"please move the file to: "
+msgstr ""
+
+msgctxt "MessageForwarder|"
+msgid ""
+"The jasp engine is running in security sandbox mode and only has access to: "
+msgstr ""

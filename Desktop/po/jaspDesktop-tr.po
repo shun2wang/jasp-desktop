@@ -1,15 +1,9 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-03-25 01:47+0000\n"
-"Last-Translator: Uğur ÇELİK <prof_ugur@hotmail.com>\n"
-"Language-Team: Turkish <https://hosted.weblate.org/projects/jasp/jaspdesktop/"
-"tr/>\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.11-dev\n"
 "X-Language: tr\n"
 "X-Qt-Contexts: true\n"
 
@@ -823,7 +817,8 @@ msgstr "Yakınlaştırma (%): "
 msgctxt "PrefsUI|"
 msgid ""
 "Increase or decrease the size of the interface elements (text, buttons, etc)."
-msgstr "Arayüz öğelerinin (metin, butonlar, vb.) boyutunu artırın veya azaltın."
+msgstr ""
+"Arayüz öğelerinin (metin, butonlar, vb.) boyutunu artırın veya azaltın."
 
 msgctxt "PrefsUI|"
 msgid "Scroll speed (pix/s): "
@@ -1392,17 +1387,20 @@ msgctxt "SetSeed|"
 msgid "Set seed:"
 msgstr ""
 
+#, fuzzy
 msgctxt "SimpleTableView|"
 msgid "Add Column"
-msgstr ""
+msgstr "Sütun Ekle"
 
+#, fuzzy
 msgctxt "SimpleTableView|"
 msgid "Delete Column"
-msgstr ""
+msgstr "Sütun Sil"
 
+#, fuzzy
 msgctxt "SimpleTableView|"
 msgid "Reset"
-msgstr ""
+msgstr "Resetle(Sıfırla)"
 
 msgctxt "SortMenuButton|"
 msgid "Sort the items"
@@ -1819,9 +1817,10 @@ msgctxt "MessageForwarder|"
 msgid "Cancel"
 msgstr ""
 
+#, fuzzy
 msgctxt "MessageForwarder|"
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 msgctxt "MessageForwarder|"
 msgid "Don't Save"
@@ -2384,9 +2383,10 @@ msgctxt "ActionButtons|"
 msgid "Open"
 msgstr ""
 
+#, fuzzy
 msgctxt "ActionButtons|"
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 msgctxt "ActionButtons|"
 msgid "Save As"
@@ -2541,9 +2541,10 @@ msgctxt "OSF|"
 msgid "%1 name can only contain the following characters A-Z a-z 0-9 _ %2"
 msgstr ""
 
+#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "Recent Files"
-msgstr ""
+msgstr "Son Dosyalar"
 
 msgctxt "ResourceButtons|"
 msgid "Current File"
@@ -2553,21 +2554,24 @@ msgctxt "ResourceButtons|"
 msgid "Computer"
 msgstr ""
 
+#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "OSF"
-msgstr ""
+msgstr "OSF"
 
+#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "Data Library"
-msgstr ""
+msgstr "Veri Kütüphanesi"
 
 msgctxt "ResourceButtons|"
 msgid "Data"
 msgstr ""
 
+#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "Results"
-msgstr ""
+msgstr "Sonuçlar"
 
 msgctxt "ResourceButtons|"
 msgid "Interface"
@@ -2925,9 +2929,10 @@ msgctxt "TableView|"
 msgid "Add to the right"
 msgstr ""
 
+#, fuzzy
 msgctxt "TableView|"
 msgid "Delete"
-msgstr ""
+msgstr "Sil"
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns the sign of values"
@@ -3614,9 +3619,10 @@ msgctxt "Form|"
 msgid "Generate Wrapper"
 msgstr ""
 
+#, fuzzy
 msgctxt "Computer|"
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 msgctxt "Computer|"
 msgid "JASP Files"
@@ -3654,18 +3660,20 @@ msgctxt "JASPListControl|"
 msgid "<no choice>"
 msgstr ""
 
+#, fuzzy
 msgctxt "ListModelInputValue|"
 msgid "New Value"
-msgstr ""
+msgstr "Yeni Değer"
 
 #, qt-format
 msgctxt "ListModelTableViewBase|"
 msgid "Row %1"
 msgstr ""
 
+#, fuzzy
 msgctxt "PrefsResults|"
 msgid "Miscellaneous options"
-msgstr ""
+msgstr "Çeşitli seçenekler"
 
 #, fuzzy
 msgctxt "PrefsResults|"
@@ -4370,17 +4378,20 @@ msgctxt "QObject|"
 msgid "Column added by analysis"
 msgstr ""
 
+#, fuzzy
 msgctxt "QObject|"
 msgid "Scale"
-msgstr ""
+msgstr "Ölçek"
 
+#, fuzzy
 msgctxt "QObject|"
 msgid "Ordinal"
-msgstr ""
+msgstr "Sıralı"
 
+#, fuzzy
 msgctxt "QObject|"
 msgid "Nominal"
-msgstr ""
+msgstr "Nominal"
 
 msgctxt "ColumnModel|"
 msgid "Computed column definition"
@@ -4962,17 +4973,20 @@ msgctxt "ListModelTermsAssigned|"
 msgid "Only %1 variables are allowed"
 msgstr ""
 
+#, fuzzy
 msgctxt "VariableInfo|"
 msgid "Scale"
-msgstr ""
+msgstr "Ölçek"
 
+#, fuzzy
 msgctxt "VariableInfo|"
 msgid "Ordinal"
-msgstr ""
+msgstr "Sıralı"
 
+#, fuzzy
 msgctxt "VariableInfo|"
 msgid "Nominal"
-msgstr ""
+msgstr "Nominal"
 
 msgctxt "VariableInfo|"
 msgid "Unknown"
@@ -5334,4 +5348,83 @@ msgstr ""
 #, qt-format
 msgctxt "QObject|"
 msgid "Adding value + label '%1' + '%2' to column '%3'"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Sandbox engines"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Strengthen security on Windows by isolating Engines running R-code"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Use thousands separators"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Disable to remove thousands separators from all numbers."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Select a file..."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Select a folder..."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Select a R-library..."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Safe Graphics mode changed"
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid ""
+"You've changed the Safe Graphics mode of JASP, for this option to take "
+"effect you need to restart JASP"
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Text rendering setting changed"
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid ""
+"The textrendering setting has been changed, this will only take full effect "
+"after JASP is restarted."
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid "Engine Sandbox setting changed"
+msgstr ""
+
+msgctxt "PreferencesModel|"
+msgid ""
+"The Engine Sandbox setting has been changed, this will only take full effect "
+"after JASP is restarted."
+msgstr ""
+
+msgctxt "MessageForwarder|"
+msgid "Sandbox warning"
+msgstr ""
+
+msgctxt "MessageForwarder|"
+msgid ""
+"You want to save a file outside of the sandbox directory! We will correct "
+"the path to: "
+msgstr ""
+
+msgctxt "MessageForwarder|"
+msgid ""
+"You want to load a file outside of the sandbox directory! This will fail "
+"please move the file to: "
+msgstr ""
+
+msgctxt "MessageForwarder|"
+msgid ""
+"The jasp engine is running in security sandbox mode and only has access to: "
 msgstr ""
