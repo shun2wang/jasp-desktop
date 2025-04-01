@@ -80,6 +80,10 @@ class PreferencesModel : public PreferencesModelBase
 	Q_PROPERTY(int			pdfPageSize				READ pdfPageSize				WRITE setPdfPageSize				NOTIFY pdfPageSizeChanged				)
 	Q_PROPERTY(bool			pdfLandscape			READ pdfLandscape				WRITE setPdfLandscape				NOTIFY pdfLandscapeChanged				)
 	Q_PROPERTY(bool			engineSandbox			READ engineSandbox				WRITE setEngineSandbox				NOTIFY engineSandboxChanged				)
+	Q_PROPERTY(QString 		localConfigurationPATH 	READ localConfigurationPATH		WRITE setLocalConfigurationPATH		NOTIFY localConfigurationPATHChanged	)
+	Q_PROPERTY(bool 		remoteConfiguration 	READ remoteConfiguration		WRITE setRemoteConfiguration		NOTIFY remoteConfigurationChanged		)
+	Q_PROPERTY(QString		remoteConfigurationURL	READ remoteConfigurationURL		WRITE setRemoteConfigurationURL		NOTIFY remoteConfigurationURLChanged	)
+	Q_PROPERTY(bool			useConfigurationFile	READ useConfigurationFile		WRITE setUseConfigurationFile		NOTIFY useConfigurationFileChanged		)
 
 
 public:
@@ -156,6 +160,11 @@ public:
 	QString			directLibpathFolder()					const;
 	QString			directDevModName()						const;
 	bool			engineSandbox()							const;
+	QString			localConfigurationPATH()				const;
+	QString			remoteConfigurationURL()				const;
+	bool			remoteConfiguration()					const;
+	bool			useConfigurationFile()					const;
+
 
 	
 	bool checkUpdatesAskUser() const;
@@ -184,6 +193,7 @@ public slots:
 	void browseSpreadsheetEditor();
 	void browseDeveloperFolder();
 	void browseDeveloperLibPathFolder();
+	void browseConfigurationFile();
 	void removeEmptyValue(				QString		value);
 	void addEmptyValue(					QString		value);
 	void resetEmptyValues();
@@ -230,6 +240,11 @@ public slots:
 	void setDirectLibpathFolder(		QString		libpath);
 	void setDirectDevModName(			QString		 name);
 	void setEngineSandbox(				bool		engineSandbox);
+	void setLocalConfigurationPATH(		QString		path);
+	void setRemoteConfiguration(		bool		enabled);
+	void setRemoteConfigurationURL(		QString		URL);
+	void setUseConfigurationFile(		bool		newUseConfigurationFile);
+
 
 	
 signals:
@@ -289,6 +304,10 @@ signals:
 	void directLibpathFolderChanged();
 	void directDevModNameChanged(		QString name);
 	void engineSandboxChanged(			bool		engineSandbox);
+	void localConfigurationPATHChanged(	QString		path);
+	void remoteConfigurationChanged(	bool		enabled);
+	void remoteConfigurationURLChanged(	QString		remoteConfigurationURL);
+	void useConfigurationFileChanged(	bool		enabled);
 
 private slots:
 	void dataLabelNAChangedSlot(QString label);
