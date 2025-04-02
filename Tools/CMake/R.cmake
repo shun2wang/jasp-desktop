@@ -103,6 +103,10 @@ set(AVAILABLE_R_VERSIONS
 	"R-4.4.2-x86_64"
 	"R-4.4.2-arm64"
 	"R-4.4.2-win"
+ "R-4.4.3"
+ 	"R-4.4.3-x86_64"
+  	"R-4.4.3-arm64"
+   	"R-4.4.3-win"
 )
 
 set(R_BINARY_HASHES
@@ -159,6 +163,11 @@ set(R_BINARY_HASHES
   "f49ad56ce3a0ac569fd8f9668749bc861b965b5e"
   "7832cb5d6cd686fd3cc54c8ab4c93c464540a944"
   "acf05881e15100144fd70c7df98dc10e57216224"
+    # 4.4.3
+  "2391e3c97b3c9f3d36001a3a3eb314a6e6efc819"
+  "2391e3c97b3c9f3d36001a3a3eb314a6e6efc819"
+  "c32bed5f8f0a7ddd31a8c5598a5a60f8b6c89073"
+  "791361bb061421ca178f4c5124cc1ee114810a4b"
 )
 
 
