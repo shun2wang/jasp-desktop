@@ -21,12 +21,26 @@ DropArea {
 	property bool	droppedShouldBeNested: false
 	property bool	shouldShowX: false
 	property bool	iWasChecked: false
+	property bool	ignoreEmpty: false
 
 	implicitWidth:	Math.max(dropText.contentWidth, acceptsDrops ? filterConstructor.blockDim * 5 : 0)
 	implicitHeight: filterConstructor.blockDim
 
 	property bool	beingDragHovered: false
 	property color	dragHoverColor: jaspTheme.blue
+	
+	signal somethingDropped();
+	signal jsonChanged();
+	
+	Connections
+	{
+		target:		containsItem
+		enabled:	containsItem != null
+		function onJsonChanged()
+		{
+			dragTarget.jsonChanged();	
+		}
+	}
 
 	Rectangle
 	{
@@ -59,7 +73,7 @@ DropArea {
 				//console.log("problem! ",parent.objectName," doesnt contain a dragger in dropper")
 			return containsItem.checkCompletenessFormulas()
 		}
-		return false
+		return ignoreEmpty
 	}
 
 	onEntered: (drag)=>
@@ -73,7 +87,7 @@ DropArea {
 		}
 
 		var ancestry = parent
-		while(ancestry !== null)
+		while(ancestry != null)
 		{
 			if((ancestry.objectName === "DragGeneric" && ancestry.dragChild === drag.source) || ancestry === drag.source)
 			{
@@ -115,7 +129,10 @@ DropArea {
 		//console.log(__debugName," onContainsItemChanged to " + (containsItem !== null ? containsItem.__debugName : "null"))
 
 		if(containsItem === null)
-			width = Qt.binding(function(){ return dragTarget.implicitWidth })
+		{
+			width			= Qt.binding(function(){ return dragTarget.implicitWidth		})
+			dropText.text	= Qt.binding(function(){ return dragTarget.defaultText			})
+		}
 		iWasChecked = false
 
 	}
@@ -193,8 +210,8 @@ DropArea {
 					createString(text)
 			}
 
-			function createNumber(value)	{ setCreatedObjectUp(numberComp.createObject(dragTarget, { "value": value,  "canBeDragged": true, "acceptsDrops": true } ) ) }
-			function createString(string)	{ setCreatedObjectUp(stringComp.createObject(dragTarget, { "text":  string, "canBeDragged": true, "acceptsDrops": true } ) ) }
+			function createNumber(value)	{ setCreatedObjectUp(numberComp.createObject(dragTarget, { "value": value } ) ) }
+			function createString(string)	{ setCreatedObjectUp(stringComp.createObject(dragTarget, { "text":  string } ) ) }
 
 
 			function setCreatedObjectUp(obj)
@@ -208,19 +225,21 @@ DropArea {
 			}
 		}
 
-		Rectangle
-		{
-			id: errorMarker
-			z: -2
-			visible: (dragTarget.iWasChecked && dragTarget.containsItem === null)
-			radius: width
-			anchors.fill: parent
-			color: "#BB0000"
-		}
+		
 	}
 
 	Component { id: numberComp; NumberDrag {}}
 	Component { id: stringComp; StringDrag {}}
+	
+	Rectangle
+	{
+		id: errorMarker
+		z: -2
+		visible: (dragTarget.iWasChecked && (dragTarget.containsItem === null && !ignoreEmpty))
+		radius: width
+		anchors.fill: parent
+		color: "#BB0000"
+	}
 
 
 }

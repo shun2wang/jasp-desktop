@@ -192,7 +192,6 @@ Item
 			Rectangle
 			{
 				id:				rectangularColumnContainer
-				z:				parent.z + 1
 				border.width:	1
 				border.color:	jaspTheme.uiBorder
 				color:			"transparent"
@@ -264,6 +263,7 @@ Item
 					anchors.right: parent.right
 
 					height: Math.min(60 * preferencesModel.uiScale, scrollScriptColumn.height)
+					z:		1000
 				}
 
 			}

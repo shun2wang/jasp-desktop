@@ -56,6 +56,9 @@ MouseArea
 
 	property bool shouldShowHoverOutline:	false
 	property bool showHighlight:			shownChild !== null ? !shownChild.acceptsDrops : false
+	
+	signal wasDroppedOn();
+	signal jsonChanged();
 
 	Rectangle
 	{
@@ -107,6 +110,7 @@ MouseArea
 		if(mouse.buttons === Qt.RightButton)
 		{
 			//delete me!
+			filterConstructor.somethingChanged = true
 			if(alternativeDropFunction === null)
 				this.destroy();
 		}
@@ -137,7 +141,27 @@ MouseArea
 		else
 			mouseArea.releaseHere(dragMe.Drag.target)
 	}
+	
+	function dropTargetIsOK(dropTarget)
+	{
+		if(dropTarget === null)
+			return false;
 
+		switch(dropTarget.objectName)
+		{
+			case "DropTrash":	
+				return true;
+				
+			case "DropSpot":	
+			{
+				for(var dragI=0; dragI<dragKeys.length; dragI++)
+					if(dropTarget.dropKeys.indexOf(dragKeys[dragI]) >= 0)
+						return true;
+			}
+		}
+		
+		return false;
+	}
 
 	function releaseHere(dropTarget)
 	{
@@ -152,34 +176,22 @@ MouseArea
 
 			var newDropTarget = this.determineReasonableInsertionSpot();
 
-			if(newDropTarget !== null)
-			{
-				//console.log("Found a new droptarget: " + newDropTarget.__debugName)
+			if(dropTargetIsOK(newDropTarget) && dropTarget != newDropTarget)
+			{			
 				this.releaseHere(newDropTarget)
 				return
 			}
 
-            if(leftDropSpot !== null && this.tryLeftApplication()) //maybe gobble something up instead of the other way 'round?
+            if(this.tryLeftApplication(dropTarget)) //maybe gobble something up instead of the other way 'round?
                return
 		}
 
 		//console.log("Second half of release here")
 
-		if(dropTarget !== null && dropTarget.objectName === "DropSpot")
+		if(dropTarget != scriptColumn && !dropTargetIsOK(dropTarget))
 		{
-			//console.log("it is in fact dropped on a dropspot!");
-
-			var foundAtLeastOneMatchingKey = false
-			for(var dragI=0; dragI<dragKeys.length; dragI++)
-				if(dropTarget.dropKeys.indexOf(dragKeys[dragI]) >= 0)
-					foundAtLeastOneMatchingKey = true
-
-			if(!foundAtLeastOneMatchingKey)
-			{
-				//console.log("Didnt find a matching key...")
-				this.releaseHere(scriptColumn)
-				return
-			}
+			this.releaseHere(scriptColumn)
+			return
 		}
 
 
@@ -223,7 +235,18 @@ MouseArea
 			parent.containsItem = this
 
 			shouldShowHoverOutline = false
-			this.removeAncestorsHoverOutlines()
+			
+			if(this.removeAncestorsHoverOutlines != undefined)
+				this.removeAncestorsHoverOutlines()
+			
+			if(parent != scriptColumn)
+			{
+				parent.somethingDropped();
+				filterConstructor.somethingChanged = true;
+			}
+			
+			this.wasDroppedOn()
+
 		}
 
 		scriptColumn.focus = true
@@ -250,7 +273,7 @@ MouseArea
 			}
 		}
 
-		return lastScriptScrap.returnEmptyRightMostDropSpot(true)
+		return lastScriptScrap.returnEmptyRightMostDropSpot()
 	}
 
 	//onParentChanged: { console.log(__debugName," onParentChanged parent == ", parent === null ? "null" : parent === undefined ? "undefined" : parent.__debugName, " alternativeDropFunction == ", alternativeDropFunction === null ? "null" : alternativeDropFunction === undefined ? "undefined" : alternativeDropFunction)	}
@@ -261,13 +284,10 @@ MouseArea
 	function checkCompletenessFormulas()		{ wasChecked = true; return shownChild.checkCompletenessFormulas() }
 	function convertToJSON()					{ var obj = shownChild.convertToJSON(); obj.toolTipText = toolTipText; return obj }
 
-	function tryLeftApplication()
+	function tryLeftApplication(lastDropTarget)
 	{
-		//console.log(__debugName," tryLeftApplication")
-
-		this.releaseHere(scriptColumn)
-
-        if(leftDropSpot === null || leftDropSpot.containsItem !== null || scriptColumn.data.length === 1) return false
+        if(leftDropSpot === null || leftDropSpot.containsItem !== null || scriptColumn.data.length === 1) 
+			return false
 
 		for(var i=scriptColumn.data.length - 1; i>=0; i--)
 			if(scriptColumn.data[i] !== this)
@@ -275,17 +295,17 @@ MouseArea
 				var gobbleMeUp = scriptColumn.data[i]
 				var putResultHere = scriptColumn
 
-				while(gobbleMeUp !== null && putResultHere !== null && gobbleMeUp !== undefined)
+				while(gobbleMeUp !== null && putResultHere != null && gobbleMeUp !== undefined)
 				{
 
 					for(var keyI=0; keyI<gobbleMeUp.dragKeys.length; keyI++)
 						if(leftDropSpot.dropKeys.indexOf(gobbleMeUp.dragKeys[keyI])>=0)
 							for(var myDragKeyI=0; myDragKeyI<this.dragKeys.length; myDragKeyI++)
-								if(putResultHere === scriptColumn || putResultHere.dropKeys.indexOf(dragKeys[myDragKeyI]) >= 0) //Make sure we are allowed to drop ourselves there!
+								if(putResultHere == scriptColumn || putResultHere.dropKeys.indexOf(dragKeys[myDragKeyI]) >= 0) //Make sure we are allowed to drop ourselves there!
 								{
-									gobbleMeUp.releaseHere(scriptColumn)
+									//gobbleMeUp.releaseHere(scriptColumn)
 
-									if(putResultHere !== scriptColumn) //we went deeper
+									if(putResultHere != scriptColumn && putResultHere != null && lastDropTarget !== putResultHere) //we went deeper
 										this.releaseHere(putResultHere)
 
 									gobbleMeUp.releaseHere(leftDropSpot)
@@ -298,7 +318,8 @@ MouseArea
 					//Which means we have to place ourselves in the dropSpot under the current gobbleMeUp!
 
 					putResultHere	= gobbleMeUp.returnFilledRightMostDropSpot()
-					if(putResultHere === null) return
+					if(putResultHere == null) 
+						return
 					gobbleMeUp		= putResultHere.containsItem
 
 					//if(gobbleMeUp.objectName !== "DragGeneric")

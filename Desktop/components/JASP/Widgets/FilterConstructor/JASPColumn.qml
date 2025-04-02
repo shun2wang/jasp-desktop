@@ -7,11 +7,12 @@ Item
 					objectName:			"Column"
 	property string __debugName:		"JASPColumn " + columnName
 	property string columnName:			"?"
-	property string columnIcon:			columnsModel.getColumnIcon(columnTypeUser == -1 ? columnType : columnTypeUser, columnTypeUser != -1 && columnTypeUser != columnType)
+	property string columnIcon:			columnsModel.getColumnIcon(columnTypeHere, columnTypeHere != columnType)
 	property int	columnType:			columnsModel.getColumnType(columnName)
 	property int	columnTypeUser:		-1
-	property int	columnTypeHere:		columnTypeUser != -1 ? columnTypeUser : columnType
-	property string preview:			(columnType == columnTypeUser || columnTypeUser == -1 ? "" : columnsModel.getColumnTransformedToolTip(columnName, columnTypeUser))
+	property int	columnTypeDrop:		-1	//If set to anything, it is what is allowed by whatever dropspot this column is in
+	property int	columnTypeHere:		columnTypeDrop != -1 ? columnTypeDrop : columnTypeUser != -1 ? columnTypeUser : columnType
+	property string preview:			(columnType == columnTypeHere ? "" : columnsModel.getColumnTransformedToolTip(columnName, columnTypeUser))
 	property string toolTip:			formatToolTip(changeTypeAllowed, colName.contentWidth > colName.width, columnsModel.getColumnDescription(columnName), preview)
 	property real	maxSize:			baseFontSize * 10 * preferencesModel.uiScale
 					height:				filterConstructor.blockDim
@@ -20,10 +21,63 @@ Item
 	property bool	isNumerical:		columnTypeHere == columnTypeScale
 	property bool	isOrdinal:			columnTypeHere == columnTypeOrdinal
 	property bool	changeTypeAllowed:	true
-	property var	dragKeys:			isNumerical ? ["number"]	: isOrdinal ? ["string", "ordered"] : ["string"]
+	property var	dragKeys:			columnTypeDrop == -1 ? ["number", "string", "ordered"] : isNumerical ? ["number"]	: isOrdinal ? ["string", "ordered"] : ["string"]
 	property string typeString:			isNumerical ? "scale"		: isOrdinal ? "ordinal"				: "nominal"
 					
-					
+	onColumnTypeHereChanged: {
+		filterConstructor.somethingChanged = true
+	}
+	
+	onColumnTypeUserChanged:		if(dropHandler.enabled) dropHandler.onWasDroppedOn(); else columnTypeDrop = -1;
+	onColumnTypeDropChanged:		filterConstructor.somethingChanged = true;
+	
+	Connections
+	{
+		id:			dropHandler
+		target:		parent
+		enabled:	parent.objectName == "DragGeneric" && parent.parent != undefined && parent.parent.objectName == "DropSpot"
+		
+		function onEnabledChanged() {	if(!enabled) columnTypeDrop = 1; }
+		
+		function	onWasDroppedOn() 
+		{
+			columnTypeDrop = -1;
+			
+
+			if(columnTypeUser != -1 && dropAccepts(columnTypeToRelevantString(columnTypeUser)))
+			{
+				columnTypeDrop = columnTypeUser;
+				return;
+			}
+			
+			if(dropAccepts(columnTypeToRelevantString(columnType)))
+			{
+				columnTypeDrop = columnType;
+				return;
+			}
+						
+			var listTypes =  [ columnTypeScale, columnTypeOrdinal, columnTypeNominal ]
+			for(var i=0; i<listTypes.length; i++)
+				if(dropAccepts(columnTypeToRelevantString(listTypes[i])))
+				{
+					columnTypeDrop = listTypes[i];
+					return;
+				}
+		}
+		
+		function dropAccepts(dragKeyToCheck)
+		{
+			var dropSpot = parent.parent;
+			
+			return dropSpot != undefined && dropSpot.objectName == "DropSpot" && dropSpot.dropKeys.indexOf(dragKeyToCheck) >= 0	
+		}
+		
+		function columnTypeToRelevantString(columnType)
+		{
+			// maybe ordinal needs more ?
+			return columnType == columnTypeOrdinal ? "ordered" : columnType != columnTypeScale ? "string" : "number"
+		}
+	}
 	//colName can elide
 	function formatToolTip(typeChangeAble, colNameTrunc, descriptionV, previewV)
 	{
@@ -48,20 +102,20 @@ Item
 					
 	Connections
 	{
-		target:								columnsModel
+		target:		columnsModel
 		function onColumnTypeChanged(name)	
 		{ 
 			if(columnName == name)
 			{
-				columnType = columnsModel.getColumnType(columnName); 
+				columnType = columnsModel.getColumnType(columnName);
 				filterConstructor.somethingChanged = true;
+				
+				if(dropHandler.enabled)
+					dropHandler.onWasDroppedOn()
 			}
 		}
 	}
-	
-	onColumnTypeUserChanged:		filterConstructor.somethingChanged = true;
-	
-	
+
 
 	Image
 	{
@@ -144,11 +198,11 @@ Item
 	function shouldDrag(mouseX, mouseY)			{ return true }
 	function returnEmptyRightMostDropSpot()		{ return null }
 	function returnFilledRightMostDropSpot()	{ return null }
-	function returnR()							{ return columnTypeUser == -1 ? columnName : columnName + "." + typeString }
+	function returnR()							{ return columnName + "." + typeString }
 	function checkCompletenessFormulas()		{ return true }
 	function convertToJSON()
 	{
-		var jsonObj = { "nodeType": "Column", "columnName": columnName, "columnTypeUser": columnTypeUser }
+		var jsonObj = { "nodeType": "Column", "columnName": columnName, "columnTypeUser": columnTypeUser, "columnTypeDrop": columnTypeDrop }
 		return jsonObj
 	}
 }
