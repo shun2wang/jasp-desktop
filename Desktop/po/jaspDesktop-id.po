@@ -5412,3 +5412,87 @@ msgctxt "MessageForwarder|"
 msgid ""
 "The jasp engine is running in security sandbox mode and only has access to: "
 msgstr ""
+
+msgctxt "ComputeColumnWindow|"
+msgid "Rowwise mean"
+msgstr ""
+
+msgctxt "ComputeColumnWindow|"
+msgid "Rowwise sum"
+msgstr ""
+
+msgctxt "ComputeColumnWindow|"
+msgid "Rowwise standard deviation"
+msgstr ""
+
+msgctxt "ComputeColumnWindow|"
+msgid "Rowwise variance"
+msgstr ""
+
+msgctxt "ComputeColumnWindow|"
+msgid "Rowwise median"
+msgstr ""
+
+msgctxt "ComputeColumnWindow|"
+msgid "Rowwise minimum"
+msgstr ""
+
+msgctxt "ComputeColumnWindow|"
+msgid "Rowwise maximum"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Configuration File Options"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Use a configuration file."
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Use remote configuration file."
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Use the remote configuration file pointed to by URL"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Configuration URL: "
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Select configuration file"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Select configuration file."
+msgstr ""
+
+msgctxt "FilterWindow|"
+msgid "Rowwise mean"
+msgstr ""
+
+msgctxt "FilterWindow|"
+msgid "Rowwise sum"
+msgstr ""
+
+msgctxt "FilterWindow|"
+msgid "Rowwise standard deviation"
+msgstr ""
+
+msgctxt "FilterWindow|"
+msgid "Rowwise variance"
+msgstr ""
+
+msgctxt "FilterWindow|"
+msgid "Rowwise median"
+msgstr ""
+
+msgctxt "FilterWindow|"
+msgid "Rowwise minimum"
+msgstr ""
+
+msgctxt "FilterWindow|"
+msgid "Rowwise maximum"
+msgstr ""
