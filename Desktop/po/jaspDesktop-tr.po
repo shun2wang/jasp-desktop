@@ -1,9 +1,15 @@
 msgid ""
 msgstr ""
+"PO-Revision-Date: 2025-04-04 15:07+0000\n"
+"Last-Translator: Uğur ÇELİK <prof_ugur@hotmail.com>\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/jasp/jaspdesktop/"
+"tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.11-dev\n"
 "X-Language: tr\n"
 "X-Qt-Contexts: true\n"
 
@@ -492,7 +498,7 @@ msgctxt "CreateComputeColumnDialog|"
 msgid "Create Column"
 msgstr "Sütun Oluştur"
 
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "CreateComputeColumnDialog|"
 msgid "Click here to create your new computed column '%1'"
 msgstr "Yeni hesaplanan sütununuzu '%1' oluşturmak için buraya tıklayın"
@@ -1297,230 +1303,231 @@ msgstr "Sırayı belirtin"
 
 msgctxt "PlotEditingAxis|"
 msgid "from"
-msgstr ""
+msgstr "itibaren"
 
 msgctxt "PlotEditingAxis|"
 msgid "to"
-msgstr ""
+msgstr "ile"
 
 msgctxt "PlotEditingAxis|"
 msgid "steps"
-msgstr ""
+msgstr "adımlar"
 
 msgctxt "PlotEditingAxis|"
 msgid "Based on data"
-msgstr ""
+msgstr "Verilere dayalı"
 
 msgctxt "PlotEditingAxis|"
 msgid "Based on ticks"
-msgstr ""
+msgstr "Doğrulamalara dayalı"
 
 msgctxt "PlotEditingAxis|"
 msgid "Set manually"
-msgstr ""
+msgstr "Manuel olarak ayarla"
 
 msgctxt "PlotEditingAxis|"
 msgid "Lower limit"
-msgstr ""
+msgstr "Alt sınır"
 
 msgctxt "PlotEditingAxis|"
 msgid "Upper limit"
-msgstr ""
+msgstr "Üst sınır"
 
 msgctxt "PlotEditor|"
 msgid "x-axis"
-msgstr ""
+msgstr "x-ekseni"
 
 msgctxt "PlotEditor|"
 msgid "y-axis"
-msgstr ""
+msgstr "y-ekseni"
 
 msgctxt "RCommanderWindow|"
 msgid "R in JASP"
-msgstr ""
+msgstr "JASP'ta R"
 
 msgctxt "RCommanderWindow|"
 msgid "Welcome to R in JASP!"
-msgstr ""
+msgstr "JASP'ta R'ye hoş geldiniz!"
 
 msgctxt "RCommanderWindow|"
 msgid "Run code"
-msgstr ""
+msgstr "Kodu çalıştır"
 
 msgctxt "RCommanderWindow|"
 msgid "Pressing Ctrl+Enter or F5 will also run the code"
-msgstr ""
+msgstr "Ctrl+Enter veya F5'e basmak da kodu çalıştıracaktır"
 
 msgctxt "RCommanderWindow|"
 msgid "Clear output"
-msgstr ""
+msgstr "Çıktıyı temizle"
 
 msgctxt "RCommanderWindow|"
 msgid "Cleared..."
-msgstr ""
+msgstr "Temizlendi..."
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "Changes were made"
-msgstr ""
+msgstr "Değişiklikler yapıldı"
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "There are unapplied changes; what would you like to do?"
-msgstr ""
+msgstr "Uygulanmamış değişiklikler var; ne yapmak istersiniz?"
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "Apply"
-msgstr ""
+msgstr "Uygula"
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "Discard"
-msgstr ""
+msgstr "At"
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "Cancel"
-msgstr ""
+msgstr "İptal et"
 
 msgctxt "SetSeed|"
 msgid "Repeatability"
-msgstr ""
+msgstr "Yinelenebilirlik"
 
 msgctxt "SetSeed|"
 msgid "Set seed:"
-msgstr ""
+msgstr "Tohumu ayarla:"
 
-#, fuzzy
 msgctxt "SimpleTableView|"
 msgid "Add Column"
 msgstr "Sütun Ekle"
 
-#, fuzzy
 msgctxt "SimpleTableView|"
 msgid "Delete Column"
-msgstr "Sütun Sil"
+msgstr "Sütunu Sil"
 
-#, fuzzy
 msgctxt "SimpleTableView|"
 msgid "Reset"
 msgstr "Resetle(Sıfırla)"
 
 msgctxt "SortMenuButton|"
 msgid "Sort the items"
-msgstr ""
+msgstr "Öğeleri sırala"
 
 msgctxt "SubjectivePriors|"
 msgid "Prior"
-msgstr ""
+msgstr "Önceki"
 
 msgctxt "SubjectivePriors|"
 msgid "Standardized effect size"
-msgstr ""
+msgstr "Standartlaştırılmış etki boyutu"
 
 msgctxt "SubjectivePriors|"
 msgid "Default"
-msgstr ""
+msgstr "Varsayılan"
 
 msgctxt "SubjectivePriors|"
 msgid "Cauchy"
-msgstr ""
+msgstr "Cauchy"
 
 msgctxt "SubjectivePriors|"
 msgid "scale"
-msgstr ""
+msgstr "ölçek"
 
 msgctxt "SubjectivePriors|"
 msgid "Informed"
-msgstr ""
+msgstr "Bilgilendirilmiş"
 
 msgctxt "SubjectivePriors|"
 msgid "location:"
-msgstr ""
+msgstr "konum:"
 
 msgctxt "SubjectivePriors|"
 msgid "scale:"
-msgstr ""
+msgstr "ölçek:"
 
 msgctxt "SubjectivePriors|"
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 msgctxt "SubjectivePriors|"
 msgid "mean:"
-msgstr ""
+msgstr "ortalama:"
 
 msgctxt "SubjectivePriors|"
 msgid "std:"
-msgstr ""
+msgstr "std:"
 
 msgctxt "SubjectivePriors|"
 msgid "t"
-msgstr ""
+msgstr "t"
 
 msgctxt "SubjectivePriors|"
 msgid "df:"
-msgstr ""
+msgstr "sd (serbestlik derecesi)df:"
 
 msgctxt "SubjectivePriors|"
 msgid "Raw effect size (Dienes)"
-msgstr ""
+msgstr "Ham etki boyutu(Dienes)"
 
 msgctxt "SubjectivePriors|"
 msgid "Uniform"
-msgstr ""
+msgstr "Benzet"
 
 msgctxt "SubjectivePriors|"
 msgid "lower bound:"
-msgstr ""
+msgstr "alt sınır:"
 
 msgctxt "SubjectivePriors|"
 msgid "upper bound:"
-msgstr ""
+msgstr "üst sınır:"
 
 msgctxt "SubjectivePriors|"
 msgid "Half-normal"
-msgstr ""
+msgstr "Yarı-normal"
 
 msgctxt "WelcomePage|"
 msgid "Welcome to JASP"
-msgstr ""
+msgstr "JASP'a Hoş Geldiniz"
 
 msgctxt "WelcomePage|"
 msgid "A Fresh Way to Do Statistics: Free, Friendly, and Flexible"
-msgstr ""
+msgstr "İstatistik Yapmanın Yeni Bir Yolu: Ücretsiz, Kullanıcı Dostu ve Esnek"
 
 msgctxt "WelcomePage|"
 msgid "Free:"
-msgstr ""
+msgstr "Ücretsiz:"
 
 msgctxt "WelcomePage|"
 msgid "Friendly:"
-msgstr ""
+msgstr "Kullanıcı dostu:"
 
 msgctxt "WelcomePage|"
 msgid "Flexible:"
-msgstr ""
+msgstr "Esnek:"
 
 msgctxt "WelcomePage|"
 msgid ""
 "JASP has an intuitive interface that was designed with the user in mind."
-msgstr ""
+msgstr "JASP, kullanıcıyı düşünerek tasarlanmış sezgisel bir arayüze sahiptir."
 
 msgctxt "WelcomePage|"
 msgid ""
 "JASP offers standard analysis procedures in both their classical and "
 "Bayesian manifestations."
 msgstr ""
+"JASP, hem klasik hem de Bayesçi görünümleriyle standart analiz prosedürleri "
+"sunmaktadır."
 
 msgctxt "WelcomePage|"
 msgid "So open a data file and take JASP for a spin!"
-msgstr ""
+msgstr "Hadi bir veri dosyası açın ve JASP'ı deneyin!"
 
 msgctxt "WelcomePage|"
 msgid "Click to get latest version"
-msgstr ""
+msgstr "En son sürümü almak için tıklayın"
 
 #, qt-format
 msgctxt "Analysis|"
 msgid "Could not find edit options of plot %1 so plot editing will not work..."
 msgstr ""
+"%1 grafiği düzenleme seçenekleri bulunamadı, bu nedenle grafik düzenleme "
+"çalışmayacak..."
 
 #, qt-format
 msgctxt "Analysis|"
@@ -1528,8 +1535,10 @@ msgid ""
 "Could not find set edit options of plot %1 so plot editing will not remember "
 "anything (if it evens works)..."
 msgstr ""
+"%1 grafiği düzenleme seçenekleri bulunamadı, bu yüzden grafik düzenleme "
+"hiçbir şeyi hatırlamayacak (çalışıyorsa bile)..."
 
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "AnalysisForm|"
 msgid "2 controls have the same name: %1"
 msgstr "2 denetim aynı ada sahip: %1"
@@ -1540,6 +1549,7 @@ msgid ""
 "Component %1 was loaded with the wrong type of value and has been reset to "
 "its default value."
 msgstr ""
+"Bileşen %1 yanlış türde değerle yüklendi ve varsayılan değerine sıfırlandı."
 
 #, qt-format
 msgctxt "AnalysisForm|"
@@ -1547,235 +1557,241 @@ msgid ""
 "These components were loaded with the wrong type of value and have been "
 "reset to their default values:%1"
 msgstr ""
+"Bu bileşenler yanlış türde bir değerle yüklendi ve varsayılan değerlerine "
+"sıfırlandı:%1"
 
 msgctxt "AnalysisForm|"
 msgid ""
 "Many components were loaded with the wrong type of value and have been reset "
 "to their default values."
 msgstr ""
+"Birçok bileşen yanlış türde değerle yüklendi ve varsayılan değerlerine "
+"sıfırlandı."
 
 msgctxt "AnalysisForm|"
 msgid "The file probably comes from an older version of JASP."
-msgstr ""
+msgstr "Dosya muhtemelen JASP'ın eski bir sürümünden geliyor."
 
 msgctxt "AnalysisForm|"
 msgid ""
 "That means that the results currently displayed do not correspond to the "
 "options selected."
 msgstr ""
+"Bu, şu anda görüntülenen sonuçların seçilen seçeneklere uymadığı anlamına "
+"gelir."
 
 msgctxt "AnalysisForm|"
 msgid "Refreshing the analysis may change the results."
-msgstr ""
+msgstr "Analizi yenilemek sonuçları değiştirebilir."
 
 msgctxt "AnalysisForm|"
 msgid "Table"
-msgstr ""
+msgstr "Tablo"
 
 msgctxt "AnalysisForm|"
 msgid "Plot"
-msgstr ""
+msgstr "Grafik"
 
 msgctxt "AnalysisForm|"
 msgid "Collection"
-msgstr ""
+msgstr "Koleksiyon"
 
 msgctxt "AnalysisForm|"
 msgid "Result"
-msgstr ""
+msgstr "Sonuç"
 
 msgctxt "AnalysisForm|"
 msgid "Output"
-msgstr ""
+msgstr "Çıktı"
 
 msgctxt "JASPControl|"
 msgid "Option"
-msgstr ""
+msgstr "Seçenek"
 
 msgctxt "JASPControl|"
 msgid "Section"
-msgstr ""
+msgstr "Bölüm"
 
 msgctxt "JASPControl|"
 msgid "CheckBox"
-msgstr ""
+msgstr "OnayKutusu"
 
 msgctxt "JASPControl|"
 msgid "Switch"
-msgstr ""
+msgstr "Değiştir"
 
 msgctxt "JASPControl|"
 msgid "Entry Field"
-msgstr ""
+msgstr "Giriş Alanı"
 
 msgctxt "JASPControl|"
 msgid "Radio Button"
-msgstr ""
+msgstr "Radyo butonu"
 
 msgctxt "JASPControl|"
 msgid "Radio Buttons"
-msgstr ""
+msgstr "Radyo butonları"
 
 msgctxt "JASPControl|"
 msgid "Input ListView"
-msgstr ""
+msgstr "Giriş ListeGörünümü"
 
 msgctxt "JASPControl|"
 msgid "TableView"
-msgstr ""
+msgstr "TabloGörünümü"
 
 msgctxt "JASPControl|"
 msgid "Slider"
-msgstr ""
+msgstr "Kaydırıcı"
 
 msgctxt "JASPControl|"
 msgid "TextArea"
-msgstr ""
+msgstr "MetinAlanı"
 
 msgctxt "JASPControl|"
 msgid "Button"
-msgstr ""
+msgstr "Buton"
 
 msgctxt "JASPControl|"
 msgid "Factors Form"
-msgstr ""
+msgstr "Faktörler Formu"
 
 msgctxt "JASPControl|"
 msgid "List of Components"
-msgstr ""
+msgstr "Bileşenlerin Listesi"
 
 msgctxt "JASPControl|"
 msgid "Group Box"
-msgstr ""
+msgstr "Grup Kutusu"
 
 msgctxt "JASPDoubleValidator|"
 msgid "The value must be "
-msgstr ""
+msgstr "Değer şu olmalıdır "
 
 #, qt-format
 msgctxt "JASPDoubleValidator|"
 msgid "&#8805; %1"
-msgstr ""
+msgstr "&#8805; %1"
 
 #, qt-format
 msgctxt "JASPDoubleValidator|"
 msgid "&gt; %1"
-msgstr ""
+msgstr "&gt; %1"
 
 msgctxt "JASPDoubleValidator|"
 msgid " and "
-msgstr ""
+msgstr " ve "
 
 #, qt-format
 msgctxt "JASPDoubleValidator|"
 msgid "&#8804; %1"
-msgstr ""
+msgstr "&#8804; %1"
 
 #, qt-format
 msgctxt "JASPDoubleValidator|"
 msgid "&lt; %1"
-msgstr ""
+msgstr "&lt; %1"
 
 msgctxt "JASPDoubleValidator|"
 msgid "No validation error"
-msgstr ""
+msgstr "Doğrulama hatası yok"
 
 msgctxt "KnownIssues|"
 msgid "Problem loading known issues"
-msgstr ""
+msgstr "Bilinen sorunları yükleme sorunu"
 
 msgctxt "AsyncLoader|"
 msgid "Loading Data Set"
-msgstr ""
+msgstr "Veri Seti Yükleniyor"
 
 msgctxt "AsyncLoader|"
 msgid "Saving Data Set"
-msgstr ""
+msgstr "Veri Seti Kaydediliyor"
 
 msgctxt "AsyncLoader|"
 msgid "Exporting Result Set"
-msgstr ""
+msgstr "Sonuç Seti Dışa Aktarılıyor"
 
 msgctxt "AsyncLoader|"
 msgid "Exporting Data Set"
-msgstr ""
+msgstr "Veri Seti Dışa Aktarılıyor"
 
 msgctxt "AsyncLoader|"
 msgid "Sync Data Set"
-msgstr ""
+msgstr "Veri Setini Senkronize Et"
 
 msgctxt "ColumnsModel|"
 msgid "The '"
-msgstr ""
+msgstr "'"
 
 msgctxt "ColumnsModel|"
 msgid "'-column "
-msgstr ""
+msgstr "'-kolon "
 
 #, qt-format
 msgctxt "FileEvent|"
 msgid "Importing Data from %1"
-msgstr ""
+msgstr "%1'den Veri İçe Aktarma"
 
 msgctxt "FileEvent|"
 msgid "Importing SPSS File"
-msgstr ""
+msgstr "SPSS Dosyası İçe Aktarılıyor"
 
 msgctxt "FileEvent|"
 msgid "Importing SAS File"
-msgstr ""
+msgstr "SAS Dosyası İçe Aktarılıyor"
 
 msgctxt "FileEvent|"
 msgid "Importing STATA File"
-msgstr ""
+msgstr "STATA Dosyası İçe Aktarılıyor"
 
 msgctxt "FileEvent|"
 msgid "Loading JASP File"
-msgstr ""
+msgstr "JASP Dosyası Yükleniyor"
 
 msgctxt "FileEvent|"
 msgid "Loading File"
-msgstr ""
+msgstr "Dosya Yükleniyor"
 
 msgctxt "FileEvent|"
 msgid "Saving JASP File"
-msgstr ""
+msgstr "JASP Dosyası Kaydediliyor"
 
 msgctxt "FileEvent|"
 msgid "Exporting Results"
-msgstr ""
+msgstr "Sonuçlar Dışa Aktarılıyor"
 
 msgctxt "FileEvent|"
 msgid "Exporting Data"
-msgstr ""
+msgstr "Veri Dışa Aktarılıyor"
 
 msgctxt "FileEvent|"
 msgid "Synchronizing Data"
-msgstr ""
+msgstr "Verilerin Senkronizasyonu"
 
 msgctxt "FileEvent|"
 msgid "Processing File"
-msgstr ""
+msgstr "Dosya işleniyor"
 
 msgctxt "EngineRepresentation|"
 msgid "The engine crashed while trying to run this analysis..."
-msgstr ""
+msgstr "Bu analizi çalıştırmaya çalışırken uygulama çöktü..."
 
 msgctxt "EngineRepresentation|"
 msgid "The engine crashed while trying to run the filter..."
-msgstr ""
+msgstr "Filtreyi çalıştırmaya çalışırken uygulama çöktü..."
 
 msgctxt "EngineRepresentation|"
 msgid "The engine crashed while trying to compute this column..."
-msgstr ""
+msgstr "Bu sütunu hesaplamaya çalışırken uygulama çöktü..."
 
 msgctxt "EngineRepresentation|"
 msgid "The engine crashed while trying to run rscript..."
-msgstr ""
+msgstr "Rscript'i çalıştırmaya çalışırken uygulama çöktü..."
 
 msgctxt "EngineRepresentation|"
 msgid "Error saving plot"
-msgstr ""
+msgstr "Grafik kaydedilirken hata oluştu"
 
 #, qt-format
 msgctxt "EngineRepresentation|"
@@ -1788,10 +1804,17 @@ msgid ""
 "If the problem persists, please report the message above at: https://jasp-"
 "stats.org/bug-reports"
 msgstr ""
+"Maalesef grafik kaydedilemedi.\n"
+"\n"
+"Hata mesajı:\n"
+"%1\n"
+"\n"
+"Sorun devam ederse lütfen yukarıdaki mesajı şu adresten bildirin: https"
+"://jasp-stats.org/bug-reports"
 
 msgctxt "EngineRepresentation|"
 msgid "Error resizing plot"
-msgstr ""
+msgstr "Grafik yeniden boyutlandırılırken hata oluştu"
 
 #, qt-format
 msgctxt "EngineRepresentation|"
@@ -1804,41 +1827,49 @@ msgid ""
 "If the problem persists, please report the message above at: https://jasp-"
 "stats.org/bug-reports"
 msgstr ""
+"Maalesef grafik düzenlenemedi.\n"
+"\n"
+"Hata mesajı:\n"
+"%1\n"
+"\n"
+"Sorun devam ederse lütfen yukarıdaki mesajı şu adresten bildirin: https"
+"://jasp-stats.org/bug-reports"
 
 msgctxt "MessageForwarder|"
 msgid "Yes"
-msgstr ""
+msgstr "Evet"
 
 msgctxt "MessageForwarder|"
 msgid "No"
-msgstr ""
+msgstr "Hayır"
 
 msgctxt "MessageForwarder|"
 msgid "Cancel"
-msgstr ""
+msgstr "İptal et"
 
-#, fuzzy
 msgctxt "MessageForwarder|"
 msgid "Save"
 msgstr "Kaydet"
 
 msgctxt "MessageForwarder|"
 msgid "Don't Save"
-msgstr ""
+msgstr "Kaydetme"
 
 msgctxt "MainWindow|"
 msgid "Datafile changed"
-msgstr ""
+msgstr "Veri dosyası değişti"
 
 msgctxt "MainWindow|"
 msgid ""
 "The datafile that was used by this JASP file was modified. Do you want to "
 "reload the analyses with this new data?"
 msgstr ""
+"Bu JASP dosyası tarafından kullanılan veri dosyası değiştirildi. Analizleri "
+"bu yeni verilerle yeniden yüklemek ister misiniz?"
 
 msgctxt "MainWindow|"
 msgid "Version incompatibility"
-msgstr ""
+msgstr "Sürüm uyumsuzluğu"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1847,6 +1878,10 @@ msgid ""
 "\n"
 "Refresh all analyses?"
 msgstr ""
+"Analizleriniz JASP'nin eski bir sürümünde oluşturuldu, görüntülerin PPI'sini "
+"değiştirmek için önce yenilenmeleri gerekir.\n"
+"\n"
+"Tüm analizleri yenile?"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1855,10 +1890,14 @@ msgid ""
 "\n"
 "Refresh the analysis?"
 msgstr ""
+"Bu analiz JASP'nin eski bir sürümünde oluşturuldu, görüntüyü kaydetmek için "
+"önce yenilenmesi gerekir.\n"
+"\n"
+"Analizi yenile?"
 
 msgctxt "MainWindow|"
 msgid "Save JASP Image"
-msgstr ""
+msgstr "JASP Görüntüsünü Kaydet"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1866,6 +1905,9 @@ msgid ""
 "Encapsulated PostScript (*.eps);;300 dpi Tagged Image File (*.tiff);;"
 "PowerPoint (*.pptx);;Scalable Vector Graphics (*.svg)"
 msgstr ""
+"Taşınabilir Ağ Grafikleri (*.png);;Taşınabilir Belge Biçimi (*.pdf);;"
+"Kapsüllenmiş PostScript (*.eps);;300 dpi Etiketli Resim Dosyası (*.tiff);;"
+"PowerPoint (*.pptx);;Ölçeklenebilir Vektör Grafikleri (*.svg)"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1874,6 +1916,10 @@ msgid ""
 "\n"
 "Refresh the analysis?"
 msgstr ""
+"Bu analiz JASP'nin eski bir sürümünde oluşturuldu, resmi yeniden "
+"boyutlandırmak için önce yenilenmesi gerekir.\n"
+"\n"
+"Analizi yenile?"
 
 #, qt-format
 msgctxt "MainWindow|"
@@ -1881,10 +1927,12 @@ msgid ""
 "Unable to open file because:\n"
 "%1"
 msgstr ""
+"Dosya açılamıyor çünkü:\n"
+"%1"
 
 msgctxt "MainWindow|"
 msgid "Save failed"
-msgstr ""
+msgstr "Kaydetme başarısız oldu"
 
 #, qt-format
 msgctxt "MainWindow|"
@@ -1893,20 +1941,25 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Dosya kaydedilemiyor.\n"
+"\n"
+"%1"
 
 msgctxt "MainWindow|"
 msgid "Do you have a GitHub account?"
-msgstr ""
+msgstr "GitHub hesabınız var mı?"
 
 msgctxt "MainWindow|"
 msgid ""
 "To be able to report the bug you need to have a GitHub account, do you have "
 "such an account?"
 msgstr ""
+"Hatayı bildirebilmeniz için bir GitHub hesabınızın olması gerekiyor, böyle "
+"bir hesabınız var mı?"
 
 msgctxt "MainWindow|"
 msgid "Join GitHub"
-msgstr ""
+msgstr "GitHub'a katılın"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1918,10 +1971,17 @@ msgid ""
 "\n"
 "Please fill in all missing information there."
 msgstr ""
+"Web tarayıcınızda sizin için iki sayfa açacağız.\n"
+"İkincisi, GitHub'da bir hesap için kayıt yaptırabileceğiniz 'GitHub'a Katıl' "
+"sayfası olacak.\n"
+"İlk sayfa, yeni GitHub hesabınızla oturum açtıktan sonra kısmen doldurulmuş "
+"bir hata raporuna yönlendiren bir oturum açma sayfası olacak.\n"
+"\n"
+"Lütfen oradaki tüm eksik bilgileri doldurun."
 
 msgctxt "MainWindow|"
 msgid "GitHub couldn't be openend for you"
-msgstr ""
+msgstr "GitHub sizin için açılamadı"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1929,10 +1989,13 @@ msgid ""
 "You can still report the bug by going to https://github.com/jasp-stats/jasp-"
 "issues/issues"
 msgstr ""
+"GitHub'a yönlendirilmenizde bir sorun oluştu..\n"
+"Hala https://github.com/jasp-stats/jasp-issues/issues adresine giderek "
+"hatayı bildirebilirsiniz"
 
 msgctxt "MainWindow|"
 msgid "Error"
-msgstr ""
+msgstr "Hata"
 
 #, qt-format
 msgctxt "MainWindow|"
@@ -1940,6 +2003,8 @@ msgid ""
 "JASP has experienced an unexpected internal error:\n"
 "%1"
 msgstr ""
+"JASP beklenmeyen dahili bir hatayla karşılaştı:\n"
+"%1"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1947,14 +2012,17 @@ msgid ""
 "\n"
 "We would be grateful if you could report this error to the JASP team."
 msgstr ""
+"JASP devam edemiyor ve kapanacak.\n"
+"\n"
+"Bu hatayı JASP ekibine bildirirseniz minnettar oluruz."
 
 msgctxt "MainWindow|"
 msgid "Report"
-msgstr ""
+msgstr "Raporla"
 
 msgctxt "MainWindow|"
 msgid "Exit"
-msgstr ""
+msgstr "Çıkış"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1963,6 +2031,10 @@ msgid ""
 "synchronize the data when the file is saved. Does this data file exist "
 "already, or do you want to generate it?"
 msgstr ""
+"JASP ilişkili veri dosyası (csv, sav veya ods dosyası) olmadan başlatıldı. "
+"Ancak verileri düzenlemek için JASP bu dosyaya dayalı bir elektronik tablo "
+"düzenleyicisi başlatır ve dosya kaydedildiğinde verileri senkronize eder. Bu "
+"veri dosyası zaten mevcut mu yoksa oluşturmak mı istiyorsunuz?"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1970,6 +2042,10 @@ msgid ""
 "edit the data, JASP needs this file on your computer. Does this data file "
 "also exist on your computer, or do you want to generate it?"
 msgstr ""
+"JASP, çevrimiçi bir veri dosyasıyla (csv, sav veya ods dosyası) başlatıldı. "
+"Ancak verileri düzenlemek için JASP'ın bilgisayarınızda bu dosyaya ihtiyacı "
+"var. Bu veri dosyası bilgisayarınızda da mevcut mu yoksa onu oluşturmak mı "
+"istiyorsunuz?"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -1977,22 +2053,25 @@ msgid ""
 "But to edit the data, JASP needs to write to the data file. Does the same "
 "file also exist on your computer, or do you want to generate it?"
 msgstr ""
+"JASP salt okunur bir veri dosyasıyla başlatıldı (muhtemelen örneklerden). "
+"Ancak verileri düzenlemek için JASP'ın veri dosyasına yazması gerekir. Aynı "
+"dosya bilgisayarınızda da mevcut mu yoksa onu oluşturmak mı istiyorsunuz?"
 
 msgctxt "MainWindow|"
 msgid "Start Spreadsheet Editor"
-msgstr ""
+msgstr "E-Tablo Düzenleyicisini Başlat"
 
 msgctxt "MainWindow|"
 msgid "Generate Data File"
-msgstr ""
+msgstr "Veri Dosyası Oluştur"
 
 msgctxt "MainWindow|"
 msgid "Find Data File"
-msgstr ""
+msgstr "Veri Dosyasını Bul"
 
 msgctxt "MainWindow|"
 msgid "Start Editor"
-msgstr ""
+msgstr "Editörü Başlat"
 
 #, qt-format
 msgctxt "MainWindow|"
@@ -2000,6 +2079,8 @@ msgid ""
 "Unable to start the editor : %1. Please check your editor settings in the "
 "preference menu."
 msgstr ""
+"Editör başlatılamıyor: %1. Lütfen tercihler menüsünde editör ayarlarınızı "
+"kontrol edin."
 
 #, qt-format
 msgctxt "MainWindow|"
@@ -2007,30 +2088,34 @@ msgid ""
 "No default spreadsheet editor for file %1. Use Preferences to set the right "
 "editor."
 msgstr ""
+"%1 dosyası için varsayılan elektronik tablo düzenleyicisi yok. Doğru "
+"düzenleyiciyi ayarlamak için Tercihler'i kullanın."
 
 msgctxt "MainWindow|"
 msgid "Remove All Analyses"
-msgstr ""
+msgstr "Tüm Analizleri Kaldır"
 
 msgctxt "MainWindow|"
 msgid "Do you really want to remove all analyses?"
-msgstr ""
+msgstr "Gerçekten tüm analizleri kaldırmak istiyor musunuz?"
 
 #, qt-format
 msgctxt "Modules::DynamicModule|"
 msgid "Loading upgrades for module %1 failed"
-msgstr ""
+msgstr "%1 modülü için yükseltmeler yüklenemedi"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid ""
 "An error occured trying to initialize a module from dir %1, the error was: %2"
 msgstr ""
+"%1 dizininden bir modülü başlatmaya çalışırken bir hata oluştu, hata şuydu: "
+"%2"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "An error occured trying to load module %1, the error was: '%2'"
-msgstr ""
+msgstr "%1 modülünü yüklemeye çalışırken bir hata oluştu, hata şuydu: '%2'"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2038,6 +2123,8 @@ msgid ""
 "Something went wrong removing files for module %1 at path '%2' and the error "
 "was: %3"
 msgstr ""
+"%1 modülü için '%2' yolundaki dosyaları kaldırırken bir sorun oluştu ve hata "
+"şuydu: %3"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2045,11 +2132,13 @@ msgid ""
 "The installation of Module %1 failed with the following errormessage:\n"
 "%2"
 msgstr ""
+"Modül %1'in kurulumu aşağıdaki hata mesajıyla başarısız oldu:\n"
+"%2"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "Cannot install module because %1 does not exist."
-msgstr ""
+msgstr "Modül yüklenemiyor çünkü %1 mevcut değil."
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2060,58 +2149,71 @@ msgid ""
 "you are not the author of this module and do not know how to do this, "
 "contact: %2"
 msgstr ""
+"Modül yüklenemiyor çünkü adı '%1' ve bu ad geliştirme modülünü yüklemek için "
+"ayrılmış.\n"
+"Adı değiştirin (DESCRIPTION ve description.json'da) ve tekrar deneyin. Bu "
+"modülün yazarı değilseniz ve bunu nasıl yapacağınızı bilmiyorsanız, şu "
+"kişiyle iletişime geçin: %2"
 
 msgctxt "Modules::DynamicModules|"
 msgid "Select a folder"
-msgstr ""
+msgstr "Bir klasör seçin"
 
 msgctxt "Modules::DynamicModules|"
 msgid ""
 "To install a development module you need to select the folder you want to "
 "watch and load, you can do this under the filemenu, Preferences->Advanced."
 msgstr ""
+"Bir geliştirme modülünü kurmak için izlemek ve yüklemek istediğiniz klasörü "
+"seçmeniz gerekir, bunu dosya menüsünden Tercihler->Gelişmiş kısmından "
+"yapabilirsiniz."
 
 msgctxt "Modules::DynamicModules|"
 msgid "Problem initializing module"
-msgstr ""
+msgstr "Modül başlatılırken sorun oluştu"
 
 msgctxt "Modules::DynamicModules|"
 msgid ""
 "There was a problem loading the developer module:\n"
 "\n"
 msgstr ""
+"Geliştirici modülü yüklenirken bir sorun oluştu:\n"
+"\n"
 
 msgctxt "Modules::DynamicModules|"
 msgid "Missing files or folders"
-msgstr ""
+msgstr "Eksik dosyalar veya klasörler"
 
 msgctxt "Modules::DynamicModules|"
 msgid ""
 "The selected folder cannot be installed as a developer module because it "
 "does not contain all the necessary files and folders."
 msgstr ""
+"Seçilen klasör, gerekli tüm dosya ve klasörleri içermediğinden geliştirici "
+"modülü olarak yüklenemez."
 
 msgctxt "Modules::DynamicModules|"
 msgid "Create a inst/Description.qml file."
-msgstr ""
+msgstr "inst/Description.qml dosyasını oluşturun."
 
 msgctxt "Modules::DynamicModules|"
 msgid "Create a R directory containing your analysis code."
-msgstr ""
+msgstr "Analiz kodunuzu içeren bir R dizini oluşturun."
 
 msgctxt "Modules::DynamicModules|"
 msgid "Create a inst/qml directory containing your optionsforms."
-msgstr ""
+msgstr "SeçenekFormlarınızı içeren bir inst/qml dizini oluşturun."
 
 msgctxt "Modules::DynamicModules|"
 msgid ""
 "Create a inst/icons directory containing the icons for your ribbonbuttons."
 msgstr ""
+"Ribbonbutton'larınızın ikonlarını içeren bir inst/icons dizini oluşturun."
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "Missing %1"
-msgstr ""
+msgstr "%1 eksik"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2120,6 +2222,9 @@ msgid ""
 "it your module cannot work, make sure to put it back. For now your old %2 "
 "file will be kept."
 msgstr ""
+"%1'i geliştirme modül dizininden kaldırmış gibi görünüyorsunuz. Bu olmadan "
+"modülünüz çalışamaz, geri koyduğunuzdan emin olun. Şimdilik önceki %2 "
+"dosyanız saklanacaktır."
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2129,11 +2234,14 @@ msgid ""
 "installed is a bit of a mystery and thus the development module shall be "
 "uninstalled now"
 msgstr ""
+"Geliştirme modülü dizininizde hiç %1 olmadığı anlaşılıyor. Modülünüz onsuz "
+"çalışamaz, bir tane oluşturduğunuzdan emin olun. Nasıl yüklediğiniz biraz "
+"gizemli ve bu nedenle geliştirme modülü şimdi kaldırılacak"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "%1 was removed!"
-msgstr ""
+msgstr "%1 kaldırıldı!"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2141,11 +2249,13 @@ msgid ""
 "You seem to have removed %1 but this file is required for your module to "
 "work. The development module is going to be uninstalled now."
 msgstr ""
+"%1'i kaldırmış gibi görünüyorsunuz ancak bu dosya modülünüzün çalışması için "
+"gereklidir. Geliştirme modülü şimdi kaldırılacak."
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "Missing folder %1"
-msgstr ""
+msgstr "Eksik klasör %1"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2154,6 +2264,9 @@ msgid ""
 "directory. Without it your module cannot work, make sure to put it back. For "
 "now your old folder will be kept."
 msgstr ""
+"%1 klasörünü geliştirme modülünüzün dizininden kaldırmış gibi "
+"görünüyorsunuz. Bu olmadan modülünüz çalışamaz, geri koyduğunuzdan emin "
+"olun. Şimdilik eski klasörünüz saklanacaktır."
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2163,15 +2276,18 @@ msgid ""
 "you installed is a bit of a mystery and thus the development module shall be "
 "uninstalled now"
 msgstr ""
+"Geliştirme modülü dizininizde %1 klasörü hiç yok gibi görünüyor. Bu olmadan "
+"modülünüz çalışamaz, bir tane oluşturduğunuzdan emin olun. Nasıl "
+"yüklediğiniz biraz gizemli ve bu nedenle geliştirme modülü şimdi kaldırılacak"
 
 msgctxt "Modules::DynamicModules|"
 msgid "Loading module description encountered a problem"
-msgstr ""
+msgstr "Modül açıklaması yüklenirken bir sorunla karşılaşıldı"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "<i>Could not load the description of the module in archive: '%1'</i>"
-msgstr ""
+msgstr "<i>Arşivdeki modülün açıklaması yüklenemedi: '%1'</i>"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2180,11 +2296,14 @@ msgid ""
 "maintained by %5.</i><br><i>See website for further details: <a "
 "href=\"http://%6\">%6</a></i><br>"
 msgstr ""
+"<h3>%1</h3><i>Sürüm %2</i><br><p>%3</p><br><br><i>%4 tarafından oluşturuldu "
+"ve %5 tarafından sürdürülüyor.</i><br><i>Daha fazla ayrıntı için web "
+"sitesine bakın: <a href=\"http://%6\">%6</a></i><br>"
 
 #, qt-format
 msgctxt "RibbonModel|"
 msgid "Loading bundled module %1 failed"
-msgstr ""
+msgstr "Paketlenmiş modül %1'in yüklenmesi başarısız oldu"
 
 #, qt-format
 msgctxt "RibbonModel|"
@@ -2193,6 +2312,9 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Paketlenmiş modül %1'in yüklenmesi şu hatayla başarısız oldu:\n"
+"\n"
+"%2"
 
 #, qt-format
 msgctxt "Modules::Upgrade|"
@@ -2200,6 +2322,8 @@ msgid ""
 "Wrong Upgrade being applied, was looking for function '%1' but this upgrade "
 "is for: '%2'"
 msgstr ""
+"Yanlış Yükseltme uygulanıyor, '%1' işlevi aranıyordu ancak bu yükseltme şuna "
+"yönelik: '%2'"
 
 #, qt-format
 msgctxt "Modules::Upgrade|"
@@ -2207,6 +2331,8 @@ msgid ""
 "Wrong Upgrade being applied, was looking for version '%1' but this upgrade "
 "is for: '%2' or lower"
 msgstr ""
+"Yanlış Yükseltme uygulanıyor, '%1' sürümü aranıyordu ancak bu yükseltme "
+"şunlar içindir: '%2' veya daha düşük"
 
 #, qt-format
 msgctxt "Modules::Upgrade|"
@@ -2218,19 +2344,24 @@ msgid ""
 "This should definitely not happen, perhaps the module author of '%2' can be "
 "of assistance"
 msgstr ""
+"Bir döngü algılandığı için yükseltme iptal ediliyor!\n"
+"\n"
+"%1 alınırsa, sonunda tekrar ulaşılır.\n"
+"\n"
+"Bu kesinlikle olmamalı, belki '%2' modülünün yazarı yardımcı olabilir"
 
 msgctxt "Modules::Upgrader|"
 msgid "Error Loading Upgrades"
-msgstr ""
+msgstr "Yükseltmeler Yüklenirken Hata"
 
 #, qt-format
 msgctxt "Modules::Upgrader|"
 msgid "While loading upgrades for %1 an error was encountered: %2"
-msgstr ""
+msgstr "%1 için yükseltmeler yüklenirken bir hatayla karşılaşıldı: %2"
 
 msgctxt "Modules::Upgrader|"
 msgid "Upgrades couldn't be read"
-msgstr ""
+msgstr "Yükseltmeler okunamadı"
 
 msgctxt "Modules::Upgrader|"
 msgid ""
@@ -2239,10 +2370,14 @@ msgid ""
 "might not be understood properly and some analyses might fail to load "
 "entirely."
 msgstr ""
+"Eski JASP dosyalarını okumak için gerekli yükseltmeler okunamadı...\n"
+"JASP'ı kullanmaya devam edebilir ve hatta (bazı) eski dosyaları "
+"okuyabilirsiniz ancak bazı seçenekler düzgün anlaşılmayabilir ve bazı "
+"analizler tamamen yüklenemeyebilir."
 
 msgctxt "OnlineDataManager|"
 msgid "File Changed"
-msgstr ""
+msgstr "Dosya Değiştirildi"
 
 msgctxt "OnlineDataManager|"
 msgid ""
@@ -2250,115 +2385,118 @@ msgid ""
 "\n"
 "Would you like to override the online file?"
 msgstr ""
+"Bu dosyanın çevrimiçi kopyası açıldığından beri değişti.\n"
+"\n"
+"Çevrimiçi dosyayı geçersiz kılmak ister misiniz?"
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Initiating upload of "
-msgstr ""
+msgstr "Yükleme başlatılıyor "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Initiating download of "
-msgstr ""
+msgstr "İndirme işlemi başlatılıyor "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Initiating making new file "
-msgstr ""
+msgstr "Yeni dosya oluşturma işlemi başlatılıyor "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Initiating making new folder "
-msgstr ""
+msgstr "Yeni klasör oluşturma işlemi başlatılıyor "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Initiating osf action "
-msgstr ""
+msgstr "Eylemin başlatılması "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Upload of "
-msgstr ""
+msgstr "Yükleme "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Download of "
-msgstr ""
+msgstr "İndir "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Creating new file "
-msgstr ""
+msgstr "Yeni dosya oluşturuluyor "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Creating new folder "
-msgstr ""
+msgstr "Yeni klasör oluşturuluyor "
 
 msgctxt "OnlineDataNodeOSF|"
 msgid "Osf action "
-msgstr ""
+msgstr "OSF eylemi "
 
 #, qt-format
 msgctxt "OnlineDataNodeOSF|"
 msgid "%1 %2 failed because %3"
-msgstr ""
+msgstr "%1 %2 başarısız oldu çünkü %3"
 
 msgctxt "OnlineDataNodeOSF|"
 msgid " in progress"
-msgstr ""
+msgstr " devam etmekte"
 
 msgctxt "ResultMenuModel|"
 msgid "Collapse"
-msgstr ""
+msgstr "Çöküş"
 
 msgctxt "ResultMenuModel|"
 msgid "Edit Title"
-msgstr ""
+msgstr "Başlığı Düzenle"
 
 msgctxt "ResultMenuModel|"
 msgid "Copy"
-msgstr ""
+msgstr "Kopyala"
 
 msgctxt "ResultMenuModel|"
 msgid "Copy LaTeX"
-msgstr ""
+msgstr "LaTeX'i Kopyala"
 
 msgctxt "ResultMenuModel|"
 msgid "Copy Citations"
-msgstr ""
+msgstr "Alıntıları Kopyala"
 
 msgctxt "ResultMenuModel|"
 msgid "Save Image As"
-msgstr ""
+msgstr "Resmi Farklı Kaydet"
 
 msgctxt "ResultMenuModel|"
 msgid "Edit Image"
-msgstr ""
+msgstr "Resmi Düzenle"
 
 msgctxt "ResultMenuModel|"
 msgid "Add Note"
-msgstr ""
+msgstr "Not Ekle"
 
 msgctxt "ResultMenuModel|"
 msgid "Duplicate"
-msgstr ""
+msgstr "Çoğalt"
 
 msgctxt "ResultMenuModel|"
 msgid "Remove"
-msgstr ""
+msgstr "Çıkar"
 
 msgctxt "ResultMenuModel|"
 msgid "Remove All"
-msgstr ""
+msgstr "Hepsini Çıkar"
 
 msgctxt "ResultMenuModel|"
 msgid "Refresh All"
-msgstr ""
+msgstr "Hepsini Yenile"
 
 msgctxt "ResultMenuModel|"
 msgid "Show Dependencies"
-msgstr ""
+msgstr "Bağımlılıkları Göster"
 
 msgctxt "ResultMenuModel|"
 msgid "Export Results"
-msgstr ""
+msgstr "Sonuçları Dışa Aktar"
 
 msgctxt "ResultsJsInterface|"
 msgid "Results Warning"
-msgstr ""
+msgstr "Sonuç Uyarısı"
 
 msgctxt "HelpModel|"
 msgid ""
@@ -2369,68 +2507,73 @@ msgid ""
 "\n"
 "Additional documentation will be available in future releases of JASP."
 msgstr ""
+"Yakında!\n"
+"========\n"
+"\n"
+"Şu anda bu analiz için herhangi bir yardım mevcut değil.\n"
+"\n"
+"JASP'nin gelecek sürümlerinde ek belgeler mevcut olacak."
 
 msgctxt "QObject|"
 msgid "valid R code"
-msgstr ""
+msgstr "geçerli R kodu"
 
 #, qt-format
 msgctxt "ComboBoxBase|"
 msgid "Unknown option %1 in DropDown %2"
-msgstr ""
+msgstr "DropDown %2'de Bilinmeyen seçenek %1"
 
 msgctxt "ActionButtons|"
 msgid "Open"
-msgstr ""
+msgstr "Aç"
 
-#, fuzzy
 msgctxt "ActionButtons|"
 msgid "Save"
 msgstr "Kaydet"
 
 msgctxt "ActionButtons|"
 msgid "Save As"
-msgstr ""
+msgstr "Farklı Kaydet"
 
 msgctxt "ActionButtons|"
 msgid "Export Results"
-msgstr ""
+msgstr "Sonuçları Dışa Aktar"
 
 msgctxt "ActionButtons|"
 msgid "Export Data"
-msgstr ""
+msgstr "Veriyi Dışa Aktar"
 
 msgctxt "ActionButtons|"
 msgid "Sync Data"
-msgstr ""
+msgstr "Verileri Senkronize Et"
 
 msgctxt "ActionButtons|"
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 msgctxt "ActionButtons|"
 msgid "Preferences"
-msgstr ""
+msgstr "Tercihler"
 
 msgctxt "ActionButtons|"
 msgid "About"
-msgstr ""
+msgstr "Hakkında"
 
 msgctxt "DataLibraryBreadCrumbsListModel|"
 msgid "Categories"
-msgstr ""
+msgstr "Kategoriler"
 
 msgctxt "FileMenu|"
 msgid "File Types"
-msgstr ""
+msgstr "Dosya Türleri"
 
 msgctxt "FileMenu|"
 msgid "Failed to open file from OSF"
-msgstr ""
+msgstr "OSF'den dosya açılamadı"
 
 msgctxt "FileMenu|"
 msgid "No associated data file"
-msgstr ""
+msgstr "İlişkili veri dosyası yok"
 
 msgctxt "FileMenu|"
 msgid ""
@@ -2438,34 +2581,38 @@ msgid ""
 "Do you want to search for such a data file on your computer?\n"
 "NB: You can also set this data file via menu File/Sync Data."
 msgstr ""
+"JASP'nin senkronize edilecek ilişkili bir veri dosyası yok.\n"
+"Bilgisayarınızda böyle bir veri dosyasını aramak ister misiniz?\n"
+"Not: Bu veri dosyasını Dosya/Verileri Senkronize Et menüsü üzerinden de "
+"ayarlayabilirsiniz."
 
 msgctxt "FileMenu|"
 msgid "Find Data File"
-msgstr ""
+msgstr "Veri Dosyasını Bul"
 
 msgctxt "FileMenu|"
 msgid "Data File"
-msgstr ""
+msgstr "Veri Dosyası"
 
 msgctxt "OSF|"
 msgid "Username and/or password are not correct. Please try again."
-msgstr ""
+msgstr "Kullanıcı adı ve/veya şifre doğru değil. Lütfen tekrar deneyin."
 
 msgctxt "OSF|"
 msgid "OSF service not available. Please check your internet connection."
-msgstr ""
+msgstr "OSF hizmeti mevcut değil. Lütfen internet bağlantınızı kontrol edin."
 
 msgctxt "OSF|"
 msgid "Connection Timeout error. Please check your internet connection."
-msgstr ""
+msgstr "Bağlantı Zaman Aşımı hatası. Lütfen internet bağlantınızı kontrol edin."
 
 msgctxt "OSF|"
 msgid "OSF Error"
-msgstr ""
+msgstr "OSF Hatası"
 
 msgctxt "OSF|"
 msgid "Projects"
-msgstr ""
+msgstr "Projeler"
 
 msgctxt "OSF|"
 msgid ""
@@ -2473,10 +2620,13 @@ msgid ""
 "\n"
 "To add a new project please use the online OSF services."
 msgstr ""
+"Projeler listesine dosyalar eklenemez.\n"
+"\n"
+"Yeni bir proje eklemek için lütfen çevrimiçi OSF hizmetlerini kullanın."
 
 msgctxt "OSF|"
 msgid "Data Providers"
-msgstr ""
+msgstr "Veri Sağlayıcıları"
 
 msgctxt "OSF|"
 msgid ""
@@ -2485,116 +2635,122 @@ msgid ""
 "To add a new data provider (eg. google drive) please use the online OSF "
 "services."
 msgstr ""
+"Dosyalar bir projenin veri sağlayıcıları listesine eklenemez.\n"
+"\n"
+"Yeni bir veri sağlayıcısı (örneğin google drive) eklemek için lütfen "
+"çevrimiçi OSF hizmetlerini kullanın."
 
 #, qt-format
 msgctxt "OSF|"
 msgid "Files cannot be added to '%1' for an unknown reason."
-msgstr ""
+msgstr "Bilinmeyen bir nedenden dolayı '%1' klasörüne dosya eklenemiyor."
 
 msgctxt "OSF|"
 msgid "File Types"
-msgstr ""
+msgstr "Dosya Türleri"
 
 msgctxt "OSF|"
 msgid "Failed to open file from OSF"
-msgstr ""
+msgstr "OSF'den dosya açılamadı"
 
 msgctxt "OSF|"
 msgid "An error occured and the folder could not be created."
-msgstr ""
+msgstr "Bir hata oluştu ve klasör oluşturulamadı."
 
 msgctxt "OSF|"
 msgid ""
 "A new folder cannot be added to the projects list.<br>To add a new project "
 "please use the online OSF services."
 msgstr ""
+"Projeler listesine yeni klasör eklenemez.<br>Yeni bir proje eklemek için "
+"lütfen çevrimiçi OSF hizmetlerini kullanın."
 
 msgctxt "OSF|"
 msgid ""
 "A new folder cannot be added to a projects data providers list.<br>To add a "
 "new data provider (eg. google drive) please use the online OSF services."
 msgstr ""
+"Bir projenin veri sağlayıcıları listesine yeni bir klasör eklenemez.<br>Yeni "
+"bir veri sağlayıcı (ör. Google Drive) eklemek için lütfen çevrimiçi OSF "
+"hizmetlerini kullanın."
 
 #, qt-format
 msgctxt "OSF|"
 msgid "A new folder cannot be added to '%1' for an unknown reason."
 msgstr ""
+"Bilinmeyen bir nedenden dolayı '%1' klasörüne yeni bir klasör eklenemiyor."
 
 msgctxt "OSF|"
 msgid "Folder"
-msgstr ""
+msgstr "Dosya"
 
 msgctxt "OSF|"
 msgid "Login"
-msgstr ""
+msgstr "Giriş Yap"
 
 msgctxt "OSF|"
 msgid "User or password cannot be empty."
-msgstr ""
+msgstr "Kullanıcı adı veya şifre boş olamaz."
 
 msgctxt "OSF|"
 msgid "Entry name cannot be empty."
-msgstr ""
+msgstr "Giriş adı boş olamaz."
 
 #, qt-format
 msgctxt "OSF|"
 msgid "%1 name can only contain the following characters A-Z a-z 0-9 _ %2"
-msgstr ""
+msgstr "%1 adı yalnızca şu karakterleri içerebilir: A-Z a-z 0-9 _ %2"
 
-#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "Recent Files"
 msgstr "Son Dosyalar"
 
 msgctxt "ResourceButtons|"
 msgid "Current File"
-msgstr ""
+msgstr "Mevcut Dosya"
 
 msgctxt "ResourceButtons|"
 msgid "Computer"
-msgstr ""
+msgstr "Bilgisayar"
 
-#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "OSF"
 msgstr "OSF"
 
-#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "Data Library"
 msgstr "Veri Kütüphanesi"
 
 msgctxt "ResourceButtons|"
 msgid "Data"
-msgstr ""
+msgstr "Veri"
 
-#, fuzzy
 msgctxt "ResourceButtons|"
 msgid "Results"
 msgstr "Sonuçlar"
 
 msgctxt "ResourceButtons|"
 msgid "Interface"
-msgstr ""
+msgstr "Arayüz"
 
 msgctxt "ResourceButtons|"
 msgid "Advanced"
-msgstr ""
+msgstr "Gelişmiş"
 
 #, qt-format
 msgctxt "ListModelCustomContrasts|"
 msgid "Contrast %1"
-msgstr ""
+msgstr "Kontrast %1"
 
 #, qt-format
 msgctxt "ListModelLayersAssigned|"
 msgid "Layer %1"
-msgstr ""
+msgstr "Katman %1"
 
 #, qt-format
 msgctxt "ListModelTableViewBase|"
 msgid "Column number in source is bigger than the number of columns of %1"
-msgstr ""
+msgstr "Kaynaktaki sütun numarası %1'in sütun sayısından büyük"
 
 #, qt-format
 msgctxt "RadioButtonsGroupBase|"
@@ -2602,243 +2758,247 @@ msgid ""
 "A RadioButton inside RadioButtonGroup element (name: %1) does not have any "
 "name"
 msgstr ""
+"RadioButtonGroup öğesi içindeki bir RadioButton'ın (adı: %1) herhangi bir "
+"adı yok"
 
 #, qt-format
 msgctxt "RadioButtonsGroupBase|"
 msgid "No radio button corresponding to name %1"
-msgstr ""
+msgstr "%1 adına karşılık gelen bir radyo düğmesi yok"
 
 #, qt-format
 msgctxt "RowControls|"
 msgid "A row component in %1 does not have a name"
-msgstr ""
+msgstr "%1'deki bir satır bileşeninin adı yok"
 
 #, qt-format
 msgctxt "RowControls|"
 msgid "2 row components in %1 have the same name"
-msgstr ""
+msgstr "%1'deki 2 satır bileşeni aynı ada sahip"
 
 msgctxt "SortMenuModel|"
 msgid "None"
-msgstr ""
+msgstr "Hiçbiri"
 
 msgctxt "SortMenuModel|"
 msgid "Sort by name"
-msgstr ""
+msgstr "İsme göre sırala"
 
 msgctxt "SortMenuModel|"
 msgid "Sort by name A-Z"
-msgstr ""
+msgstr "Adına göre A'dan Z'ye sırala"
 
 msgctxt "SortMenuModel|"
 msgid "Sort by name Z-A"
-msgstr ""
+msgstr "Adına göre Z'den A'ya sırala"
 
 msgctxt "SortMenuModel|"
 msgid "Sort by type"
-msgstr ""
+msgstr "Türe göre sırala"
 
 msgctxt "SortMenuModel|"
 msgid "Sort by date"
-msgstr ""
+msgstr "Tarihe göre sırala"
 
 msgctxt "SortMenuModel|"
 msgid "Sort by size"
-msgstr ""
+msgstr "Boyuta göre sırala"
 
 msgctxt "SortMenuModel|"
 msgid "SortMenuModel not called with a sortable parent"
-msgstr ""
+msgstr "SortMenuModel sıralanabilir bir üst öğeyle çağrılmadı"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "No name given for the source of %1"
-msgstr ""
+msgstr "%1 kaynağı için herhangi bir isim verilmedi"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "No source given for %1"
-msgstr ""
+msgstr "%1 için kaynak verilmedi"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Cannot find component %1 for the source of %2"
-msgstr ""
+msgstr "%2 kaynağı için %1 bileşeni bulunamadı"
 
 msgctxt "TextAreaBase|"
 msgid "Model applied"
-msgstr ""
+msgstr "Uygulanan model"
 
 msgctxt "TextInputBase|"
 msgid "The expression did not return a number."
-msgstr ""
+msgstr "İfade bir sayı döndürmedi."
 
 msgctxt "TextInputBase|"
 msgid "Integer Field"
-msgstr ""
+msgstr "Tamsayı Alanı"
 
 msgctxt "TextInputBase|"
 msgid "Percentage Field"
-msgstr ""
+msgstr "Yüzde Alanı"
 
 msgctxt "TextInputBase|"
 msgid "Doubles Field"
-msgstr ""
+msgstr "Çiftler Alanı"
 
 msgctxt "TextInputBase|"
 msgid "Add Column Field"
-msgstr ""
+msgstr "Sütun Alanı Ekle"
 
 msgctxt "TextInputBase|"
 msgid "Add Computed Column Field"
-msgstr ""
+msgstr "Hesaplanan Sütun Alanı Ekle"
 
 msgctxt "TextInputBase|"
 msgid "Formula Field"
-msgstr ""
+msgstr "Formül Alanı"
 
 msgctxt "TextInputBase|"
 msgid "Text Field"
-msgstr ""
+msgstr "Metin Alanı"
 
 #, qt-format
 msgctxt "TextInputBase|"
 msgid "The value (%1) must be %2"
-msgstr ""
+msgstr "Değer (%1) %2 olmalıdır"
 
 #, qt-format
 msgctxt "VariablesListBase|"
 msgid "Source model of %1 must be from a Factor List"
-msgstr ""
+msgstr "%1'in kaynak modeli bir Faktör Listesinden olmalıdır"
 
 #, qt-format
 msgctxt "VariablesListBase|"
 msgid "Wrong kind of source for VariableList %1"
-msgstr ""
+msgstr "VariableList %1 için yanlış kaynak türü"
 
 #, qt-format
 msgctxt "VariablesListBase|"
 msgid "No related list found for VariablesList %1"
-msgstr ""
+msgstr "VariablesList %1 için ilgili liste bulunamadı"
 
 #, qt-format
 msgctxt "VariablesListBase|"
 msgid "Wrong kind of related list (%1) found for VariablesList %2"
-msgstr ""
+msgstr "VariablesList %2 için yanlış türde ilişkili liste (%1) bulundu"
 
 msgctxt "FactorLevelList|"
 msgid "Factor"
-msgstr ""
+msgstr "Faktör"
 
 msgctxt "FactorLevelList|"
 msgid "Level"
-msgstr ""
+msgstr "Seviye"
 
 msgctxt "FactorLevelList|"
 msgid "New Factor"
-msgstr ""
+msgstr "Yeni Faktör"
 
 msgctxt "FactorLevelList|"
 msgid "New Level"
-msgstr ""
+msgstr "Yeni Seviye"
 
 msgctxt "PrefsAdvanced|"
 msgid "Remember enabled modules"
-msgstr ""
+msgstr "Etkinleştirilmiş modülleri hatırla"
 
 msgctxt "PrefsAdvanced|"
 msgid "Use default PAT for Github"
-msgstr ""
+msgstr "Github için varsayılan PAT'ı kullan"
 
 msgctxt "PrefsAdvanced|"
 msgid ""
 "Either use the bundled GITHUB_PAT or, if available, use the one set in "
 "environment variables."
 msgstr ""
+"Ya paketlenmiş GITHUB_PAT'ı kullanın ya da varsa ortam değişkenlerinde "
+"ayarlananı kullanın."
 
 msgctxt "PrefsAdvanced|"
 msgid "Private GITHUB_PAT:"
-msgstr ""
+msgstr "Özel GITHUB_PAT:"
 
 msgctxt "PrefsUI|"
 msgid "R, JAGS, or lavaan code:"
-msgstr ""
+msgstr "R, JAGS veya lavaan kodu:"
 
 msgctxt "PrefsUI|"
 msgid "Result & help:"
-msgstr ""
+msgstr "Sonuç ve yardım:"
 
 msgctxt "PrefsUI|"
 msgid "Light theme"
-msgstr ""
+msgstr "Açık tema"
 
 msgctxt "PrefsUI|"
 msgid "Dark theme"
-msgstr ""
+msgstr "Koyu tema"
 
 msgctxt "PrefsUI|"
 msgid "Preferred language"
-msgstr ""
+msgstr "Tercih edilen dil"
 
 msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
-msgstr ""
+msgstr "Güvenli grafik modu"
 
 msgctxt "PrefsUI|"
 msgid "Disable animations"
-msgstr ""
+msgstr "Animasyonları devre dışı bırak"
 
 msgctxt "PrefsUI|"
 msgid "Use native file dialogs"
-msgstr ""
+msgstr "Yerel dosya iletişim kutularını kullan"
 
 msgctxt "ModulesMenu|"
 msgid "Select a developer module by clicking here"
-msgstr ""
+msgstr "Buraya tıklayarak bir geliştirici modülü seçin"
 
 msgctxt "RibbonBar|"
 msgid "Show main menu"
-msgstr ""
+msgstr "Ana menüyü göster"
 
 msgctxt "RibbonBar|"
 msgid "Show modules menu"
-msgstr ""
+msgstr "Modüller menüsünü göster"
 
 msgctxt "jasp-qml-style-example|"
 msgid "A nice grouping of elements"
-msgstr ""
+msgstr "Güzel bir eleman gruplandırması"
 
 msgctxt "jasp-qml-style-example|"
 msgid "You can enter an integer here: "
-msgstr ""
+msgstr "Buraya bir tam sayı girebilirsiniz: "
 
 msgctxt "jasp-qml-style-example|"
 msgid "This is an incredibly useful tooltip right?"
-msgstr ""
+msgstr "Bu inanılmaz derecede faydalı bir ipucu, değil mi?"
 
 msgctxt "jasp-qml-style-example|"
 msgid "The first checkbox"
-msgstr ""
+msgstr "İlk onay kutusu"
 
 msgctxt "jasp-qml-style-example|"
 msgid "The second checkbox"
-msgstr ""
+msgstr "İkinci onay kutusu"
 
 msgctxt "jasp-qml-style-example|"
 msgid "The last checkbox"
-msgstr ""
+msgstr "Son onay kutusu"
 
 msgctxt "jasp-qml-style-example|"
 msgid "Variables"
-msgstr ""
+msgstr "Değişkenler"
 
 msgctxt "jasp-qml-style-example|"
 msgid "Split"
-msgstr ""
+msgstr "Ayır"
 
 msgctxt "JASPControl|"
 msgid "Factor Level List"
-msgstr ""
+msgstr "Faktör Seviye Listesi"
 
 msgctxt "KnownIssues|"
 msgid ""
@@ -2846,6 +3006,9 @@ msgid ""
 "probably could not connect to the server. Don't worry, JASP will work fine "
 "it just might not tell you about a few small known issues."
 msgstr ""
+"JASP bu sürüm için bilinen sorunları indirirken bir sorunla karşılaştı, "
+"muhtemelen sunucuya bağlanamadı. Endişelenmeyin, JASP iyi çalışacaktır, "
+"sadece size birkaç küçük bilinen sorundan bahsetmeyebilir."
 
 msgctxt "KnownIssues|"
 msgid ""
@@ -2853,6 +3016,9 @@ msgid ""
 "isn't necessarily a problem but if it keeps occuring you could contact the "
 "JASP team for assistance."
 msgstr ""
+"JASP, bu sürüm için bilinen sorunları yüklerken bir sorunla karşılaştı. Bu "
+"tam olarak bir sorun olmayabilir ancak bu sorun devam ederse yardım için "
+"JASP ekibiyle iletişime geçebilirsiniz."
 
 #, qt-format
 msgctxt "KnownIssues|"
@@ -2861,6 +3027,9 @@ msgid ""
 "this isn't necessarily a problem but if it keeps occuring you could contact "
 "the JASP team for assistance."
 msgstr ""
+"JASP bu sürüm için bilinen sorunları yüklerken bir sorunla karşılaştı ('%1')"
+", bu mutlaka bir sorun değildir ancak bu sorun devam ederse yardım için JASP "
+"ekibiyle iletişime geçebilirsiniz."
 
 #, qt-format
 msgctxt "MainWindow|"
@@ -2868,19 +3037,24 @@ msgid ""
 "No default spreadsheet editor for file %1. Do you want to export the data "
 "into a CSV file and start the default spreadsheet editor for this CSV file?"
 msgstr ""
+"%1 dosyası için varsayılan elektronik tablo düzenleyicisi yok. Verileri bir "
+"CSV dosyasına aktarmak ve bu CSV dosyası için varsayılan elektronik tablo "
+"düzenleyicisini başlatmak ister misiniz?"
 
 msgctxt "MainWindow|"
 msgid "Generate Data File as CSV"
-msgstr ""
+msgstr "Veri Dosyasını CSV Olarak Oluştur"
 
 msgctxt "MainWindow|"
 msgid "Cancel"
-msgstr ""
+msgstr "İptal et"
 
 msgctxt "Modules::DynamicModules|"
 msgid ""
 "Initializing module during JASP startup failed, should the module be removed?"
 msgstr ""
+"JASP başlatma sırasında modülün başlatılması başarısız oldu, modül "
+"kaldırılmalı mı?"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -2890,15 +3064,19 @@ msgid ""
 "\n"
 "Should the module be removed?"
 msgstr ""
+"JASP başlatma sırasında modülün başlatılması şu mesajla başarısız oldu:\n"
+"%1\n"
+"\n"
+"Modül kaldırılmalı mı?"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
 msgid "Initializing module %1 failed"
-msgstr ""
+msgstr "%1 modülünün başlatılması başarısız oldu"
 
 msgctxt "RibbonModel|"
 msgid "Module missing"
-msgstr ""
+msgstr "Modül eksik"
 
 #, qt-format
 msgctxt "RibbonModel|"
@@ -2908,89 +3086,95 @@ msgid ""
 "If you installed this version of JASP via an official installer let the JASP "
 "team know."
 msgstr ""
+"Görünüşe göre paketlenmiş modül %1 doğru bir şekilde yüklenmemiş ve bu "
+"nedenle yüklenemiyor.\n"
+"Bu JASP sürümünü resmi bir yükleyici aracılığıyla yüklediyseniz JASP ekibine "
+"bildirin."
 
 msgctxt "RibbonModel|"
 msgid "Execute R code in a console"
-msgstr ""
+msgstr "R kodunu bir konsolda yürütün"
 
 msgctxt "VariablesFormBase|"
 msgid "Only 1 Available Variables list can be set in a VariablesForm"
 msgstr ""
+"Bir VariablesForm'da yalnızca 1 Kullanılabilir Değişken listesi ayarlanabilir"
 
 msgctxt "VariablesFormBase|"
 msgid "There is no Available List in the Variables Form"
-msgstr ""
+msgstr "Değişkenler Formunda Kullanılabilir Liste yok"
 
 msgctxt "TableView|"
 msgid "Add to the left"
-msgstr ""
+msgstr "Sola ekle"
 
 msgctxt "TableView|"
 msgid "Add to the right"
-msgstr ""
+msgstr "Sağa ekle"
 
-#, fuzzy
 msgctxt "TableView|"
 msgid "Delete"
 msgstr "Sil"
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns the sign of values"
-msgstr ""
+msgstr "değerlerin işaretini döndürür"
 
 msgctxt "OSFLogin|"
 msgid ""
 "<sup>*</sup>OSF account login only, ORCID or institutional login are not "
 "supported."
 msgstr ""
+"<sup>*</sup>Yalnızca OSF hesabı girişi, ORCID veya kurumsal giriş "
+"desteklenmemektedir."
 
 msgctxt "PrefsAdvanced|"
 msgid "Clear installed modules and packages"
-msgstr ""
+msgstr "Kurulu modülleri ve paketleri temizle"
 
 msgctxt "PrefsAdvanced|"
 msgid "This will erase the 'renv' and 'Modules' folders in the appdata."
-msgstr ""
+msgstr "Bu işlem appdata'daki 'renv' ve 'Modules' klasörlerini silecektir."
 
 msgctxt "PrefsData|"
 msgid "Windows workaround"
-msgstr ""
+msgstr "Pencere geçici çözümü"
 
 msgctxt "PrefsData|"
 msgid "See documentation for more information "
-msgstr ""
+msgstr "Daha fazla bilgi için belgelere bakın "
 
 msgctxt "PrefsUI|"
 msgid "User Interface Options"
-msgstr ""
+msgstr "Kullanıcı Arayüzü Seçenekleri"
 
 msgctxt "FilterWindow|"
 msgid "returns the sign of values"
-msgstr ""
+msgstr "değerlerin işaretini döndürür"
 
 msgctxt "PlotEditingAxis|"
 msgid "Label"
-msgstr ""
+msgstr "Etiket"
 
 msgctxt "PlotEditingAxis|"
 msgid "Tick #"
-msgstr ""
+msgstr "Tick #"
 
 msgctxt "PlotEditingAxis|"
 msgid "Insert tick left"
-msgstr ""
+msgstr "Sola onay işareti ekle"
 
 msgctxt "PlotEditingAxis|"
 msgid "Insert tick right"
-msgstr ""
+msgstr "Sağa onay işareti ekle"
 
 msgctxt "PlotEditingAxis|"
 msgid "Delete tick"
-msgstr ""
+msgstr "Tiki sil"
 
 msgctxt "MainWindow|"
 msgid "Clean user installed modules and pkgs"
-msgstr ""
+msgstr "Kullanıcı tarafından yüklenen modüller ve paketleri temizle"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -2999,58 +3183,64 @@ msgid ""
 "\n"
 "Make sure to restart JASP afterwards!"
 msgstr ""
+"Modüllerinizi ve paketlerinizi temizlemek yalnızca JASP ile birlikte "
+"gelenleri kullandığınızdan emin olmanızı sağlayacaktır.\n"
+"\n"
+"Sonrasında JASP'yi yeniden başlattığınızdan emin olun!"
 
 msgctxt "MainWindow|"
 msgid "Clean"
-msgstr ""
+msgstr "Temizle"
 
 msgctxt "PrefsData|"
 msgid "<i>On Linux the default spreadsheet editor is always used.</i>"
 msgstr ""
+"<i>Linux'ta her zaman varsayılan elektronik tablo düzenleyicisi "
+"kullanılır.</i>"
 
 msgctxt "PlotEditor|"
 msgid "OK"
-msgstr ""
+msgstr "TAMAM"
 
 msgctxt "PlotEditor|"
 msgid "Cancel"
-msgstr ""
+msgstr "İptal et"
 
 msgctxt "PlotEditor|"
 msgid "Reset defaults"
-msgstr ""
+msgstr "Varsayılanları sıfırla"
 
 msgctxt "PlotEditingAxis|"
 msgid "Show title"
-msgstr ""
+msgstr "Başlığı göster"
 
 msgctxt "PlotEditingAxis|"
 msgid "Show axis"
-msgstr ""
+msgstr "Ekseni göster"
 
 msgctxt "PlotEditingAxis|"
 msgid "Ticks:"
-msgstr ""
+msgstr "Tikler:"
 
 msgctxt "PlotEditingAxis|"
 msgid "Position"
-msgstr ""
+msgstr "Pozisyon"
 
 msgctxt "PlotEditingAxis|"
 msgid "Advanced"
-msgstr ""
+msgstr "Gelişmiş"
 
 msgctxt "PlotEditingAxis|"
 msgid "Parse title as R expression"
-msgstr ""
+msgstr "Başlığı R ifadesi olarak ayrıştır"
 
 msgctxt "PlotEditingAxis|"
 msgid "Limits:"
-msgstr ""
+msgstr "Sınırlar:"
 
 msgctxt "PlotEditor|"
 msgid "Save image as"
-msgstr ""
+msgstr "Resmi farklı kaydet"
 
 #, qt-format
 msgctxt "EngineRepresentation|"
@@ -3063,6 +3253,13 @@ msgid ""
 "If the problem persists, please report the message above at: https://jasp-"
 "stats.org/bug-reports"
 msgstr ""
+"Maalesef çizim yeniden boyutlandırılamadı.\n"
+"\n"
+"Hata mesajı:\n"
+"%1\n"
+"\n"
+"Sorun devam ederse lütfen yukarıdaki mesajı şu adresten bildirin: https"
+"://jasp-stats.org/bug-reports"
 
 msgctxt "EngineRepresentation|"
 msgid "Error editing plot"
@@ -3172,7 +3369,7 @@ msgstr "Sorgu"
 
 msgctxt "Database|"
 msgid "Execute"
-msgstr ""
+msgstr "Uygula"
 
 msgctxt "Database|"
 msgid "Preview data"
@@ -3222,6 +3419,7 @@ msgstr "Veritabanı Şifresi"
 msgctxt "DataSetPackage|"
 msgid "The databaseconnection needs a password for user '%1'"
 msgstr ""
+"Veritabanı bağlantısının '%1' kullanıcısı için bir parolaya ihtiyacı var"
 
 msgctxt "DataSetPackage|"
 msgid "The databaseconnection needs a password"
@@ -3237,6 +3435,8 @@ msgid ""
 "Could not connect to database because of '%1', want to try a different "
 "password?"
 msgstr ""
+"'%1' nedeniyle veritabanına bağlanılamadı, farklı bir parola denemek ister "
+"misiniz?"
 
 msgctxt "DataSetPackage|"
 msgid "Could not connect to the database so synchronizing will be disabled."
@@ -3248,6 +3448,8 @@ msgctxt "DatabaseImporter|"
 msgid ""
 "Failed to connect to database %1 at %2 with user %3, last error was: '%4'"
 msgstr ""
+"%2 adresindeki %1 veritabanına %3 kullanıcısı ile bağlanılamadı, son hata: "
+"'%4'"
 
 msgctxt "DatabaseFileMenu|"
 msgid "Choose a database driver..."
@@ -3299,6 +3501,9 @@ msgid ""
 "comparisons. Not in mathematical operations as subtraction etc, to do so: "
 "try converting to scalar first."
 msgstr ""
+"yalnızca (eş)değerlilik, daha büyük ve daha küçük karşılaştırmalarda "
+"kullanılabilir. Çıkarma vb. gibi matematiksel işlemlerde kullanılamaz, bunu "
+"yapmak için: önce skalere dönüştürmeyi deneyin."
 
 msgctxt "ColumnsModel|"
 msgid ""
@@ -3306,6 +3511,9 @@ msgid ""
 "than comparisons or mathematical operations, to do so: try converting to "
 "ordinal or scalar first."
 msgstr ""
+"yalnızca (eş)değerlilik karşılaştırmalarında kullanılabilir. Daha büyük/daha "
+"küçük karşılaştırmalarında veya matematiksel işlemlerde değil, bunu yapmak "
+"için: önce sıralı veya skalere dönüştürmeyi deneyin."
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
@@ -3373,19 +3581,19 @@ msgstr "veritabanı sürücüsü"
 
 msgctxt "EnginesWindow|"
 msgid "Engines Overview"
-msgstr ""
+msgstr "Motorlara Genel Bakış"
 
 msgctxt "EnginesWindow|"
 msgid "Right and middle mouse button to kill an engine."
-msgstr ""
+msgstr "Bir motoru durdurmak için sağ ve orta fare tuşu."
 
 msgctxt "PrefsAdvanced|"
 msgid "Maximum number of engines: "
-msgstr ""
+msgstr "Maksimum motor sayısı: "
 
 msgctxt "PrefsAdvanced|"
 msgid "Show engines"
-msgstr ""
+msgstr "Motorları göster"
 
 msgctxt "Modules::DynamicModules|"
 msgid "Select an exisiting folder"
@@ -3410,6 +3618,10 @@ msgid ""
 "and filtered as 'filteredData'.\n"
 "You can also paste syntax-mode JASP analyses here."
 msgstr ""
+"R kodunuzu buraya girin.\n"
+"Veriler filtrelenmemiş olarak 'data' olarak mevcuttur\n"
+"ve filtrelenmiş olarak 'filteredData' olarak mevcuttur.\n"
+"Ayrıca sözdizimi modu JASP analizlerini buraya yapıştırabilirsiniz."
 
 msgctxt "RCommanderWindow|"
 msgid ""
@@ -3417,6 +3629,9 @@ msgid ""
 "\n"
 "You can also paste syntax-mode JASP analyses here."
 msgstr ""
+"R kodunuzu buraya girin.\n"
+"\n"
+"Ayrıca sözdizimi modu JASP analizlerini buraya yapıştırabilirsiniz."
 
 msgctxt "RCommanderWindow|"
 msgid "Add analysis"
@@ -3425,22 +3640,22 @@ msgstr "Analiz ekle"
 #, qt-format
 msgctxt "Modules::DynamicModule|"
 msgid "Loading upgrades gave the following error(s): %1"
-msgstr ""
+msgstr "Güncellemeleri yüklerken şu hata(lar) oluştu: %1"
 
 #, qt-format
 msgctxt "FormulaBase|"
 msgid "Could not find term %1 in Formula"
-msgstr ""
+msgstr "Formülde %1 terimi bulunamadı"
 
 #, qt-format
 msgctxt "FormulaBase|"
 msgid "Source %1 in Formula not found"
-msgstr ""
+msgstr "Formülde Kaynak %1 bulunamadı"
 
 #, qt-format
 msgctxt "FormulaBase|"
 msgid "Source %1 in Formula is not a Variables List"
-msgstr ""
+msgstr "Formüldeki Kaynak %1 Değişkenler Listesi Değildir"
 
 #, qt-format
 msgctxt "FormulaSource|"
@@ -3449,7 +3664,7 @@ msgstr "\"Formül açıklamasında verilen öğe bulunamıyor%1\"."
 
 msgctxt "FormulaSource|"
 msgid "No source found in Formula randomEffects"
-msgstr ""
+msgstr "Formula randomEffects'te kaynak bulunamadı"
 
 msgctxt "FormulaSource|"
 msgid "randomEffects in Formula can be used only with a ComponentsList item"
@@ -3458,7 +3673,7 @@ msgstr ""
 
 msgctxt "FormulaSource|"
 msgid "No source found in Formula"
-msgstr ""
+msgstr "Formülde kaynak bulunamadı"
 
 msgctxt "PrefsUI|"
 msgid "Reporting mode"
@@ -3466,7 +3681,7 @@ msgstr "Raporlama Modu"
 
 msgctxt "PrefsUI|"
 msgid "Whether JASP should run in reporting mode or not."
-msgstr ""
+msgstr "JASP'ın raporlama modunda çalışıp çalışmayacağı."
 
 msgctxt "Reporter|"
 msgid "No datafile"
@@ -3480,6 +3695,11 @@ msgid ""
 "\n"
 "Would you like to continue anyway?"
 msgstr ""
+"JASP raporlama modunda başlatıldı, ancak jasp dosyası bir veri dosyasına "
+"bağlanmadı.\n"
+"Bu, güncelleme olamayacağı anlamına gelir...\n"
+"\n"
+"Yine de devam etmek ister misiniz?"
 
 msgctxt "OSF|"
 msgid "Unknown error"
@@ -3501,7 +3721,7 @@ msgstr "Bu kontrolün adı yok"
 #, qt-format
 msgctxt "JASPControl|"
 msgid "Option name '%1' is a reserved word"
-msgstr ""
+msgstr "Seçenek adı '%1' ayrılmış bir kelimedir"
 
 #, qt-format
 msgctxt "JASPControl|"
@@ -3529,138 +3749,138 @@ msgstr "Analiz bulunamadı"
 
 msgctxt "RCommander|"
 msgid "Not an analysis function: <module name>::<analysis name>(...)"
-msgstr ""
+msgstr "Bir analiz fonksiyonu değil: <modül adı>::<analiz adı>(...)"
 
 msgctxt "RCommander|"
 msgid "R is (re)starting"
-msgstr ""
+msgstr "R (yeniden) başlıyor"
 
 #, qt-format
 msgctxt "RCommander|"
 msgid "R is installing or loading a module %1"
-msgstr ""
+msgstr "R, %1 modülünü kuruyor veya yüklüyor"
 
 msgctxt "RCommander|"
 msgid "R stopped"
-msgstr ""
+msgstr "R durdu"
 
 msgctxt "RCommander|"
 msgid "R awaits commands"
-msgstr ""
+msgstr "R komutları bekliyor"
 
 msgctxt "JASPControl|"
 msgid "Variables List"
-msgstr ""
+msgstr "Değişkenler Listesi"
 
 msgctxt "JASPControl|"
 msgid "DropDown"
-msgstr ""
+msgstr "DropDown"
 
 msgctxt "JASPControl|"
 msgid "Tab View"
-msgstr ""
+msgstr "Sekme Görünümü"
 
 msgctxt "JASPControl|"
 msgid "Variables Form"
-msgstr ""
+msgstr "Değişkenler Formu"
 
 msgctxt "Form|"
 msgid "Show all options"
-msgstr ""
+msgstr "Tüm seçenekleri göster"
 
 msgctxt "RibbonModel|"
 msgid "R console"
-msgstr ""
+msgstr "R konsolu"
 
 msgctxt "RCommander|"
 msgid " and "
-msgstr ""
+msgstr " ve "
 
 msgctxt "RCommander|"
 msgid "has unselected module"
-msgstr ""
+msgstr "seçili olmayan modüle sahip"
 
 msgctxt "RCommander|"
 msgid "has selected module "
-msgstr ""
+msgstr "modülü seçti "
 
 msgctxt "CurrentDataFile|"
 msgid "Click on the file below to synchronize or use "
-msgstr ""
+msgstr "Senkronize etmek veya kullanmak için aşağıdaki dosyaya tıklayın "
 
 #, qt-format
 msgctxt "ListModelAssignedInterface|"
 msgid "This variable has been removed, because it is not allowed: %1"
-msgstr ""
+msgstr "Bu değişken kaldırıldı, çünkü izin verilmiyor: %1"
 
 #, qt-format
 msgctxt "ListModelAssignedInterface|"
 msgid "These variables have been removed, because they are not allowed: %1"
-msgstr ""
+msgstr "Bu değişkenler kaldırıldı, çünkü bunlara izin verilmiyor: %1"
 
 msgctxt "PrefsData|"
 msgid "Assume CSV is the selected codepage, when no BOM is specified."
 msgstr ""
+"Hiçbir BOM belirtilmediğinde, seçili kod sayfasının CSV olduğunu varsayın."
 
 msgctxt "PrefsData|"
 msgid "Choose codepage here"
-msgstr ""
+msgstr "Burada kod sayfasını seçin"
 
 #, qt-format
 msgctxt "Analysis|"
 msgid "Copy of %1"
-msgstr ""
+msgstr "%1'in kopyası"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Hide R Syntax"
-msgstr ""
-
-msgctxt "Form|"
-msgid "Generate Wrapper"
-msgstr ""
+msgstr "R Sözdizimini Gizle"
 
 #, fuzzy
+msgctxt "Form|"
+msgid "Generate Wrapper"
+msgstr "Kapağı Oluştur"
+
 msgctxt "Computer|"
 msgid "Save"
 msgstr "Kaydet"
 
 msgctxt "Computer|"
 msgid "JASP Files"
-msgstr ""
+msgstr "JASP Dosyaları"
 
 msgctxt "Computer|"
 msgid "Export Result as HTML or PDF"
-msgstr ""
+msgstr "Sonucu HTML veya PDF olarak Dışa Aktar"
 
 msgctxt "Computer|"
 msgid "HTML Files"
-msgstr ""
+msgstr "HTML Dosyaları"
 
 msgctxt "Computer|"
 msgid "Portable Document Format"
-msgstr ""
+msgstr "Taşınabilir Belge Biçimi"
 
 msgctxt "Computer|"
 msgid "Export Data as CSV"
-msgstr ""
+msgstr "Veriyi CSV olarak Dışa Aktar"
 
 msgctxt "Computer|"
 msgid "CSV Files"
-msgstr ""
+msgstr "CSV Dosyaları"
 
 msgctxt "Computer|"
 msgid "Sync Data"
-msgstr ""
+msgstr "Verileri Senkronize Et"
 
 msgctxt "Computer|"
 msgid "Data Files"
-msgstr ""
+msgstr "Veri Dosyaları"
 
 msgctxt "JASPListControl|"
 msgid "<no choice>"
-msgstr ""
+msgstr "<seçenek yok>"
 
-#, fuzzy
 msgctxt "ListModelInputValue|"
 msgid "New Value"
 msgstr "Yeni Değer"
@@ -3668,50 +3888,48 @@ msgstr "Yeni Değer"
 #, qt-format
 msgctxt "ListModelTableViewBase|"
 msgid "Row %1"
-msgstr ""
+msgstr "Satır %1"
 
-#, fuzzy
 msgctxt "PrefsResults|"
 msgid "Miscellaneous options"
 msgstr "Çeşitli seçenekler"
 
-#, fuzzy
 msgctxt "PrefsResults|"
 msgid "Show R syntax"
 msgstr "R sözdizimini göster"
 
 msgctxt "PrefsResults|"
 msgid "Add R syntax for each analysis"
-msgstr ""
+msgstr "Her analiz için R sözdizimini ekleyin"
 
 msgctxt "ResultMenuModel|"
 msgid "Show R Syntax"
-msgstr ""
+msgstr "R Sözdizimini Göster"
 
 msgctxt "ResultMenuModel|"
 msgid "Hide R Syntax"
-msgstr ""
+msgstr "R Sözdizimini Gizle"
 
 msgctxt "ComputeColumnWindow|"
 msgid "Would you like to save your changes to the Computed Column?"
-msgstr ""
+msgstr "Hesaplanan Sütun'da yaptığınız değişiklikleri kaydetmek ister misiniz?"
 
 msgctxt "ComputeColumnWindow|"
 msgid "Your changes will be lost if you don't save them."
-msgstr ""
+msgstr "Değişikliklerinizi kaydetmezseniz kaybolacaktır."
 
 msgctxt "FilterWindow|"
 msgid "Would you like to save your changes to the Filter?"
-msgstr ""
+msgstr "Filtre'de yaptığınız değişiklikleri kaydetmek ister misiniz?"
 
 msgctxt "FilterWindow|"
 msgid "Your changes will be lost if you don't save them."
-msgstr ""
+msgstr "Değişikliklerinizi kaydetmezseniz kaybolacaktır."
 
 #, qt-format
 msgctxt "MainWindow|"
 msgid "Would you like to save your changes to %1 file?"
-msgstr ""
+msgstr "Değişikliklerinizi %1 dosyasına kaydetmek ister misiniz?"
 
 msgctxt "MainWindow|"
 msgid "Your changes will be lost if you don't save them."
@@ -3719,125 +3937,124 @@ msgstr ""
 
 msgctxt "PrefsUI|"
 msgid "Use Qt's text rendering"
-msgstr ""
+msgstr "Qt'nin metin oluşturma özelliğini kullan"
 
 msgctxt "PrefsUI|"
 msgid "Accessibility options"
-msgstr ""
+msgstr "Erişilebilirlik seçenekleri"
 
 msgctxt "PrefsUI|"
 msgid "ALT-Navigation mode"
-msgstr ""
+msgstr "ALT-Gezinme modu"
 
 msgctxt "PrefsUI|"
 msgid "Whether ALT-Navigation mode is active or not."
-msgstr ""
+msgstr "ALT-Navigasyon modunun aktif olup olmadığı."
 
 msgctxt "MainPage|"
 msgid "Bold"
-msgstr ""
+msgstr "Kalın"
 
 msgctxt "MainPage|"
 msgid "Italic"
-msgstr ""
+msgstr "İtalik"
 
 msgctxt "MainPage|"
 msgid "Underline"
-msgstr ""
+msgstr "Altçizgi"
 
 msgctxt "MainPage|"
 msgid "Link"
-msgstr ""
+msgstr "Bağlantı"
 
 msgctxt "MainPage|"
 msgid "Formula"
-msgstr ""
+msgstr "Formül"
 
 msgctxt "MainPage|"
 msgid "Code Block"
-msgstr ""
+msgstr "Kod Bloğu"
 
 msgctxt "MainPage|"
 msgid "Header"
-msgstr ""
+msgstr "Başlık"
 
 msgctxt "MainPage|"
 msgid "Ordered List"
-msgstr ""
+msgstr "Sıralı Liste"
 
 msgctxt "MainPage|"
 msgid "Unordered List"
-msgstr ""
+msgstr "Sıralanmamış Liste"
 
 msgctxt "MainPage|"
 msgid "Background Color"
-msgstr ""
+msgstr "Arkaplan Rengi"
 
 msgctxt "MainPage|"
 msgid "Subscript"
-msgstr ""
+msgstr "Alt simge"
 
 msgctxt "MainPage|"
 msgid "Superscript"
-msgstr ""
+msgstr "Üst simge"
 
 msgctxt "MainPage|"
 msgid "Blockquote"
-msgstr ""
+msgstr "Alıntı bloğu"
 
 msgctxt "MainPage|"
 msgid "Add Indent"
-msgstr ""
+msgstr "Girinti Ekle"
 
 msgctxt "MainPage|"
 msgid "Remove Indent"
-msgstr ""
+msgstr "Girintiyi Kaldır"
 
 msgctxt "MainPage|"
 msgid "Font Size"
-msgstr ""
+msgstr "Yazı Tipi Boyutu"
 
 msgctxt "MainPage|"
 msgid "Clear Formatting"
-msgstr ""
+msgstr "Biçimlendirmeyi Temizle"
 
 msgctxt "MainPage|"
 msgid "Click here to add text"
-msgstr ""
+msgstr "Metin eklemek için burayı tıklayın"
 
 msgctxt "MainPage|"
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Panoya kopyalandı"
 
 msgctxt "MainPage|"
 msgid "Citations copied to clipboard"
-msgstr ""
+msgstr "Alıntılar panoya kopyalandı"
 
 msgctxt "MainPage|"
 msgid "LaTeX code copied to clipboard"
-msgstr ""
+msgstr "LaTeX kodu panoya kopyalandı"
 
 msgctxt "MainPage|"
 msgid "Introduction:"
-msgstr ""
+msgstr "Giriş:"
 
 msgctxt "MainPage|"
 msgid "Conclusion:"
-msgstr ""
+msgstr "Çözüm:"
 
 msgctxt "DataTableView|"
 msgid "Change to data editing mode"
-msgstr ""
+msgstr "Veri düzenleme moduna geç"
 
 msgctxt "DataTableView|"
 msgid "Cmd"
-msgstr ""
+msgstr "Cmd"
 
 msgctxt "DataTableView|"
 msgid "Ctrl"
-msgstr ""
+msgstr "Ctrl"
 
-#, fuzzy
 msgctxt "DataTableView|"
 msgid "Select All"
 msgstr "Hepsini seç"
@@ -3845,638 +4062,641 @@ msgstr "Hepsini seç"
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+A"
-msgstr ""
+msgstr "%1+A"
 
 msgctxt "DataTableView|"
 msgid "Cut"
-msgstr ""
+msgstr "Kes"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+X"
-msgstr ""
+msgstr "%1+X"
 
 msgctxt "DataTableView|"
 msgid "Copy"
-msgstr ""
+msgstr "Kopyala"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+C"
-msgstr ""
+msgstr "%1+C"
 
 msgctxt "DataTableView|"
 msgid "Paste"
-msgstr ""
+msgstr "Yapıştır"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+V"
-msgstr ""
+msgstr "%1+V"
 
 msgctxt "DataTableView|"
 msgid "Clear cells"
-msgstr ""
+msgstr "Hücreleri temizle"
 
 msgctxt "DataTableView|"
 msgid "Del"
-msgstr ""
+msgstr "Del"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "Undo: %1"
-msgstr ""
+msgstr "Geri al: %1"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+Z"
-msgstr ""
+msgstr "%1+Z"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "Redo: %1"
-msgstr ""
+msgstr "Tekrar yap: %1"
 
 #, qt-format
 msgctxt "DataTableView|"
 msgid "%1+Shift+Z"
-msgstr ""
+msgstr "%1+Shift+Z"
 
 msgctxt "DataTableView|"
 msgid "Select column"
-msgstr ""
+msgstr "Sütun seç"
 
 msgctxt "DataTableView|"
 msgid "Insert column before"
-msgstr ""
+msgstr "Öncesine sütun ekle"
 
 msgctxt "DataTableView|"
 msgid "Insert column after"
-msgstr ""
+msgstr "Sonrasına sütun ekle"
 
 msgctxt "DataTableView|"
 msgid "Delete column"
-msgstr ""
+msgstr "Sütunu sil"
 
 msgctxt "DataTableView|"
 msgid "Select row"
-msgstr ""
+msgstr "Satırı seç"
 
 msgctxt "DataTableView|"
 msgid "Delete row"
-msgstr ""
+msgstr "Satırı sil"
 
 msgctxt "FilterWindow|"
 msgid "Close filter window"
-msgstr ""
+msgstr "Filtre penceresini kapat"
 
 msgctxt "RenameColumnDialog|"
 msgid "Rename column"
-msgstr ""
+msgstr "Sütunu yeniden adlandır"
 
 msgctxt "RenameColumnDialog|"
 msgid "Rename"
-msgstr ""
+msgstr "Yeniden adlandır"
 
 #, qt-format
 msgctxt "RenameColumnDialog|"
 msgid "Rename column %1 to %2"
-msgstr ""
+msgstr "%1 sütununu %2 olarak yeniden adlandırın"
 
 msgctxt "RenameColumnDialog|"
 msgid "Close without renaming column"
-msgstr ""
+msgstr "Sütunu yeniden adlandırmadan kapat"
 
 msgctxt "VariablesWindow|"
 msgid "Close variable window"
-msgstr ""
+msgstr "Değişken penceresini kapat"
 
 msgctxt "ColumnModel|"
 msgid "Value"
-msgstr ""
+msgstr "Değer"
 
 msgctxt "ColumnModel|"
 msgid "Label"
-msgstr ""
+msgstr "Etiket"
 
 #, qt-format
 msgctxt "DataSetPackage|"
 msgid "Column %1"
-msgstr ""
+msgstr "Sütun %1"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Set value to '%1' at row %2 column '%3'"
-msgstr ""
+msgstr "Değeri %2 satırındaki %3 sütunundaki %1 olarak ayarlayın"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Insert computed column '%1'"
-msgstr ""
+msgstr "Hesaplanan '%1' sütununu ekle"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Insert column '%1'"
-msgstr ""
+msgstr "'%1' sütununu ekle"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Remove column '%1'"
-msgstr ""
+msgstr "'%1' sütununu kaldır"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Remove row %1"
-msgstr ""
+msgstr "%1 satırını kaldır"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Set label for value '%1' of column '%2' from '%3' to '%4'"
-msgstr ""
+msgstr "'%2' sütununun '%1' değeri için etiketi '%3'ten '%4'e ayarlayın"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Filter rows having label '%1' in column '%2'"
-msgstr ""
+msgstr "'%2' sütununda '%1' etiketine sahip satırları filtrele"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Remove filter for rows having label '%1' in column '%2'"
-msgstr ""
+msgstr "'%2' sütununda '%1' etiketine sahip satırlar için filtreyi kaldırın"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Move up label '%1' of column '%2'"
-msgstr ""
+msgstr "'%2' sütununun '%1' etiketini yukarı taşı"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Move down label '%1' of column '%2'"
-msgstr ""
+msgstr "'%2' sütununun '%1' etiketini aşağı taşı"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Move up labels of column '%1'"
-msgstr ""
+msgstr "'%1' sütununun etiketlerini yukarı taşı"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Move down labels of column '%1'"
-msgstr ""
+msgstr "'%1' sütununun etiketlerini aşağı taşı"
 
 msgctxt "QObject|"
 msgid "Change drag and drop filter"
-msgstr ""
+msgstr "Sürükle ve bırak filtresini değiştir"
 
 msgctxt "QObject|"
 msgid "Change R filter"
-msgstr ""
+msgstr "R filtresini değiştir"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Create a computed column with name '%1'"
-msgstr ""
+msgstr "'%1' adlı hesaplanmış bir sütun oluşturun"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Set code to computed column with name '%1'"
-msgstr ""
+msgstr "Kodu '%1' adlı hesaplanan sütuna ayarla"
 
 msgctxt "MainWindow|"
 msgid ""
 "JASP has an associated data file, but you edited it. Would you like to "
 "reload from the associated data or generate a new file?"
 msgstr ""
+"JASP'ın ilişkili bir veri dosyası var, ancak siz onu düzenlediniz. İlişkili "
+"verilerden yeniden yüklemek mi yoksa yeni bir dosya oluşturmak mı istersiniz?"
 
 msgctxt "MainWindow|"
 msgid "Reload Data File"
-msgstr ""
+msgstr "Veri Dosyasını Yeniden Yükle"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Waiting for initialization (of the engine) of module: %1"
-msgstr ""
+msgstr "Modül (motorunun) başlatılması bekleniyor: %1"
 
 msgctxt "RibbonModel|"
 msgid "Insert column before"
-msgstr ""
+msgstr "Öncesine sütun ekle"
 
 msgctxt "RibbonModel|"
 msgid "Insert column after"
-msgstr ""
+msgstr "Sonrasına sütun ekle"
 
 msgctxt "RibbonModel|"
 msgid "Delete column"
-msgstr ""
+msgstr "Sütunu sil"
 
 msgctxt "RibbonModel|"
 msgid "Delete row"
-msgstr ""
+msgstr "Satırı sil"
 
 msgctxt "RibbonModel|"
 msgid "Clear cells"
-msgstr ""
+msgstr "Hücreleri temizle"
 
 msgctxt "RibbonModel|"
 msgid "Undo"
-msgstr ""
+msgstr "Geri al"
 
 msgctxt "RibbonModel|"
 msgid "Redo"
-msgstr ""
+msgstr "Yeniden yap"
 
 msgctxt "RibbonModel|"
 msgid "Analyses"
-msgstr ""
+msgstr "Analizler"
 
 msgctxt "RibbonModel|"
 msgid "Switch JASP to analyses mode"
-msgstr ""
+msgstr "JASP'ı analiz moduna geçir"
 
 msgctxt "RibbonModel|"
 msgid "Edit Data"
-msgstr ""
+msgstr "Veriyi düzenle"
 
 msgctxt "RibbonModel|"
 msgid "Switch JASP to data editing mode"
-msgstr ""
+msgstr "JASP'ı veri düzenleme moduna geçirin"
 
 msgctxt "RibbonModel|"
 msgid "New Data"
-msgstr ""
+msgstr "Yeni veri"
 
 msgctxt "RibbonModel|"
 msgid "Open a workspace without data"
-msgstr ""
+msgstr "Veri içermeyen bir çalışma alanı açın"
 
 msgctxt "RibbonModel|"
 msgid "Insert"
-msgstr ""
+msgstr "Ekle"
 
 msgctxt "RibbonModel|"
 msgid "Insert empty columns or rows"
-msgstr ""
+msgstr "Boş sütunlar veya satırlar ekle"
 
 msgctxt "RibbonModel|"
 msgid "Remove"
-msgstr ""
+msgstr "Kaldır"
 
 msgctxt "RibbonModel|"
 msgid "Remove columns or rows"
-msgstr ""
+msgstr "Sütunları veya satırları kaldırın"
 
 msgctxt "RibbonModel|"
 msgid "Synchronisation"
-msgstr ""
+msgstr "Senkronizasyon"
 
 msgctxt "RibbonModel|"
 msgid "Turn external data synchronisation on"
-msgstr ""
+msgstr "Harici veri senkronizasyonunu açın"
 
 msgctxt "RibbonModel|"
 msgid "Turn external data synchronisation off"
-msgstr ""
+msgstr "Harici veri senkronizasyonunu kapatın"
 
 msgctxt "DataTableView|"
 msgid "Insert row above"
-msgstr ""
+msgstr "Yukarıya satır ekle"
 
 msgctxt "DataTableView|"
 msgid "Insert row below"
-msgstr ""
+msgstr "Aşağıya satır ekle"
 
 msgctxt "ColorPalette|"
 msgid "Color palette"
-msgstr ""
+msgstr "Renk paleti"
 
 msgctxt "ColorPalette|"
 msgid "Colorblind"
-msgstr ""
+msgstr "Renk körü"
 
 msgctxt "ColorPalette|"
 msgid "Colorblind #2"
-msgstr ""
+msgstr "Renk Körü #2"
 
 msgctxt "ColorPalette|"
 msgid "Colorblind #3"
-msgstr ""
+msgstr "Renk Körü #3"
 
 msgctxt "ColorPalette|"
 msgid "Viridis"
-msgstr ""
+msgstr "Viridis"
 
 msgctxt "ColorPalette|"
 msgid "ggplot2"
-msgstr ""
+msgstr "ggplot2"
 
 msgctxt "ColorPalette|"
 msgid "Gray"
-msgstr ""
+msgstr "Gri"
 
 msgctxt "ColorPalette|"
 msgid "Blue"
-msgstr ""
+msgstr "Mavi"
 
 msgctxt "ColorPalette|"
 msgid "Sports teams: NBA"
-msgstr ""
+msgstr "Spor takımları: NBA"
 
 msgctxt "ColorPalette|"
 msgid "Grand Budapest"
-msgstr ""
+msgstr "Büyük Budapeşte"
 
 msgctxt "RibbonModel|"
 msgid "Insert row above"
-msgstr ""
+msgstr "Yukarıya satır ekle"
 
 msgctxt "RibbonModel|"
 msgid "Insert row below"
-msgstr ""
+msgstr "Aşağıya satır ekle"
 
 #, qt-format
 msgctxt "RibbonModel|"
 msgid "Undo changes, %1+Z"
-msgstr ""
+msgstr "Değişiklikleri geri al, %1+Z"
 
 #, qt-format
 msgctxt "RibbonModel|"
 msgid "Redo changes, %1+shift+Z or %1+Y"
-msgstr ""
+msgstr "Değişiklikleri yeniden yap, %1+shift+Z veya %1+Y"
 
 #, qt-format
 msgctxt "RibbonModel|"
 msgid "Undo %2 (%1+Z)"
-msgstr ""
+msgstr "Geri al %2 (%1+Z)"
 
 #, qt-format
 msgctxt "RibbonModel|"
 msgid "Redo %2 (%1+shift+Z or %1+Y)"
-msgstr ""
+msgstr "Yeniden yap %2 (%1+shift+Z veya %1+Y)"
 
 msgctxt "RibbonModel|"
 msgid "Open datafile with default spreadsheet editor"
-msgstr ""
+msgstr "Veri dosyasını varsayılan elektronik tablo düzenleyicisiyle açın"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Remove %1 columns from '%2'"
-msgstr ""
+msgstr "'%2'den %1 sütununu kaldır"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Remove rows %1 to %2"
-msgstr ""
+msgstr "%1 ile %2 arasındaki satırları kaldır"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Copy columns '%1' to '%2'"
-msgstr ""
+msgstr "'%1' sütunlarını '%2'ye kopyala"
 
 msgctxt "ContactWindow|"
 msgid "Contact JASP"
-msgstr ""
+msgstr "JASP ile iletişime geçin"
 
 msgctxt "Supporters|"
 msgid "JASP is supported by the following institutions:"
-msgstr ""
+msgstr "JASP aşağıdaki kurumlar tarafından desteklenmektedir:"
 
-#, fuzzy
 msgctxt "WavyWindow|"
 msgid "About JASP"
 msgstr "JASP Hakkında"
 
 msgctxt "WavyWindow|"
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Copy column '%1' into column number '%2'"
-msgstr ""
+msgstr "'%1' sütununu '%2' numaralı sütuna kopyala"
 
 msgctxt "ActionButtons|"
 msgid "Contact"
-msgstr ""
+msgstr "İletişime geçin"
 
 msgctxt "AboutModel|"
 msgid ""
 "This program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE "
 "WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
 msgstr ""
+"Bu program, TASARIM, SATILABİLİRLİK VE BELİRLİ BİR AMACA UYGUNLUK GARANTİSİ "
+"DAHİL OLMAK ÜZERE HİÇBİR TÜRDE GARANTİ OLMADAN OLDUĞU GİBİ sunulmaktadır."
 
 #, qt-format
 msgctxt "MainWindow|"
 msgid "and %1"
-msgstr ""
+msgstr "ve %1"
 
 msgctxt "PrefsData|"
 msgid "Reset with standard values"
-msgstr ""
+msgstr "Standart değerlerle sıfırla"
 
 msgctxt "PrefsData|"
 msgid "Reset missing values with the standard JASP missing values"
-msgstr ""
+msgstr "Eksik değerleri standart JASP eksik değerleriyle sıfırlayın"
 
 msgctxt "PrefsMissingValues|"
 msgid "Add a missing value"
-msgstr ""
+msgstr "Eksik bir değeri ekleyin"
 
 msgctxt "PrefsMissingValues|"
 msgid "Set current workspace with these values"
-msgstr ""
+msgstr "Mevcut çalışma alanını bu değerlerle ayarlayın"
 
 msgctxt "PrefsMissingValues|"
 msgid "Set the current workspace missing values with these values"
-msgstr ""
+msgstr "Mevcut çalışma alanının eksik değerlerini bu değerlerle ayarlayın"
 
 msgctxt "LabelEditorWindow|"
 msgid "Edit the labels here or choose which values should be filtered out."
 msgstr ""
+"Burada etiketleri düzenleyin veya hangi değerlerin filtreleneceğini seçin."
 
 msgctxt "LabelEditorWindow|"
 msgid "Filter"
-msgstr ""
+msgstr "Filtre"
 
 msgctxt "LabelEditorWindow|"
 msgid "Value"
-msgstr ""
+msgstr "Değer"
 
 msgctxt "LabelEditorWindow|"
 msgid "Label"
-msgstr ""
+msgstr "Etiket"
 
 msgctxt "LabelEditorWindow|"
 msgid "Move selected labels up"
-msgstr ""
+msgstr "Seçili etiketleri yukarı taşı"
 
 msgctxt "LabelEditorWindow|"
 msgid "Move selected labels down"
-msgstr ""
+msgstr "Seçili etiketleri aşağı taşı"
 
 msgctxt "LabelEditorWindow|"
 msgid "Reverse order of all labels"
-msgstr ""
+msgstr "Tüm etiketleri ters sırala"
 
 msgctxt "LabelEditorWindow|"
 msgid "Reset all filter checkmarks for this column"
-msgstr ""
+msgstr "Bu sütun için tüm filtre onay işaretlerini sıfırla"
 
 msgctxt "LabelEditorWindow|"
 msgid "Reset all filter checkmarks for all columns"
-msgstr ""
+msgstr "Tüm sütunlar için tüm filtre onay işaretlerini sıfırla"
 
 msgctxt "MainPage|"
 msgid "Image"
-msgstr ""
+msgstr "Resim"
 
 msgctxt "ModulesMenu|"
 msgid "Workspace settings"
-msgstr ""
+msgstr "Çalışma alanı ayarları"
 
 #, qt-format
 msgctxt "ModulesMenu|"
 msgid "Name: %1"
-msgstr ""
+msgstr "İsim: %1"
 
 msgctxt "ModulesMenu|"
 msgid "Description: "
-msgstr ""
+msgstr "Açıklama: "
 
 msgctxt "ModulesMenu|"
 msgid "Reset missing values with the ones set in Data Preferences"
-msgstr ""
+msgstr "Eksik değerleri Veri Tercihleri'nde ayarlanan değerlerle sıfırlayın"
 
 msgctxt "RibbonBar|"
 msgid "Show workspace settings"
-msgstr ""
+msgstr "Çalışma alanı ayarlarını göster"
 
 msgctxt "VariablesWindow|"
 msgid "Use custom values"
-msgstr ""
+msgstr "Özel değerleri kullan"
 
 msgctxt "VariablesWindow|"
 msgid "Reset missing values with the ones set in your workspace"
-msgstr ""
+msgstr "Eksik değerleri çalışma alanınızda ayarlanan değerlerle sıfırlayın"
 
 msgctxt "QObject|"
 msgid "Not computed"
-msgstr ""
+msgstr "Hesaplanmadı"
 
 msgctxt "QObject|"
 msgid "Computed with R code"
-msgstr ""
+msgstr "R koduyla hesaplandı"
 
 msgctxt "QObject|"
 msgid "Computed with drag-and-drop"
-msgstr ""
+msgstr "Sürükle ve bırak ile hesaplandı"
 
 msgctxt "QObject|"
 msgid "Column generated by analysis"
-msgstr ""
+msgstr "Analizle oluşturulan sütun"
 
 msgctxt "QObject|"
 msgid "Column added by analysis"
-msgstr ""
+msgstr "Analizle eklenen sütun"
 
-#, fuzzy
 msgctxt "QObject|"
 msgid "Scale"
 msgstr "Ölçek"
 
-#, fuzzy
 msgctxt "QObject|"
 msgid "Ordinal"
 msgstr "Sıralı"
 
-#, fuzzy
 msgctxt "QObject|"
 msgid "Nominal"
 msgstr "Nominal"
 
 msgctxt "ColumnModel|"
 msgid "Computed column definition"
-msgstr ""
+msgstr "Hesaplanan sütun tanımı"
 
 msgctxt "ColumnModel|"
 msgid "Label editor"
-msgstr ""
+msgstr "Etiket düzenleyici"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Change column name of '%1' from '%2' to '%3'"
-msgstr ""
+msgstr "'%1' sütun adını '%2'den '%3'e değiştirin"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Change column title of '%1' from '%2' to '%3'"
-msgstr ""
+msgstr "'%1' sütun başlığını '%2'den '%3'e değiştirin"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Change column description of '%1' from '%2' to '%3'"
-msgstr ""
+msgstr "'%1' sütun açıklamasını '%2'den '%3'e değiştir"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Set computed type of '%1' from '%2' to '%3'"
-msgstr ""
+msgstr "'%1'in hesaplanan türünü '%2'den '%3'e ayarlayın"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Change workspace description from '%1' to '%2'"
-msgstr ""
+msgstr "Çalışma alanı açıklamasını '%1'den '%2'ye değiştirin"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Use custom empty values for column '%1'"
-msgstr ""
+msgstr "'%1' sütunu için özel boş değerler kullanın"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Use default empty values for column '%1'"
-msgstr ""
+msgstr "'%1' sütunu için varsayılan boş değerleri kullan"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Set empty values for column '%1'"
-msgstr ""
+msgstr "'%1' sütunu için boş değerler ayarlayın"
 
 msgctxt "QObject|"
 msgid "Set workspace empty values"
-msgstr ""
+msgstr "Çalışma alanı boş değerlerini ayarla"
 
 msgctxt "PrefsMissingValues|"
 msgid "Show workspace missing values"
-msgstr ""
+msgstr "Çalışma alanında eksik değerleri göster"
 
 msgctxt "PrefsMissingValues|"
 msgid "Opens the settings for workspace missing values"
-msgstr ""
+msgstr "Çalışma alanı eksik değerleri için ayarları açar"
 
 msgctxt "MainPage|"
 msgid "Embed web video"
-msgstr ""
+msgstr "Web videosunu yerleştir"
 
 msgctxt "MainPage|"
 msgid "Unsupported video services"
-msgstr ""
+msgstr "Desteklenmeyen video hizmetleri"
 
 msgctxt "MainPage|"
 msgid "JASP only allows the following videoservices:"
-msgstr ""
+msgstr "JASP yalnızca aşağıdaki video servislerine izin verir:"
 
 msgctxt "MainPage|"
 msgid ""
 "Contact the JASP team to request adding another videoservice to the list."
 msgstr ""
+"Listeye başka bir video hizmeti ekleme talebinde bulunmak için JASP ekibiyle "
+"iletişime geçin."
 
 msgctxt "CommunityWindow|"
 msgid "JASP Community"
-msgstr ""
+msgstr "JASP Topluluğu"
 
 msgctxt "Supporters|"
 msgid "Suggest your institution joins the JASP Community"
-msgstr ""
+msgstr "Kurumunuzun JASP Topluluğuna katılmasını önerin"
 
 #, qt-format
 msgctxt "MainWindow|"
@@ -4499,303 +4719,329 @@ msgid ""
 "\n"
 "For individual donations: please visit <a href=\"%8\">the JASP website</a>.\n"
 msgstr ""
+"<h3>İletişim</h3>\n"
+"<a href=\"%1\">Özellik istekleri</a> ve <a href=\"%2\">hata raporları</a> "
+"için: lütfen GitHub sayfamızda bir sorun yayınlayın, <a href=\"%3\">burada "
+"açıklandığı gibi.</a>\n"
+"Bu sizi JASP yazılım geliştiricileriyle doğrudan iletişime geçirecektir.\n"
+"\n"
+"İstatistiksel sorular için: lütfen JASP Forumunda bir sorun yayınlayın.</a>\n"
+"\n"
+"JASP Topluluğu hakkında bilgi için: lütfen <a href=\"%5\">JASP web "
+"sitesindeki bilgileri</a> okuyun\n"
+"\n"
+"Kurumunuzun <a href=\"%6\">JASP Dünya Haritasına</a> eklenmesini önermek "
+"için lütfen <a href=\"%7\">communications@jasp-stats.org</a> adresine bir e-"
+"posta gönderin.\n"
+"\n"
+"Bireysel bağışlar için: lütfen <a href=\"%8\">JASP web sitesini</a> ziyaret "
+"edin.\n"
 
 msgctxt "ActionButtons|"
 msgid "Community"
-msgstr ""
+msgstr "Topluluk"
 
 msgctxt "ColumnBasicInfo|"
 msgid "Name: "
-msgstr ""
+msgstr "İsim: "
 
 msgctxt "ColumnBasicInfo|"
 msgid "Column type: "
-msgstr ""
+msgstr "Sütun türü: "
 
 msgctxt "ColumnBasicInfo|"
 msgid "Computed type: "
-msgstr ""
+msgstr "Hesaplanan tür: "
 
 msgctxt "ColumnBasicInfo|"
 msgid "Show parent analysis"
-msgstr ""
+msgstr "Ana analiz göster"
 
 msgctxt "ColumnBasicInfo|"
 msgid "Long name: "
-msgstr ""
+msgstr "Uzun isim "
 
 msgctxt "ColumnBasicInfo|"
 msgid "<Fill in a more descriptive name of the column>"
-msgstr ""
+msgstr "<Sütunun daha açıklayıcı bir adını girin>"
 
 msgctxt "ColumnBasicInfo|"
 msgid "Close variable window"
-msgstr ""
+msgstr "Değişken penceresini kapat"
 
 msgctxt "ColumnBasicInfo|"
 msgid "Description: "
-msgstr ""
+msgstr "Açıklama: "
 
 msgctxt "ColumnModel|"
 msgid "Column definition"
-msgstr ""
+msgstr "Sütun tanımı"
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns a boolean vector with TRUE for each missing value in y"
-msgstr ""
+msgstr "y'deki her eksik değer için TRUE ile bir Boole vektörü döndürür"
 
 msgctxt "FilterWindow|"
 msgid ""
 "Combine with not-operator to filter out rows with missing values (NA) for a "
 "column."
 msgstr ""
+"Bir sütun için eksik değerlere (NA) sahip satırları filtrelemek için not-"
+"operatörüyle birleştirin."
 
 msgctxt "FilterModel|"
 msgid "No data loaded!"
-msgstr ""
+msgstr "Veri yüklenmedi!"
 
 #, qt-format
 msgctxt "FilterModel|"
 msgid "Data has %1 rows, %2 (%3%4%) passed through filter"
-msgstr ""
+msgstr "Veride %1 satır var, %2 (%3%4%) filtreden geçti"
 
 msgctxt "PrefsData|"
 msgid "External spreadsheet editor (for data synchronization)"
-msgstr ""
+msgstr "Harici elektronik tablo düzenleyici (veri senkronizasyonu için)"
 
 msgctxt "PrefsData|"
 msgid ""
 "If a variable has more distinct integer values than this it will be "
 "interpreted as scale."
 msgstr ""
+"Eğer bir değişken bundan daha fazla farklı tam sayı değerine sahipse ölçek "
+"olarak yorumlanacaktır."
 
 msgctxt "PrefsData|"
 msgid "Reset types of loaded variables"
-msgstr ""
+msgstr "Yüklenen değişkenlerin türlerini sıfırla"
 
 msgctxt "PrefsData|"
 msgid "Missing values setting"
-msgstr ""
+msgstr "Eksik değerler ayarı"
 
 msgctxt "AboutWindow|"
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Panoya kopyalandı"
 
 msgctxt "AboutWindow|"
 msgid "Copy debug information"
-msgstr ""
+msgstr "Hata ayıklama bilgilerini kopyala"
 
 msgctxt "MainPage|"
 msgid "Search in results:"
-msgstr ""
+msgstr "Sonuçlarda ara:"
 
 msgctxt "MainPage|"
 msgid "Close search bar"
-msgstr ""
+msgstr "Arama çubuğunu kapat"
 
 msgctxt "MainPage|"
 msgid "Font Color"
-msgstr ""
+msgstr "Yazı Tipi Rengi"
 
 msgctxt "MainPage|"
 msgid "Input LaTeX here:"
-msgstr ""
+msgstr "LaTeX'i buraya girin:"
 
 msgctxt "MainPage|"
 msgid "Press `Cmd/Ctrl + Enter` to apply;"
-msgstr ""
+msgstr "Uygulamak için `Cmd/Ctrl + Enter` tuşlarına basın;"
 
 msgctxt "MainPage|"
 msgid "Click to apply formula"
-msgstr ""
+msgstr "Formülü uygulamak için tıklayın"
 
 msgctxt "MainPage|"
 msgid "Click to edit this formula"
-msgstr ""
+msgstr "Bu formülü düzenlemek için tıklayın"
 
 #, qt-format
 msgctxt "FactorsForm|"
 msgid "Add a %1"
-msgstr ""
+msgstr "%1 ekleyin"
 
 #, qt-format
 msgctxt "FactorsForm|"
 msgid "Remove last %1"
-msgstr ""
+msgstr "Son %1'i kaldır"
 
 msgctxt "FactorsFormBase|"
 msgid "Factor"
-msgstr ""
+msgstr "Faktör"
 
 msgctxt "DataTableView|"
 msgid "Insert constructor column before"
-msgstr ""
+msgstr "Oluşturucu sütununu ekle"
 
 msgctxt "DataTableView|"
 msgid "Insert constructor column after"
-msgstr ""
+msgstr "Oluşturucu sütununu sonra ekle"
 
 msgctxt "DataTableView|"
 msgid "Insert R column before"
-msgstr ""
+msgstr "R sütununu önce ekle"
 
 msgctxt "DataTableView|"
 msgid "Insert R column after"
-msgstr ""
+msgstr "R sütununu sonra ekle"
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Click here to change column type"
-msgstr ""
+msgstr "Sütun türünü değiştirmek için buraya tıklayın"
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Add column"
-msgstr ""
+msgstr "Sütun ekle"
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Computed by an analysis"
-msgstr ""
+msgstr "Bir analizle hesaplandı"
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Doubleclick here to change variable settings"
-msgstr ""
+msgstr "Değişken ayarlarını değiştirmek için buraya çift tıklayın"
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Doubleclick here to close variable window"
-msgstr ""
+msgstr "Değişken penceresini kapatmak için buraya çift tıklayın"
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Click here to change selected variable"
-msgstr ""
+msgstr "Seçili değişkeni değiştirmek için buraya tıklayın"
 
 msgctxt "DataTableViewRowHeader|"
 msgid "Click here to select the row, hold shift for selecting multiple."
 msgstr ""
+"Satırı seçmek için buraya tıklayın, birden fazla seçmek için shift tuşuna "
+"basın."
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Set original value  from '%3' to '%4' for label '%1' of column '%2'"
 msgstr ""
+"'%2' sütununun '%1' etiketi için orijinal değeri '%3'ten '%4'e ayarlayın"
 
 msgctxt "RibbonModel|"
 msgid "Insert constructor column before"
-msgstr ""
+msgstr "Oluşturucu sütununu önce ekle"
 
 msgctxt "RibbonModel|"
 msgid "Insert constructor column after"
-msgstr ""
+msgstr "Oluşturucu sütununu sonra ekle"
 
 msgctxt "RibbonModel|"
 msgid "Insert R column before"
-msgstr ""
+msgstr "R sütununu önce ekle"
 
 msgctxt "RibbonModel|"
 msgid "Insert R column after"
-msgstr ""
+msgstr "R sütununu sonra ekle"
 
 msgctxt "DataTableView|"
 msgid "Reverse values"
-msgstr ""
+msgstr "Ters değerler"
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Computed column has error:<br>"
-msgstr ""
+msgstr "Hesaplanan sütunda hata var:<br>"
 
 msgctxt "LabelEditorWindow|"
 msgid "Reverse order of all numerical values"
-msgstr ""
+msgstr "Tüm sayısal değerlerin ters sıralaması"
 
 msgctxt "DataSetPackage|"
 msgid "Changing column type failed"
-msgstr ""
+msgstr "Sütun türü değiştirilemedi"
 
 #, qt-format
 msgctxt "DataSetPackage|"
 msgid "The column '%1' is generated by an analysis and its type is fixed."
-msgstr ""
+msgstr "'%1' sütunu bir analiz sonucu oluşturulmuştur ve türü sabittir."
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Set type to '%1' for column(s) '%2'"
-msgstr ""
+msgstr "'%2' sütunu için türü '%1' olarak ayarlayın"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Reverse values of column(s) '%1'"
-msgstr ""
+msgstr "'%1' sütununun değerlerini ters çevir"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Reverse labels of column '%1'"
-msgstr ""
+msgstr "'%1' sütununun etiketlerini ters çevir"
 
 msgctxt "DataTableView|"
 msgid "Order labels by values"
-msgstr ""
+msgstr "Etiketleri değerlere göre sırala"
 
 msgctxt "WelcomePage|"
 msgid ""
 "JASP is an open-source project with structural support from the <a "
 "href=\"dummyLink\">University of Amsterdam &amp; others</a>."
 msgstr ""
+"JASP, <a href=\"dummyLink\">Amsterdam Üniversitesi ve diğerlerinden</a> "
+"yapısal destek alan açık kaynaklı bir projedir."
 
 msgctxt "WelcomePage|"
 msgid "Report bugs"
-msgstr ""
+msgstr "Hataları bildirin"
 
 msgctxt "WelcomePage|"
 msgid "Request features"
-msgstr ""
+msgstr "İstek özellikleri"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Insert %2 cols at %1"
-msgstr ""
+msgstr "%1 konumuna %2 sütun ekle"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Insert %2 rows at %1"
-msgstr ""
+msgstr "%1'e %2 satır ekle"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Paste values at row '%1' column '%2'"
-msgstr ""
+msgstr "Değerleri '%1' satırına '%2' sütununa yapıştır"
 
 msgctxt "DataSetView|"
 msgid "Cutting all data"
-msgstr ""
+msgstr "Tüm verileri kesiyoruz"
 
 msgctxt "TableViewBase|"
 msgid "Mutinomial Chi2 Table"
-msgstr ""
+msgstr "Çok terimli Ki2 Tablosu"
 
 msgctxt "TableViewBase|"
 msgid "JAGS Table"
-msgstr ""
+msgstr "JAGS Tablosu"
 
 msgctxt "TableViewBase|"
 msgid "Custom Contrasts Table"
-msgstr ""
+msgstr "Özel Kontrastlar Tablosu"
 
 msgctxt "TableViewBase|"
 msgid "Filterd Data Entry Table"
-msgstr ""
+msgstr "Filtrelenmiş Veri Girişi Tablosu"
 
 msgctxt "TableViewBase|"
 msgid "Grid Table"
-msgstr ""
+msgstr "Grid Tablosu"
 
 msgctxt "TableViewBase|"
 msgid "Table"
-msgstr ""
+msgstr "Tablo"
 
 msgctxt "TextInputBase|"
 msgid "Double Field"
-msgstr ""
+msgstr "Çift Alan"
 
 msgctxt "PrefsData|"
 msgid "Import settings"
-msgstr ""
+msgstr "İçe aktarma ayarları"
 
 msgctxt "PrefsData|"
 msgid ""
@@ -4803,24 +5049,29 @@ msgid ""
 "scalars. Think 1 million+ rows of random floating point numbers.\n"
 "If you find that loading of such a file is slow you can disable this option."
 msgstr ""
+"Bu, çok sayıda skaler içeren çok büyük veri kümelerini yüklerken bir "
+"yavaşlamaya neden olabilir. 1 milyondan fazla satır rastgele kayan nokta "
+"sayıları düşünün.\n"
+"Böyle bir dosyanın yüklenmesinin yavaş olduğunu fark ederseniz bu seçeneği "
+"devre dışı bırakabilirsiniz."
 
 msgctxt "PrefsData|"
 msgid "Threshold for Scale"
-msgstr ""
+msgstr "Ölçek için Eşik"
 
 #, qt-format
 msgctxt "ExpandDataProxyModel|"
 msgid "Remove %1 rows"
-msgstr ""
+msgstr "%1 satırını kaldır"
 
 #, qt-format
 msgctxt "ExpandDataProxyModel|"
 msgid "Remove %1 columns"
-msgstr ""
+msgstr "%1 sütununu kaldır"
 
 msgctxt "ColumnModel|"
 msgid "Missing values"
-msgstr ""
+msgstr "Eksik değerler"
 
 #, qt-format
 msgctxt "CommunityWindow|"
@@ -4846,68 +5097,89 @@ msgid ""
 "\n"
 "<a href=\"%6\">Click here for the current list of educators</a>\n"
 msgstr ""
+"<h3>Topluluk</h3>\n"
+"JASP topluluğuna katılan yüksek öğrenim kurumları, JASP'nin sürdürülmesini "
+"ve daha da geliştirilmesini ortaklaşa destekler ve bu sayede kendi "
+"öğrencilerine ve dünya çapındaki diğer kurumların öğrencilerine paha "
+"biçilmez bir eğitim hizmeti sunarlar.\n"
+"\n"
+"Kurumunuz henüz JASP topluluğunun bir parçası değilse, <a href=\"%1\""
+">katılmalarını önerebilirsiniz</a>.\n"
+"Bu sürümün mümkün olmasına yardımcı olan eğitimcilerin listesi aşağıdadır:\n"
+"\n"
+"<i><b>Altın Eğitimciler:</b></i>\n"
+"%2\n"
+"\n"
+"<i><b>Gümüş Eğitimciler:</b></i>\n"
+"%3\n"
+"\n"
+"<i><b>Bronz Eğitimciler:</b></i>\n"
+"%4\n"
+"\n"
+"<a href=\"%6\">Güncel eğitimci listesi için buraya tıklayın</a>\n"
 
 msgctxt "PrefsData|"
 msgid "Order labels by value by default"
-msgstr ""
+msgstr "Etiketleri varsayılan olarak değere göre sırala"
 
 msgctxt "ResizeDataDialog|"
 msgid "Resize Data"
-msgstr ""
+msgstr "Veriyi Yeniden Boyutlandır"
 
 msgctxt "ResizeDataDialog|"
 msgid "Columns"
-msgstr ""
+msgstr "Sütunlar"
 
 msgctxt "ResizeDataDialog|"
 msgid "Rows"
-msgstr ""
+msgstr "Satırlar"
 
 msgctxt "ResizeDataDialog|"
 msgid "Resize"
-msgstr ""
+msgstr "Yeniden Boyutlandır"
 
 msgctxt "ResizeDataDialog|"
 msgid "Resize data to set values"
-msgstr ""
+msgstr "Değerleri ayarlamak için verileri yeniden boyutlandırın"
 
 msgctxt "ResizeDataDialog|"
 msgid "Close without resizing data"
-msgstr ""
+msgstr "Verileri yeniden boyutlandırmadan kapat"
 
 msgctxt "WelcomePage|"
 msgid "Ask a question"
-msgstr ""
+msgstr "Bir soru sorun"
 
 msgctxt "WelcomePage|"
 msgid "Visit the website"
-msgstr ""
+msgstr "Web sitesini ziyaret edin"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Toggle autosorting labels by values for column(s) '%1'"
 msgstr ""
+"'%1' sütunu için değerlerine göre etiketlerin otomatik sıralanmasını değiştir"
 
 msgctxt "RibbonModel|"
 msgid "Resize Data"
-msgstr ""
+msgstr "Verileri Yeniden Boyutlandır"
 
 msgctxt "RibbonModel|"
 msgid "Resize your dataset"
-msgstr ""
+msgstr "Veri setinizi yeniden boyutlandırın"
 
 #, qt-format
 msgctxt "DataSetView|"
 msgid "Resize data to %1 rows and %2 columns"
-msgstr ""
+msgstr "Verileri %1 satır ve %2 sütun olarak yeniden boyutlandır"
 
 msgctxt "PrefsUI|"
 msgid "Check for updates"
-msgstr ""
+msgstr "Güncellemeleri kontrol edin"
 
 msgctxt "PrefsUI|"
 msgid "Daily automatic check for updates & known issues"
-msgstr ""
+msgstr "Güncellemeler ve bilinen sorunlar için günlük otomatik kontrol"
 
 msgctxt "PrefsUI|"
 msgid ""
@@ -4922,6 +5194,16 @@ msgid ""
 "you *in the analysis* that there is something you should take into account. "
 "Luckily we almost never need to use it."
 msgstr ""
+"JASP güncelleme aldığında verilerinizin hiçbirini paylaşmaz, hatta hangi "
+"JASP sürümünü kullandığınızı bile paylaşmaz.\n"
+"IP adresinizi sunucuyla paylaşır ancak bu internetin çalışması için "
+"gereklidir.\n"
+"\n"
+"İndirdiği bilinen sorunların listesi nadiren kullanılır, sorunlar çoğunlukla "
+"[jasp-issues](https://github.com/jasp-stats/jasp-issues/issues) "
+"adresindedir. Ancak bir analize korkunç bir hatanın sızdığını fark edersek "
+"bu size *analizde* dikkate almanız gereken bir şey olduğunu gösterecektir. "
+"Neyse ki onu kullanmamız neredeyse hiç gerekmez."
 
 #, qt-format
 msgctxt "DataSetPackage|"
@@ -4930,11 +5212,14 @@ msgid ""
 "As a '%3' it looks like: %4\n"
 "%5"
 msgstr ""
+"Toplam %1 seviye var, bunlardan %2'sinin sayısal değeri var.\n"
+"%3 olarak şöyle görünüyor: %4\n"
+"%5"
 
 #, qt-format
 msgctxt "DataSetPackage|"
 msgid "Implicit missing values: %1"
-msgstr ""
+msgstr "Eksik örtük değerler: %1"
 
 #, qt-format
 msgctxt "DataSetPackage|"
@@ -4942,10 +5227,12 @@ msgid ""
 "There are %1 total levels.\n"
 "As a '%2' it looks like: %3"
 msgstr ""
+"Toplam %1 seviye var.\n"
+"%2 olarak şöyle görünüyor: %3"
 
 msgctxt "MainWindow|"
 msgid "Check for updates"
-msgstr ""
+msgstr "Güncellemeleri kontrol edin"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -4959,46 +5246,54 @@ msgid ""
 "\n"
 "This setting can always be changed in the Interface Preferences."
 msgstr ""
+"JASP sunucumuzda güncellemeleri kontrol edip yeni bir sürüm olup olmadığını "
+"size bildirmeli mi?\n"
+"\n"
+"JASP güncelleme aldığında verilerinizin hiçbirini paylaşmaz, hatta hangi "
+"JASP sürümünü kullandığınızı bile paylaşmaz.\n"
+"IP adresinizi sunucumuzla paylaşır ancak bu internetin çalışması için "
+"gereklidir.\n"
+"\n"
+"Bu ayar her zaman Arayüz Tercihleri'nde değiştirilebilir."
 
 msgctxt "MainWindow|"
 msgid "Yes"
-msgstr ""
+msgstr "Evet"
 
 msgctxt "MainWindow|"
 msgid "No"
-msgstr ""
+msgstr "Hayır"
 
 #, qt-format
 msgctxt "ListModelTermsAssigned|"
 msgid "Only %1 variables are allowed"
-msgstr ""
+msgstr "Yalnızca %1 değişkene izin verilir"
 
-#, fuzzy
 msgctxt "VariableInfo|"
 msgid "Scale"
 msgstr "Ölçek"
 
-#, fuzzy
 msgctxt "VariableInfo|"
 msgid "Ordinal"
 msgstr "Sıralı"
 
-#, fuzzy
 msgctxt "VariableInfo|"
 msgid "Nominal"
 msgstr "Nominal"
 
 msgctxt "VariableInfo|"
 msgid "Unknown"
-msgstr ""
+msgstr "Bilinmeyen"
 
 msgctxt "ColumnBasicInfo|"
 msgid "<First fill in the column name>"
-msgstr ""
+msgstr "<Önce sütun adını girin>"
 
 msgctxt "PrefsData|"
 msgid "Maximum allowed levels for scale when used as nominal/ordinal"
 msgstr ""
+"Nominal/sıralı olarak kullanıldığında ölçek için izin verilen maksimum "
+"seviyeler"
 
 msgctxt "PrefsData|"
 msgid ""
@@ -5006,121 +5301,126 @@ msgid ""
 "scale variable is used, JASP checks whether the number of levels of this "
 "variable exceeds this maximum."
 msgstr ""
+"Bazı değişkenler için sadece nominal veya ordinal kabul eden analizlerde, "
+"eğer bir ölçek değişkeni kullanılıyorsa JASP bu değişkenin seviye sayısının "
+"bu maksimum değeri aşıp aşmadığını kontrol eder."
 
 msgctxt "AsyncLoader|"
 msgid "Loading New Data Set"
-msgstr ""
+msgstr "Yeni Veri Kümesi Yükleniyor"
 
 msgctxt "ActionButtons|"
 msgid "New"
-msgstr ""
+msgstr "Yeni"
 
 msgctxt "FileEvent|"
 msgid "Importing Excel File"
-msgstr ""
+msgstr "Excel Dosyasını İçe Aktarma"
 
 #, qt-format
 msgctxt "Computer|"
 msgid "All Data Sets %1"
-msgstr ""
+msgstr "Tüm Veri Kümeleri %1"
 
 #, qt-format
 msgctxt "Computer|"
 msgid "JASP Files %1"
-msgstr ""
+msgstr "JASP Dosyaları %1"
 
 #, qt-format
 msgctxt "Computer|"
 msgid "CSV Text Files %1"
-msgstr ""
+msgstr "CSV Metin Dosyaları %1"
 
 #, qt-format
 msgctxt "Computer|"
 msgid "Spreadsheet Files %1"
-msgstr ""
+msgstr "E-Tablo Dosyaları %1"
 
 #, qt-format
 msgctxt "Computer|"
 msgid "SPSS Files %1"
-msgstr ""
+msgstr "SPSS Dosyaları %1"
 
 #, qt-format
 msgctxt "Computer|"
 msgid "Stata Files %1"
-msgstr ""
+msgstr "Stata Dosyaları %1"
 
 #, qt-format
 msgctxt "Computer|"
 msgid "SAS Files %1"
-msgstr ""
+msgstr "SAS Dosyaları %1"
 
 msgctxt "ColorPalette|"
 msgid "JASP"
-msgstr ""
+msgstr "JASP"
 
 msgctxt "PrefsResults|"
 msgid "PDF Settings"
-msgstr ""
+msgstr "PDF Ayarları"
 
 msgctxt "PrefsResults|"
 msgid "Orientation"
-msgstr ""
+msgstr "Oryantasyon"
 
 msgctxt "PrefsResults|"
 msgid "Portrait"
-msgstr ""
+msgstr "Portre"
 
 msgctxt "PrefsResults|"
 msgid "Landscape"
-msgstr ""
+msgstr "Görünüm"
 
 msgctxt "PrefsResults|"
 msgid "Page size"
-msgstr ""
+msgstr "Sayfa boyutu"
 
 msgctxt "FilterConstructor|"
 msgid "Filter cleared\n"
-msgstr ""
+msgstr "Filtre temizlendi\n"
 
 msgctxt "FilterConstructor|"
 msgid "Filter applied\n"
-msgstr ""
+msgstr "Filtre uygulandı\n"
 
 msgctxt "FilterConstructor|"
 msgid "Please enter all arguments - see fields marked in red.\n"
-msgstr ""
+msgstr "Lütfen tüm argümanları girin - kırmızıyla işaretli alanlara bakın.\n"
 
 msgctxt "FilterConstructor|"
 msgid ""
 "Formula does not return a set of logical values, and therefore cannot be "
 "used in the filter.\n"
 msgstr ""
+"Formül mantıksal değerler kümesi döndürmez ve bu nedenle filtrede "
+"kullanılamaz.\n"
 
 msgctxt "FilterConstructor|"
 msgid "Welcome to the drag and drop filter!\n"
-msgstr ""
+msgstr "Sürükle ve bırak filtresine hoş geldiniz!\n"
 
 msgctxt "JASPColumn|"
 msgid "Click icon to change column type"
-msgstr ""
+msgstr "Sütun türünü değiştirmek için simgeye tıklayın"
 
 msgctxt "TextInputBase|"
 msgid "Column-name-is-free field"
-msgstr ""
+msgstr "Sütun adı-serbest alanı"
 
 #, qt-format
 msgctxt "TextInputBase|"
 msgid "Column '%1' already exists and is not created by this analysis."
-msgstr ""
+msgstr "'%1' sütunu zaten var ve bu analiz tarafından oluşturulmadı."
 
 #, qt-format
 msgctxt "ListModelFilteredDataEntry|"
 msgid "Filter had error '%1'"
-msgstr ""
+msgstr "Filtrede '%1' hatası oluştu"
 
 msgctxt "LabelEditorWindow|"
 msgid "Automatically order labels by their value"
-msgstr ""
+msgstr "Etiketleri değerlerine göre otomatik olarak sıralayın"
 
 msgctxt "FilterModel|"
 msgid ""
@@ -5132,16 +5432,23 @@ msgid ""
 "& perhapsAnotherFilter'\n"
 "Click the (i) icon in the lower right corner for further help.\n"
 msgstr ""
+"Yukarıda JASP'nin hem değer filtrelemesi hem de sürükle ve bırak filtresi "
+"için ürettiği kodu görüyorsunuz.\n"
+"Bu varsayılan sonuç 'generatedFilter' içinde saklanır ve özel bir filtreyle "
+"değiştirilebilir veya birleştirilebilir.\n"
+"Birleştirmek için '&' kullanarak ifadeler ekleyebilirsiniz: 'generatedFilter "
+"& customFilter & perhapsAnotherFilter'\n"
+"Daha fazla yardım için sağ alt köşedeki (i) simgesine tıklayın.\n"
 
 #, qt-format
 msgctxt "JASPListControl|"
 msgid "Minimum number of levels is %1. Variable %2 has only %3 levels"
-msgstr ""
+msgstr "Minimum seviye sayısı %1'dir. %2 değişkeninin sadece %3 seviyesi vardır"
 
 #, qt-format
 msgctxt "JASPListControl|"
 msgid "Maximum number of levels is %1. Variable %2 has %3 levels."
-msgstr ""
+msgstr "Maksimum seviye sayısı %1'dir. %2 değişkeninin %3 seviyesi vardır."
 
 #, qt-format
 msgctxt "JASPListControl|"
@@ -5151,6 +5458,10 @@ msgid ""
 "either change its type, or change 'Maximum allowed levels for scale' in "
 "Preferences / Data menu"
 msgstr ""
+"Ölçek değişkeni %1'i %2 değişkenine dönüştürmeyi deneyin, ancak seviye "
+"sayısı %3 maksimum %4'ü aşıyor. Bu değişkeni hala kullanmak istiyorsanız, "
+"türünü değiştirin veya Tercihler / Veri menüsünde 'Ölçek için izin verilen "
+"maksimum seviyeler'i değiştirin"
 
 #, qt-format
 msgctxt "JASPListControl|"
@@ -5158,6 +5469,8 @@ msgid ""
 "Minimum number of numeric values is %1. Variable %2 has only %3 different "
 "numeric values"
 msgstr ""
+"Minimum sayısal değer sayısı %1'dir. %2 değişkeni yalnızca %3 farklı sayısal "
+"değere sahiptir"
 
 #, qt-format
 msgctxt "JASPListControl|"
@@ -5165,100 +5478,106 @@ msgid ""
 "Maximum number of numeric values is %1. Variable %2 has %3 different numeric "
 "values"
 msgstr ""
+"Sayısal değerlerin maksimum sayısı %1'dir. %2 değişkeni %3 farklı sayısal "
+"değere sahiptir"
 
 msgctxt "PrefsAdvanced|"
 msgid "Developer mode"
-msgstr ""
+msgstr "Geliştirici modu"
 
 msgctxt "PrefsAdvanced|"
 msgid "Development module"
-msgstr ""
+msgstr "Geliştirme modülü"
 
 msgctxt "PrefsAdvanced|"
 msgid "Enable direct libpath mode"
-msgstr ""
+msgstr "Doğrudan libpath modunu etkinleştir"
 
 msgctxt "PrefsAdvanced|"
 msgid ""
 "Load modules from a binary in an R-library instead of installing it from "
 "sources."
 msgstr ""
+"Modülleri kaynaklardan yüklemek yerine R kütüphanesindeki bir ikili dosyadan "
+"yükleyin."
 
 msgctxt "PrefsAdvanced|"
 msgid "Source folder:"
-msgstr ""
+msgstr "Kaynak klasörü:"
 
 msgctxt "PrefsAdvanced|"
 msgid "Libpath:"
-msgstr ""
+msgstr "Libpath:"
 
 msgctxt "PrefsAdvanced|"
 msgid "Choose the R library where you installed the development module"
-msgstr ""
+msgstr "Geliştirme modülünü yüklediğiniz R kütüphanesini seçin"
 
 msgctxt "PrefsAdvanced|"
 msgid "Module name:"
-msgstr ""
+msgstr "Modül adı:"
 
 msgctxt "PrefsAdvanced|"
 msgid "Enter the (package)name of the development module you want to load"
-msgstr ""
+msgstr "Yüklemek istediğiniz geliştirme modülünün (paket) adını girin"
 
 msgctxt "ModulesMenu|"
 msgid "Select a developer module by filling in the relevant preferences"
-msgstr ""
+msgstr "İlgili tercihleri doldurarak bir geliştirici modülü seçin"
 
 msgctxt "ModulesMenu|"
 msgid "Refresh developer module "
-msgstr ""
+msgstr "Geliştirici modülünü yenile "
 
 msgctxt "ExcelImporter|"
 msgid "0 valid columns were read from the file, please check your data file."
-msgstr ""
+msgstr "Dosyadan 0 geçerli sütun okundu, lütfen veri dosyanızı kontrol edin."
 
 msgctxt "PrefsUI|"
 msgid "Ribbon scale (%): "
-msgstr ""
+msgstr "Şerit ölçeği (%): "
 
 msgctxt "PrefsUI|"
 msgid "Set the scale of height of the ribbon."
-msgstr ""
+msgstr "Şeridin yükseklik ölçeğini ayarlayın."
 
 msgctxt "TabView|"
 msgid "Double click to edit this name"
-msgstr ""
+msgstr "Bu adı düzenlemek için çift tıklayın"
 
 msgctxt "PrefsUI|"
 msgid "Choose language"
-msgstr ""
+msgstr "Dili seçin"
 
 msgctxt "PrefsUI|"
 msgid "Use an alternative language and territory dependent display for numbers"
-msgstr ""
+msgstr "Sayılar için alternatif bir dil ve bölgeye bağlı görüntüleme kullanın"
 
 msgctxt "PrefsUI|"
 msgid "Use the locale specified below for display of numbers and currency."
 msgstr ""
+"Sayıların ve para birimlerinin görüntülenmesi için aşağıda belirtilen yerel "
+"ayarı kullanın."
 
 msgctxt "PrefsUI|"
 msgid "Alt. language"
-msgstr ""
+msgstr "Alternatif dil"
 
 msgctxt "PrefsUI|"
 msgid "Alt. territory"
-msgstr ""
+msgstr "Alt. bölge"
 
 msgctxt "JASPColumn|"
 msgid "Column description: "
-msgstr ""
+msgstr "Sütun açıklaması: "
 
 msgctxt "VariablesList|"
 msgid "Click icon to change column type"
-msgstr ""
+msgstr "Sütun türünü değiştirmek için simgeye tıklayın"
 
 msgctxt "VariablesList|"
 msgid "Column description: "
-msgstr ""
+msgstr "Sütun açıklaması: "
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -5266,10 +5585,12 @@ msgid ""
 "To install a development module you need to select and existing folder, you "
 "selected '%1' but it doesn't exist."
 msgstr ""
+"Bir geliştirme modülünü kurmak için var olan bir klasörü seçmeniz gerekir, "
+"'%1' klasörünü seçtiniz ancak mevcut değil."
 
 msgctxt "MainPage|"
 msgid "Remove this note"
-msgstr ""
+msgstr "Bu notu kaldır"
 
 msgctxt "MainWindow|"
 msgid ""
@@ -5277,154 +5598,177 @@ msgid ""
 "For this: open the file menu (the blue hamburger button left top), navigate "
 "to Advanced Preferences and check the 'Log to file' checkbox."
 msgstr ""
+"Log dosyası mevcut değil. Daha fazla bilgi edinmek için lütfen günlük "
+"kaydını açın. Bunun için: dosya menüsünü açın (sol üstteki mavi hamburger "
+"düğmesi), Gelişmiş Tercihler'e gidin ve 'Dosyaya kaydet' onay kutusunu "
+"işaretleyin."
 
 msgctxt "MainWindow|"
 msgid "Please drag and drop these log files into this issue: "
-msgstr ""
+msgstr "Lütfen bu log dosyalarını bu soruna sürükleyip bırakın: "
 
 msgctxt "ComputeColumnWindow|"
 msgid "Select a filter to use for this computed column"
-msgstr ""
+msgstr "Bu hesaplanan sütun için kullanılacak bir filtre seçin"
 
 msgctxt "LabelEditorWindow|"
 msgid "Remove"
-msgstr ""
+msgstr "Kaldır"
 
 msgctxt "LabelEditorWindow|"
 msgid "Add new level:"
-msgstr ""
+msgstr "Yeni seviye ekle:"
 
 msgctxt "LabelEditorWindow|"
 msgid "Add a level that's missing from the data"
-msgstr ""
+msgstr "Verilerde eksik olan bir seviyeyi ekleyin"
 
 msgctxt "LabelEditorWindow|"
 msgid ""
 "Keeping levels, so all levels are passed to the analysis, both filtered out "
 "ones and those added later manually."
 msgstr ""
+"Seviyeleri koruyarak, hem filtrelenmiş olanlar hem de sonradan manuel olarak "
+"eklenenler olmak üzere tüm seviyelerin analize aktarılmasını sağlıyoruz."
 
 msgctxt "LabelEditorWindow|"
 msgid ""
 "Dropping levels, so only those levels in the (possibly filtered) data get "
 "sent to the analysis."
 msgstr ""
+"Seviyeler düşürülüyor, böylece (muhtemelen filtrelenmiş) verilerdeki "
+"yalnızca seviyeler analize gönderiliyor."
 
 msgctxt "LabelEditorWindow|"
 msgid "Turn automatically ordering off to reverse order of all labels"
 msgstr ""
+"Tüm etiketlerin sırasını tersine çevirmek için otomatik sıralamayı kapatın"
 
 msgctxt "LabelEditorWindow|"
 msgid "Turn automatically ordering off to move labels up manually"
 msgstr ""
+"Etiketleri manuel olarak yukarı taşımak için otomatik sıralamayı kapatın"
 
 msgctxt "LabelEditorWindow|"
 msgid "Turn automatically ordering off to move labels down manually"
-msgstr ""
+msgstr "Etiketleri manuel olarak aşağı taşımak için otomatik sıralamayı kapatın"
 
 msgctxt "QObject|"
 msgid "No filter"
-msgstr ""
+msgstr "Filtre yok"
 
 msgctxt "QObject|"
 msgid "Use filter"
-msgstr ""
+msgstr "Filtre kullan"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Change column compute filter of '%1' from '%2' to '%3'"
-msgstr ""
+msgstr "'%1' sütun hesaplama filtresini '%2'den '%3'e değiştirin"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Change column drop levels of '%1' from '%2' to '%3'"
-msgstr ""
+msgstr "'%1' sütun bırakma seviyelerini '%2'den '%3'e değiştirin"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Delete label %1 of column '%2'"
-msgstr ""
+msgstr "'%2' sütununun %1 etiketini sil"
 
 #, qt-format
 msgctxt "QObject|"
 msgid "Adding value + label '%1' + '%2' to column '%3'"
-msgstr ""
+msgstr "'%3' sütununa değer + etiket '%1' + '%2' ekleniyor"
 
 msgctxt "PrefsAdvanced|"
 msgid "Sandbox engines"
-msgstr ""
+msgstr "Sandbox motorları"
 
 msgctxt "PrefsAdvanced|"
 msgid "Strengthen security on Windows by isolating Engines running R-code"
 msgstr ""
+"R kodunu çalıştıran Motorları izole ederek Windows'ta güvenliği güçlendirin"
 
 msgctxt "PrefsUI|"
 msgid "Use thousands separators"
-msgstr ""
+msgstr "Binler ayracı kullanın"
 
 msgctxt "PrefsUI|"
 msgid "Disable to remove thousands separators from all numbers."
-msgstr ""
+msgstr "Tüm sayılardan binlik ayraçları kaldırmak için devre dışı bırakın."
 
 msgctxt "PreferencesModel|"
 msgid "Select a file..."
-msgstr ""
+msgstr "Bir dosya seçin..."
 
 msgctxt "PreferencesModel|"
 msgid "Select a folder..."
-msgstr ""
+msgstr "Bir klasör seçin..."
 
 msgctxt "PreferencesModel|"
 msgid "Select a R-library..."
-msgstr ""
+msgstr "Bir R-kütüphanesi seçin..."
 
 msgctxt "PreferencesModel|"
 msgid "Safe Graphics mode changed"
-msgstr ""
+msgstr "Güvenli Grafik modu değiştirildi"
 
 msgctxt "PreferencesModel|"
 msgid ""
 "You've changed the Safe Graphics mode of JASP, for this option to take "
 "effect you need to restart JASP"
 msgstr ""
+"JASP'nin Güvenli Grafik modunu değiştirdiniz, bu seçeneğin etkili olması "
+"için JASP'yi yeniden başlatmanız gerekir"
 
 msgctxt "PreferencesModel|"
 msgid "Text rendering setting changed"
-msgstr ""
+msgstr "Metin oluşturma ayarı değiştirildi"
 
 msgctxt "PreferencesModel|"
 msgid ""
 "The textrendering setting has been changed, this will only take full effect "
 "after JASP is restarted."
 msgstr ""
+"Metin oluşturma ayarı değiştirildi, bu ayar yalnızca JASP yeniden "
+"başlatıldıktan sonra tam olarak etkili olacak."
 
 msgctxt "PreferencesModel|"
 msgid "Engine Sandbox setting changed"
-msgstr ""
+msgstr "Motor Sandbox ayarı değiştirildi"
 
 msgctxt "PreferencesModel|"
 msgid ""
 "The Engine Sandbox setting has been changed, this will only take full effect "
 "after JASP is restarted."
 msgstr ""
+"Motor Sandbox ayarı değiştirildi, bu ayar yalnızca JASP yeniden "
+"başlatıldıktan sonra tam olarak etkili olacak."
 
 msgctxt "MessageForwarder|"
 msgid "Sandbox warning"
-msgstr ""
+msgstr "Sandbox uyarısı"
 
 msgctxt "MessageForwarder|"
 msgid ""
 "You want to save a file outside of the sandbox directory! We will correct "
 "the path to: "
 msgstr ""
+"Sandbox dizininin dışında bir dosyayı kaydetmek istiyorsunuz! Yolu şu "
+"şekilde düzelteceğiz: "
 
 msgctxt "MessageForwarder|"
 msgid ""
 "You want to load a file outside of the sandbox directory! This will fail "
 "please move the file to: "
 msgstr ""
+"Sandbox dizininin dışında bir dosya yüklemek istiyorsunuz! Bu başarısız olur "
+"lütfen dosyayı şuraya taşıyın: "
 
 msgctxt "MessageForwarder|"
 msgid ""
 "The jasp engine is running in security sandbox mode and only has access to: "
 msgstr ""
+"Jasp motoru güvenlik deneme modunda çalışıyor ve yalnızca şunlara "
+"erişebiliyor: "
