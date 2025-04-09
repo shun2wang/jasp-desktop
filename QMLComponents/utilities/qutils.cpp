@@ -160,7 +160,7 @@ Json::Value fqj(const QJSValue & jsVal)
 		return json;
 	}
 
-	if(jsVal.isObject() && !(jsVal.isCallable() || jsVal.isQObject() || jsVal.isVariant()))
+	if(jsVal.isObject() && !(jsVal.isCallable() || jsVal.isQObject()))
 	{
 		Json::Value json = Json::objectValue;
 		QJSValueIterator it(jsVal);
