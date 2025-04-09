@@ -555,6 +555,11 @@ const char*	STDCALL jaspRCPP_evalRCode(const char *rCode, bool setWd) {
 	{
 		staticResult = jaspRCPP_parseEvalStringReturn(rCodeTryCatch, setWd);
 	}
+	catch(std::exception& e)
+	{
+		jaspRCPP_logString(std::string("Error when running code ") + rCodeTryCatch + ": " + e.what() + "\n");
+		staticResult = NullString;
+	}
 	catch(...)
 	{
 		staticResult = NullString;
