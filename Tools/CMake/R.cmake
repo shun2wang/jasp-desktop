@@ -107,6 +107,10 @@ set(AVAILABLE_R_VERSIONS
  	"R-4.4.3-x86_64"
   	"R-4.4.3-arm64"
    	"R-4.4.3-win"
+"R-4.5.0"
+	  "R-4.5.0-x86_64"
+	  "R-4.5.0-arm64"
+	  "R-4.5.0-win"
 )
 
 set(R_BINARY_HASHES
@@ -168,14 +172,19 @@ set(R_BINARY_HASHES
   "2391e3c97b3c9f3d36001a3a3eb314a6e6efc819"
   "c32bed5f8f0a7ddd31a8c5598a5a60f8b6c89073"
   "791361bb061421ca178f4c5124cc1ee114810a4b"
+  # 4.5.0
+  "d1121c69451118c6e43d66b643c589008340f3e7"
+  "d1121c69451118c6e43d66b643c589008340f3e7"
+  "a47d9579664f0ca878b83d90416d66af2581ef9c"
+  "ed8be81b82f849e43cd85482753b0948acac0e19"
 )
 
 
 list(APPEND CMAKE_MESSAGE_CONTEXT R)
 
 # dont forget check and upgrande Rtools version if major_minor version changed.
-set(R_VERSION "4.4.2")
-set(R_VERSION_MAJOR_MINOR "4.4")
+set(R_VERSION "4.5.0")
+set(R_VERSION_MAJOR_MINOR "4.5")
 set(CURRENT_R_VERSION ${R_VERSION_MAJOR_MINOR})
 
 if(CMAKE_OSX_ARCHITECTURES STREQUAL "arm64")
@@ -325,9 +334,9 @@ if(APPLE)
 
           fetchcontent_declare(
             gfortran_tar_gz
-            URL "${GFORTRAN_REPOSITORY}gfortran-12.0.1-20220312-is-darwin20-arm64.tar.xz"
+            URL "${GFORTRAN_REPOSITORY}gfortran-14.2-arm64.tar.xz"
             URL_HASH
-              SHA256=a2ab8be30a7d92a24f53e1509c8c0804f8502f0bc35469750e3f1e233d1c64b8
+              SHA256=77f5eb33b961eba4f9ffac015ca96dbabfd745fff6bf8883bc34c41b7208291d
             DOWNLOAD_NO_EXTRACT ON
             DOWNLOAD_NAME gfortran.tar.gz)
 
@@ -364,45 +373,25 @@ if(APPLE)
           # Downloading the gfortran
           message(CHECK_START "Downloading gfortran")
 
-          # @todo, it's probably a good idea to unpack this and provide a tar.gz like the other version
-          fetchcontent_declare(
-            gfortran_dmg
-            URL "${GFORTRAN_REPOSITORY}gfortran-8.2-Mojave.dmg"
+
+	  fetchcontent_declare(
+            gfortran_tar_gz
+            URL "${GFORTRAN_REPOSITORY}gfortran-14.2-intel.tar.xz"
             URL_HASH
-              SHA256=81d379231ba5671a5ef1b7832531f53be5a1c651701a61d87e1d877c4f06d369
+              SHA256=fae5e451ace56b97c02e909cd864095bf2a749b71db61454f4fdfd8908a71919
             DOWNLOAD_NO_EXTRACT ON
-            DOWNLOAD_NAME gfortran.dmg)
+            DOWNLOAD_NAME gfortran.tar.gz)
 
-          fetchcontent_makeavailable(gfortran_dmg)
+          fetchcontent_makeavailable(gfortran_tar_gz)
 
-          if(gfortran_dmg_POPULATED)
+          if(gfortran_tar_gz_POPULATED)
 
             message(CHECK_PASS "done.")
 
-            # message(CHECK_START "Unpacking the payloads.")
-            execute_process(WORKING_DIRECTORY ${gfortran_dmg_SOURCE_DIR}
-                            COMMAND hdiutil attach gfortran.dmg)
+            execute_process(WORKING_DIRECTORY ${gfortran_tar_gz_SOURCE_DIR}
+                            COMMAND tar xzf gfortran.tar.gz -C ${r_pkg_r_home}/)
 
-            execute_process(
-              WORKING_DIRECTORY /Volumes/gfortran-8.2-Mojave/gfortran-8.2-Mojave
-              COMMAND ${CMAKE_COMMAND} -E copy gfortran.pkg
-                      ${gfortran_dmg_SOURCE_DIR}/)
-
-            execute_process(WORKING_DIRECTORY ${gfortran_dmg_SOURCE_DIR}
-                            COMMAND xar -xf gfortran.pkg)
-
-            execute_process(WORKING_DIRECTORY ${gfortran_dmg_SOURCE_DIR}
-                            COMMAND tar -xf Payload)
-
-            execute_process(
-              WORKING_DIRECTORY ${gfortran_dmg_SOURCE_DIR}
-              COMMAND ${CMAKE_COMMAND} -E copy_directory usr/local
-                      ${r_pkg_r_home}/opt/local/)
-
-            execute_process(COMMAND hdiutil detach /Volumes/gfortran-8.2-Mojave)
-
-            set(GFORTRAN_PATH ${R_OPT_PATH}/local/gfortran/bin)
-
+            set(GFORTRAN_PATH ${R_OPT_PATH}/R/x86_64/bin)
           else()
 
             message(CHECK_FAIL "unsuccessful")
@@ -677,13 +666,6 @@ elseif(WIN32)
       R_BINARY_HASHES
       ${HASH_INDEX}
       R_PACKAGE_HASH)
-
-      # Remove this before merging
-      set(R_VERSION_NAME "R-4.4.3-win-containerable")
-      set(R_PACKAGE_NAME "${R_VERSION_NAME}.exe")
-      set(R_DOWNLOAD_URL "${R_BINARY_REPOSITORY}/${R_PACKAGE_NAME}")
-      set(R_PACKAGE_HASH "D322E263E8EA55BDBD161B0EE57C76994DBE70DA")
-      ######
 
     fetchcontent_declare(
       r_win_exe
