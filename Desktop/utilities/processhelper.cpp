@@ -44,23 +44,23 @@ QProcessEnvironment ProcessHelper::getProcessEnvironmentForJaspEngine(bool bootS
 	
 			TZDIR		= shortenWinPaths(TZDIR);
 	QString PATH		= shortenWinPaths(programDir.absoluteFilePath("R/library/RInside/libs/" ARCH_SUBPATH)) + ";" + shortenWinPaths(programDir.absoluteFilePath("R/library/Rcpp/libs/" ARCH_SUBPATH)) + ";" + shortenWinPaths(programDir.absoluteFilePath("R/bin/" ARCH_SUBPATH)) + ";" + shortenWinPaths(env.value("PATH")),
-			R_HOME		= shortenWinPaths(rHome.absolutePath()),
+			_R_HOME		= shortenWinPaths(rHome.absolutePath()),
 			JAGS_HOME	= shortenWinPaths(programDir.absoluteFilePath("R/opt/jags/"));
 			// JAGS_LIBDIR	= shortenWinPaths(programDir.absoluteFilePath("R/opt/jags/lib/"));
 
-	Log::log() << "R_HOME set to " << R_HOME << std::endl;
+	Log::log() << "R_HOME set to " << _R_HOME << std::endl;
 
 	env.insert("PATH",				PATH);
-	env.insert("R_HOME",			R_HOME);
+	env.insert("R_HOME",			_R_HOME);
 	env.insert("JAGS_HOME",			JAGS_HOME);
 	// env.insert("JAGS_LIBDIR",		JAGS_LIBDIR);
 	
 #undef ARCH_SUBPATH
 
 	if(bootStrap)
-		env.insert("R_LIBS",			programDir.absoluteFilePath("Modules/Tools/junction_bootstrap_library") + ";" + R_HOME + "/library");
+		env.insert("R_LIBS",			programDir.absoluteFilePath("Modules/Tools/junction_bootstrap_library") + ";" + _R_HOME + "/library");
 	else
-		env.insert("R_LIBS",			AppDirs::bundledModulesDir() + "Tools/R_cpp_includes_library" + ";" + R_HOME + "/library");
+		env.insert("R_LIBS",			AppDirs::bundledModulesDir() + "Tools/R_cpp_includes_library" + ";" + _R_HOME + "/library");
 
 	env.insert("R_ENVIRON",			"something-which-doesn't-exist");
 	env.insert("R_PROFILE",			"something-which-doesn't-exist");
