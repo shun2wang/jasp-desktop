@@ -26,18 +26,18 @@ Window
 	id:					mainWindowRoot
 	title:				mainWindow.windowTitle
 	visible:			true
-	visibility:			Window.Maximized
 	width:				1280
 	height:				720
 	flags:				Qt.Window | Qt.WindowFullscreenButtonHint
 	color:				jaspTheme.white
 	minimumWidth:		jaspTheme.formWidth + 2 * jaspTheme.splitHandleWidth + jaspTheme.scrollbarBoxWidthBig + 3
 	minimumHeight:		400 * jaspTheme.uiScale
+	visibility:			!preferencesModel.startMaximized ? Window.Windowed : Window.Maximized
 
 	onVisibleChanged:
 		if(!visible)
 		{
-			helpModel.visible = false;
+			helpModel.visible  = false;
 			aboutModel.visible = false;
 		}
 

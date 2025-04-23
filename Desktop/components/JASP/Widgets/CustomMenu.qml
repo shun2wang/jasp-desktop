@@ -203,6 +203,35 @@ FocusScope
 			}
 		}
 
+		JASPControl.ScrollMoreIndicator 
+		{
+			id: 		scrollingGuideBottom
+			
+			anchors
+			{
+				left: 	parent.left
+				right: 	itemScrollbar.left
+				bottom: parent.bottom
+			}
+
+			extraSpace: itemFlickable.contentHeight - (itemFlickable.contentY + itemFlickable.height)
+		}
+		
+		JASPControl.ScrollMoreIndicator 
+		{
+			id: 		scrollingGuideTop
+			
+			anchors
+			{
+				left: 	parent.left
+				right: 	itemScrollbar.left
+				top:	parent.top
+			}
+			
+			upsideDown:	true
+			extraSpace: itemFlickable.contentY
+		}
+
 		Flickable
 		{
 			id						: itemFlickable

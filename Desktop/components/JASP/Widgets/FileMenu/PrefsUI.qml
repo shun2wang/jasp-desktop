@@ -4,13 +4,10 @@ import QtQuick.Layouts	as L
 import JASP.Widgets
 import JASP.Controls
 
-ScrollView
+PrefsScrollView
 {
 	id:						scrollPrefs
-	focus:					true
-	onActiveFocusChanged:	if(activeFocus) interfaceFonts.forceActiveFocus();
-	Keys.onLeftPressed:		resourceMenu.forceActiveFocus();
-	hoverEnabled:			false
+	
 
 	function resetMe()
 	{
@@ -95,7 +92,7 @@ ScrollView
 					placeholderText:		qsTr("default: %1").arg(defaultInterfaceFont.fontInfo.family)
 					startValue:				preferencesModel.interfaceFont
 					onValueChanged: 		preferencesModel.interfaceFont = (currentIndex <= 0 ? "" : value)
-
+					focus:					true
 					KeyNavigation.tab:		codeFonts
 				}
 			
@@ -394,7 +391,19 @@ ScrollView
 				onCheckedChanged:	preferencesModel.safeGraphics = checked
 				toolTip:			qsTr("Switches to a \"safer\" mode for graphics aka software rendering.\nIt will make your interface slower but if you have some problems (weird glitches, cannot see results or anything even) might fix them.\nAnalyses will still be just as fast though.")
 				
-				KeyNavigation.tab:			disableAnimations
+				KeyNavigation.tab:	startMaximized
+
+			}
+			
+			CheckBox
+			{
+				id:					startMaximized
+				label:				qsTr("Start Maximized")
+				checked:			preferencesModel.startMaximized
+				onCheckedChanged:	preferencesModel.startMaximized = checked
+				toolTip:			qsTr("Should JASP open its window maximized on startup?")
+				
+				KeyNavigation.tab:	disableAnimations
 
 			}
 
