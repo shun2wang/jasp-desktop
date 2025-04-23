@@ -34,25 +34,28 @@
 class Term
 {
 public:
-	Term(const std::vector<std::string> components, const columnTypeVec& types	= { columnType::unknown }	);
-	Term(const std::string				component, columnType type				= columnType::unknown		);
-	Term(const QStringList				components, const columnTypeVec& types	= { columnType::unknown }	);
-	Term(const QString					component, columnType type				= columnType::unknown		);
+	Term(const std::vector<std::string> &	components, const columnTypeVec	&	types	= { columnType::unknown }	);
+	Term(const std::string				&	component,	const columnType		type	= columnType::unknown		);
+	Term(const QStringList				&	components, const columnTypeVec	&	types	= { columnType::unknown }	);
+	Term(const QString					&	component,	const columnType		type	= columnType::unknown		);
+	Term(const QString					&	value,		const QString		&	label,		const QString		& info = QString());
+	Term(const Json::Value				&	json,		const std::string	&	keyValue,	const std::string	& keyLabel);
 
-	const QStringList			& components()	const;
-	const QString				& asQString()	const;
-
-	std::vector<std::string>	scomponents()	const;
-	std::string					asString()		const;
+	const QStringList		&	components()			const;
+	const QString			&	label()					const { return _label;	}
+	const QString			&	value()					const { return _value;	}
+	const QString			&	info()					const { return _info;	}
+	std::vector<std::string>	scomponents()			const;
 
 	bool						isDraggable()	const			{ return _draggable; }
 	void						setDraggable(bool draggable)	{ _draggable = draggable; }
 
 	// If a term has several components, its type self is unknown, but the components have maybe a type.
 	columnType					type()			const			{ return _types.size() == 1 ? _types[0] : columnType::unknown; }
-	void						setType(columnType type)		{ _types = {type}; }
-	columnTypeVec				types()			const			{ return _types; }
-	void						setTypes(columnTypeVec types)	{ _types = types; }
+	void						setType(columnType type)		{ _types = {type};	}
+	columnTypeVec				types()			const			{ return _types;	}
+	void						setTypes(columnTypeVec types)	{ _types = types;	}
+	void						setLabel(const QString& label)	{ _label = label;	}
 
 	typedef QStringList::const_iterator const_iterator;
 	typedef QStringList::iterator		iterator;
@@ -72,21 +75,22 @@ public:
 
 	size_t size() const;
 
-	bool replaceVariableName(const std::string & oldName, const std::string & newName);
+	bool replaceVariableName(const std::string & oldValue, const std::string & newValue);
 
 	static const char* separator;
 	static Term	readTerm(std::string str);
 	static Term	readTerm(QString str);
-	static Term readTerm(const Json::Value& json, columnType defaultType = columnType::unknown);
 
 	Json::Value toJson(bool useArray = true, bool useValueAndType = true) const;
 
 private:
-	void initFrom(const QStringList components, const columnTypeVec& type);
-	void initFrom(const QString		component,	columnType type);
+	void initFrom(const QStringList	& components,	const QString	& label, const columnTypeVec& type, const QString	& info = "");
+	void initFrom(const QString		& value,		const QString	& label, columnType type,			const QString	& info = "");
 
 	QStringList		_components;
-	QString			_asQString;
+	QString			_label,
+					_value,
+					_info;
 	bool			_draggable = true;
 	columnTypeVec	_types = {columnType::unknown};
 };
