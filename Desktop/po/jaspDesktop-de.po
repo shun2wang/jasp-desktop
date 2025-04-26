@@ -5924,3 +5924,11 @@ msgstr "Zeilenweises Minimum"
 msgctxt "FilterWindow|"
 msgid "Rowwise maximum"
 msgstr "Zeilenweises Maximum"
+
+msgctxt "PrefsUI|"
+msgid "Start Maximized"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Should JASP open its window maximized on startup?"
+msgstr ""

@@ -5646,3 +5646,11 @@ msgstr "按行计算极小值"
 msgctxt "FilterWindow|"
 msgid "Rowwise maximum"
 msgstr "按行计算极大值"
+
+msgctxt "PrefsUI|"
+msgid "Start Maximized"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Should JASP open its window maximized on startup?"
+msgstr ""
