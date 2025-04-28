@@ -173,7 +173,8 @@ void BoundControlRlangTextArea::_setBoundValues()
 		value.append(column);
 	}
 
-	_textArea->model()->initTerms(terms);
+	if (_textArea->model())
+		_textArea->model()->initTerms(terms);
 	boundValue["columns"]	= columns;
 	boundValue["value"]		= value;
 	boundValue["types"]		= terms.types();
