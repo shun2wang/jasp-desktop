@@ -401,6 +401,27 @@ void recursiveFileOpener(QFileInfo file, int & failures, int & total, int & time
 	}
 }
 
+void qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+	const char *file	= context.file ? context.file : "";
+	const char *function = context.function ? context.function : "";
+
+	switch (type) {
+	case QtWarningMsg:
+		Log::log() << "Msg from Qt Warning: " << msg << " [" << file << ":" << context.line << ", " << function << "]" << std::endl;
+		break;
+	case QtCriticalMsg:
+		Log::log() << "Msg from Qt Critical: " << msg << " [" << file << ":" << context.line << ", " << function << "]" << std::endl;
+		break;
+	case QtFatalMsg:
+		Log::log() << "Msg from Qt Fatal: " << msg << " [" << file << ":" << context.line << ", " << function << "]" << std::endl;
+		break;
+	case QtDebugMsg:
+	case QtInfoMsg:
+		break;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	std::string filePath;
@@ -415,6 +436,8 @@ int main(int argc, char *argv[])
 	int			timeOut;
 	Json::Value	dbJson;
 
+	qInstallMessageHandler(qtMessageHandler);
+	
 	QCoreApplication::setOrganizationName("JASP");
 	QCoreApplication::setOrganizationDomain("jasp-stats.org");
 	QCoreApplication::setApplicationName("JASP");
