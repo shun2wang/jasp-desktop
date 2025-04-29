@@ -104,7 +104,7 @@ const Settings::Setting Settings::Values[] = {
 	{"directLibpathFolder",			""		},
 	{"directDevModName",			""		},
 	{"ribbonBarHeightScale",		1.0		},
-	{"engineSandbox",				false	},
+	{"engineSandbox",				true	},
 	{"remoteConfiguration",			false   },
 	{"remoteConfigurationURL",		""		},
 	{"localConfigurationPath",		""		},
