@@ -628,9 +628,12 @@ void PreferencesModel::setDirectLibpathFolder(QString libpath)
 }
 
 void PreferencesModel::setEngineSandbox(bool engineSandbox) {
-        if(engineSandbox != PreferencesModel::engineSandbox()) {
-	        Settings::setValue(Settings::ENGINE_SANDBOX, engineSandbox);
+	if(engineSandbox != PreferencesModel::engineSandbox()) {
+		Settings::setValue(Settings::ENGINE_SANDBOX, engineSandbox);
+
+#ifdef _WIN32
 		MessageForwarder::showWarning(tr("Engine Sandbox setting changed"), tr("The Engine Sandbox setting has been changed, this will only take full effect after JASP is restarted."));
+#endif
 		emit engineSandboxChanged(engineSandbox);
 	}
 }
