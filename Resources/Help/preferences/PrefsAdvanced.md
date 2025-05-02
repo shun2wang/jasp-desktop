@@ -48,7 +48,15 @@ A simple way to avoid this is to tell `renv` to install to a temporary folder, k
 # restore, install and print project library
 ```
 On Windows you would then get something like: `C:/Users/A_User/AppData/Local/Temp/RtmpYN3aqC`
+
+#### Dedicated project library
 You could of course also decide to make a dedicated project library somewhere and use that instead of `tempdir()`, or if the temporary directory it creates isn't accessible for JASP. 
+As an example, you can create a directory somewhere and pass that to `renv`.
+```R
+.libPaths("~/jasp-renv-package-library")
+```
+This will load `jasp-renv-package-library` from your homefolder (which would make it `/home/username/jasp-renv-package-library` on macos/linux or `c:\Users\username\jasp-renv-package-library` on windows).
+You then do the above `renv::restore` and `renv::install`.
 
 #### Installing extra packages
 Until we finish syntaxmode for JASP, which is now in beta, you might want to use `jaspTools` to run analyses in R. You can just run `renv::install('jaspTools') and it will be installed to your project library. The same goes for any other package(s) you might need.
