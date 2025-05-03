@@ -3165,10 +3165,6 @@ msgctxt "PrefsAdvanced|"
 msgid "Clear installed modules and packages"
 msgstr "Installierte Module und Pakete löschen"
 
-msgctxt "PrefsAdvanced|"
-msgid "This will erase the 'renv' and 'Modules' folders in the appdata."
-msgstr "Dies löscht die Ordner 'renv' und 'Modules' in appdata."
-
 msgctxt "PrefsData|"
 msgid "Windows workaround"
 msgstr "Windows-Übergangslösung"
@@ -5545,10 +5541,6 @@ msgid "Development module"
 msgstr "Entwicklungsmodul"
 
 msgctxt "PrefsAdvanced|"
-msgid "Enable direct libpath mode"
-msgstr "Direkten libpath-Modus aktivieren"
-
-msgctxt "PrefsAdvanced|"
 msgid ""
 "Load modules from a binary in an R-library instead of installing it from "
 "sources."
@@ -5559,10 +5551,6 @@ msgstr ""
 msgctxt "PrefsAdvanced|"
 msgid "Source folder:"
 msgstr "Quellen-Verzeichnis:"
-
-msgctxt "PrefsAdvanced|"
-msgid "Libpath:"
-msgstr "Libpath:"
 
 msgctxt "PrefsAdvanced|"
 msgid "Choose the R library where you installed the development module"
@@ -5869,10 +5857,6 @@ msgid "Rowwise maximum"
 msgstr "Zeilenweises Maximum"
 
 msgctxt "PrefsAdvanced|"
-msgid "Configuration File Options"
-msgstr "Konfigurations-Datei-Optionen"
-
-msgctxt "PrefsAdvanced|"
 msgid "Use a configuration file."
 msgstr "Verwendung einer Konfigurationsdatei."
 
@@ -5931,4 +5915,22 @@ msgstr ""
 
 msgctxt "PrefsUI|"
 msgid "Should JASP open its window maximized on startup?"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid ""
+"This will erase the 'renv', 'Modules' and development Module folders in the "
+"appdata."
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Enable renv mode"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Project library:"
+msgstr ""
+
+msgctxt "PrefsAdvanced|"
+msgid "Configuration file options"
 msgstr ""
