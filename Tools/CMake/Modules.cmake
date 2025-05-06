@@ -87,7 +87,7 @@ configure_file(${CMAKE_SOURCE_DIR}/Desktop/modules/activemodules.h.in
                ${CMAKE_SOURCE_DIR}/Desktop/modules/activemodules.h @ONLY)
 message(STATUS "activemodules.h is successfully generated...")
 
-if(("jaspMetaAnalysis" IN_LIST JASP_EXTRA_MODULES) OR ("jaspJags" IN_LIST JASP_EXTRA_MODULES))
+if(("jaspMetaAnalysis" IN_LIST JASP_EXTRA_MODULES) OR ("jaspJags" IN_LIST JASP_EXTRA_MODULES) OR (JASP_TEST_BUILD AND (("jaspMetaAnalysis" IN_LIST JASP_COMMON_MODULES) OR ("jaspJags" IN_LIST JASP_COMMON_MODULES))))
   if(LINUX)
 
     if(LINUX_LOCAL_BUILD)
