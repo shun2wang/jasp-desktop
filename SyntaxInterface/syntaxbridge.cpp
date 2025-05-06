@@ -102,11 +102,12 @@ void STDCALL syntaxBridgeLoadDataSet(const SyntaxBridgeDataSet* syntaxBridgeData
 
 	for (int colNr = 0; colNr < syntaxBridgeDataSet->columnCount; colNr++)
 	{
-		stringvec values;
-		for (int rowNr = 0; rowNr < syntaxBridgeDataSet->rowCount; rowNr++)
-			values.push_back(syntaxBridgeDataSet->columns[colNr].values[rowNr]);
-		dataset->initColumnWithStrings(colNr, syntaxBridgeDataSet->columns[colNr].name, values, {}, syntaxBridgeDataSet->columns[colNr].name, columnType::unknown, {}, threshold, orderLabelsByValue);
-		dataset->columns()[colNr]->labelsTempCount(); // Needs to do this to set the label temp stuff
+		auto lookup = [&](size_t r)
+		{
+			return syntaxBridgeDataSet->columns[colNr].values[r];
+		};
+		
+		dataset->column(colNr)->initFromLookups(syntaxBridgeDataSet->columns[colNr].name, syntaxBridgeDataSet->rowCount, lookup, lookup, syntaxBridgeDataSet->columns[colNr].name, columnType::unknown, {}, threshold, orderLabelsByValue);
 	}
 
 	dataset->endBatchedToDB([](float f) {});
@@ -217,7 +218,7 @@ const char* STDCALL syntaxBridgeGenerateModuleWrappers(const char* modulePath, b
 		}
 	}
 
-	for (auto analysis : analyses)
+	for (auto & analysis : analyses)
 	{
 		Log::log() << "Analysis " << fq(analysis.analysisName) << " with qml file " << fq(analysis.qmlFileName) << std::endl;
 		if (!generateWrapper(modulePathQ, analysis.analysisName, analysis.qmlFileName, analysis.analysisTitle, preloadData))

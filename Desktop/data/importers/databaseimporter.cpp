@@ -33,7 +33,7 @@ ImportDataSet * DatabaseImporter::loadFile(const std::string &locator, std::func
 	for(int i=0; i<record.count(); i++)
 		data->addColumn(new DatabaseImportColumn(data, fq(record.fieldName(i)), record.field(i).metaType()));
 												
-	long lastProgress = Utils::currentMillis();	
+	int64_t lastProgress = Utils::currentMillis();	
 		
 	do
 	{
@@ -54,16 +54,4 @@ ImportDataSet * DatabaseImporter::loadFile(const std::string &locator, std::func
 	data->buildDictionary(); //Not necessary for reading from database but synching will break otherwise...
 	
 	return data;
-}
-
-void DatabaseImporter::initColumn(QVariant colId, ImportColumn *importColumn)
-{
-	JASPTIMER_SCOPE(DatabaseImporter::initColumn);
-	
-	typedef QMetaType::Type MT;
-	
-	DatabaseImportColumn * col = static_cast<DatabaseImportColumn*>(importColumn);
-	
-	initColumnWithStrings(colId, col->name(), col->allValuesAsStrings());
-	
 }

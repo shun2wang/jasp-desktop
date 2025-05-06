@@ -30,22 +30,27 @@ void Filter::dbUpdate()
 
 	assert(_id != -1);
 
-	db().transactionWriteBegin();
 	if(!_data->writeBatchedToDB())
+	{
+		db().transactionWriteBegin();
 		db().filterUpdate(_id, _rFilter, _generatedFilter, _constructorJson, _constructorR, _name);
 
-	incRevision();
-	db().transactionWriteEnd();
+		incRevision();
+		db().transactionWriteEnd();
+	}
 }
 
 void Filter::dbUpdateErrorMsg()
 {
 	assert(_id != -1);
-	db().transactionWriteBegin();
+	
 	if(!_data->writeBatchedToDB())
+	{
+		db().transactionWriteBegin();
 		db().filterUpdateErrorMsg(_id, _errorMsg);
-	incRevision();
-	db().transactionWriteEnd();
+		incRevision();
+		db().transactionWriteEnd();
+	}
 }
 
 void Filter::dbLoad()
@@ -159,7 +164,7 @@ bool Filter::checkForUpdates()
 		if(_id == -1)
 			return false;
 	}
-	else if(_revision == db().filterGetRevision(_id))
+	else if(_revision >= db().filterGetRevision(_id))
 		return false;
 
 	if(_data->id() != -1 && _id != -1)

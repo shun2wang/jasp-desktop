@@ -1,19 +1,16 @@
 #include "importdataset.h"
 #include "timers.h"
 #include "appinfo.h"
+#include "importer.h"
 
 using namespace std;
 
-ImportDataSet::ImportDataSet(Importer *importer) : _importer(importer)
+ImportDataSet::ImportDataSet(Importer *importer) : QObject(importer), _importer(importer)
 {
 }
 
 ImportDataSet::~ImportDataSet()
 {
-	JASPTIMER_SCOPE(ImportDataSet::~ImportDataSet());
-	
-	for (ImportColumn * col : _columns)
-		delete col;
 }
 
 void ImportDataSet::addColumn(ImportColumn *column)

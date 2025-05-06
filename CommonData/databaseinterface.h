@@ -7,12 +7,22 @@
 #include <json/json.h>
 #include "version.h"
 #include <functional>
+#include <mutex>
+#include <thread>
 
 class DataSet;
 class Column;
+typedef std::vector<Column*> Columns;
 class DatabaseInterface;
 struct sqlite3_stmt;
 struct sqlite3;
+
+class dbMalformedException : public std::runtime_error
+{
+public:
+	dbMalformedException() : std::runtime_error("Database file is malformed!") {}
+	~dbMalformedException() {}
+};
 
 ///Single point of interaction with sqlite, can later be turned into an interface for supporting other sql
 ///
@@ -63,15 +73,15 @@ public:
 
 	static		DatabaseInterface * singleton();					///< There can be only one! https://www.youtube.com/watch?v=sqcLjcSloXs
 
-	bool		hasConnection() { return _db; }
+	bool		hasConnection() { return _db(); }
 	void		upgradeDBFromVersion(Version originalVersion);							///< Ensures that the database has all the fields configured as required for the current JASP version, useful when loading older sqlite-containing jasp-files
 
 	void		runQuery(		const std::string & query,		std::function<void(sqlite3_stmt *stmt)>		bindParameters,				std::function<void(size_t row, sqlite3_stmt *stmt)>		processRow);	///< Runs a single query and then goes through the resultrows while calling processRow for each.
-	void		runStatements(	const std::string & statements);																																				///< Runs several sql statements without looking at the results.
-	int			runStatementsId(const std::string & statements);																																				///< Runs several sql statements only looking for a single returned value from the results.
-	void		runStatements(	const std::string & statements, std::function<void(sqlite3_stmt *stmt)>	bindParameters);																						///< Runs several sql statements without looking at the results. Arguments can be set by supplying bindParameters.
-	int			runStatementsId(const std::string & statements, std::function<void(sqlite3_stmt *stmt)>	bindParameters);																						///< Runs (several) sql statements and only looks for a single value, this would usually be a id resulting from an insert
-	void		runStatements(	const std::string & statements, std::function<void(sqlite3_stmt *stmt)>	bindParameters,	std::function<void(size_t row, sqlite3_stmt *stmt)>	processRow);						///< Runs several sql statements. Arguments can be set by supplying bindParameters and use processRow to read from the results.
+	void		runStatements(	const std::string & statements, bool ignoreFails=false);																																				///< Runs several sql statements without looking at the results.
+	int			runStatementsId(const std::string & statements, bool ignoreFails=false);																																				///< Runs several sql statements only looking for a single returned value from the results.
+	void		runStatements(	const std::string & statements, std::function<void(sqlite3_stmt *stmt)>	bindParameters, bool ignoreFails=false);																						///< Runs several sql statements without looking at the results. Arguments can be set by supplying bindParameters.
+	int			runStatementsId(const std::string & statements, std::function<void(sqlite3_stmt *stmt)>	bindParameters, bool ignoreFails=false);																						///< Runs (several) sql statements and only looks for a single value, this would usually be a id resulting from an insert
+	void		runStatements(	const std::string & statements, std::function<void(sqlite3_stmt *stmt)>	bindParameters,	std::function<void(size_t row, sqlite3_stmt *stmt)>	processRow, bool ignoreFails=false);						///< Runs several sql statements. Arguments can be set by supplying bindParameters and use processRow to read from the results.
 
 	//DataSets
 	int			dataSetGetId();
@@ -90,7 +100,7 @@ public:
 	void		dataSetInsertEmptyRow(	int dataSetId, size_t row);
 	void		dataSetCreateTable(		DataSet * dataSet); ///< Assumes you are importing fresh data and havent created any DataSet_? table yet
 
-	void		dataSetBatchedValuesUpdate(DataSet * data, std::vector<Column*> columns, std::function<void(float)> progressCallback = [](float){});
+	void		dataSetBatchedValuesUpdate(DataSet * data, Columns columns, std::function<void(float)> progressCallback = [](float){});
 	void		dataSetBatchedValuesUpdate(DataSet * data, std::function<void(float)> progressCallback = [](float){});
 
 	//Filters
@@ -144,17 +154,21 @@ public:
 	size_t		columnGetLabelCount(		int columnId);
 	void		columnGetValues(			int columnId,	intvec		& ints, doublevec & dbls);
 	std::string columnBaseName(				int columnId) const;
+	
 	void		dataSetBatchedValuesLoad(	DataSet * data, std::function<void(float)> progressCallback = [](float){});
+	void		dataSetBatchedLabelsLoad(	DataSet * data, std::function<void(float)> progressCallback = [](float){});
 
 	//Labels
 	void		labelsClear(			int columnId);
 	int			labelAdd(				int columnId,	int value, const std::string & label, bool filterAllows, const	std::string & description = "", const	std::string & originalValueJson = "");
-	void		labelSet(		int id,	int columnId,	int value, const std::string & label, bool filterAllows, const	std::string & description = "", const	std::string & originalValueJson = "");
+	void		labelSet(		int id,	int columnId,	int value, const std::string & label, bool filterAllows, const	std::string & description = "", const	std::string & originalValueJson = "", bool userAdded = false);
 	void		labelDelete(	int id);
-	void		labelLoad(		int id,	int & columnId,	int & value,	 std::string & label, bool & filterAllows,		std::string & description,				std::string & originalValueJson,	int & order);
+	void		labelLoad(		int id,	int & columnId,	int & value,	 std::string & label, bool & filterAllows,		std::string & description,				std::string & originalValueJson,	int & order, bool & userAdded);
 	void		labelSetOrder(	int id, int order);
-	void		labelsLoad(		Column * column);
-	void		labelsWrite(	Column * column);
+	void		labelsLoad(			Column  * column);
+	void		labelsLoad(	const	Columns & columns);//, std::function<void(float)> progressCallback);
+	void		labelsWrite(const	Columns & columns, std::function<void(float)> progressCallback);
+	void		labelsWrite(		Column  * column);
 	void		labelsSetOrder(	const intintmap & orderPerDbId);
 
 	//Transactions
@@ -162,23 +176,34 @@ public:
 	void		transactionWriteEnd(bool rollback = false);		///< runs COMMIT or ROLLBACK based on rollback and ends the transaction.  Tracks whether nested and only does BEGIN+COMMIT at lowest depth
 	void		transactionReadBegin();							///< runs BEGIN DEFERRED and waits for sqlite to not be busy anymore if some other process is writing  Tracks whether nested and only does BEGIN+COMMIT at lowest depth
 	void		transactionReadEnd();							///< runs COMMIT and ends the transaction. Tracks whether nested and only does BEGIN+COMMIT at lowest depth
-		
+	
+	//Miscellaneous
+	void		doWalCheckPoint();
+	void		truncateAllTables();
+	bool		tableHasColumn(const std::string & tableName, const std::string & columnName);
+	bool		tableExists(const std::string & name);
+	int			transactionWriteDepth() { return _transactionWriteDepth; }
+	int			transactionReadDepth()	{ return _transactionReadDepth;  }
+	
 private:
+	sqlite3	*	_db();
 	void		_doubleTroubleBinder(sqlite3_stmt *stmt, int param, double dbl);	///< Needed to work around the lack of support for NAN, INF and NEG_INF in sqlite, converts those to string to make use of sqlite flexibility
 	double		_doubleTroubleReader(sqlite3_stmt *stmt, int colI);					///< The reading counterpart to _doubleTroubleBinder to convert string representations of NAN, INF and NEG_INF back to double
-	void		_runStatements(				const std::string & statements,						std::function<void(sqlite3_stmt *stmt)> *	bindParameters = nullptr,	std::function<void(size_t row, sqlite3_stmt *stmt)> *	processRow = nullptr);	///< Runs several sql statements without looking at the results. Unless processRow is not NULL, then this is called for each row.
-	void		_runStatementsRepeatedly(	const std::string & statements, std::function<bool(	std::function<void(sqlite3_stmt *stmt)> **	bindParameters, size_t row)> bindParameterFactory, std::function<void(size_t row, size_t repetition, sqlite3_stmt *stmt)> * processRow = nullptr);
+	void		_runStatements(				const std::string & statements,						std::function<void(sqlite3_stmt *stmt)> *	bindParameters = nullptr,	std::function<void(size_t row, sqlite3_stmt *stmt)> *	processRow = nullptr, bool ignoreFails = false);	///< Runs several sql statements without looking at the results. Unless processRow is not NULL, then this is called for each row.
+	void		_runStatementsRepeatedly(	const std::string & statements, std::function<bool(	std::function<void(sqlite3_stmt *stmt)> **	bindParameters, size_t row)> bindParameterFactory, std::function<void(size_t row, size_t repetition, sqlite3_stmt *stmt)> * processRow = nullptr, bool ignoreFails = false);
 
 	void		create();					///< Creates a new sqlite database in sessiondir and loads it
 	void		load();						///< Loads a sqlite database from sessiondir (after loading a jaspfile)
 	void		close();										///< Closes the loaded database and disconnects
-	bool		tableHasColumn(const std::string & tableName, const std::string & columnName);
+	
 
 	int			_transactionWriteDepth	= 0,
 				_transactionReadDepth	= 0;
 
-	sqlite3	*	_db = nullptr;
-	bool		_inMemory = false;
+	std::map<std::thread::id, sqlite3*>		_dbs;
+	std::thread::id							_dbCreator;
+	sqlite3*								_dbCreated = nullptr;
+	bool									_inMemory;
 
 	static			std::string _wrap_sqlite3_column_text(sqlite3_stmt * stmt, int iCol);
 	static const	std::string _dbConstructionSql;

@@ -431,6 +431,9 @@ void EngineSync::process()
 
 	processSettingsChanged();
 	
+	if(!DataSetPackage::pkg()->isLoaded())
+		return;
+	
 	if(!anEngineIsLoadingData)
 		processFilterScript();
 		
@@ -888,7 +891,7 @@ size_t EngineSync::enginesStartableCount() const
 
 	//But perhaps they have to cool down for a bit.
 
-	for(long engineStopTime : _engineStopTimes)
+	for(int64_t engineStopTime : _engineStopTimes)
 		if(engineStopTime != -1 && ( engineStopTime + ENGINE_COOLDOWN > Utils::currentMillis() ) && enginesPossible > 0)
 			enginesPossible--;
 
@@ -1157,9 +1160,9 @@ void EngineSync::dataModeChanged(bool dataMode)
 
 void EngineSync::enginesPrepareForData()
 {
-	JASPTIMER_SCOPE(EngineSync::enginesPrepareForData);
+	/*JASPTIMER_SCOPE(EngineSync::enginesPrepareForData);
 
-	/*
+	
 	//make sure we process any received messages first.
 	for(auto * engine : _engines)
 		engine->processReplies();
@@ -1280,6 +1283,28 @@ void EngineSync::killEngine(int channelNumber)
 		{
 			if(!engine->killed())
 				engine->killEngine();
+			return;
+		}
+}
+
+void EngineSync::stopOrKillEngine(int channelNumber)
+{
+	for(auto * engine : _engines)
+		if(engine->channelNumber() == channelNumber)
+		{
+			if(!engine->stopped())
+				engine->stopEngine();
+			
+			int64_t theTimeIsNow = Utils::currentSeconds();
+			
+			while(Utils::currentSeconds() - theTimeIsNow < 10 && !engine->stopped())
+			{
+				engine->processReplies();	
+			}
+			
+			if(!engine->stopped() && !engine->killed())
+				engine->killEngine();
+			
 			return;
 		}
 }

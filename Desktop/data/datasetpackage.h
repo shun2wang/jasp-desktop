@@ -69,7 +69,6 @@ public:
 		void				setEngineSync(EngineSync * engineSync);
 		void				reset(bool newDataSet = true);
 		void				setDataSetSize(size_t columnCount, size_t rowCount);
-		void				setDataSetColumnCount(size_t columnCount)			{ setDataSetSize(columnCount,			dataRowCount()); }
 		void				setDataSetRowCount(size_t rowCount)					{ setDataSetSize(dataColumnCount(),		rowCount); }
 		void				increaseDataSetColCount(size_t rowCount)			{ setDataSetSize(dataColumnCount() + 1,	rowCount); }
 
@@ -162,7 +161,7 @@ public:
 				bool				currentFileIsExample()				const;
 				long				dataFileTimestamp()					const	{ return _dataSet ? _dataSet->dataFileTimestamp() : 0;	}
 				bool				isDatabaseSynching()				const	{ return _databaseIntervalSyncher.isActive();	}
-				bool				filterShouldRunInit()				const	{ return _filterShouldRunInit;					}
+				bool				filterShouldRunInit()				const	{ return _filterShouldRunInit && isLoaded();					}
 
 
 				void				setFilterShouldRunInit(bool shouldIt)				{ _filterShouldRunInit			= shouldIt;			}
@@ -186,7 +185,6 @@ public:
 				void				setLoaded(bool loaded = true);
 				void				setDescription(const QString& description);
 				
-				bool						initColumnWithStrings(			QVariant			colId,		const std::string & newName, const stringvec	& values, const stringvec	& labels=stringvec(),	const std::string & title = "", columnType desiredType = columnType::unknown, const stringset & emptyValues = stringset());
 				void						initializeComputedColumns();
 				
 				void						pasteSpreadsheet(size_t row, size_t column, const std::vector<std::vector<QString>> & values, const std::vector<std::vector<QString>> & labels, const intvec & colTypes, const QStringList & colNames, const std::vector<boolvec> & selected = {}); ///< If selected.size() >0 it is assumed to be the same size as labels/values. And it will make sure that it will only overwrite values where it is `true`
@@ -201,7 +199,7 @@ public:
 
 				stringvec					getColumnNames();
 		std::map<std::string, columnType>	getColumnTypesMap();
-				bool						isColumnDifferentFromStringValues(const std::string & columnName, const std::string & title, const stringvec & strVals, const stringvec & strLabs, const stringset & strEmptyVals);
+				bool						isColumnDifferentFromStringLookUps(const std::string & columnName, const std::string & title, size_t rows,	const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, const stringset & strEmptyVals);
 				int							findIndexByName(const std::string & name)	const;
 
 				bool						getRowFilter(				int						row)		const;
@@ -261,6 +259,8 @@ public:
 				std::vector<bool>			filterVector();
 				void						setFilterVectorWithoutModelUpdate(std::vector<bool> newFilterVector) { if(_dataSet) _dataSet->filter()->setFilterVector(newFilterVector); }
 				
+	static		int							thresholdScale();
+	static		int							orderByValueByDefault();
 				const stringset&			workspaceEmptyValues()										const;
 				void						setWorkspaceEmptyValues(const stringset& emptyValues, bool resetModel = true);
 				void						setDefaultWorkspaceEmptyValues();
@@ -274,6 +274,8 @@ public:
 				void						dbDelete();
 				void						resetVariableTypes();
 				void						emitColumnChanged(const QString &colName); //temporary until ColumnQ exists
+				
+				
 				
 				
 signals:
@@ -337,6 +339,7 @@ public slots:
 				bool				requestComputedColumnDestruction(	const std::string & columnName, Analysis * analysis);
 				void				checkDataSetForUpdates();
 				void				delayedRefresh();
+				void				doWalCheckPoint();
 				void				resetFilterCounters();
 				void				prepareForLanguageChange();
 				void				languageChangeDone();
@@ -389,7 +392,8 @@ private:
 							*	_labelsSubModel;
 	
 	QTimer						_databaseIntervalSyncher,
-								_delayedRefreshTimer;
+								_delayedRefreshTimer,
+								_doWalCheckPointTimer;
 	UndoStack				*	_undoStack					= nullptr;
 	
 };

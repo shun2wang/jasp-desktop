@@ -235,7 +235,7 @@ bool ColumnModel::hasSeveralNumericValues() const
 				return true;
 		}
 	
-	return column()->labelsTempNumerics() > 1;
+	return false;
 }
 
 void ColumnModel::setCustomEmptyValues(const QStringList& customEmptyValues)
@@ -341,7 +341,7 @@ void ColumnModel::setColumnDescription(const QString & newColumnDescription)
 
 void ColumnModel::setComputedType(QString type)
 {
-	if (_beingRefreshed || type.isEmpty() || type == computedType())
+	if (_beingRefreshed || type.isEmpty() || type == computedType() || !computedColumnTypeValidName(fq(type)))
 		return;
 
 	computedColumnType cType = computedColumnTypeFromString(type.toStdString());
@@ -372,7 +372,8 @@ void ColumnModel::setComputeFilter(const QString &newComputeFilter)
 
 void ColumnModel::setColumnType(QString type)
 {
-	if (_beingRefreshed || type.isEmpty() || type == currentColumnType()) return;
+	if (_beingRefreshed || type.isEmpty() || type == currentColumnType() || !columnTypeValidName(fq(type))) 
+		return;
 
 	columnType cType = columnTypeFromString(type.toStdString());
 
@@ -534,6 +535,9 @@ int ColumnModel::chosenColumn() const
 	if(!c)
 		return -1;
 	
+	if(!c->data())
+		return -1;
+	
 	return c->data()->columnIndex(c);
 }
 
@@ -621,7 +625,7 @@ int ColumnModel::rowCount(const QModelIndex & p) const
 	if(p.isValid())
 		return 0;
 	
-	return !column() ? 0 : column()->labelsTempCount(); //Im having some trouble with the proxymodel, so lets take a shortcut 
+	return !column() ? 0 : column()->labelsNonEmptyCount(); //Im having some trouble with the proxymodel, so lets take a shortcut 
 }
 
 void ColumnModel::onChosenColumnChanged()
@@ -841,11 +845,14 @@ void ColumnModel::_addLabel(QString value, QString label)
 	if(!column())
 		return;
 	
-	column()->labelsAdd(fq(label), fq(value));
+	int labelIntsId = column()->labelsAdd(fq(label), fq(value));
+	
+	column()->labelByIntsId(labelIntsId)->setUserAdded(true);
 	
 	if(column()->dropLevels() == dropLevelsType::noChoice) //No choice was made yet, but the user added a label, so I guess they want all labels
 		column()->setDropLevels(dropLevelsType::keep);
 	
+	column()->labelsHandleAutoSort();
 	column()->incRevision();
 	refresh();
 	DataSetPackage::pkg()->emitColumnChanged(columnNameQ());

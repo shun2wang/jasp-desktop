@@ -6,10 +6,11 @@
 #ifdef WIN32
 #include <io.h>
 #endif
-
+#include <iomanip>
 #include <fstream>
 #include "utils.h"
 #include <codecvt>
+#include <mutex>
 #include <fstream>
 
 std::ofstream Log::_logFile;// = bofstream();
@@ -152,6 +153,15 @@ const char * Log::getTimestamp()
 	std::snprintf(buf, 13, "%02u:%02u:%02u.%03u", hour, min, sec, milli);
 
 	return buf;
+}
+
+std::string Log::getLocalTime()
+{
+	std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&now), "%Y-%m-%d %H:%M:%S");
+	return ss.str();
 }
 
 std::ostream & Log::log(bool addTimestamp)

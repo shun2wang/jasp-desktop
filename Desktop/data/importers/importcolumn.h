@@ -1,6 +1,7 @@
 #ifndef IMPORTCOLUMN_H
 #define IMPORTCOLUMN_H
 
+#include <QObject>
 #include <string>
 #include <map>
 #include <vector>
@@ -12,15 +13,18 @@ class ImportDataSet;
 ///
 /// Base class for all columns during import
 /// It has some utility functions and defines the interface that is used to convert all this to the "real" dataset in memory in JASP
-class ImportColumn
+class ImportColumn : public QObject
 {
+	Q_OBJECT
 public:
 										ImportColumn(ImportDataSet* importDataSet, const std::string & name,  const std::string & title = "");
 	virtual								~ImportColumn();
 
 	virtual			size_t				size()									const = 0;
-	virtual const	stringvec		&	allValuesAsStrings()					const = 0;
-	virtual const	stringvec		&	allLabelsAsStrings()					const	{ return allValuesAsStrings(); };
+	virtual const	stringvec			allValuesAsStrings()					const = 0;
+	virtual const	stringvec			allLabelsAsStrings()					const	{ return {}; };
+	virtual			std::string			valueLookup(size_t row)					const = 0;
+	virtual			std::string			labelLookup(size_t row)					const	{ return ""; }
 	virtual const	stringset		&	allEmptyValuesAsStrings()				const	{ static stringset a; return a; }
 	virtual			columnType			getColumnType()							const	{ return columnType::unknown; }
 			const	std::string		&	title()									const;
@@ -28,11 +32,16 @@ public:
 			void						setName(const std::string & name);
 			void						setTitle(const std::string & title);
 			bool						containsAnythingAtAll();
+			void						finish(bool doCallback = true);
+
+signals:
+			void						finished(ImportColumn *, bool doCallback);
 					
 protected:
 	ImportDataSet * _importDataSet;
 	std::string		_name,
 					_title;
+	bool			_imported = true;
 };
 
 #endif // IMPORTCOLUMN_H

@@ -19,9 +19,9 @@ class Analysis;
 /// Anything with a label on it will have a Label-object in Column and the "intsId" of this label is entered in the corresponding _ints row.
 /// If the originalValue of that label is convertible to double/int it will *also* be stored in _dbls. (Which is different from how <0.19 JASPs did it)
 /// 
-/// If no label exists _ints simply contains Label::DOUBLE_LABEL_VALUE (-1) and it tells JASP that _dbl should be used.
+/// If no label exists _ints simply contains Label::NO_LABEL (-1) and it tells JASP that _dbl should be used.
 /// We do want users to be able to edit them, or to set "filter allows" or something on it.
-/// To this end labelsTempCount() can be called to get the total of "labels" a column has.
+/// To this end labelsNonEmptyCount() can be called to get the total of "labels" a column has.
 /// The shown labels are stored in a temporary internal representation (stringvec).
 /// 
 /// What this means is that a column could have "labels" visible in the label-editor, but _labels.size() == 0!
@@ -40,8 +40,10 @@ class Analysis;
 /// It also handles storing the information of computed columns (those used to be split off)
 class Column : public DataSetBaseNode
 {
+	friend DatabaseInterface;
 public:
 	typedef std::map<std::pair<std::string, std::string>, Label*>	LabelByStrStr;
+	typedef std::map<std::string, Labelset>							LabelsByStr;
 
 									Column(DataSet * data, int id = -1);
 									~Column();
@@ -53,7 +55,7 @@ public:
 			void					dbLoad(		int id=-1, bool getValues = true);	///< Loads *and* reloads from DB!
 			void					dbLoadIndex(int index, bool getValues = true);
 			void					dbUpdateComputedColumnStuff();
-			void					dbUpdateValues(bool labelsTempCanBeMaintained = true);
+			void					dbUpdateValues();
 			void					dbDelete(bool cleanUpRest = true);
 																														
 			
@@ -79,15 +81,16 @@ public:
 			bool					setAsNominalOrOrdinal(	const intvec	& values,									bool	is_ordinal = false);
 			bool					setAsNominalOrOrdinal(	const intvec	& values, intstrmap uniqueValues,			bool	is_ordinal = false);
 
+			bool					initFromLookups(const std::string & newName, size_t rows, const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, const std::string & title, columnType desiredType, const stringset & emptyValues, int threshold, bool orderLabelsByValue, bool leaveBatchedUnfinished = false);
 			bool					overwriteDataAndType(	stringvec		data, columnType colType);
 			
 			bool					allLabelsPassFilter()	const;
 			bool					hasFilter()				const;
 			void					resetFilter();
-			void					incRevision(bool labelsTempCanBeMaintained = true);
+			void					incRevision() override;
 			bool					checkForUpdates();
 
-			bool					isColumnDifferentFromStringValues(const std::string & title, const stringvec & strVals, const stringvec & strLabs, const stringset & strEmptyVals) const;
+			bool					isColumnDifferentFromStringLookUps(const std::string & title, size_t rows,	const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, const stringset & strEmptyVals) const;
 
 			columnType				type()					const	{ return _type;				}
 			int						id()					const	{ return _id;				}
@@ -126,16 +129,6 @@ public:
 			strintmap				labelsResetValues(	int & maxValue);
 			void					labelsRemoveBeyond( size_t indexToStartRemoving);
 			
-			int						labelsTempCount(); ///< Generates the labelsTemp also!
-			int						labelsTempNumerics(); ///< Also calls labelsTempCount() to be sure it has some info
-			const stringvec		&	labelsTemp();
-			void					labelsTempReset();
-			std::string				labelsTempDisplay(		size_t tempLabelIndex);
-			std::string				labelsTempValue(		size_t tempLabelIndex, bool fancyEmptyValue = false);
-			double					labelsTempValueDouble(	size_t tempLabelIndex);
-			int						labelsDoubleValueIsTempLabelRow(double dbl);
-			Label				*	labelDoubleDummy()		{ return _doubleDummy; }
-
 			int						nonFilteredNumericsCount();
             stringvec				nonFilteredLevels();
 			void					nonFilteredCountersReset();
@@ -156,21 +149,18 @@ public:
 			stringvec				dataAsRLevels(intvec & values, const boolvec & filter, bool useLabels = true)			; ///< values is output! If filter is of different length than the data an error is thrown, if length is zero it is ignored. useLabels indicates whether the levels will be based on the label or on the value as specified in the label editor.
 			doublevec				dataAsRDoubles(const boolvec & filter)													const; ///< If filter is of different length than the data an error is thrown, if length is zero it is ignored
 
-			std::map<double,Label*>	replaceDoubleWithLabel(doublevec dbls);
-			Label				* 	replaceDoubleWithLabel(double dbl);
-            Label				* 	replaceDoublesTillLabelsRowWithLabels(size_t row, double returnForDbl = NAN);
-			bool					replaceDoubleLabelFromRowWithDouble(size_t row, double dbl); ///< Returns true if succes
-
 			void					labelValueChanged(		Label * label,	const Json::Value & previousOriginal); ///< Pass NaN for non-convertible values
 			void					labelDisplayChanged(	Label * label,	const std::string & previousDisplay);
 			void					labelValDisplayChanged(	Label * label,	const std::string & previousDisplay,	const Json::Value & previousOriginal);
 			
 			bool					setStringValue(				size_t row, const std::string & value, const std::string & label = "", bool writeToDB = true); ///< Does two things, if label=="" it will handle user input, as value or label depending on columnType. Otherwise it will simply try to use userEntered as a value. But this will trigger the setting of type
-			bool					setValue(					size_t row, const std::string & value, const std::string & label,	bool writeToDB = true);
+			bool					setValue(					size_t row,		  std::string   value, const std::string & label,	bool writeToDB = true);
 			bool					setValue(					size_t row, int					value,								bool writeToDB = true);
 			bool					setValue(					size_t row, double				value,								bool writeToDB = true);
 			bool					setValue(					size_t row, int					valueInt, double valueDbl,			bool writeToDB = true);
-			columnType				setValues(			const stringvec &	values, const stringvec &	labels, int thresholdScale, bool * changedSomething = nullptr); ///< Returns what would be the most sensible columntype
+			columnType				setValues(				const stringvec &	values, const stringvec &	labels, int thresholdScale, bool * changedSomething = nullptr); ///< Returns what would be the most sensible columntype
+			columnType				setValues(size_t rows,	const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, int thresholdScale, bool * changedSomething = nullptr); ///< Returns what would be the most sensible columntype
+			
 			bool					setDescriptions(	strstrmap labelToDescriptionMap); ///<Returns any changes
 			void					rowInsertEmptyVal(size_t row);
 			void					rowDelete(size_t row);
@@ -178,6 +168,7 @@ public:
 
 			Labels				&	labels()																						{ return _labels; }
 			const Labels		&	labels()																				const	{ return _labels; }
+			size_t					labelsNonEmptyCount()																	const;
 			void					labelsMergeDuplicateInto(Label * label);
 			bool					labelsRemoveOrphans();
 			Labelset				labelsByDisplay(		const std::string	&	display)								const; ///< SLOW! Might be nullptr for missing label
@@ -190,7 +181,6 @@ public:
 			Label				*	labelByIndexNotEmpty(	int						index)									const;
 			Label				*	labelByValueAndDisplay(	const std::string	&	value, const std::string &	label)		const; ///< Might be nullptr for missing label, assumes you ran labelsMergeDuplicates before
 			void					labelsHandleAutoSort(	bool					doDbUpdateEtc = true);
-			size_t					labelCountNotEmpty()																	const;
 
 			bool					isValueEqual(size_t row, double value)				 const;
 			bool					isValueEqual(size_t row, int value)					 const;
@@ -254,35 +244,29 @@ protected:
 			doublevec				valuesNumericOrdered();			
 			std::map<Label*,size_t> valuesAlphabeticalOffsets();
 			int						_labelMapIt(Label *label);
-
+			void					_labelMapUpdates(Label *label, const std::string & previousDisplay, const std::string & previousOriginal);
 private:
 			DataSet			* const	_data;
 			EmptyValues		* const	_emptyValues;
 			Labels					_labels;
-			Label			* const	_doubleDummy;		///< Only used to work around node problems in DataSetPackage. Should probably be replaced with something less hacky later on. (when rewriting DataSetPackage models)
-			columnType				_type				= columnType::unknown;
-			int						_id					= -1,
-									_analysisId			= -1,	// Actually initialized in DatabaseInterface::columnInsert
-									_labelsTempRevision	= -1,	///< When were the "temporary labels" created?
-									_labelsTempNumerics = 0,	///< Use the labelsTemp step to calculate the amount of numeric labels
-									_highestIntsId		= -1;
-			size_t					_labelsTempMaxWidth = 0;
-			stringvec				_labelsTemp;				///< Contains displaystring for labels. Used to allow people to edit "double" labels. Initialized when necessary
-			doublevec				_labelsTempDbls;
-			strintmap				_labelsTempToIndex;
+			columnType				_type						= columnType::unknown;
+			int						_id							= -1,
+									_analysisId					= -1,	// Actually initialized in DatabaseInterface::columnInsert
+									_highestIntsId				= -1;
             stringvec				_nonFilteredLevels;
 			int						_nonFilteredNumericsCount	= -1;
-			bool					_invalidated		= false,
-									_autoSortByValue;
-			dropLevelsType			_dropLevels			= dropLevelsType::noChoice;
-			computedColumnType		_codeType			= computedColumnType::notComputed;
+			bool					_invalidated				= false,
+									_autoSortByValue,
+									_hasShadows					= false;
+			dropLevelsType			_dropLevels					= dropLevelsType::noChoice;
+			computedColumnType		_codeType					= computedColumnType::notComputed;
 			std::string				_name,
 									_title,
 									_description,
 									_error,
 									_rCode,
 									_computeFilter;
-			Json::Value				_constructorJson	= Json::objectValue;
+			Json::Value				_constructorJson			= Json::objectValue;
 			doublevec				_dbls;
 			intvec					_ints;
 			stringset				_dependsOnColumns;
@@ -290,7 +274,11 @@ private:
 									_labelByNonEmptyIndex;
 			std::map<Label*, int>	_labelNonEmptyIndexByLabel;
 			LabelByStrStr			_labelByValDis;
-			int						_batchedLabelDepth	= 0;
+			LabelsByStr				_labelsByValue,
+									_labelsByDisplay;
+			int						_batchedLabelDepth			= 0,
+									_maxWidthLabel				= -1,
+									_maxWidthValue				= -1;
 	static	bool					_autoSortByValuesByDefault;
 			
 			
@@ -298,5 +286,6 @@ private:
 };
 
 typedef std::vector<Column*> Columns;
+typedef std::set<Column*> ColumnSet;
 
 #endif // COLUMN_H

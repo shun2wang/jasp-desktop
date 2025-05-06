@@ -22,10 +22,8 @@ class DatabaseInterface;
 class Label : public DataSetBaseNode
 {
 public:	
-	static const int DOUBLE_LABEL_VALUE;
+	static const int NO_LABEL;
 
-								Label(Column * column);
-								Label(Column * column, int value);
 								Label(Column * column, const std::string & label, int value, bool filterAllows = true, const std::string & description = "", const Json::Value & originalValue = Json::nullValue, int order = -1, int id = -1);
 
 			void				dbDelete();
@@ -36,6 +34,7 @@ public:
 			Label			&	operator=(const Label &label);
 			
 			int					dbId()						const	{ return _dbId;				}
+			bool				userAdded()					const	{ return _userAdded;		}
 	const	std::string		&	description()				const	{ return _description;		}
 			std::string			label()						const	{ return _label;			}
 			std::string			labelDisplay()				const;
@@ -45,11 +44,12 @@ public:
 			int					order()						const	{ return _order;			}
 			bool				filterAllows()				const	{ return _filterAllows;		}
 	const	Json::Value		&	originalValue()				const	{ return _originalValue;	}
+			double				originalValueAsDouble()		const	{ return _dblValue;			}
 	std::pair<std::string
 		,std::string>			origValDisplay()			const	{ return std::make_pair(originalValueAsString(), labelDisplay()); }
 
-	static	std::string			originalValueAsString(const Column * column, const Json::Value & originalValue, bool fancyEmptyValue = false);
-			std::string			originalValueAsString(bool fancyEmptyValue = false)		const;
+	static	std::string			originalValueAsString(const Column * column, const Json::Value & originalValue, bool fancyEmptyValue = false, bool ignoreEmpty=true);
+			std::string			originalValueAsString(bool fancyEmptyValue = false, bool ignoreEmpty = true)		const;
 			std::string			str() const;
 			
 			void				setIntsId(			int value);
@@ -60,6 +60,7 @@ public:
 			bool				setOrigValLabel(	const Json::Value & originalValue);
 			bool				setDescription(		const std::string & description);
 			bool				setFilterAllows(	bool allowFilter);
+			void				setUserAdded(		bool userAddedIt);
 			void				setInformation(Column * column, int id, int order, const std::string &label, int value, bool filterAllows, const std::string & description, const Json::Value & originalValue);
 			
 			void				updateDoubleLabelsPostLocaleChange();
@@ -70,6 +71,7 @@ public:
 	const	DatabaseInterface	& db() const;
 
 private:
+			void				_setOriginalValue(	const Json::Value & originalValue);
 
 	Column		*	_column;
 
@@ -80,7 +82,9 @@ private:
 					_intsId			= -1;	///< value of label, should always map to Column::_ints
 	std::string		_label,					///< What to display in the dataview
 					_description;			///< Extended information for tooltip in dataview and of course in the variableswindow
-	bool			_filterAllows	= true;	///< Used in generating filters for when users disable and enable certain labels/levels
+	bool			_filterAllows	= true,	///< Used in generating filters for when users disable and enable certain labels/levels
+					_userAdded		= false;
+	double			_dblValue;
 };
 
 typedef std::vector<Label*>				Labels;

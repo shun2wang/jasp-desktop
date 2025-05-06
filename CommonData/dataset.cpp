@@ -46,45 +46,47 @@ void DataSet::dbDelete()
 	JASPTIMER_SCOPE(DataSet::dbDelete);
 
 	assert(_dataSetID != -1);
-
-	db().transactionWriteBegin();
-
-	if(_filter && _filter->id() != -1)
-		_filter->dbDelete();
-	delete _filter;
-	_filter = nullptr;
-
-	for(Column * col : _columns)
-	{
-		col->dbDelete(false);
-		delete col;
-	}
-	_columns.clear();
+	
+	//We know there is only a single dataset, so we can truncate every table superquickly instead of doing it carefully
 
 	db().dataSetDelete(_dataSetID);
-
-	_dataSetID = -1;
-
+	db().truncateAllTables();	
 	
-	db().transactionWriteEnd();
+	_dataSetID = -1;
 }
 
 void DataSet::beginBatchedToDB()
 {
-	assert(!_writeBatchedToDB);
-	_writeBatchedToDB = true;
+	if(_writeBatchedToDBDepth == 0)
+		_changedDuringBatch = {};
+	
+	_writeBatchedToDBDepth++;
 }
 
 void DataSet::endBatchedToDB(std::function<void(float)> progressCallback, Columns columns)
 {
-	assert(_writeBatchedToDB);
-	_writeBatchedToDB = false;
-	
 	if(columns.size() == 0)
-		columns = _columns;
-
-	db().dataSetBatchedValuesUpdate(this, columns, progressCallback);
-	incRevision(); //Should trigger reload at engine end
+		columns = _columns;//_changedDuringBatch.size() ? Columns(_changedDuringBatch.begin(), _changedDuringBatch.end()) : _columns;
+	
+	assert(columns.size() != _columns.size() || _writeBatchedToDBDepth);
+	
+	if(_writeBatchedToDBDepth > 0)
+	{
+		//lets also write the labels now if they werent yet:
+		db().labelsWrite(columns, [&progressCallback](float f){ progressCallback(f * 0.75);});
+		
+		for(Column * col : columns)
+			if(col->batchedLabelDepth())
+				col->endBatchedLabelsDB(false);
+	
+		_writeBatchedToDBDepth--;
+	}
+	
+	if(_writeBatchedToDBDepth == 0)
+	{
+		db().dataSetBatchedValuesUpdate(this, columns, [&progressCallback](float f){ progressCallback(0.75 + (f * 0.25));});
+		incRevision(); //Should trigger reload at engine end
+	}
 }
 
 int DataSet::getColumnIndex(const std::string & name) const 
@@ -262,6 +264,9 @@ void DataSet::dbCreate()
 
 	//The variables are probably empty though:
 	_dataSetID	= db().dataSetInsert(_dataFilePath, _dataFileTimestamp, _description, _databaseJson, _emptyValues->toJson().toStyledString(), _dataFileSynch);
+	
+	assert(_dataSetID == 1);
+	
 	_filter = new Filter(this);
 	_filter->dbCreate();
 	_columns.clear();
@@ -296,6 +301,7 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, boo
 		_dataSetID	= index;
 
 	assert(_dataSetID > 0);
+	assert(_dataSetID == 1);
 
 	std::string emptyVals;
 
@@ -328,7 +334,8 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, boo
 
 	_columns.resize(colCount);
 
-	db().dataSetBatchedValuesLoad(this, [&](float p){ progressCallback(0.5 + p * 0.5); });
+	db().dataSetBatchedValuesLoad(this, [&](float p){ progressCallback(0.50 + (p * 0.25)); });
+	db().dataSetBatchedLabelsLoad(this, [&](float p){ progressCallback(0.75 + (p * 0.25)); });
 	
 	Json::Value emptyValsJson;
 	Json::Reader().parse(emptyVals, emptyValsJson);
@@ -413,6 +420,11 @@ int DataSet::rowCount() const
 	return _rowCount;
 }
 
+void DataSet::batchColumnHadChange(Column *col)
+{
+	_changedDuringBatch.insert(col);
+}
+
 void DataSet::setColumnCount(size_t colCount)
 {
 	db().transactionWriteBegin();
@@ -476,7 +488,7 @@ bool DataSet::checkForUpdates(stringvec * colsChanged, stringvec * colsRemoved, 
 	size_t rowCountPrev = rowCount();
 	
 		
-	if(_revision != db().dataSetGetRevision(_dataSetID))
+	if(_revision < db().dataSetGetRevision(_dataSetID))
 	{
 		dbLoad();
 		
@@ -599,7 +611,7 @@ void DataSet::setWorkspaceEmptyValues(const stringset &values)
 {
 	_emptyValues->setEmptyValues(values);
 	for(Column * column : _columns)
-		column->labelsTempReset();
+		column->nonFilteredCountersReset();
 	dbUpdate();
 }
 
@@ -639,23 +651,5 @@ stringset DataSet::findUsedColumnNames(std::string searchThis)
 	return columnsFound;
 }
 
-bool DataSet::initColumnWithStrings(int colIndex, const std::string & newName, const stringvec &values, const stringvec & labels, const std::string & title, columnType desiredType, const stringset & emptyValues, int threshold, bool orderLabelsByValue)
-{
-	Column	*	column			=	columns()[colIndex];
-				column			->	setHasCustomEmptyValues(emptyValues.size());
-				column			->	setCustomEmptyValues(emptyValues);
-				column			->	setName(newName);
-				column			->	setTitle(title);
-				column			->	beginBatchedLabelsDB();
-	bool		anyChanges		=	title != column->title() || newName != column->name();
-	columnType	prevType		=	column->type(),
-				suggestedType	=	column->setValues(values, labels,	threshold, &anyChanges);  //If less unique integers than the thresholdScale then we think it must be ordinal: https://github.com/jasp-stats/INTERNAL-jasp/issues/270
-				column			->	setType(column->type() != columnType::unknown ? column->type() : desiredType == columnType::unknown ? suggestedType : desiredType);
-				column			->	endBatchedLabelsDB();
 
-	if(orderLabelsByValue)
-		column->labelsOrderByValue();
-
-	return anyChanges || column->type() != prevType;
-}
 

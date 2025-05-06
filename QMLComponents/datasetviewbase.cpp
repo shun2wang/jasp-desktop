@@ -117,6 +117,8 @@ int DataSetViewBase::getRole(const std::string &roleName) const
 
 QSizeF DataSetViewBase::getColumnSize(int col)
 {
+	JASPTIMER_SCOPE(DataSetViewBase::getColumnSize);
+	
 	QVariant maxColStringVar = _model->headerData(col, Qt::Orientation::Horizontal, getRole("maxColString"));
 	
 	QSizeF colSize;
@@ -125,6 +127,8 @@ QSizeF DataSetViewBase::getColumnSize(int col)
 		colSize = getTextSize(maxColStringVar.toString());
 	else
 	{
+		JASPTIMER_SCOPE(DataSetViewBase::getColumnSize fallback);
+		
 		QVariant columnWidthFallbackVar = _model->headerData(col, Qt::Orientation::Horizontal, getRole("columnWidthFallback"));
 
 		colSize = getTextSize("??????");
@@ -138,6 +142,8 @@ QSizeF DataSetViewBase::getColumnSize(int col)
 
 QSizeF DataSetViewBase::getRowHeaderSize()
 {
+	JASPTIMER_SCOPE(DataSetViewBase::getRowHeaderSize);
+	
 	QString text = _model->headerData(0, Qt::Orientation::Vertical, getRole("maxRowHeaderString")).toString();
 
 	return getTextSize(text);
@@ -257,12 +263,13 @@ void DataSetViewBase::calculateCellSizesAndClear(bool clearStorage)
 {
 	JASPTIMER_SCOPE(DataSetViewBase::calculateCellSizes);
 
+	
 	_cellSizes.clear();
 	_dataColsMaxWidth.clear();
 	_storedLineFlags.clear();
 	_storedDisplayText.clear();
 
-    storeAllItems();
+	storeAllItems();
 	
 	//if(clearStorage)
 	//	clearCaches();
@@ -284,6 +291,7 @@ void DataSetViewBase::calculateCellSizesAndClear(bool clearStorage)
 	setHeaderHeight(_model->columnCount() == 0 ? 0 : _cellSizes[0].height() + _itemVerticalPadding * 2);
 	setRowNumberWidth(getRowHeaderSize().width());
 
+	
 	float w = _rowNumberMaxWidth;
 	for(int col=0; col<_model->columnCount(); col++)
 		w += _dataColsMaxWidth[col];
@@ -1143,7 +1151,7 @@ bool DataSetViewBase::isSelected(int row, int col)
 bool DataSetViewBase::relaxForSelectScroll()
 {
 	JASPTIMER_SCOPE(DataSetViewBase::relaxForSelectScroll);
-	long curMs = Utils::currentMillis();
+	int64_t curMs = Utils::currentMillis();
 
 	//Log::log() << "_selectScrollMs = " << _selectScrollMs << ", curMs = " << curMs << std::endl;
 

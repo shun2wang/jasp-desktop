@@ -32,7 +32,8 @@ public:
 	const	std::string &	dataFilePath()			const { return _dataFilePath;			}
 			int				dataFileTimestamp()		const { return _dataFileTimestamp;		}
 	const	std::string &	databaseJson()			const { return _databaseJson;			}
-			bool			writeBatchedToDB()		const { return _writeBatchedToDB;		}
+			bool			writeBatchedToDB()		const { return _writeBatchedToDBDepth;		}
+			void			batchColumnHadChange(Column *col);
 
 			void			dbCreate();
 			void			dbUpdate();
@@ -72,7 +73,6 @@ public:
 			
 			void			loadOldComputedColumnsJson(const Json::Value & json); ///< Should act the same as the old ComputedColumns::fromJson() to allow loading "older jaspfiles"
 			stringset		findUsedColumnNames(std::string searchThis);
-			bool			initColumnWithStrings(int colIndex, const std::string & newName, const stringvec &values, const stringvec & labels, const std::string & title, columnType desiredType, const stringset & emptyValues, int threshold, bool orderLabelsByValue);
 
 			DatabaseInterface	 &	db();
 	const	DatabaseInterface	 &	db() const;
@@ -100,13 +100,14 @@ private:
 	Filter					*	_filter					= nullptr;
 	EmptyValues				*	_emptyValues			= nullptr;
 	int							_dataSetID				= -1,
-								_rowCount				= -1;
+								_rowCount				= -1,
+								_writeBatchedToDBDepth	= 0;
+	ColumnSet					_changedDuringBatch		= {};
 	long						_dataFileTimestamp		= 0;
 	std::string					_dataFilePath,
 								_databaseJson;
 	
-	bool						_writeBatchedToDB		= false,
-								_dataFileSynch			= false;
+	bool						_dataFileSynch			= false;
 	static stringset			_defaultEmptyvalues;	// Default empty values if workspace do not have its own empty values (used for backward compatibility)
 	std::string					_description;
 };

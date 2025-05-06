@@ -12,7 +12,6 @@ ImportColumn::~ImportColumn()
 	JASPTIMER_SCOPE(ImportColumn::~ImportColumn());
 }
 
-
 const std::string & ImportColumn::name() const
 {
 	return _name;
@@ -52,4 +51,9 @@ bool ImportColumn::containsAnythingAtAll()
 			return true;	
 	
 	return false;
+}
+
+void ImportColumn::finish(bool doCallback)
+{
+	emit finished(this, doCallback);
 }

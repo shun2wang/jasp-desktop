@@ -3,6 +3,7 @@
 #include "columnencoder.h"
 #include "timers.h"
 #include <QMap>
+#include "log.h"
 
 FilterModel::FilterModel(labelFilterGenerator * labelFilterGenerator)
 	: QObject(DataSetPackage::pkg()), _labelFilterGenerator(labelFilterGenerator)
@@ -49,7 +50,7 @@ void FilterModel::reset()
 	setConstructorJson(	DEFAULT_FILTER_JSON	);
 	_setRFilter(		defaultRFilter()		);
 
-	if(DataSetPackage::pkg()->dataRowCount() > 0)
+	if(DataSetPackage::pkg()->dataRowCount() > 0 && DataSetPackage::pkg()->isLoaded())
 		sendGeneratedAndRFilter();
 	
 	emit filterDropDownListChanged();
@@ -57,9 +58,12 @@ void FilterModel::reset()
 
 void FilterModel::dataSetPackageResetDone()
 {
-	_setGeneratedFilter(tq(_labelFilterGenerator->generateFilter())		);
-	setConstructorJson(	!DataSetPackage::filter() ? "" : tq(DataSetPackage::filter()->constructorJson())	);
-	_setRFilter(		!DataSetPackage::filter() ? "" : tq(DataSetPackage::filter()->rFilter())			);
+	if(DataSetPackage::pkg()->isLoaded())
+	{
+		_setGeneratedFilter(tq(_labelFilterGenerator->generateFilter())		);
+		setConstructorJson(	!DataSetPackage::filter() ? "" : tq(DataSetPackage::filter()->constructorJson())	);
+		_setRFilter(		!DataSetPackage::filter() ? "" : tq(DataSetPackage::filter()->rFilter())			);
+	}
 }
 
 void FilterModel::modelInit()
@@ -213,7 +217,13 @@ void FilterModel::processFilterErrorMsg(QString filterErrorMsg, int requestId)
 void FilterModel::sendGeneratedAndRFilter()
 {
 	JASPTIMER_SCOPE(FilterModel::sendGeneratedAndRFilter);
-
+	
+	if(!DataSetPackage::pkg()->isLoaded())
+	{
+		Log::log() << "An attempt was made to run a filter while the DataSetPackage is not loaded!" << std::endl;
+		return;
+	}
+	
 	setFilterErrorMsg("");
 	_lastSentRequestId = emit sendFilter(generatedFilter(), rFilter());
 }
