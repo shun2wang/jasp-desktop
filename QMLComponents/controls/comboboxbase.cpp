@@ -317,15 +317,13 @@ QString	ComboBoxBase::generateMDHelp(int depth) const
 		{
 			QString label = term.label(),
 					info = term.info();
-			if (label.isEmpty())
+			if (label.isEmpty() || info.isEmpty())
 				continue;
 
-			markdown << "\n" << QString{depth * 2, ' '} << "- *" << label << "*";
-			if (!info.isEmpty())
-				markdown << (": " + info);
+			markdown << "\n" << QString{depth * 2, ' '} << "- *" << label << "*" << (": " + info);
 		}
 	}
-	else
+	else if(!containsVariables())
 	{
 		markdown << "\n" << QString{depth * 2, ' '};
 		// Display the options in one line separated by a comma.
@@ -339,7 +337,7 @@ QString	ComboBoxBase::generateMDHelp(int depth) const
 QString ComboBoxBase::generateDoxygenHelp() const
 {
 	QString result = JASPListControl::generateDoxygenHelp();
-	if (result.isEmpty())
+	if (result.isEmpty() || !_hasOptionInfo() || containsVariables())
 		return result;
 
 	result += "#' \\itemize{\n";

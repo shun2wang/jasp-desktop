@@ -576,7 +576,7 @@ bool JASPControl::printLabelMD(QStringList& md, int depth) const
 		return false;
 
 	// Print the label as a header, in italic or in bold
-	if (infoLabelIsHeader())			md << "<h" << QString::number(depth + 2) << ">";
+	if (infoLabelIsHeader())			md << "<h" << QString::number(depth + 3) << ">";
 	else if	(infoLabelItalic())			md << "*";
 	else								md << "**";
 
@@ -584,7 +584,7 @@ bool JASPControl::printLabelMD(QStringList& md, int depth) const
 
 	md << label;
 
-	if (infoLabelIsHeader())			md << "</h" << QString::number(depth + 2) << ">\n";
+	if (infoLabelIsHeader())			md << "</h" << QString::number(depth + 3) << ">\n";
 	else
 	{
 		md << (infoLabelItalic() ? "*" : "**");
