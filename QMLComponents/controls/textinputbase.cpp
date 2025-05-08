@@ -88,11 +88,31 @@ void TextInputBase::bindTo(const Json::Value& value)
 	}
 	case TextInputType::FormulaType:
 	{
-		_value = value.isString() ? tq(value.asString()) : value.isNumeric() ? value.asDouble() : QVariant();
-		setIsRCode();
+		// If it is already numeric, no need to parse it.
+		// This also avoid parsing infinite value: a QVariant with an infinite value gives "inf" as string value,
+		// which gives an error when parsed by R.
+		bool setRealValue = true;
 
-		if (!_value.isNull())
-			runRScript("as.character(" + _value.toString() + ")", true);
+		if (value.isNumeric())
+			_value = value.asDouble();
+		else if (value.isString())
+		{
+			double dblVal = 0;
+			QString strValue = tq(value.asString());
+			if (!strValue.isEmpty() && !QColumnUtils::getDoubleValue(strValue, dblVal))
+			{
+				setIsRCode();
+				runRScript("as.character(" + _value.toString() + ")", true);
+				setRealValue = false;
+			}
+			else
+				_value = dblVal;
+		}
+		else
+			_value = QVariant();
+
+		if (setRealValue)
+			setProperty("realValue", _value);
 
 		break;
 	}
@@ -233,6 +253,12 @@ void TextInputBase::rScriptDoneHandler(const QString &result)
 			setHasScriptError(true);
 			break;
 		}
+		else
+		{
+			clearControlError();
+			setHasScriptError(false);
+		}
+
 
 		if (!_formulaResultInBounds(val))
 		{
@@ -437,19 +463,33 @@ void TextInputBase::_setBoundValue()
 {
 	if (_inputType == TextInputType::FormulaType)
 	{
-		QString strValue = _value.toString();
+		double valueDbl = 0;
+		bool isDbl = QColumnUtils::getDoubleValue(_value.toString(), valueDbl);
 
-		// _formula might be empty (in TableView the FormulaType is not directly bound, and has its own model).
-		if (boundValue().asString() != fq(strValue))
+		if (isDbl)
 		{
-			if (!_parseDefaultValue && _defaultValue == _value)
+			setProperty("realValue", _value);
+			setBoundValue(_getJsonValue(_value));
+			clearControlError();
+			setHasScriptError(false);
+			emit formulaCheckSucceeded();
+		}
+		else
+		{
+			QString strValue = _value.toString();
+
+			// _formula might be empty (in TableView the FormulaType is not directly bound, and has its own model).
+			if (boundValue().asString() != fq(strValue))
 			{
-				// The value is the same as the default value and this default value should not be parsed (this might be just a string like '...')
-				// So just set this value and emit that the formula is succesfully checked without running the R script.
-				setBoundValue(fq(strValue));
-				emit formulaCheckSucceeded();
+				if (!_parseDefaultValue && _defaultValue == _value)
+				{
+					// The value is the same as the default value and this default value should not be parsed (this might be just a string like '...')
+					// So just set this value and emit that the formula is succesfully checked without running the R script.
+					setBoundValue(fq(strValue));
+					emit formulaCheckSucceeded();
+				}
+				runRScript("as.character(" + strValue + ")", true);
 			}
-			runRScript("as.character(" + strValue + ")", true);
 		}
 	}
 	else setBoundValue(_getJsonValue(_value));
