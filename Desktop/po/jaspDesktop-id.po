@@ -1,15 +1,9 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-05-06 09:06+0000\n"
-"Last-Translator: Kukuh Pambuka Putra <kukuh.pambuka@gmail.com>\n"
-"Language-Team: Indonesian <https://hosted.weblate.org/projects/jasp/"
-"jaspdesktop/id/>\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12-dev\n"
 "X-Language: id\n"
 "X-Qt-Contexts: true\n"
 
@@ -551,9 +545,10 @@ msgctxt "Computer|"
 msgid "Recent Folders"
 msgstr "Folder Terbaru"
 
+#, fuzzy
 msgctxt "Computer|"
 msgid "Browse"
-msgstr ""
+msgstr "Telusuri"
 
 msgctxt "CurrentFile|"
 msgid "Current data file for synchronization"
@@ -3145,9 +3140,10 @@ msgctxt "Database|"
 msgid "Name"
 msgstr ""
 
+#, fuzzy
 msgctxt "Database|"
 msgid "Browse"
-msgstr ""
+msgstr "Telusuri"
 
 msgctxt "Database|"
 msgid "Username"
@@ -5488,10 +5484,6 @@ msgid "Rowwise maximum"
 msgstr ""
 
 msgctxt "PrefsUI|"
-msgid "Start Maximized"
-msgstr ""
-
-msgctxt "PrefsUI|"
 msgid "Should JASP open its window maximized on startup?"
 msgstr ""
 
@@ -5511,4 +5503,8 @@ msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Configuration file options"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Start maximized"
 msgstr ""

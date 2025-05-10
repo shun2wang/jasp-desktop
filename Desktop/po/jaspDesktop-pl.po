@@ -5801,10 +5801,6 @@ msgid "Rowwise maximum"
 msgstr ""
 
 msgctxt "PrefsUI|"
-msgid "Start Maximized"
-msgstr ""
-
-msgctxt "PrefsUI|"
 msgid "Should JASP open its window maximized on startup?"
 msgstr ""
 
@@ -5824,4 +5820,8 @@ msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Configuration file options"
+msgstr ""
+
+msgctxt "PrefsUI|"
+msgid "Start maximized"
 msgstr ""
