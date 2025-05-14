@@ -50,7 +50,7 @@ void DatabaseInterface::upgradeDBFromVersion(Version originalVersion)
 			runStatements("ALTER TABLE Columns  DROP 	COLUMN forceSourceColType;");
 	}
 
-	if(originalVersion < "0.19.2" && !tableHasColumn("Filters", "name"))
+	if(originalVersion < "0.19.2" && !tableHasColumn("Filters", "name"))	
 		runStatements("ALTER TABLE Filters  ADD COLUMN name		TEXT;");
 	
 	if(originalVersion <= "0.19.3")
@@ -61,7 +61,7 @@ void DatabaseInterface::upgradeDBFromVersion(Version originalVersion)
 			runStatements("UPDATE Columns SET dropLevels = 1;"); //Previously dropLevels was always on, so loading an older jasp-file should have this enabled
 		}
 		
-		runStatements(std::string("UPDATE Filters SET name = '") + DEFAULT_FILTER_NAME + "' WHERE name = '';"); //Previously the "default filter" didnt have a name, but this is actually not very practical for computeFilter, so lets set it to something on load. Filters will always have a name now.
+		runStatements(std::string("UPDATE Filters SET name = '") + DEFAULT_FILTER_NAME + "' WHERE trim(name) = '' OR name IS NULL;"); //Previously the "default filter" didnt have a name, but this is actually not very practical for computeFilter, so lets set it to something on load. Filters will always have a name now.
 
 		if(!tableHasColumn("Columns", "computeFilter"))
 			runStatements("ALTER TABLE Columns  ADD COLUMN computeFilter		TEXT DEFAULT \"\";");
