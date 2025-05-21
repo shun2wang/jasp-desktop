@@ -8,6 +8,7 @@
 #include "utilities/appdirs.h"
 #include "utilities/messageforwarder.h"
 #include "gui/preferencesmodel.h"
+#include "processhelper.h"
 
 std::wstring toWString(const std::string& in) {
 	return std::wstring(in.begin(), in.end());
@@ -91,7 +92,10 @@ bool checkIfAccessible(STARTUPINFOEX si, const std::vector<std::string>& paths)
 {
 	QDir programDir					= AppDirs::programDir();
 	QString checkerExecutable		= programDir.absoluteFilePath("ContainerFilePermissionChecker");
-	QProcess* checkProc = new QProcess();
+	QProcess* checkProc				= new QProcess();
+	QProcessEnvironment env			= QProcessEnvironment::systemEnvironment();
+	ProcessHelper::fixPATHForWindows(env);
+	checkProc->setProcessEnvironment(env);
 
 	QStringList args;
 	for(const std::string& path : paths)
