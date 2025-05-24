@@ -337,17 +337,6 @@ msgstr ""
 "Encapsulated PostScript (*.eps);;300 dpi Tagged Image File (*.tiff);;"
 "PowerPoint (*.pptx);;Scalable Vector Graphics (*.svg)"
 
-msgctxt "MainWindow|"
-msgid ""
-"JASP cannot continue and will close.\n"
-"\n"
-"We would be grateful if you could report this error to the JASP team."
-msgstr ""
-"JASP non pode continuar e vai pecharse.\n"
-"\n"
-"Te estariamos moi agradecidos se puideras informar deste fallo ao equipo de "
-"JASP."
-
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
@@ -2058,23 +2047,6 @@ msgctxt "MenuHeader|"
 msgid "Show info about these preferences"
 msgstr "Amosar a información sobre estas preferencias"
 
-#, qt-format
-msgctxt "ModuleInstaller|"
-msgid "<i>%1 is not a (correct) JASP Module!</i>"
-msgstr "<i>%1 non é un Módulo (correcto) de JASP!</i>"
-
-msgctxt "ModuleInstaller|"
-msgid "Select a JASP Module"
-msgstr "Escoller un Módulo de JASP"
-
-msgctxt "ModuleInstaller|"
-msgid "<i>Browse for a JASP Module to see more information here</i>"
-msgstr "<i>Procurar un Módulo de JASP para ver aquí máis información</i>"
-
-msgctxt "ModuleInstaller|"
-msgid "Browse for JASP Module"
-msgstr "Procurar o Módulo de JASP"
-
 msgctxt "DataLibraryBreadCrumbsListModel|"
 msgid "Categories"
 msgstr "Categorías"
@@ -2766,25 +2738,6 @@ msgstr ""
 "A instalación do Módulo %1 fallou coa seguinte mensaxe de fallo:\n"
 "%2"
 
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid "Cannot install module because %1 does not exist."
-msgstr "Non pode instalarse o módulo porque %1 non existe."
-
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"Cannot install module because it is named '%1' and that name is reserved for "
-"installing the development module.\n"
-"Change the name (in DESCRIPTION and description.json) and try it again. If "
-"you are not the author of this module and do not know how to do this, "
-"contact: %2"
-msgstr ""
-"Non pode instalarse o módulo porque se chama '%1' e ese nome está reservado "
-"para instalar o módulo de desenvolvemento.\n"
-"Troca o nome (en DESCRICIÓN e description.json) e proba de novo. Se non es o "
-"autor deste módulo e non sabes como se fai isto, contacta con: %2"
-
 msgctxt "Modules::DynamicModules|"
 msgid "Select a folder"
 msgstr "Escoller un cartafol"
@@ -3294,18 +3247,6 @@ msgstr "Compoñentes de Código Aberto"
 msgctxt "PrefsUI|"
 msgid "Help us translate or improve JASP in your language"
 msgstr "Axúdanos a traducir ou mellorar JASP no teu idioma"
-
-msgctxt "ModuleInstaller|"
-msgid "Install"
-msgstr "Instalar"
-
-msgctxt "ModuleInstaller|"
-msgid "Press this to install your selected Module"
-msgstr "Preme isto para instalar o Módulo escollido"
-
-msgctxt "ModuleInstaller|"
-msgid "Select a JASP Module to install"
-msgstr "Escolle un Módulo de JASP para instalar"
 
 msgctxt "ErrorMessage|"
 msgid "Don't show again"
@@ -5911,3 +5852,41 @@ msgstr "Opcións do ficheiro de configuración"
 msgctxt "PrefsUI|"
 msgid "Start maximized"
 msgstr "Iniciar maximizado"
+
+msgctxt "MainWindow|"
+msgid ""
+"JASP had a serious error and cannot calculate anymore.\n"
+"\n"
+"We would be grateful if you could report this error to the JASP team."
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Salvage"
+msgstr ""
+
+msgctxt "Modules::DynamicModules|"
+msgid "Install complete"
+msgstr ""
+
+msgctxt "Modules::DynamicModules|"
+msgid "Completed installation of Bundles: "
+msgstr ""
+
+msgctxt "QObject|"
+msgid "Security Sandbox Failure"
+msgstr ""
+
+msgctxt "QObject|"
+msgid ""
+"Failed to activate Security Sandbox. Your system does not allow security "
+"sandboxing. Do you wish to continue with out is? (probably fine)"
+msgstr ""
+
+msgctxt "QObject|"
+msgid "Continue"
+msgstr ""
+
+#, fuzzy
+msgctxt "QObject|"
+msgid "Exit"
+msgstr "Saír"

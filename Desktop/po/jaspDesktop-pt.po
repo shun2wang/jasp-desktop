@@ -1,15 +1,9 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-05-22 18:44+0000\n"
-"Last-Translator: Welden Sousa <weldensousape@gmail.com>\n"
-"Language-Team: Portuguese <https://hosted.weblate.org/projects/jasp/"
-"jaspdesktop/pt/>\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Language: pt\n"
 "X-Source-Language: American English\n"
 "X-Qt-Contexts: true\n"
@@ -329,14 +323,6 @@ msgstr "Redimensionar dados / resultados"
 msgctxt "MainPage|"
 msgid "Drag to show data"
 msgstr "Arraste para mostrar os dados"
-
-msgctxt "ModuleInstaller|"
-msgid "Browse for JASP Module"
-msgstr "Procure pelo Módulo JASP"
-
-msgctxt "ModuleInstaller|"
-msgid "Select a JASP Module"
-msgstr "Selecione um Módulo JASP"
 
 msgctxt "ModulesMenu|"
 msgid "Install Module"
@@ -1427,16 +1413,6 @@ msgstr ""
 "%1"
 
 msgctxt "MainWindow|"
-msgid ""
-"JASP cannot continue and will close.\n"
-"\n"
-"We would be grateful if you could report this error to the JASP team."
-msgstr ""
-"O JASP não pode continuar e irá fechar.\n"
-"\n"
-"Ficaremos agradecidos se você reportar esse erro à equipe do JASP."
-
-msgctxt "MainWindow|"
 msgid "Report"
 msgstr "Reportar"
 
@@ -2145,15 +2121,6 @@ msgctxt "FilterWindow|"
 msgid "returns true if string contains substring at least once"
 msgstr "retorna verdadeiro se a cadeia contém a sub-cadeia pelo menos uma vez"
 
-msgctxt "ModuleInstaller|"
-msgid "<i>Browse for a JASP Module to see more information here</i>"
-msgstr "<i>Procure um Módulo JASP para ver mais informações aqui</i>"
-
-#, qt-format
-msgctxt "ModuleInstaller|"
-msgid "<i>%1 is not a (correct) JASP Module!</i>"
-msgstr "<i>%1 não é um Módulo JASP (correto)!</i>"
-
 msgctxt "ModulesMenu|"
 msgid "Ready"
 msgstr "Pronto"
@@ -2490,25 +2457,6 @@ msgid ""
 msgstr ""
 "A instalação do Módulo %1 falhou com a seguinte mensagem de erro:\n"
 "%2"
-
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid "Cannot install module because %1 does not exist."
-msgstr "Não é possível instalar o módulo porque %1 não existe."
-
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"Cannot install module because it is named '%1' and that name is reserved for "
-"installing the development module.\n"
-"Change the name (in DESCRIPTION and description.json) and try it again. If "
-"you are not the author of this module and do not know how to do this, "
-"contact: %2"
-msgstr ""
-"Não é possível instalar o módulo porque ele se chama '%1' e esse nome é "
-"reservado para a instalação do módulo de desenvolvimento.\n"
-"Mude o nome (em DESCRIÇÃO e descrição.json) e tente novamente. Se você não é "
-"o autor deste módulo e não sabe como fazer isso, entre em contato: %2"
 
 msgctxt "Modules::DynamicModules|"
 msgid "Select a folder"
@@ -3290,18 +3238,6 @@ msgctxt "PrefsUI|"
 msgid "Help us translate or improve JASP in your language"
 msgstr "Ajude-nos a traduzir o JASP para o Português :D"
 
-msgctxt "ModuleInstaller|"
-msgid "Install"
-msgstr "Instalar"
-
-msgctxt "ModuleInstaller|"
-msgid "Press this to install your selected Module"
-msgstr "Clique aqui para instalar o módulo selecionado"
-
-msgctxt "ModuleInstaller|"
-msgid "Select a JASP Module to install"
-msgstr "Selecionar um módulo JASP para instalar"
-
 msgctxt "ErrorMessage|"
 msgid "Don't show again"
 msgstr "Não mostrar novamente"
@@ -3439,7 +3375,8 @@ msgstr "Senha da base de dados"
 #, qt-format
 msgctxt "DataSetPackage|"
 msgid "The databaseconnection needs a password for user '%1'"
-msgstr "A conexão com o banco de dados precisa de uma senha para o usuário '%1'"
+msgstr ""
+"A conexão com o banco de dados precisa de uma senha para o usuário '%1'"
 
 msgctxt "DataSetPackage|"
 msgid "The databaseconnection needs a password"
@@ -4762,9 +4699,10 @@ msgctxt "ColumnBasicInfo|"
 msgid "Close variable window"
 msgstr ""
 
+#, fuzzy
 msgctxt "ColumnBasicInfo|"
 msgid "Description: "
-msgstr ""
+msgstr "Descrição: "
 
 msgctxt "ColumnModel|"
 msgid "Column definition"
@@ -5758,3 +5696,41 @@ msgstr ""
 msgctxt "PrefsUI|"
 msgid "Start maximized"
 msgstr ""
+
+msgctxt "MainWindow|"
+msgid ""
+"JASP had a serious error and cannot calculate anymore.\n"
+"\n"
+"We would be grateful if you could report this error to the JASP team."
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Salvage"
+msgstr ""
+
+msgctxt "Modules::DynamicModules|"
+msgid "Install complete"
+msgstr ""
+
+msgctxt "Modules::DynamicModules|"
+msgid "Completed installation of Bundles: "
+msgstr ""
+
+msgctxt "QObject|"
+msgid "Security Sandbox Failure"
+msgstr ""
+
+msgctxt "QObject|"
+msgid ""
+"Failed to activate Security Sandbox. Your system does not allow security "
+"sandboxing. Do you wish to continue with out is? (probably fine)"
+msgstr ""
+
+msgctxt "QObject|"
+msgid "Continue"
+msgstr ""
+
+#, fuzzy
+msgctxt "QObject|"
+msgid "Exit"
+msgstr "Sair"

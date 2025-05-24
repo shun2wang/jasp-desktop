@@ -1195,24 +1195,6 @@ msgctxt "MainPage|"
 msgid "Results"
 msgstr "Результаты"
 
-msgctxt "ModuleInstaller|"
-msgid "Browse for JASP Module"
-msgstr "Поиск модуля JASP"
-
-msgctxt "ModuleInstaller|"
-msgid "Select a JASP Module"
-msgstr "Выберите модуль JASP"
-
-msgctxt "ModuleInstaller|"
-msgid "<i>Browse for a JASP Module to see more information here</i>"
-msgstr ""
-"<i>Найдите модуль JASP, чтобы увидеть дополнительную информацию здесь</i>"
-
-#, qt-format
-msgctxt "ModuleInstaller|"
-msgid "<i>%1 is not a (correct) JASP Module!</i>"
-msgstr "<i>%1 не является (правильным) модулем JASP!</i>"
-
 msgctxt "ModulesMenu|"
 msgid "Install Module"
 msgstr "Установка модуля"
@@ -1920,16 +1902,6 @@ msgid ""
 msgstr ""
 "В JASP произошла непредвиденная внутренняя ошибка:\n"
 "%1"
-
-msgctxt "MainWindow|"
-msgid ""
-"JASP cannot continue and will close.\n"
-"\n"
-"We would be grateful if you could report this error to the JASP team."
-msgstr ""
-"JASP не может продолжать работу и будет закрыт. \n"
-" \n"
-"Мы будем благодарны, если вы сообщите об этой ошибке команде JASP."
 
 msgctxt "MainWindow|"
 msgid "Report"
@@ -2679,26 +2651,6 @@ msgstr ""
 "Установка модуля %1 не удалась со следующим сообщением об ошибке:\n"
 "%2"
 
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid "Cannot install module because %1 does not exist."
-msgstr "Невозможно установить модуль, так как %1 не существует."
-
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"Cannot install module because it is named '%1' and that name is reserved for "
-"installing the development module.\n"
-"Change the name (in DESCRIPTION and description.json) and try it again. If "
-"you are not the author of this module and do not know how to do this, "
-"contact: %2"
-msgstr ""
-"Невозможно установить модуль, так как он называется «%1» и это имя "
-"зарезервировано для установки модуля разработки.\n"
-"Измените имя (в DESCRIPTION и description.json) и повторите попытку. Если вы "
-"не являетесь автором этого модуля и не знаете, как это сделать, обращайтесь: "
-"%2"
-
 msgctxt "Modules::DynamicModules|"
 msgid "Select a folder"
 msgstr "Выберите папку"
@@ -3275,18 +3227,6 @@ msgstr "Компоненты с открытым исходным кодом"
 msgctxt "PrefsUI|"
 msgid "Help us translate or improve JASP in your language"
 msgstr "Помогите нам перевести или улучшить JASP на вашем языке"
-
-msgctxt "ModuleInstaller|"
-msgid "Install"
-msgstr "Установить"
-
-msgctxt "ModuleInstaller|"
-msgid "Press this to install your selected Module"
-msgstr "Нажмите, чтобы установить выбранный модуль"
-
-msgctxt "ModuleInstaller|"
-msgid "Select a JASP Module to install"
-msgstr "Выберите модуль JASP для установки"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Show R syntax"
@@ -5783,3 +5723,41 @@ msgstr ""
 msgctxt "PrefsUI|"
 msgid "Start maximized"
 msgstr ""
+
+msgctxt "MainWindow|"
+msgid ""
+"JASP had a serious error and cannot calculate anymore.\n"
+"\n"
+"We would be grateful if you could report this error to the JASP team."
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Salvage"
+msgstr ""
+
+msgctxt "Modules::DynamicModules|"
+msgid "Install complete"
+msgstr ""
+
+msgctxt "Modules::DynamicModules|"
+msgid "Completed installation of Bundles: "
+msgstr ""
+
+msgctxt "QObject|"
+msgid "Security Sandbox Failure"
+msgstr ""
+
+msgctxt "QObject|"
+msgid ""
+"Failed to activate Security Sandbox. Your system does not allow security "
+"sandboxing. Do you wish to continue with out is? (probably fine)"
+msgstr ""
+
+msgctxt "QObject|"
+msgid "Continue"
+msgstr ""
+
+#, fuzzy
+msgctxt "QObject|"
+msgid "Exit"
+msgstr "Выход"
