@@ -69,9 +69,11 @@ public:
 
 				DatabaseInterface(bool create = false, bool inMemory = false);									///< Creates or loads a sqlite database based on the argument
 				~DatabaseInterface();
+
 	std::string dbFile(bool onlyPostfix = false) const;									///< Convenience function for getting the filename where sqlite db should be
 
 	static		DatabaseInterface * singleton();					///< There can be only one! https://www.youtube.com/watch?v=sqcLjcSloXs
+	static		void				closeInterfaces();
 
 	bool		hasConnection() { return _db(); }
 	void		upgradeDBFromVersion(Version originalVersion);							///< Ensures that the database has all the fields configured as required for the current JASP version, useful when loading older sqlite-containing jasp-files
@@ -184,7 +186,9 @@ public:
 	bool		tableExists(const std::string & name);
 	int			transactionWriteDepth() { return _transactionWriteDepth; }
 	int			transactionReadDepth()	{ return _transactionReadDepth;  }
-	
+
+    void        preloadInterfaceForThread();
+
 private:
 	sqlite3	*	_db();
 	void		_doubleTroubleBinder(sqlite3_stmt *stmt, int param, double dbl);	///< Needed to work around the lack of support for NAN, INF and NEG_INF in sqlite, converts those to string to make use of sqlite flexibility
@@ -204,6 +208,7 @@ private:
 	std::thread::id							_dbCreator;
 	sqlite3*								_dbCreated = nullptr;
 	bool									_inMemory;
+    std::mutex                              _loadMutex;
 
 	static			std::string _wrap_sqlite3_column_text(sqlite3_stmt * stmt, int iCol);
 	static const	std::string _dbConstructionSql;

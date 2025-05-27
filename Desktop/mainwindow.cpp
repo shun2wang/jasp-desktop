@@ -206,6 +206,8 @@ MainWindow::~MainWindow()
 {
 	Log::log() << "MainWindow::~MainWindow()" << std::endl;
 
+	DatabaseInterface::closeInterfaces();
+
 	_analyses->destroyAllForms();
 
 	_singleton = nullptr;

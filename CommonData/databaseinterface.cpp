@@ -749,8 +749,9 @@ void DatabaseInterface::dataSetBatchedValuesLoad(DataSet *data, std::function<vo
 			cols.push_back(data->column(curCol));
 		
 		
-		threads.push_back(std::thread([cols, group, &loadBatchOfColumns]()
+        threads.push_back(std::thread([cols, group, &loadBatchOfColumns,this]()
 		{
+			preloadInterfaceForThread();
 			loadBatchOfColumns(cols, group);
 		}));
 		
@@ -1715,6 +1716,11 @@ DatabaseInterface *DatabaseInterface::singleton()
 	return _singleton; 
 }
 
+void DatabaseInterface::closeInterfaces()
+{
+	delete _singleton;
+}
+
 void DatabaseInterface::runQuery(const std::string & query, std::function<void(sqlite3_stmt *stmt)> bindParameters, std::function<void(size_t row, sqlite3_stmt *stmt)> processRow)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::runQuery);
@@ -2041,22 +2047,15 @@ void DatabaseInterface::_runStatementsRepeatedly(const std::string & statements,
 }
 
 sqlite3 * DatabaseInterface::_db()
-{
-	static std::mutex loadMutex;
-	
+{	
 	const auto id = std::this_thread::get_id();
 
 	if(_dbCreated && _dbCreator == id)
 		return _dbCreated;
 	
 	if(!_dbs.count(id))
-	{
-		loadMutex.lock();
-		if(!_dbs.count(id))
-			load();
-		loadMutex.unlock();
-	}
-	
+		load();
+
 	return _dbs.at(id);
 }
 
@@ -2071,7 +2070,7 @@ void DatabaseInterface::create()
 		std::filesystem::remove(dbFile());
 	}
 	
-	int ret = sqlite3_open_v2(dbFile().c_str(), &_dbCreated, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX, NULL);
+    int ret = sqlite3_open_v2(dbFile().c_str(), &_dbCreated, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX, NULL);
 
 	if(ret != SQLITE_OK)
 	{
@@ -2127,58 +2126,76 @@ void DatabaseInterface::doWalCheckPoint()
 	}*/
 }
 
+void DatabaseInterface::preloadInterfaceForThread()
+{
+    //Load the interface by asking for it
+    _db();
+}
+
 void DatabaseInterface::load()
 {
-	JASPTIMER_SCOPE(DatabaseInterface::load);
-	
+    JASPTIMER_SCOPE(DatabaseInterface::load);
 	assert(!_dbCreated || std::this_thread::get_id() != _dbCreator);
+
+    _loadMutex.lock();
+    if(_dbs.count(std::this_thread::get_id()))
+    {
+        _loadMutex.unlock();
+        return;
+    }
+
 	
 	if(!std::filesystem::exists(dbFile()))
 		throw std::runtime_error("Trying to load '" + dbFile() + "' but it doesn't exist!");
-	
-	sqlite3 * db;
 
-	int ret = sqlite3_open_v2(dbFile().c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_NOMUTEX, NULL);
+    bool        loadingWorked	= false;
+    size_t      loadingAttempt	= 0;
+    sqlite3 *   db              = nullptr;
 
-	if(ret != SQLITE_OK)
-	{
-		Log::log() << "Couldnt open sqlite internal db, because of: " << (db ? sqlite3_errmsg(db) : "not even a broken sqlite3 obj was returned..." ) << std::endl;
-		throw std::runtime_error("JASP cannot run without an internal database and it cannot be created. Contact the JASP team for help.");
-	}
-	else
-		Log::log() << "Opened internal sqlite database for loading at '" << dbFile() << "'. This is for thread " << std::this_thread::get_id() << std::endl;
-	
-	_dbs[std::this_thread::get_id()] = db;
-	
-	
-	bool	loadingWorked	= false;
-	size_t	loadingAttempt	= 0; 
-	
-isItReallyAnotherLabel:
-	try
-	{
-		int tableCount = runStatementsId("SELECT COUNT(*) FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
-		Log::log() << "Loaded a database with #" << tableCount << " tables." << std::endl;
-		if(tableCount < 0)
-			throw dbMalformedException();
-		
-		loadingWorked = true;
-	}
-	catch(dbMalformedException & e)
-	{
-		//Unfortunate, but perhaps we were too quick?	
-		loadingWorked = false;
-		loadingAttempt++;
-	}
-	
-	if(!loadingWorked)
-	{
-		if(loadingAttempt > 10)
-			throw dbMalformedException();
-		
-		std::this_thread::sleep_for(std::chrono::nanoseconds(1000000));
-		goto isItReallyAnotherLabel;
-	}
+    for(bool loadingWorked = false; !loadingWorked; )
+    {
+        int ret = sqlite3_open_v2(dbFile().c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_NOMUTEX, NULL);
+
+        if(ret != SQLITE_OK)
+        {
+            Log::log() << "Couldnt open sqlite internal db, because of: " << (db ? sqlite3_errmsg(db) : "not even a broken sqlite3 obj was returned..." ) << std::endl;
+            throw std::runtime_error("JASP cannot run without an internal database and it cannot be created. Contact the JASP team for help.");
+        }
+        else
+            Log::log() << "Opened internal sqlite database for loading at '" << dbFile() << "'. This is for thread " << std::this_thread::get_id() << std::endl;
+
+        _dbs[std::this_thread::get_id()] = db;
+
+        try
+        {
+            int tableCount = runStatementsId("SELECT COUNT(*) FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
+            if(tableCount < 0)
+                throw dbMalformedException();
+
+            Log::log() << "Loaded a database with #" << tableCount << " tables." << std::endl;
+            loadingWorked = true;
+        }
+        catch(dbMalformedException & e)
+        {
+            //Unfortunate, but perhaps we were too quick?
+            loadingWorked = false;
+            loadingAttempt++;
+        }
+
+        if(!loadingWorked)
+        {
+            if(loadingAttempt > 100 * 60) //Timeout is 0.01 sec, so this lets the db try for 1 minute to connect...
+            {
+                _loadMutex.unlock();
+                throw dbMalformedException();
+            }
+
+            Log::log() << "There was a problem loading the database, retrying for the #" << loadingAttempt << " time" << std::endl;
+            std::this_thread::sleep_for(std::chrono::nanoseconds(10000000));
+        }
+    }
+
+    _loadMutex.unlock();
 }
 
 void DatabaseInterface::close()
