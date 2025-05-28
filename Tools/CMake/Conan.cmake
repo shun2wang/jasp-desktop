@@ -23,55 +23,96 @@ if(USE_CONAN)
 
   message(STATUS "  ${CMAKE_BUILD_TYPE}")
   set(CONAN_COMPILER_RUNTIME "dynamic")
-  set(CONAN_RESULT_FILE "conanbuild.bat") #for windows
 
+
+  # We use our own recipe with some patches to cook up a functional version of freexl, so get the recipe:
+  message(STATUS "Cloning private freexl dependency")
+  set(FREEXL_VERSION "2.0.99.cci.20250526")
+  FetchContent_Declare(
+    freexl
+    GIT_REPOSITORY   https://github.com/jasp-stats/conan-recipes.git
+    GIT_TAG          e02cefc5a37684749a20d31500fc54468383e30a
+  )
+  FetchContent_MakeAvailable(freexl)
+
+  # Configure Conan for windows
   if(WIN32)
+    set(CONAN_RESULT_FILE "conanbuild.bat") #for windows
 
     message(STATUS "  ${CONAN_COMPILER_RUNTIME}")
-
+    
     execute_process(
       COMMAND_ECHO STDOUT
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
       COMMAND
-      conan install ${CONAN_FILE_PATH} --output-folder=${CMAKE_BINARY_DIR}/conan_build
+      conan install ${CONAN_FILE_PATH} --output-folder=${CMAKE_BINARY_DIR}/_conan_build
       -s build_type=${CMAKE_BUILD_TYPE}
       -c tools.cmake.cmaketoolchain:generator=${CMAKE_GENERATOR}
       -s compiler.runtime=${CONAN_COMPILER_RUNTIME} --build=missing)
 
+
+      if(NOT freexl_FOUND)
+        if(freexl_POPULATED)
+            message(STATUS "Compiling freexl dependency ${freexl_SOURCE_DIR}")
+            execute_process(
+                COMMAND_ECHO STDOUT
+                WORKING_DIRECTORY ${freexl_SOURCE_DIR}/freexl
+                COMMAND
+                conan create ${freexl_SOURCE_DIR}/freexl --version=${FREEXL_VERSION}
+                -s build_type=${CMAKE_BUILD_TYPE}
+                -c tools.cmake.cmaketoolchain:generator=${CMAKE_GENERATOR}
+                -s compiler.runtime=${CONAN_COMPILER_RUNTIME} --build=missing
+                --test-missing
+            )
+        else()
+          message(CHECK_FAIL "build freexl failed")
+        endif()
+    endif()
+  
+      # configure conan for apple
   elseif(APPLE)
 
     set(CONAN_RESULT_FILE "conanbuild.sh")
-
-    if(CROSS_COMPILING)
-
-      execute_process(
-        COMMAND_ECHO STDOUT
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        COMMAND
-          zsh -l -c "conan install ${CONAN_FILE_PATH} -s build_type=${CMAKE_BUILD_TYPE} -s os.version=${CMAKE_OSX_DEPLOYMENT_TARGET} --build=missing -of ${CMAKE_BINARY_DIR}/conan_build")
     
-    else()
-
-      execute_process(
+    # We set CC and CCX to nothing because that was the only difference between running conan in a terminal (where it worked) and in qt creator (where it did not)
+    # They were set to bona fide looking xtools stuff but apparently this was too much for conan.
+    
+    execute_process(
         COMMAND_ECHO STDOUT
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        COMMAND
-          zsh -l -c "conan install ${CONAN_FILE_PATH} -s build_type=${CMAKE_BUILD_TYPE} -s os.version=${CMAKE_OSX_DEPLOYMENT_TARGET} --build=missing -of ${CMAKE_BINARY_DIR}/conan_build")
-    endif()
-
+        COMMAND zsh -c -l "export CC=\"\"; export CCX=\"\"; conan install ${CONAN_FILE_PATH} -s build_type=${CMAKE_BUILD_TYPE} -s os.version=${CMAKE_OSX_DEPLOYMENT_TARGET} --build=missing -of ${CMAKE_BINARY_DIR}/_conan_build")
+    
+    execute_process(
+      COMMAND_ECHO STDOUT
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+      COMMAND zsh -c -l "export CC=\"\"; export CCX=\"\"; conan create ${freexl_SOURCE_DIR}/freexl --version=${FREEXL_VERSION} -s build_type=${CMAKE_BUILD_TYPE} -s os.version=${CMAKE_OSX_DEPLOYMENT_TARGET} --build=missing --test-missing")        
   endif()
 
-  if(EXISTS ${CMAKE_BINARY_DIR}/conan_build/${CONAN_RESULT_FILE})
+  # find conan_toolchain.cmake generated in local
+  file(GLOB_RECURSE CONAN_TOOLCHAIN_PATH ${freexl_SOURCE_DIR}/freexl/test_package/build/*/generators/conan_toolchain.cmake)
+  list(GET CONAN_TOOLCHAIN_PATH 0 CONAN_TOOLCHAIN_PATH)
+  if (EXISTS ${CONAN_TOOLCHAIN_PATH})
+      get_filename_component(CONAN_TOOLCHAIN_PATH_DIR ${CONAN_TOOLCHAIN_PATH} DIRECTORY)
+      message(STATUS "freexl conan toolchain directory: ${CONAN_TOOLCHAIN_PATH_DIR}")
+  else ()
+      message(FATAL_ERROR "freexl conan toolchain not found!")
+  endif ()
+  
+
+  # Check whether we now have the result file we expect and thus conan did what it needed to do
+
+  if(EXISTS ${CMAKE_BINARY_DIR}/_conan_build/${CONAN_RESULT_FILE})
     message(CHECK_PASS "successful")
   else()
     message(CHECK_FAIL "unsuccessful")
     message(
       FATAL_ERROR
-        "Conan configuration failed. You may try running the above conan command from your command line, in your build directory."
+        "Conan configuration failed. You may try running the above conan command from your command line, in your build directory. Hint: FreeXL might still give you problems"
     )
   endif()
 
-  include(${CMAKE_BINARY_DIR}/conan_build/conan_toolchain.cmake)
+  include(${CMAKE_BINARY_DIR}/_conan_build/conan_toolchain.cmake)
+  include(${CONAN_TOOLCHAIN_PATH})
 
 endif()
 
