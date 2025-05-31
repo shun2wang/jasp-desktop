@@ -2924,21 +2924,6 @@ msgid "Initializing module %1 failed"
 msgstr "初始化模块 %1 失败"
 
 msgctxt "RibbonModel|"
-msgid "Module missing"
-msgstr "模块缺失"
-
-#, qt-format
-msgctxt "RibbonModel|"
-msgid ""
-"It seems the bundled module %1 wasn't correctly installed, and thus cannot "
-"be loaded.\n"
-"If you installed this version of JASP via an official installer let the JASP "
-"team know."
-msgstr ""
-"预置模块 %1 似乎没有被正确安装，因此无法加载。\n"
-"如果您通过官方安装程序安装了此版本的 JASP，请告知 JASP 团队。"
-
-msgctxt "RibbonModel|"
 msgid "Execute R code in a console"
 msgstr "在控制台执行 R 代码"
 

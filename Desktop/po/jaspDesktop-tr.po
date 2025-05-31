@@ -3023,23 +3023,6 @@ msgid "Initializing module %1 failed"
 msgstr "%1 modülünün başlatılması başarısız oldu"
 
 msgctxt "RibbonModel|"
-msgid "Module missing"
-msgstr "Modül eksik"
-
-#, qt-format
-msgctxt "RibbonModel|"
-msgid ""
-"It seems the bundled module %1 wasn't correctly installed, and thus cannot "
-"be loaded.\n"
-"If you installed this version of JASP via an official installer let the JASP "
-"team know."
-msgstr ""
-"Görünüşe göre paketlenmiş modül %1 doğru bir şekilde yüklenmemiş ve bu "
-"nedenle yüklenemiyor.\n"
-"Bu JASP sürümünü resmi bir yükleyici aracılığıyla yüklediyseniz JASP ekibine "
-"bildirin."
-
-msgctxt "RibbonModel|"
 msgid "Execute R code in a console"
 msgstr "R kodunu bir konsolda yürütün"
 

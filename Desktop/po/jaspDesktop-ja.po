@@ -3055,23 +3055,6 @@ msgstr ""
 "い: <a href=\"http://%6\">%6</a></i><br>"
 
 msgctxt "RibbonModel|"
-msgid "Module missing"
-msgstr "モジュールがありません"
-
-#, qt-format
-msgctxt "RibbonModel|"
-msgid ""
-"It seems the bundled module %1 wasn't correctly installed, and thus cannot "
-"be loaded.\n"
-"If you installed this version of JASP via an official installer let the JASP "
-"team know."
-msgstr ""
-"同梱されているモジュール%1が正しくインストールされていないため、ロードできな"
-"いようです。\n"
-"このバージョンのJASPを公式インストーラーでインストールした場合は、JASPチーム"
-"にお知らせください。"
-
-msgctxt "RibbonModel|"
 msgid "Execute R code in a console"
 msgstr "Rコードをコンソールで実行"
 

@@ -3040,23 +3040,6 @@ msgid "Initializing module %1 failed"
 msgstr "Ошибка инициализации модуля %1"
 
 msgctxt "RibbonModel|"
-msgid "Module missing"
-msgstr "Модуль отсутствует"
-
-#, qt-format
-msgctxt "RibbonModel|"
-msgid ""
-"It seems the bundled module %1 wasn't correctly installed, and thus cannot "
-"be loaded.\n"
-"If you installed this version of JASP via an official installer let the JASP "
-"team know."
-msgstr ""
-"Похоже, что встроенный модуль %1 был неправильно установлен и поэтому не "
-"может быть загружен.\n"
-"Если вы установили эту версию JASP через официальный установщик, сообщите об "
-"этом команде JASP."
-
-msgctxt "RibbonModel|"
 msgid "Execute R code in a console"
 msgstr "Выполнить код R в командной строке"
 
