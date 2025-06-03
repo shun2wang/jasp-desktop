@@ -113,14 +113,16 @@ public:
 	QString				title()						const	{ return _title;					}
 	QString				info()						const	{ return _info;						}
 	QString				infoLabel()					const	{ return _infoLabel;				}
+	QString				fullLabel()					const	{ return (infoLabel().isEmpty() ? title() : infoLabel()).trimmed(); }
 	virtual bool		infoAddControlType()		const	{ return  false;					}
 	virtual bool		infoLabelIsHeader()			const	{ return  false;					}
 	virtual bool		infoLabelItalic()			const	{ return  false;					}
 
 	QString				toolTip()					const	{ return _toolTip;					}
-	virtual QString		generateMDHelp(int depth = 0)	const;
+	std::vector<JASPControl*> getMDSubItems()		const;
+	virtual QString		generateMDHelp(int depth = 0) const;
 	virtual QString		generateDoxygenHelp()		const;
-	virtual bool		hasInfo()					const;
+	virtual bool		hasInfoSomewhere()					const;
 	bool				isBound()					const	{ return _isBound;					}
 	bool				nameIsOptionValue()			const	{ return _nameIsOptionValue;		}
 	bool				indent()					const	{ return _indent;					}
@@ -159,7 +161,7 @@ public:
 	QVector<JASPControl::ParentKey>	getParentKeys();
 
 	static QString					ControlTypeToFriendlyString(ControlType controlType);
-	static QList<JASPControl*>		getChildJASPControls(const QQuickItem* item, bool removeUnecessaryGroups = false);
+	static QList<JASPControl*>		getChildJASPControls(const QQuickItem* item, bool collapseStructuralControls = false);
 
 	virtual void					setUp()										{}
 	void							setInitialized(const Json::Value& value = Json::nullValue);
@@ -178,6 +180,7 @@ public:
 
 	virtual QString					friendlyName() const;
 	void							addExplicitDependency();
+	bool							hasLabelOrInfo() const;
 
 public slots:
 	void	setControlType(			ControlType			controlType)		{ _controlType = controlType; }
@@ -271,7 +274,7 @@ protected:
 	void				_addExplicitDependency(const QVariant& depends);
 	bool				dependingControlsAreInitialized();
 	virtual void		_setInitialized(const Json::Value &value);
-	virtual bool		printLabelMD(QStringList& md, int depth)			const;
+	virtual QString		printLabelMD(int depth)								const;
 
 protected:
 	Set						_depends;
@@ -317,7 +320,6 @@ protected:
 	QVariant				_explicitDepends;
 	QString					_info,
 							_infoLabel;
-
 
 	static QMap<QQmlEngine*, QQmlComponent*>		_mouseAreaComponentMap;
 	static QByteArray								_mouseAreaDef;

@@ -49,7 +49,7 @@ public:
 	void				setUpModel()										override;
 	QString				generateMDHelp(int depth = 0)				const	override;
 	QString				generateDoxygenHelp()						const	override;
-	bool				hasInfo()									const	override;
+	bool				hasInfoSomewhere()									const	override;
 	void				setBoundValue(const Json::Value &value, bool emitChanges = true)	override;
 
 	const QString&		currentLabel()								const				{ return _currentLabel;			}

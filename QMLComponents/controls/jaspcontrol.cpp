@@ -44,8 +44,8 @@ JASPControl::JASPControl(QQuickItem *parent) : QQuickItem(parent)
 
 	connect(this, &JASPControl::titleChanged,			this, &JASPControl::helpMDChanged);
 	connect(this, &JASPControl::infoChanged,			this, &JASPControl::helpMDChanged);
-	connect(this, &JASPControl::visibleChanged,			this, &JASPControl::helpMDChanged);
-	connect(this, &JASPControl::visibleChildrenChanged,	this, &JASPControl::helpMDChanged);
+	//connect(this, &JASPControl::visibleChanged,			this, &JASPControl::helpMDChanged);
+	//connect(this, &JASPControl::visibleChildrenChanged,	this, &JASPControl::helpMDChanged);
 	connect(this, &JASPControl::backgroundChanged,		[this] () { if (!_focusIndicator)		setFocusIndicator(_background); });
 	connect(this, &JASPControl::infoChanged,			[this] () { if (_toolTip.isEmpty())	setToolTip(info());					});
 	connect(this, &JASPControl::toolTipChanged,			[this] () { setShouldStealHover(!_toolTip.isEmpty());					});
@@ -306,7 +306,7 @@ void JASPControl::clearControlError()
 		_form->clearControlError(this);
 }
 
-QList<JASPControl*> JASPControl::getChildJASPControls(const QQuickItem * item, bool removeUnecessaryGroups)
+QList<JASPControl*> JASPControl::getChildJASPControls(const QQuickItem * item, bool collapseStructuralControls)
 {
 	QList<JASPControl*> result;
 
@@ -321,10 +321,10 @@ QList<JASPControl*> JASPControl::getChildJASPControls(const QQuickItem * item, b
 
 		if (childControl)
 		{
-			if (removeUnecessaryGroups && childControl->controlType() == ControlType::GroupBox && childControl->title().isEmpty() && childControl->infoLabel().isEmpty() && childControl->info().isEmpty())
-				// If a Group has no label, title or info, then it is used probably for layout purpose, but to structure the controls is sub elements.
+			if (collapseStructuralControls && childControl->controlType() == ControlType::GroupBox && !childControl->hasLabelOrInfo())
+				// If a Group has no label, title or info, then it is used probably for layout purpose.
 				// Just skip it: this is necessary for generating properly the markdown help
-				result.append(getChildJASPControls(childControl));
+				result.append(getChildJASPControls(childControl, collapseStructuralControls));
 			else
 				result.push_back(childControl);
 		}
@@ -336,7 +336,7 @@ QList<JASPControl*> JASPControl::getChildJASPControls(const QQuickItem * item, b
 			result.push_back(expanderButton);
 		}
 		else
-			result.append(getChildJASPControls(childItem));
+			result.append(getChildJASPControls(childItem, collapseStructuralControls));
 	}
 
 	return result;
@@ -559,22 +559,23 @@ QString JASPControl::ControlTypeToFriendlyString(ControlType controlType)
 	}
 }
 
-bool JASPControl::hasInfo() const
+bool JASPControl::hasInfoSomewhere() const
 {
 	if(!info().isEmpty()) return true;
 
 	for (JASPControl* control : getChildJASPControls(_childControlsArea ? _childControlsArea : this))
-		if (control->hasInfo()) return true;
+		if (control->hasInfoSomewhere()) return true;
 
 	return false;
 }
 
-bool JASPControl::printLabelMD(QStringList& md, int depth) const
+QString JASPControl::printLabelMD(int depth) const
 {
-	QString label = (infoLabel().isEmpty() ? title() : infoLabel()).trimmed();
+	QString label = fullLabel();
 	if(label.isEmpty() && !infoAddControlType())
-		return false;
+		return QString();
 
+	QStringList md;
 	// Print the label as a header, in italic or in bold
 	if (infoLabelIsHeader())			md << "<h" << QString::number(depth + 3) << ">";
 	else if	(infoLabelItalic())			md << "*";
@@ -593,44 +594,52 @@ bool JASPControl::printLabelMD(QStringList& md, int depth) const
 		md << " ";
 	}
 
-	return true;
+	return md.join("");
+}
+
+bool JASPControl::hasLabelOrInfo() const
+{
+	return !fullLabel().isEmpty() || !info().isEmpty();
+}
+
+std::vector<JASPControl*> JASPControl::getMDSubItems() const
+{
+	std::vector<JASPControl*> MDSubItems;
+
+	for (JASPControl* childControl : getChildJASPControls(_childControlsArea ? _childControlsArea : this, true))
+	{
+		// In case of RadioButtonGroup, if at least one of the RadioButton has info, then all RadioButtons should be listed even if they don't have any info
+		if (childControl->hasInfoSomewhere() || (controlType() == ControlType::RadioButtonGroup && childControl->controlType() == ControlType::RadioButton))
+		{
+			std::vector<JASPControl*> MDGrandChilren = childControl->getMDSubItems();
+
+			if (!childControl->hasLabelOrInfo())
+				// The child does not have label nor info: just add its own children to the parent
+				MDSubItems.insert(MDSubItems.end(), MDGrandChilren.begin(), MDGrandChilren.end());
+			else
+				MDSubItems.push_back(childControl);
+		}
+	}
+
+	return MDSubItems;
 }
 
 QString JASPControl::generateMDHelp(int depth) const
 {
-	if (!hasInfo()) return "";
-		
-	QStringList childMDs, markdown;
+	std::vector<JASPControl*> MDSubItems = getMDSubItems();
+	QStringList markdown;
+	markdown << printLabelMD(depth) << info() << "\n";
 
-	for (JASPControl* childControl : getChildJASPControls(_childControlsArea ? _childControlsArea : this, true))
+	if (MDSubItems.size() == 1)
+		markdown << "\n" << QString{depth * 2, ' '} << MDSubItems[0]->generateMDHelp(depth + 1);
+	else if (MDSubItems.size() > 1)
 	{
-		QString childMD = childControl->generateMDHelp(depth + 1);
-		if (!childMD.isEmpty())
-			childMDs.push_back(childMD);
+		markdown << "\n"; // Before adding bullets, a new line is needed
+		for (const auto& childMD : MDSubItems)
+			markdown << QString{depth * 2, ' '} << "- " << childMD->generateMDHelp(depth + 1);
 	}
 
-	bool hasLabel = printLabelMD(markdown, depth);
-	markdown << info() << "\n";
-
-	if (infoLabelIsHeader() && !info().isEmpty())
-		markdown << "\n"; // Special case when a header has no info (a Section without info eg).
-
-	if (childMDs.length() == 1)
-		markdown << QString{depth * 2, ' '} << childMDs[0];
-	else
-	{
-		for (const QString& childMD : childMDs)
-		{
-			markdown << QString{depth * 2, ' '};
-			if (hasLabel)
-				markdown << "- "; // Add bullet list
-			markdown << childMD;
-			if (!hasLabel)
-				markdown << "\n"; // If no bullet list is used, markdown needs an extra '\n' to display a new line
-		}
-	}
-
-	return markdown.join("");;
+	return markdown.join("");
 }
 
 QString JASPControl::generateDoxygenHelp() const
@@ -858,4 +867,4 @@ void JASPControl::_setInitialized(const Json::Value &value)
 	_initialized = true;
 	_initializedWithValue = (value != Json::nullValue);
 	emit initializedChanged();
-}		
+}

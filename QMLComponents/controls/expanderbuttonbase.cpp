@@ -35,19 +35,33 @@ void ExpanderButtonBase::setUp()
 
 QString ExpanderButtonBase::generateMDHelp(int depth) const
 {
-	if (!hasInfo())
-		return "";
+	if (!hasInfoSomewhere())
+		return QString();
 
-	QString label = (infoLabel().isEmpty() ? title() : infoLabel()).trimmed();
-	// For sub-section, draw first a line, and reset the depth to 0.
-	if (label.isEmpty() || depth > 0)
-		return "\n---\n\n" + JASPControl::generateMDHelp(0);
+	QStringList markdown;
 
-	// Use collapsible section
-	return "<details>\n<summary><b>" + label + "</b></summary>\n" + JASPControl::generateMDHelp(0) + "\n</details>";
+	if (!useCollapsibleSection(depth))
+		// For sub-section, draw first a line, and reset the depth to 0.
+		markdown <<  "\n---\n\n";
+
+	markdown << JASPControl::generateMDHelp(0);
+
+	if (useCollapsibleSection(depth))
+		markdown << "\n</details>";
+
+	return markdown.join("");
 }
 
-bool ExpanderButtonBase::printLabelMD(QStringList &md, int depth) const
+QString ExpanderButtonBase::printLabelMD(int depth) const
 {
-	return depth == 0 || JASPControl::printLabelMD(md, depth);
+	if (useCollapsibleSection(depth))
+		// Use collapsible section
+		return "<details>\n<summary><b>" + fullLabel() + "</b></summary>\n";
+	else
+		return JASPControl::printLabelMD(depth);
+}
+
+bool ExpanderButtonBase::useCollapsibleSection(int depth) const
+{
+	return depth == 0 && !fullLabel().isEmpty();
 }
