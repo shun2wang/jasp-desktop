@@ -97,14 +97,14 @@ Engine::~Engine()
 	_channel = nullptr;
 }
 
+bool Engine::parentAlive()
+{
+	return _channel->jaspAlive();
+}
+
 void Engine::run()
 {
-#ifdef _WIN32
-	bool jaspAlive = true;
-	while(_engineState != engineState::stopped && jaspAlive)
-#else 
-	while(_engineState != engineState::stopped && ProcessInfo::isParentRunning())
-#endif
+	do
 	{
 		static bool initDone = false;
 		if(!initDone && _engineState == engineState::initializing) //Do this first, otherwise receiveMessages possibly triggers some other functions
@@ -127,11 +127,8 @@ void Engine::run()
 		default:
 			Log::log() << "Engine got stuck in engineState " << engineStateToString(_engineState) << " which is not supposed to happen..." << std::endl;
 		}
-
-#ifdef _WIN32
-		jaspAlive = _channel->jaspAlive();
-#endif
 	}
+	while(_engineState != engineState::stopped && parentAlive());
 
 	if(_engineState == engineState::stopped)
 		Log::log() << "Engine leaving mainloop after having been asked to stop." << std::endl;
@@ -201,7 +198,7 @@ bool Engine::receiveMessages(int timeout)
 			printData["GITHUB_PAT"] = "********";
 		}
 		
-		Log::log() << "Received: '" << printData.toStyledString() << "' so now clearing my send buffer" << std::endl;
+		//Log::log() << "Received: '" << printData.toStyledString() << "' so now clearing my send buffer" << std::endl;
 
 		sendString("");
 

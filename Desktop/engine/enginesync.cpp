@@ -260,7 +260,7 @@ EngineRepresentation * EngineSync::createNewEngine(bool addToEngines, int overri
 		connect(engine,						&EngineRepresentation::moduleLoadingFailed,				this,					&EngineSync::moduleLoadingFailed										);
 		connect(engine,						&EngineRepresentation::logCfgReplyReceived,				this,					&EngineSync::logCfgReplyReceived										);
 		connect(engine,						&EngineRepresentation::plotEditorRefresh,				this,					&EngineSync::plotEditorRefresh											);
-		connect(engine,						&EngineRepresentation::requestEngineRestartAfterCrash,	this,					&EngineSync::restartEngineAfterCrash									);
+		connect(engine,						&EngineRepresentation::requestEngineRestartAfterCrash,	this,					&EngineSync::restartEngineAfterCrash,			Qt::QueuedConnection	);
 		connect(engine,						&EngineRepresentation::registerForModule,				this,					&EngineSync::registerEngineForModule									);
 		connect(engine,						&EngineRepresentation::unregisterForModule,				this,					&EngineSync::unregisterEngineForModule									);
 		connect(engine,						&EngineRepresentation::moduleHasEngine,					this,					&EngineSync::moduleHasEngine											);
@@ -309,14 +309,19 @@ void EngineSync::start(int )
 	//Once it is assigned to a module it won't be possible to use it for another module until it is restarted.
 	createNewEngine();
 
-	QTimer	*timerProcess	= new QTimer(this),
-			*timerBeat		= new QTimer(this);
+	_timerProcess	= new QTimer(this);
+	_timerBeat		= new QTimer(this);
 
-	connect(timerProcess,	&QTimer::timeout, this, &EngineSync::process,				Qt::QueuedConnection);
-	connect(timerBeat,		&QTimer::timeout, this, &EngineSync::heartbeatTempFiles,	Qt::QueuedConnection);
+	connect(_timerProcess,	&QTimer::timeout, this, &EngineSync::process,				Qt::QueuedConnection);
+	connect(_timerBeat,		&QTimer::timeout, this, &EngineSync::heartbeatTempFiles,	Qt::QueuedConnection);
 
-	timerProcess->start(50);
-	timerBeat->start(50);
+	_timerProcess->start(100);
+	_timerBeat->start(50);
+}
+
+void EngineSync::killProcessTimer()
+{
+	_timerProcess->stop();
 }
 
 void EngineSync::restartEngines()
@@ -335,6 +340,8 @@ void EngineSync::restartEngines()
 
 void EngineSync::restartEngineAfterCrash(EngineRepresentation * engine)
 {
+	Log::log() << "restartEngineAfterCrash(" << engine->channelNumber() << ")" << std::endl;
+	
 	engine->restartEngine(startSlaveProcess(engine->channelNumber()));
 	logCfgRequest();
 }
@@ -1070,8 +1077,11 @@ void EngineSync::resumeEngines()
 	_stopProcessing = false;
 	
 	while(!allEnginesResumed())
-		for (auto * engine : _engines)
+		for(EngineRepresentation * engine : _engines)
+		{
 			engine->processReplies();
+			startStoppedEngine(engine);
+		}
 }
 
 bool EngineSync::allEnginesStopped(std::set<EngineRepresentation *> these)

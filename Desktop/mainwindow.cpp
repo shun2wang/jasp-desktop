@@ -205,10 +205,20 @@ This setting can always be changed in the Interface Preferences.)MultiLine"),
 MainWindow::~MainWindow()
 {
 	Log::log() << "MainWindow::~MainWindow()" << std::endl;
+	
+	_engineSync->killProcessTimer();
 
-	DatabaseInterface::closeInterfaces();
+	try
+	{
+		DatabaseInterface::closeInterfaces();
+	}
+	catch(...) {}
 
-	_analyses->destroyAllForms();
+	try
+	{
+		_analyses->destroyAllForms();
+	}
+	catch(...) {}
 
 	_singleton = nullptr;
 
@@ -229,11 +239,6 @@ MainWindow::~MainWindow()
 		_odm->clearAuthenticationOnExit(OnlineDataManager::OSF);
 
 		delete _resultsJsInterface;
-
-		if (_package->hasDataSet())
-			_package->reset(false);
-
-		//delete _engineSync; it will be deleted by Qt!
 	}
 	catch(...)	{}
 }
@@ -386,6 +391,7 @@ void MainWindow::makeConnections()
 	connect(_package,				&DataSetPackage::checkForDependentColumnsToBeSent,	_computedColumnsModel,	&ComputedColumnModel::checkForDependentColumnsToBeSentSlot	);
 	connect(_package,				&DataSetPackage::datasetChanged,					_columnsModel,			&ColumnsModel::datasetChanged								);
 	connect(_package,				&DataSetPackage::isModifiedChanged,					this,					&MainWindow::packageChanged									);
+	connect(_package,				&DataSetPackage::isModifiedChanged,					_fileMenu,				&FileMenu::workspaceModified								);
 	connect(_package,				&DataSetPackage::windowTitleChanged,				this,					&MainWindow::windowTitleChanged								);
 	connect(_package,				&DataSetPackage::columnDataTypeChanged,				_computedColumnsModel,	&ComputedColumnModel::recomputeColumn						);
 	connect(_package,				&DataSetPackage::checkDoSync,						_loader,				&AsyncLoader::checkDoSync,									Qt::DirectConnection); //Force DirectConnection because the signal is called from Importer which means it is running in AsyncLoaderThread...
@@ -406,7 +412,7 @@ void MainWindow::makeConnections()
 	connect(_engineSync,			&EngineSync::computeColumnSucceeded,				_computedColumnsModel,	&ComputedColumnModel::computeColumnSucceeded				);
 	connect(_engineSync,			&EngineSync::computeColumnRemoved,					_computedColumnsModel,	&ComputedColumnModel::computeColumnRemoved					);
 	connect(_engineSync,			&EngineSync::computeColumnFailed,					_computedColumnsModel,	&ComputedColumnModel::computeColumnFailed					);
-	connect(_engineSync,			&EngineSync::engineTerminated,						this,					&MainWindow::fatalError,									Qt::QueuedConnection); //To give the process some time to realize it has crashed or something
+	connect(_engineSync,			&EngineSync::engineTerminated,						this,					&MainWindow::fatalError										);
 	connect(_engineSync,			&EngineSync::columnDataTypeChanged,					_columnsModel,			&ColumnsModel::columnTypeChanged							);
 	connect(_engineSync,			&EngineSync::refreshAllPlotsExcept,					_analyses,				&Analyses::refreshAllPlots									);
 	connect(_engineSync,			&EngineSync::processNewFilterResult,				_filterModel,			&FilterModel::processFilterResult							);
@@ -1008,7 +1014,11 @@ void MainWindow::refreshPlotsHandler(bool askUserForRefresh)
 void MainWindow::checkEmptyWorkspace()
 {
 	if (!analysesAvailable() && !dataAvailable())
-		_fileMenu->close();
+	{
+		if(DataSetPackage::pkg()->hasAnalysesWithoutData())
+			_fileMenu->close();
+
+	}
 }
 
 void MainWindow::analysisResultsChangedHandler(Analysis *analysis)
@@ -1134,12 +1144,34 @@ void MainWindow::connectFileEventCompleted(FileEvent * event)
 	connect(event, &FileEvent::completed, this, &MainWindow::dataSetIOCompleted, Qt::QueuedConnection);
 }
 
+bool MainWindow::startDetached(const QString & applicationPath, const QStringList & args) const
+{
+	QProcess detachMe;
+
+	detachMe.setProgram(applicationPath);
+	detachMe.setArguments(args);
+#ifdef __unix__
+	detachMe.setUnixProcessParameters(QProcess::UnixProcessFlag::IgnoreSigPipe | QProcess::UnixProcessFlag::CreateNewSession | QProcess::UnixProcessFlag::ResetSignalHandlers | QProcess::UnixProcessFlag::DisconnectControllingTerminal);
+#endif
+	detachMe.setStandardErrorFile(QProcess::nullDevice());
+	detachMe.setStandardInputFile(QProcess::nullDevice());
+	detachMe.setStandardOutputFile(QProcess::nullDevice());
+
+	qint64 pidResult;
+	bool worked = detachMe.startDetached(&pidResult);
+
+
+	Log::log() << (worked ? "Started" : "Failed to start" ) << " application " << applicationPath << " with args: (" << args.join(", ") << ") and got pid: " << pidResult << std::endl;
+
+	return worked;
+}
+
 void MainWindow::dataSetIORequestHandler(FileEvent *event)
 {
 	if (event->operation() == FileEvent::FileNew)
 	{
 		if (_package->isLoaded())
-			QProcess::startDetached(QCoreApplication::applicationFilePath(), QStringList("--newData"));
+			MainWindow::startDetached(QCoreApplication::applicationFilePath(), QStringList("--newData"));
 		else
 			showNewData();
 	}
@@ -1152,8 +1184,8 @@ void MainWindow::dataSetIORequestHandler(FileEvent *event)
 
 			// begin new instance
 			
-			if(event->isDatabase())		QProcess::startDetached(QCoreApplication::applicationFilePath(), QStringList(tq(event->databaseStr())));
-			else						QProcess::startDetached(QCoreApplication::applicationFilePath(), QStringList(event->path()));
+			if(event->isDatabase())		MainWindow::startDetached(QCoreApplication::applicationFilePath(), QStringList(tq(event->databaseStr())));
+			else						MainWindow::startDetached(QCoreApplication::applicationFilePath(), QStringList(event->path()));
 		}
 		else
 		{
@@ -1198,6 +1230,8 @@ void MainWindow::dataSetIORequestHandler(FileEvent *event)
 	}
 	else if (event->operation() == FileEvent::FileClose)
 	{
+		connectFileEventCompleted(event);
+
 		if (_package->isModified() && (dataAvailable() || analysesAvailable()))
 		{
 			QString title = windowTitle();
@@ -1208,24 +1242,20 @@ void MainWindow::dataSetIORequestHandler(FileEvent *event)
 			default:
 			case MessageForwarder::DialogResponse::Cancel:
 				event->setComplete(false);
-				dataSetIOCompleted(event);
 				return;
 
 			case MessageForwarder::DialogResponse::Save:
 				event->chain(_fileMenu->save());
-				connectFileEventCompleted(event);
 				break;
 
 			case MessageForwarder::DialogResponse::Discard:
 				event->setComplete(true);
-				dataSetIOCompleted(event);
 				break;
 			}
 		}
 		else
 		{
 			event->setComplete();
-			dataSetIOCompleted(event);
 		}
 	}
 }
@@ -1375,11 +1405,11 @@ void MainWindow::dataSetIOCompleted(FileEvent *event)
 			_package->dbDelete();
 			_package->reset(false);
 			_ribbonModel->showStatistics();
+			_fileMenu->buttonsForEmptyWorkspace();
 
 			if(!_applicationExiting)
 				_engineSync->cleanRestart();
-
-			if (_applicationExiting)	
+			else
 				emit exitSignal();
 		}
 		else
@@ -1572,11 +1602,14 @@ void MainWindow::fatalError()
 	if (exiting == false)
 	{
 		exiting = true;
+		
+		_engineSync->killProcessTimer();
+		
 		MessageForwarder::DialogResponse response = MessageForwarder::showYesNoCancel(
 					tr("Error"), 
 					tr("JASP has experienced an unexpected internal error:\n%1").arg(_fatalError) + "\n\n" +
 					tr("JASP had a serious error and cannot calculate anymore.\n\nWe would be grateful if you could report this error to the JASP team."), 
-					tr("Report"), tr("Salvage"), tr("Exit"));
+					tr("Report"), tr("Salvage"), tr("Exit"), QMessageBox::Icon::Critical);
 		
 		switch(response)
 		{
@@ -1782,7 +1815,7 @@ void MainWindow::clearModulesFoldersUser()
 /* the following does not seem to work: the new process crashes immediately... 
 void MainWindow::restartJASP()
 {
-	QProcess::startDetached(QCoreApplication::applicationFilePath());
+	MainWindow::startDetached(QCoreApplication::applicationFilePath());
 	QApplication::quit();
 }*/
 
@@ -1838,7 +1871,7 @@ void MainWindow::startDataEditor(QString path)
 #else
 		args = {path};
 #endif
-		if (!QProcess::startDetached(appname, args))
+		if (!MainWindow::startDetached(appname, args))
 			MessageForwarder::showWarning(tr("Start Editor"), tr("Unable to start the editor : %1. Please check your editor settings in the preference menu.").arg(appname));
 	}
 	else

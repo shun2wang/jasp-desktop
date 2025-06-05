@@ -128,23 +128,15 @@ FileEvent *FileMenu::newData()
 
 FileEvent *FileMenu::save()
 {
-	FileEvent *event = nullptr;
-
 	if (_currentFileType != Utils::FileType::jasp || DataSetPackage::pkg()->currentFileIsExample())
+		return saveAs();
+
+	FileEvent *event = new FileEvent(this, FileEvent::FileSave);
+	if (!event->setPath(_currentFilePath))
 	{
-		event = saveAs();
-		if (event->isCompleted())
-			return event;
-	}
-	else
-	{
-		event = new FileEvent(this, FileEvent::FileSave);
-		if (!event->setPath(_currentFilePath))
-		{
-			MessageForwarder::showWarning(tr("File Types"), event->getLastError());
-			event->setComplete(false, tr("Failed to open file from OSF"));
-			return event;
-		}
+		MessageForwarder::showWarning(tr("File Types"), event->getLastError());
+		event->setComplete(false, tr("Failed to open file from OSF"));
+		return event;
 	}
 
 	dataSetIORequestHandler(event);
@@ -260,6 +252,16 @@ void FileMenu::enableButtonsForOpenedWorkspace(bool enableSaveButton)
 	_actionButtons->setEnabled(ActionButtons::Close,			true);
 }
 
+void FileMenu::buttonsForEmptyWorkspace()
+{
+	_actionButtons->setEnabled(ActionButtons::Save,				false);
+	_actionButtons->setEnabled(ActionButtons::SaveAs,			false);
+	_actionButtons->setEnabled(ActionButtons::ExportResults,	false);
+	_actionButtons->setEnabled(ActionButtons::ExportData,		false);
+	_actionButtons->setEnabled(ActionButtons::SyncData,			false);
+	_actionButtons->setEnabled(ActionButtons::Close,			false);
+}
+
 void FileMenu::dataSetIOCompleted(FileEvent *event)
 {
 	if (event->operation() == FileEvent::FileSave || event->operation() == FileEvent::FileOpen)
@@ -289,7 +291,7 @@ void FileMenu::dataSetIOCompleted(FileEvent *event)
 				)
 					DataSetPackage::pkg()->setSynchingExternally(true);
 			}
-			
+
 			// all this stuff is a hack
 			QFileInfo info(event->path());
 			_computer->setFileName(info.completeBaseName());
@@ -321,16 +323,11 @@ void FileMenu::dataSetIOCompleted(FileEvent *event)
 		{
 		case FileEvent::FileOpen:
 		case FileEvent::FileSave:
-			enableButtonsForOpenedWorkspace((!event->isReadOnly() && event->type() == Utils::FileType::jasp) || event->operation() == FileEvent::FileSave);
+			enableButtonsForOpenedWorkspace((!event->isReadOnly() && event->type() == Utils::FileType::jasp) && (event->operation() == FileEvent::FileOpen && DataSetPackage::pkg()->currentFileIsExample() ));
 			break;
 
 		case FileEvent::FileClose:
-			_actionButtons->setEnabled(ActionButtons::Save,				false);
-			_actionButtons->setEnabled(ActionButtons::SaveAs,			false);
-			_actionButtons->setEnabled(ActionButtons::ExportResults,	false);
-			_actionButtons->setEnabled(ActionButtons::ExportData,		false);
-			_actionButtons->setEnabled(ActionButtons::SyncData,			false);
-			_actionButtons->setEnabled(ActionButtons::Close,			false);
+			buttonsForEmptyWorkspace();
 			setMode(FileEvent::FileOpen);
 			break;
 
@@ -376,6 +373,12 @@ void FileMenu::analysisAdded(Analysis *analysis)
 	_actionButtons->setEnabled(ActionButtons::Close,			true);
 	_actionButtons->setEnabled(ActionButtons::SaveAs,			true);
 	_actionButtons->setEnabled(ActionButtons::ExportResults,	true);
+}
+
+void FileMenu::workspaceModified()
+{
+	if(DataSetPackage::pkg()->isLoaded())
+		_actionButtons->setEnabled(ActionButtons::Save, DataSetPackage::pkg()->isModified());
 }
 
 void FileMenu::setSyncFile(FileEvent *event)
