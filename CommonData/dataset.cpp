@@ -84,7 +84,10 @@ void DataSet::endBatchedToDB(std::function<void(float)> progressCallback, Column
 	
 	if(_writeBatchedToDBDepth == 0)
 	{
-		db().dataSetBatchedValuesUpdate(this, columns, [&progressCallback](float f){ progressCallback(0.75 + (f * 0.25));});
+		if(columns.size())
+			db().dataSetBatchedValuesUpdate(this, columns, [&progressCallback](float f){ progressCallback(0.75 + (f * 0.25));});
+		else
+			progressCallback(1);
 		incRevision(); //Should trigger reload at engine end
 	}
 }
