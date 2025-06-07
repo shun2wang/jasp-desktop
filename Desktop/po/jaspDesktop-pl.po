@@ -5786,3 +5786,8 @@ msgstr "Kontynuuj"
 msgctxt "QObject|"
 msgid "Exit"
 msgstr "Wyjście"
+
+#, qt-format
+msgctxt "ComboBoxBase|"
+msgid "Possible values are: %1"
+msgstr ""
