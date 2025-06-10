@@ -61,7 +61,7 @@ You can download and install Homebrew using the following command, which might p
 After installing Homebrew, you can start install the other requirements by running the following command in the Terminal.
 
 ```bash
-brew install conan cmake bison flex pkg-config automake autoconf create-dmg parallel
+brew install conan cmake bison flex pkg-config automake autoconf create-dmg parallel ninja
 ```
 
 > 💡 Optionally, you can install the Qt from the command line, and build JASP using that, e.g., `brew install qt`.
