@@ -459,25 +459,14 @@ else()
         message(CHECK_START "--- Signing  ${FILE_SHORT_PATH}")
 
         while(${SIGNING_RESULT} MATCHES "timeout")
-          if(RUNTIMEHARDENING)
-            execute_process(
-              COMMAND_ECHO STDOUT
-              #ERROR_QUIET OUTPUT_QUIET
-              TIMEOUT 30
-              WORKING_DIRECTORY ${PATH}
-              COMMAND codesign --deep --force ${CODESIGN_TIMESTAMP_FLAG} --sign ${APPLE_CODESIGN_IDENTITY} --options runtime "${FILE}"
-              RESULT_VARIABLE SIGNING_RESULT
-              OUTPUT_VARIABLE SIGNING_OUTPUT)
-          else()
-            execute_process(
-              COMMAND_ECHO STDOUT
-              #ERROR_QUIET OUTPUT_QUIET
-              TIMEOUT 30
-              WORKING_DIRECTORY ${PATH}
-              COMMAND codesign --deep --force ${CODESIGN_TIMESTAMP_FLAG} --sign ${APPLE_CODESIGN_IDENTITY}   "${FILE}"
-              RESULT_VARIABLE SIGNING_RESULT
-              OUTPUT_VARIABLE SIGNING_OUTPUT)
-          endif()
+	    execute_process(
+	      COMMAND_ECHO STDOUT
+	      #ERROR_QUIET OUTPUT_QUIET
+	      TIMEOUT 30
+	      WORKING_DIRECTORY ${PATH}
+	      COMMAND codesign --deep --force ${CODESIGN_TIMESTAMP_FLAG} --sign ${APPLE_CODESIGN_IDENTITY}   "${FILE}"
+	      RESULT_VARIABLE SIGNING_RESULT
+	      OUTPUT_VARIABLE SIGNING_OUTPUT)
         endwhile()
 
         if(SIGNING_RESULT STREQUAL "0")
