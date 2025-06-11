@@ -37,6 +37,7 @@
 		"jaspSurvival",
 		"jaspSummaryStatistics",
 		"jaspTimeSeries",
-		"jaspVisualModeling"
+		"jaspVisualModeling",
+		"jaspTestModule"
     ]
     }
