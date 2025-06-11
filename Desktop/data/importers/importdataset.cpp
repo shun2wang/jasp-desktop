@@ -1,3 +1,4 @@
+#include "utilities/qutils.h"
 #include "importdataset.h"
 #include "timers.h"
 #include "appinfo.h"
@@ -26,7 +27,9 @@ size_t ImportDataSet::columnCount() const
 const string & ImportDataSet::description() const
 {
 	static std::string localCache;
-	localCache = "Originally imported into " + AppInfo::getShortDesc()+ " on " + Utils::currentDateTime();	
+	QString desc = tr("Originally imported into %1 on %2").arg(tq(AppInfo::getShortDesc())).arg(tq(Utils::currentDateTime()));
+	localCache = fq(desc);
+	
 	return localCache;
 }
 
