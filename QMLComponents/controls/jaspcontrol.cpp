@@ -585,7 +585,7 @@ QString JASPControl::printLabelMD(int depth) const
 
 	md << label;
 
-	if (infoLabelIsHeader())			md << "</h" << QString::number(depth + 3) << ">\n";
+	if (infoLabelIsHeader())			md << "</h" << QString::number(depth + 3) << ">";
 	else
 	{
 		md << (infoLabelItalic() ? "*" : "**");
