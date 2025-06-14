@@ -5816,3 +5816,8 @@ msgstr "Sortie"
 msgctxt "ComboBoxBase|"
 msgid "Possible values are: %1"
 msgstr ""
+
+#, qt-format
+msgctxt "ImportDataSet|"
+msgid "Originally imported into %1 on %2"
+msgstr ""
