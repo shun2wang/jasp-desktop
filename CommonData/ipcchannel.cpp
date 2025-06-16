@@ -224,7 +224,7 @@ bool IPCChannel::jaspAlive()
 	
 	if(Utils::currentSeconds() - _lastHeartBeatTimestamp > _maxHeartbeatDiffS)
 	{
-		Log::log() << "heartbeat time limit exceeded" << std::endl;
+		Log::log() << "heartbeat time limit exceeded, last timestamp was from " << (Utils::currentSeconds() - _lastHeartBeatTimestamp) << " seconds ago. Heartbeat file is at '" << _jaspHeartBeatPath << "'."  << std::endl;
 		return false;
 	}
 
