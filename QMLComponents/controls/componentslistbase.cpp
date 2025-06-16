@@ -43,10 +43,22 @@ void ComponentsListBase::bindTo(const Json::Value& value)
 {
 	BoundControlBase::bindTo(value);
 
-	Terms terms;
-	ListModel::RowControlsValues allControlValues;
+	Terms::RelatedValuesPerTerm allControlValues;
+	Terms	terms(value, Json::nullValue, fq(_optionKeyValue), fq(_optionKeyLabel), allControlValues),
+			sourceTerms = _termsModel->getSourceTerms();
 
-	_readTableValue(value, fq(_optionKeyValue), fq(_optionKeyLabel), containsInteractions(), terms, allControlValues, _termsModel->getSourceTerms());
+	if (sourceTerms.size() > 0)
+	{
+		for (Term& term : terms)
+		{
+			int termInd = sourceTerms.indexOfValue(term);
+			if (termInd >= 0)
+			{
+				term.setTypes(sourceTerms[termInd].types());
+				term.setLabel(sourceTerms[termInd].label());
+			}
+		}
+	}
 
 	_termsModel->initTerms(terms, allControlValues);
 }
@@ -214,7 +226,8 @@ void ComponentsListBase::termsChangedHandler()
 {
 	JASPListControl::termsChangedHandler();
 
-	_setTableValue(_termsModel->terms(), _termsModel->getTermsWithComponentValues(), fq(_optionKeyValue), fq(_optionKeyLabel), containsInteractions(), containsVariables());
+	setBoundValue(_termsModel->terms().getOptionsWithRelatedValues(_termsModel->getTermsWithComponentValues(), fq(_optionKeyValue), fq(_optionKeyLabel), containsInteractions(), containsVariables()));
+
 	bindOffsets();
 	emit controlNameXOffsetMapChanged();
 }
@@ -310,9 +323,9 @@ QList<QVariant> ComponentsListBase::controlNameXOffsetMap() const
 	return result;
 }
 
-Json::Value ComponentsListBase::getJsonFromComponentValues(const Terms& terms, const ListModel::RowControlsValues &termsWithComponentValues)
+Json::Value ComponentsListBase::getJsonFromComponentValues(const Terms& terms, const Terms::RelatedValuesPerTerm &termsWithComponentValues)
 {
-	return _createTableOption(terms, termsWithComponentValues, fq(_optionKeyValue), fq(_optionKeyLabel), containsInteractions(), containsVariables());
+	return terms.getOptionsWithRelatedValues(termsWithComponentValues, fq(_optionKeyValue), fq(_optionKeyLabel), containsInteractions(), containsVariables());
 }
 
 void ComponentsListBase::addItemHandler()
@@ -321,7 +334,7 @@ void ComponentsListBase::addItemHandler()
 	QString newItemValue = _makeUnique(_newItemValue, _termsModel->terms().values());
 	QString newItemLabel = _makeUnique(_newItemLabel, _termsModel->terms().labels());
 	newTerms.add(Term(newItemValue, newItemLabel));
-	ListModel::RowControlsValues rowValues;
+	Terms::RelatedValuesPerTerm rowValues;
 
 	if (_duplicateWhenAdding)
 	{

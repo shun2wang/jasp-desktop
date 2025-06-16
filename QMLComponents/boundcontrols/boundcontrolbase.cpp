@@ -117,65 +117,6 @@ std::string BoundControlBase::getName() const
 	return fq(_control->name());
 }
 
-void BoundControlBase::_readTableValue(const Json::Value &value, const std::string& keyValue, const std::string& keyLabel, bool hasMultipleTerms, Terms& terms, ListModel::RowControlsValues& allControlValues, const Terms& sourceTerms)
-{
-	for (const Json::Value& row : value)
-	{
-		Term term(row, keyValue, keyLabel);
-		if (term.size() > 0)
-		{
-			int termInd = sourceTerms.indexOfValue(term);
-			if (termInd >= 0)
-			{
-				term.setTypes(sourceTerms[termInd].types());
-				term.setLabel(sourceTerms[termInd].label());
-			}
-			terms.add(term);
-
-			QMap<QString, Json::Value> controlMap;
-			for (auto itr = row.begin(); itr != row.end(); ++itr)
-			{
-				const std::string& name = itr.key().asString();
-				if (name != keyValue)
-					controlMap[tq(name)] = *itr;
-			}
-
-			allControlValues[term.value()] = controlMap;
-		}
-	}
-}
-
-Json::Value BoundControlBase::_createTableOption(const Terms& terms, const ListModel::RowControlsValues& componentValuesMap, const std::string& keyValue, const std::string& keyLabel, bool hasInteraction, bool keyHasVariables)
-{
-	Json::Value result(Json::arrayValue);
-
-	for (const Term& term : terms)
-	{
-		QMap<QString, Json::Value> componentValues = componentValuesMap[term.value()];
-
-		Json::Value rowValues(Json::objectValue);
-
-		rowValues[keyValue] = term.toJson(hasInteraction, keyHasVariables);
-		if (!keyLabel.empty())
-			rowValues[keyLabel] = fq(term.label());
-
-		QMapIterator<QString, Json::Value> it2(componentValues);
-		while (it2.hasNext())
-		{
-			it2.next();
-			rowValues[fq(it2.key())] = it2.value();
-		}
-		result.append(rowValues);
-	}
-
-	return result;
-}
-
-void BoundControlBase::_setTableValue(const Terms& terms, const ListModel::RowControlsValues& componentValuesMap, const std::string& keyValue, const std::string& keyLabel, bool hasInteraction, bool keyHasVariables)
-{
-	setBoundValue(_createTableOption(terms, componentValuesMap, keyValue, keyLabel, hasInteraction, keyHasVariables));
-}
-
 bool BoundControlBase::_isValueWithTypes(const Json::Value &value) const
 {
 	return value.isObject() && value.isMember("types") && value.isMember("value");
