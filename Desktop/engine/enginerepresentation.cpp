@@ -848,10 +848,8 @@ void EngineRepresentation::sendPauseEngine()
 
 void EngineRepresentation::resumeEngine(bool setResuming)
 {
-	if (_engineState == engineState::resuming || _engineState == engineState::idle )
-		return;
-
-	if(_engineState != engineState::paused && _engineState != engineState::stopped && _engineState != engineState::initializing)
+	
+	if(!(_engineState == engineState::resuming || _engineState == engineState::idle) && _engineState != engineState::paused && _engineState != engineState::stopped && _engineState != engineState::initializing)
 		throw unexpectedEngineReply("Attempt to resume engine #" + std::to_string(channelNumber()) + " made but it isn't paused, initializing or stopped");
 
 	if(setResuming)

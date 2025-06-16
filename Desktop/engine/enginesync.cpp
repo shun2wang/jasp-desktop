@@ -1075,7 +1075,8 @@ void EngineSync::resumeEngines()
 		for(EngineRepresentation * engine : _engines)
 		{
 			engine->processReplies();
-			startStoppedEngine(engine);
+			if(!engine->jaspEngineStillRunning())
+				startStoppedEngine(engine);
 		}
 }
 
