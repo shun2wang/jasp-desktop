@@ -3,7 +3,7 @@
 {"url" : "https://repo.jasp-stats.org/bundles/Windows-x86_64/jaspMetaAnalysis.JASPModule",            "checksum" : "fc36ffc380b68ca9b31b4751c48e78d1902840dd94389bb073c8ab98e1de6cb7"},
 {"url" : "https://repo.jasp-stats.org/bundles/Windows-x86_64/jaspAcceptanceSampling.JASPModule",      "checksum" : "adc997e595ca60bd106811d4df77b4e62b9217b8e658435eae6a956580ba3cdb"},
 {"url" : "https://repo.jasp-stats.org/bundles/Windows-x86_64/jaspSummaryStatistics.JASPModule",       "checksum" : "b84ca34a4407185d6023516ab2ba2a6d168ba1edc7bdeda4a6271d5d7ac0c1cb"},
-{"url" : "https://repo.jasp-stats.org/bundles/Windows-x86_64/jaspPower.JASPModule",                   "checksum" : "f7d1152a8594fee600a684251f5fb79019ecd5ecae4d45feb0112dab37fe2aa1"},
+{"url" : "https://repo.jasp-stats.org/bundles/Windows-x86_64/jaspPower.JASPModule",                   "checksum" : "b1419b06d793bccbd0af79bd7e67bc5224e22d2deed42358d6c72ac360aef3ce"},
 {"url" : "https://repo.jasp-stats.org/bundles/Windows-x86_64/jaspTTests.JASPModule",                  "checksum" : "123948d3fae3d502370b89a88f73a373e6a1193ed05121bac389d7f822cc35d5"},
 {"url" : "https://repo.jasp-stats.org/bundles/Windows-x86_64/jaspCircular.JASPModule",                "checksum" : "bec61be6b11c63c6538f44e41576fdb6f0f20a962011ebfe130d6a3c7d40b6fa"},
 {"url" : "https://repo.jasp-stats.org/bundles/Windows-x86_64/jaspQualityControl.JASPModule",          "checksum" : "56a1033a4cc4c616456168f84ff3435123992f295bc3049710c3fbe6bff9e8d3"},
