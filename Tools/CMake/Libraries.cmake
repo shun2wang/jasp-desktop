@@ -219,6 +219,26 @@ if(LINUX)
     )
   endif()
 
+  # ---- librdata ----
+  message(CHECK_START "Looking for `librdata`")
+    set(LIBRDATA_INCLUDE_DIRS /usr/include/ /usr/include/rdata /usr/local/include /usr/local/include/rdata /app/include)
+    set(LIBRDATA_LIBRARY_DIRS /usr/local/lib /usr/lib /app/lib64 /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu)
+
+  message(CHECK_START "Looking for librdata.so")
+  find_library(LIBRDATA_LIBRARIES librdata.so
+            HINTS ${LIBRDATA_LIBRARY_DIRS} REQUIRED)
+
+  if(EXISTS ${LIBRDATA_LIBRARIES})
+    message(CHECK_PASS "found")
+    message(STATUS "  ${LIBRDATA_LIBRARIES}")
+  else()
+    message(CHECK_FAIL "not found")
+    message(
+      FATAL_ERROR
+        "librdata is required for building on Linux(e.g. librdata-dev on debian/ubuntu), please follow the build instruction before you continue."
+    )
+  endif()
+
   find_package(PkgConfig)
   #pkg_check_modules(_PKGCONFIG_LIB_JSONCPP REQUIRED jsoncpp>=1.9)
 
@@ -230,6 +250,7 @@ if(APPLE)
 
   find_package(Brotli 1.0.9 REQUIRED)
   find_package(freexl 2.0.99 REQUIRED)
+  find_package(librdata REQUIRED)
 
 endif()
 
@@ -266,7 +287,8 @@ if(WIN32)
 
   if(EXISTS ${RTOOLS_LIBREADSTAT_H})
     message(CHECK_PASS "found")
-    message(STATUS "  ${RTOOLS_LIBREADSTAT_H}")
+    message(STATUS "Now copy ${RTOOLS_LIBREADSTAT_H} to source directory.")
+    configure_file("${RTOOLS_LIBREADSTAT_H}" "${CMAKE_SOURCE_DIR}/Desktop/data/importers/readstat/readstat.h" COPYONLY)
   else()
     message(CHECK_FAIL "not found")
     message(
@@ -292,6 +314,62 @@ if(WIN32)
         "ReadStat is required for building on Windows, please follow the build instruction before you continue."
     )
   endif()
+
+    # librdata
+    message(CHECK_START "Looking for librdata.dll.a")
+    find_file(
+      RTOOLS_LIBRDATA_DLL_A
+      NAMES librdata.dll.a
+      PATHS ${RTOOLS_PATH}/lib
+      NO_DEFAULT_PATH)
+  
+    if(EXISTS ${RTOOLS_LIBRDATA_DLL_A})
+      message(CHECK_PASS "found")
+      message(STATUS "  ${RTOOLS_LIBRDATA_DLL_A}")
+    else()
+      message(CHECK_FAIL "not found")
+      message(
+        FATAL_ERROR
+          "librdata is required for building on Windows, please follow the build instruction before you continue."
+      )
+    endif()
+  
+    message(CHECK_START "Looking for rdata.h")
+    find_file(
+      RTOOLS_LIBRDATA_H
+      NAMES rdata.h
+      PATHS ${RTOOLS_PATH}/include
+      NO_DEFAULT_PATH)
+  
+    if(EXISTS ${RTOOLS_LIBRDATA_H})
+      message(CHECK_PASS "found")
+      message(STATUS "Now copy ${RTOOLS_LIBRDATA_H} to source directory")
+      configure_file("${RTOOLS_LIBRDATA_H}" "${CMAKE_SOURCE_DIR}/Desktop/data/importers/rdata/rdata.h" COPYONLY)
+    else()
+      message(CHECK_FAIL "not found")
+      message(
+        FATAL_ERROR
+          "rdata is required for building on Windows, please follow the build instruction before you continue."
+      )
+    endif()
+  
+    message(CHECK_START "Looking for librdata-0.dll")
+    find_file(
+      RTOOLS_LIBRDATA_DLL
+      NAMES librdata-0.dll
+      PATHS ${RTOOLS_PATH}/bin
+      NO_DEFAULT_PATH)
+  
+    if(EXISTS ${RTOOLS_LIBRDATA_DLL})
+      message(CHECK_PASS "found")
+      message(STATUS "  ${RTOOLS_LIBRDATA_DLL}")
+    else()
+      message(CHECK_FAIL "not found")
+      message(
+        FATAL_ERROR
+          "librdata is required for building on Windows, please follow the build instruction before you continue."
+      )
+    endif()
   
   message(CHECK_START "Looking for zlib1.dll")
   find_file(

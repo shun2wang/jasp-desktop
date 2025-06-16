@@ -104,8 +104,10 @@ if(WINDOWS)
   execute_process(
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     COMMAND ${CMAKE_COMMAND} -E touch "junctions-recreated-successfully.log")
-
 endif()
+
+message(STATUS "LIBRDATA_INCLUDE_DIRS:    ${LIBRDATA_INCLUDE_DIRS}")
+message(STATUS "LIBREADSTAT_INCLUDE_DIRS: ${LIBREADSTAT_INCLUDE_DIRS}")
 
 target_include_directories(
     JASP
@@ -115,9 +117,8 @@ target_include_directories(
     ${PROJECT_SOURCE_DIR}/Common/jaspColumnEncoder
     ${PROJECT_SOURCE_DIR}/CommonData
     ${PROJECT_SOURCE_DIR}/QMLComponents
-    # ReadStat
-    $<$<PLATFORM_ID:Windows>:${RTOOLS_LIBREADSTAT_H}>
     ${LIBREADSTAT_INCLUDE_DIRS}
+    ${LIBRDATA_INCLUDE_DIRS}
     # JSONCPP
     $<$<PLATFORM_ID:Linux>:${_PKGCONFIG_LIB_JSONCPP_INCLUDEDIR}>
     $<$<BOOL:${FLATPAK_USED}>:/app/include/QtCore5Compat>
@@ -129,9 +130,10 @@ target_include_directories(
 target_link_libraries(
     JASP
 	PUBLIC
-	Common
-	CommonData
 	QMLComponentsplugin
+    CommonData
+    Common
+    $<$<PLATFORM_ID:Darwin>:compression>
     Qt::Core
     Qt::Gui
     Qt::OpenGL
@@ -166,8 +168,12 @@ target_link_libraries(
     $<$<NOT:$<BOOL:${LINUX}>>:freexl::freexl>
     # ReadStat -----------------------------------
     ${LIBREADSTAT_LIBRARIES}
-    # MinGW's ReadStat
+    # Rtools's ReadStat
     $<$<PLATFORM_ID:Windows>:${RTOOLS_LIBREADSTAT_DLL_A}>
+    # librdata -----------------------------------
+    ${LIBRDATA_LIBRARIES}
+    $<$<PLATFORM_ID:Windows>:${RTOOLS_LIBRDATA_DLL_A}>
+    $<$<PLATFORM_ID:Darwin>:librdata::librdata>
     # JSONCPP
          #$<$<PLATFORM_ID:Linux>:${_PKGCONFIG_LIB_JSONCPP_LIBRARIES}>
          #$<$<PLATFORM_ID:Linux>:${_PKGCONFIG_LIB_JSONCPP_LINK_LIBRARIES}>
