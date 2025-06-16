@@ -197,10 +197,23 @@ bool IPCChannel::heartbeat(string path, unsigned int delayS)
 {
 	while(true)
 	{
-		Utils::touch(path);
-		std::this_thread::sleep_for(std::chrono::seconds(delayS));
+		try
+		{
+			Utils::touch(path);
+			std::this_thread::sleep_for(std::chrono::seconds(delayS));
+		}
+		catch(std::exception e)
+		{
+			Log::log() << "Heartbeatthread had an exception: " << e.what() << "\nIgnoring it." << std::endl;
+		}
+		catch(...)
+		{
+			Log::log() << "Heartbeatthread had some sort of exception or problem.\nIgnoring it." << std::endl;
+		}
 	}
 
+	Log::log() << "Heartbeatthread ended." << std::endl; //Obviously cant occur but whatever.
+	
 	return false;
 }
 
