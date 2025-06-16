@@ -442,8 +442,8 @@ void EngineSync::process()
 		return;
 	}
 
-	if(_engines.size() == 0)
-		startExtraEngines();
+	//if(_engines.size() == 0)
+	//	startExtraEngines();
 	
 	//So we try to distribute some work to each engine as below:
 	stringset	notEnoughIdlesForScript		=	processRCodeQueue();
