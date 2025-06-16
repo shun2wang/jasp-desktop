@@ -95,6 +95,9 @@ DataSet * DataBridge::provideAndUpdateDataSet()
 
 	if(_dataSet && setColumnNames)
 		ColumnEncoder::columnEncoder()->setCurrentNames(_dataSet->getColumnTypesMap());
+	
+	if(_dataSet && _datasetProvidedCallback)
+		_datasetProvidedCallback();
 
 	JASPTIMER_STOP(DataBridge::provideAndUpdateDataSet());
 

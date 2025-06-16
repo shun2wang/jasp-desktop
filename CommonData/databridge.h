@@ -48,6 +48,7 @@ protected:
 	DataSet				*	_dataSet		= nullptr;
 	DatabaseInterface	*	_db				= nullptr;
 	int						_analysisId		= -1;
+	std::function<void()>	_datasetProvidedCallback;
 };
 
 #endif // DATABRIDGE_H

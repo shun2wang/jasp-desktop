@@ -136,6 +136,7 @@ void EngineRepresentation::handleEngineCrash()
 	}
 
 	case engineState::stopped:
+	case engineState::stopRequested:
 		//It will be resumed manually
 		return;
 
@@ -879,7 +880,7 @@ void EngineRepresentation::processEngineResumedReply(Json::Value & json)
 	Log::log() << "EngineRepresentation::processEngineResumedReply() for engine #" << channelNumber() << std::endl;
 
 	if(_engineState != engineState::resuming && _engineState != engineState::initializing && _engineState != engineState::reloadData)
-		throw unexpectedEngineReply("Received an unexpected engine #" + std::to_string(channelNumber()) + " resumed reply!");
+		throw unexpectedEngineReply("Received an unexpected engine #" + std::to_string(channelNumber()) + " resumed reply (current state is " + engineStateToString(_engineState) +")!");
 	
 	if(json.get("justReloadedData", false))
 		_reloadData = false;

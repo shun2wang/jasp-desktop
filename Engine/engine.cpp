@@ -81,6 +81,15 @@ void Engine::initialize()
 		rbridge_init(this, SendFunctionForJaspresults, PollMessagesFunctionForJaspResults, _extraEncodings, _resultFont.c_str());
 
 		Log::log() << "rbridge_init completed" << std::endl;
+		
+		_datasetProvidedCallback = [this]()
+		{
+			if(_engineState == engineState::reloadData)
+			{
+				sendEngineResumed();
+				_engineState = engineState::idle;
+			}
+		};
 	
 		sendEngineLoadingData();
 	}
@@ -124,6 +133,7 @@ void Engine::run()
 		case engineState::paused:			/* Do nothing */
 		case engineState::stopped:															break;
 		case engineState::resuming:			throw std::runtime_error("Enginestate " + engineStateToString(_engineState) + " should NOT be set as currentState!");
+		case engineState::reloadData:		provideAndUpdateDataSet();						break;
 		default:
 			Log::log() << "Engine got stuck in engineState " << engineStateToString(_engineState) << " which is not supposed to happen..." << std::endl;
 		}
@@ -935,11 +945,9 @@ void Engine::receiveReloadData()
 	case engineState::computeColumn:	throw std::runtime_error("Unexpected data synch during " + engineStateToString(_engineState) + " somehow, you should not expect to see this exception ever.");
 	};
 
-	_engineState = engineState::idle;
-
 	//First send state, then load data
 	sendEngineLoadingData();
-	provideAndUpdateDataSet(); //Also triggers loading from DB
+	provideAndUpdateDataSet(); //Also triggers loading from DB and calls _datasetProvidedCallback
 	reloadColumnNames();
 	sendEngineResumed();
 }
@@ -977,8 +985,9 @@ void Engine::sendEngineLoadingData()
 {
 	Log::log() << "Engine::sendEngineLoadingData()" << std::endl;
 	
+	_engineState			= engineState::reloadData;
 	Json::Value response	= Json::objectValue;
-	response["typeRequest"]	= engineStateToString(engineState::reloadData);
+	response["typeRequest"]	= engineStateToString(_engineState);
 
 	sendString(response.toStyledString());
 }
