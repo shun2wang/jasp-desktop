@@ -886,6 +886,8 @@ void EngineRepresentation::processEngineResumedReply(Json::Value & json)
 		_reloadData = false;
 
 	setState(engineState::idle);
+	
+	restartAbortedAnalysis();
 }
 
 void EngineRepresentation::processEngineStoppedReply()

@@ -71,26 +71,18 @@ if(WINDOWS)
   add_custom_command(
     TARGET JASPEngine
     POST_BUILD DEPENDS ${CMAKE_BINARY_DIR}/R-Interface/libR-Interface.dll
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBGCC_S_SEH_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBSTDCPP_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_MSYS_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBWINPTHREAD_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBREADSTAT_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBRDATA_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_ZLIB_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBICONV_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_LIB_R_INTERFACE_DLL}
-            ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_LIB_R_INTERFACE_NORINSIDE_DLL}
-            ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBWINPTHREAD_DLL}       ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBGCC_S_SEH_DLL}        ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBREADSTAT_DLL}         ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBSTDCPP_DLL}           ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBRDATA_DLL}            ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_MSYS_DLL}                ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_ZLIB_DLL}                ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBBZ2_DLL}              ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBLZMA_DLL}             ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RTOOLS_LIBICONV_DLL}            ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_LIB_R_INTERFACE_DLL}           ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_LIB_R_INTERFACE_NORINSIDE_DLL} ${CMAKE_BINARY_DIR}
     COMMENT "------ Re-installing the dependencies (if necessary)")
 
 endif()

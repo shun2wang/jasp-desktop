@@ -193,6 +193,11 @@ void IPCChannel::findConstructAllAgain()
 }
 
 
+void IPCChannel::touchHeartbeat()
+{
+	try { Utils::touch(_jaspHeartBeatPath); } catch(...){}	
+}
+
 bool IPCChannel::heartbeat(string path, unsigned int delayS)
 {
 	while(true)

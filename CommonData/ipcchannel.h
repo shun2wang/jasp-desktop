@@ -60,6 +60,8 @@ public:
 	void findConstructAllAgain();
 
 	bool jaspAlive();
+	
+	void touchHeartbeat();
 
 private:
 	bool tryWait(int timeout = 0);
