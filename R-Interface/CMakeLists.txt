@@ -62,7 +62,7 @@ if(${R_VERSION} VERSION_GREATER_EQUAL "4.5.0")
     set(RTOOLS_PATH
       "C:/rtools45/ucrt64"
        CACHE PATH "Path to Rtools45 ucrt64 folder")
-  if(${R_VERSION} VERSION_GREATER_EQUAL "4.4.0")
+  elseif(${R_VERSION} VERSION_GREATER_EQUAL "4.4.0")
     set(RTOOLS_PATH
       "C:/rtools44/ucrt64"
        CACHE PATH "Path to Rtools44 ucrt64 folder")
