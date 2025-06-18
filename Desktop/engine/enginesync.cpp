@@ -969,7 +969,7 @@ QProcess * EngineSync::startSlaveProcess(int channel)
 	slave->setProcessEnvironment(env);
 	slave->setWorkingDirectory(programDir.absolutePath());
 	
-	_channels[channel]->touchHeartbeat();
+	EngineSync::channel(channel)->touchHeartbeat();
 
 #ifdef _WIN32
 	if(!WinContainerManager::launchSandboxedEngine(slave, engineExe, args))
