@@ -45,6 +45,7 @@ const QStringList & bronzeTier()
 		"NSDSK Academy (The Dutch Foundation for the Deaf and Hard of Hearing Child)",
 		"The Department of Communication at Appalachian State University",
 		"Birmingham Newman University",
+		"Faculty of Behavioural and Movement Sciences, VU Amsterdam",
 		"School of Psychological Science, University of Bristol"
 	};
 
