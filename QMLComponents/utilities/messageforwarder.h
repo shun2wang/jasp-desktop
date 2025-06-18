@@ -24,13 +24,13 @@ public:
 
 	static QMessageBox* getInfoBox(const QString& title, const QString& message);
 
-	static void showWarning(QString title, QString message);
-	static void showWarning(std::string title, std::string message)		{ showWarning(QString::fromStdString(title),	QString::fromStdString(message));	}
-	static void showWarning(const char * title, const char * message)	{ showWarning(QString(title),					QString(message));					}
+	static void showWarning(QString title, QString message,				QMessageBox::Icon icon = QMessageBox::Warning);
+	static void showWarning(std::string title, std::string message,		QMessageBox::Icon icon = QMessageBox::Warning)		{ showWarning(QString::fromStdString(title),	QString::fromStdString(message),	icon);	}
+	static void showWarning(const char * title, const char * message,	QMessageBox::Icon icon = QMessageBox::Warning)		{ showWarning(QString(title),					QString(message),					icon);	}
 
-	static void showWarning(QString message)							{ showWarning("",								message);					}
-	static void showWarning(std::string message)						{ showWarning(QString::fromStdString(message));								}
-	static void showWarning(const char * message)						{ showWarning(QString(message));											}
+	static void showWarning(QString message,							QMessageBox::Icon icon = QMessageBox::Warning)		{ showWarning("",								message,							icon);	}
+	static void showWarning(std::string message,						QMessageBox::Icon icon = QMessageBox::Warning)		{ showWarning(QString::fromStdString(message),										icon);	}
+	static void showWarning(const char * message,						QMessageBox::Icon icon = QMessageBox::Warning)		{ showWarning(QString(message),														icon);	}
 
 	static bool showYesNo(QString title,		QString message,		QString YesButtonText		= "",	QString NoButtonText = "",			QMessageBox::Icon icon = QMessageBox::Question);
 	static bool showYesNo(std::string title,	std::string message,	std::string YesButtonText	= "",	std::string NoButtonText = "",		QMessageBox::Icon icon = QMessageBox::Question)	{ return showYesNo(QString::fromStdString(title), QString::fromStdString(message), QString::fromStdString(YesButtonText), QString::fromStdString(NoButtonText), icon); }

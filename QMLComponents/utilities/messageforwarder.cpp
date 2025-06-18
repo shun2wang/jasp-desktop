@@ -93,12 +93,12 @@ QMessageBox *MessageForwarder::getInfoBox(const QString &title, const QString &m
 	return msgBox;
 }
 
-void MessageForwarder::showWarning(QString title, QString message)
+void MessageForwarder::showWarning(QString title, QString message, QMessageBox::Icon icon)
 {
 	QMessageBox box;
 	box.setText(title);
 	box.setInformativeText(message);
-	box.setIcon(QMessageBox::Warning);
+	box.setIcon(icon);
 
 	box.exec();
 }

@@ -1624,6 +1624,12 @@ void MainWindow::fatalError()
 		default:
 			break;
 		}
+
+		MessageForwarder::showWarning(tr("Salvaging"), tr("We're very sorry JASP has had a fatal error.\n"
+														  "To allow you to salvage or recover something out of this mess JASP will stay partly functional.\n\n"
+														  "You can for instance save your current workspace, or try changing a setting to perhaps prevent the problem next time.\n\n"
+														  "Analyses or computed columns and the like will not function anymore until you restart JASP."),
+									  QMessageBox::Critical);
 		
 		
 		_hadFatalError = true;
