@@ -6,7 +6,8 @@
 
 class Importer;
 
-typedef std::vector<ImportColumn *> ImportColumns;
+typedef std::vector	<ImportColumn *> ImportColumns;
+typedef std::set	<ImportColumn *> ImportColumnSet;
 
 ///
 /// Base class for all data during import
@@ -39,6 +40,8 @@ public:
 	void									clear();
 	void									erase(ImportColumns::iterator it);
 	void									buildDictionary();
+	
+	ImportColumns						&	columns() { return _columns; }
 
 
 protected:
@@ -46,6 +49,7 @@ protected:
 	Importer							*	_importer;
 	ImportColumns							_columns;
 	std::map<std::string, ImportColumn*>	_nameToColMap;
+	int										_rowsCountedByBuildDictionary = -1;
 };
 
 #endif // IMPORTDATASET_H
