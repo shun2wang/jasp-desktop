@@ -51,9 +51,10 @@ public:
 
 	std::string lastSentMsg() const;
 
-	void send(std::string		&	data,	bool alreadyLockedMutex = false);
-	void send(std::string		&&	data,	bool alreadyLockedMutex = false);
-	bool receive(std::string	&	data,	int timeout = 0);
+	void resend();
+	void send(const std::string		&	data,	bool alreadyLockedMutex = false);
+	void send(const std::string		&&	data,	bool alreadyLockedMutex = false);
+	bool receive(	std::string		&	data,	int timeout = 0);
 
 	size_t channelNumber() { return _channelNumber; }
 

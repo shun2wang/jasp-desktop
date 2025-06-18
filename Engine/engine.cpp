@@ -27,7 +27,18 @@
 #include "databaseinterface.h"
 #include "r_functionwhitelist.h"
 
-void SendFunctionForJaspresults(const char * msg) { Engine::theEngine()->sendString(msg); }
+void SendFunctionForJaspresults(const char * msg) 
+{
+	Json::Reader	parser;
+	Json::Value		json;
+	
+	if(parser.parse(msg, json))
+		Engine::theEngine()->sendString(json); 
+	else
+		Engine::theEngine()->sendString(msg); 
+
+}
+
 bool PollMessagesFunctionForJaspResults()
 {
 	if(Engine::theEngine()->receiveMessages())
@@ -142,6 +153,12 @@ void Engine::run()
 
 	if(_engineState == engineState::stopped)
 		Log::log() << "Engine leaving mainloop after having been asked to stop." << std::endl;
+	
+	if(!parentAlive())
+	{
+		Log::log() << "Engine leaving mainloop after having no parent alive, sending engine stopped just in case we just awoke from sleep." << std::endl;
+		sendEngineStopped();
+	}
 
 	delete _channel;
 	_channel = nullptr;
@@ -365,7 +382,7 @@ void Engine::sendFilterResult(int filterRequestId)
 	filterResponse["typeRequest"]	= engineStateToString(engineState::filter);
 	filterResponse["requestId"]		= filterRequestId;
 
-	sendString(filterResponse.toStyledString());
+	sendString(filterResponse);
 }
 
 void Engine::sendFilterError(int filterRequestId, const std::string & errorMessage)
@@ -378,7 +395,7 @@ void Engine::sendFilterError(int filterRequestId, const std::string & errorMessa
 	filterResponse["requestId"]		= filterRequestId;
 	filterResponse["error"]			= errorMessage;
 
-	sendString(filterResponse.toStyledString());
+	sendString(filterResponse);
 }
 
 void Engine::sendFilterByNameDone(const std::string & name, const std::string & errorMessage)
@@ -389,7 +406,7 @@ void Engine::sendFilterByNameDone(const std::string & name, const std::string & 
 	filterResponse["name"]			= name;
 	filterResponse["errorMessage"]	= errorMessage;
 
-	sendString(filterResponse.toStyledString());
+	sendString(filterResponse);
 }
 
 void Engine::receiveRCodeMessage(const Json::Value & jsonRequest)
@@ -467,7 +484,7 @@ void Engine::sendRCodeResult(int rCodeRequestId, const std::string & rCodeResult
 	rCodeResponse["requestId"]		= rCodeRequestId;
 
 
-	sendString(rCodeResponse.toStyledString());
+	sendString(rCodeResponse);
 }
 
 void Engine::sendRCodeError(int rCodeRequestId)
@@ -480,7 +497,7 @@ void Engine::sendRCodeError(int rCodeRequestId)
 	rCodeResponse["rCodeError"]		= RError.size() == 0 ? "R Code failed for unknown reason. Check that R function returns a string." : RError;
 	rCodeResponse["requestId"]		= rCodeRequestId;
 
-	sendString(rCodeResponse.toStyledString());
+	sendString(rCodeResponse);
 }
 
 void Engine::receiveComputeColumnMessage(const Json::Value & jsonRequest)
@@ -542,7 +559,7 @@ void Engine::runComputeColumn(const std::string & computeColumnName, const std::
 		computeColumnResponse["error"]			= "No DataSet loaded in engine!";
 	}
 
-	sendString(computeColumnResponse.toStyledString());
+	sendString(computeColumnResponse);
 	
 	_engineState = engineState::idle;
 }
@@ -588,7 +605,7 @@ void Engine::receiveModuleRequestMessage(const Json::Value & jsonRequest)
 
 	Log::log() << "Sending it." << std::endl;
 
-	sendString(jsonAnswer.toStyledString());
+	sendString(jsonAnswer);
 
 	_engineState = engineState::idle;
 }
@@ -668,25 +685,21 @@ void Engine::receiveAnalysisMessage(const Json::Value & jsonRequest)
 }
 
 
-void Engine::sendString(std::string message)
+void Engine::sendString(Json::Value message)
 {
-	ColumnUtils::convertEscapedUnicodeToUTF8(message);
-
-	Json::Value msgJson;
-
-	// JSONCPP_STRING          err;
-	// Json::CharReaderBuilder jsonReaderBuilder;
-	// std::unique_ptr<Json::CharReader> const jsonReader(jsonReaderBuilder.newCharReader());
-
-	// if(jsonReader->parse(message.c_str(), message.c_str() + message.length(), &msgJson, &err)) //If everything is converted to jaspResults maybe we can do this there?
-
-	if(Json::Reader().parse(message, msgJson)) //If everything is converted to jaspResults maybe we can do this there?
+	std::string msgStr;
+	
+	if(message.isObject()) //If everything is converted to jaspResults maybe we can do this there?
 	{
-		ColumnEncoder::columnEncoder()->decodeJsonSafeHtml(msgJson); // decode all columnnames as far as you can
-		_channel->send(msgJson.toStyledString());
+		ColumnEncoder::columnEncoder()->decodeJsonSafeHtml(message); // decode all columnnames as far as you can
+		msgStr = message.toStyledString();
 	}
-	else
-		_channel->send(message);
+	else if(message.isString())
+		msgStr = message.asString();
+	
+	ColumnUtils::convertEscapedUnicodeToUTF8(msgStr);
+	
+	_channel->send(msgStr);
 }
 
 
@@ -852,7 +865,7 @@ void Engine::sendAnalysisResults()
 	response["results"] = _analysisResults.get("results", _analysisResults);
 	response["status"]  = analysisResultStatusToString(resultStatus);
 
-	sendString(response.toStyledString());
+	sendString(response);
 }
 
 void Engine::removeNonKeepFiles(const Json::Value & filesToKeepValue)
@@ -903,7 +916,7 @@ void Engine::sendEngineStopped()
 {
 	Json::Value rCodeResponse		= Json::objectValue;
 	rCodeResponse["typeRequest"]	= engineStateToString(_engineState);
-	sendString(rCodeResponse.toStyledString());
+	sendString(rCodeResponse);
 }
 
 void Engine::pauseEngine(const Json::Value & json)
@@ -957,7 +970,7 @@ void Engine::sendEnginePaused()
 	Json::Value rCodeResponse		= Json::objectValue;
 	rCodeResponse["typeRequest"]	= engineStateToString(engineState::paused);
 
-	sendString(rCodeResponse.toStyledString());
+	sendString(rCodeResponse);
 }
 
 void Engine::resumeEngine(const Json::Value & jsonRequest)
@@ -978,7 +991,7 @@ void Engine::sendEngineResumed(bool justReloadedData)
 	response["typeRequest"]			= engineStateToString(engineState::resuming);
 	response["justReloadedData"]	= justReloadedData;
 
-	sendString(response.toStyledString());
+	sendString(response);
 }
 
 void Engine::sendEngineLoadingData()
@@ -989,7 +1002,7 @@ void Engine::sendEngineLoadingData()
 	Json::Value response	= Json::objectValue;
 	response["typeRequest"]	= engineStateToString(_engineState);
 
-	sendString(response.toStyledString());
+	sendString(response);
 }
 
 void Engine::receiveLogCfg(const Json::Value & jsonRequest)
@@ -1004,7 +1017,7 @@ void Engine::receiveLogCfg(const Json::Value & jsonRequest)
 	Json::Value logCfgResponse		= Json::objectValue;
 	logCfgResponse["typeRequest"]	= engineStateToString(engineState::logCfg);
 
-	sendString(logCfgResponse.toStyledString());
+	sendString(logCfgResponse);
 
 	_engineState = engineState::idle;
 }
@@ -1047,7 +1060,7 @@ void Engine::receiveSettings(const Json::Value & jsonRequest)
 	Json::Value response	= Json::objectValue;
 	response["typeRequest"]	= engineStateToString(engineState::settings);
 
-	sendString(response.toStyledString());
+	sendString(response);
 
 	_engineState = engineState::idle;
 }

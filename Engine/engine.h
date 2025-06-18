@@ -40,7 +40,7 @@ public:
 	bool					receiveMessages(int timeout = 0);
 	void					setSlaveNo(int no);
 	int						engineNum() const { return _engineNum; }
-	void					sendString(std::string message);
+	void					sendString(Json::Value message);
 
 	bool					parentAlive();
 

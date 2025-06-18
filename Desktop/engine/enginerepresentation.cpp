@@ -73,12 +73,21 @@ void EngineRepresentation::cleanUpAfterClose(bool forgetAnalyses)
 		runMeLater->run();
 }
 
-void EngineRepresentation::sendString(std::string str)
+void EngineRepresentation::sendString(const Json::Value & json)
 {
 #ifdef PRINT_ENGINE_MESSAGES
-	Log::log() << "sending to jaspEngine: " << str << "\n" << std::endl;
+	Json::Value printData = json;
+	if (printData.isObject() && printData.isMember("GITHUB_PAT"))
+		printData["GITHUB_PAT"] = "********";
+	
+	Log::log() << "sending to jaspEngine: " << printData << "\n" << std::endl;
 #endif
-	channel()->send(str);
+	channel()->send(json.toStyledString());
+}
+
+void EngineRepresentation::resend()
+{
+	channel()->resend();
 }
 
 
@@ -338,7 +347,7 @@ void EngineRepresentation::runScriptOnProcess(RFilterStore * filterStore)
 
 	Log::log() << "sending filter with requestID " << filterStore->requestId << " to engine" << std::endl;
 
-	sendString(json.toStyledString());
+	sendString(json);
 }
 
 void EngineRepresentation::runScriptOnProcess(RFilterByNameStore *filterStore)
@@ -350,7 +359,7 @@ void EngineRepresentation::runScriptOnProcess(RFilterByNameStore *filterStore)
 	json["typeRequest"]		= engineStateToString(_engineState);
 	json["name"]			= filterStore->name.toStdString();
 
-	sendString(json.toStyledString());
+	sendString(json);
 }
 
 void EngineRepresentation::processFilterReply(Json::Value & json)
@@ -420,7 +429,7 @@ void EngineRepresentation::runScriptOnProcess(RScriptStore * scriptStore)
 
 		_lastRequestId			= scriptStore->requestId;
 
-		sendString(json.toStyledString());
+		sendString(json);
 
 		return;
 	}
@@ -465,7 +474,7 @@ void EngineRepresentation::runScriptOnProcess(RComputeColumnStore * computeColum
 
 	_lastCompColName		= json["columnName"].asString();
 
-	sendString(json.toStyledString());
+	sendString(json);
 }
 
 
@@ -770,7 +779,7 @@ void EngineRepresentation::sendStopEngine()
 
 	Log::log() << "informing engine #" << channelNumber() << " that it ought to stop" << std::endl;
 
-	sendString(json.toStyledString());
+	sendString(json);
 }
 
 void EngineRepresentation::restartEngine(QProcess * jaspEngineProcess)
@@ -844,7 +853,7 @@ void EngineRepresentation::sendPauseEngine()
 
 	Log::log() << "informing engine #" << channelNumber() << " that it ought to pause for a bit" << std::endl;
 
-	sendString(json.toStyledString());
+	sendString(json);
 }
 
 void EngineRepresentation::resumeEngine(bool setResuming)
@@ -864,7 +873,7 @@ void EngineRepresentation::resumeEngine(bool setResuming)
 
 	Log::log() << "informing engine #" << channelNumber() << " that it may resume." << std::endl;
 
-	sendString(json.toStyledString());
+	sendString(json);
 }
 
 void EngineRepresentation::processEnginePausedReply()
@@ -878,16 +887,21 @@ void EngineRepresentation::processEnginePausedReply()
 void EngineRepresentation::processEngineResumedReply(Json::Value & json)
 {
 	Log::log() << "EngineRepresentation::processEngineResumedReply() for engine #" << channelNumber() << std::endl;
-
-	if(_engineState != engineState::resuming && _engineState != engineState::initializing && _engineState != engineState::reloadData)
-		throw unexpectedEngineReply("Received an unexpected engine #" + std::to_string(channelNumber()) + " resumed reply (current state is " + engineStateToString(_engineState) +")!");
 	
 	if(json.get("justReloadedData", false))
 		_reloadData = false;
-
-	setState(engineState::idle);
 	
-	restartAbortedAnalysis();
+	if(_engineState != engineState::resuming && _engineState != engineState::initializing && _engineState != engineState::reloadData && _engineState != engineState::idle)
+	{
+	//	throw unexpectedEngineReply("Received an unexpected engine #" + std::to_string(channelNumber()) + " resumed reply (current state is " + engineStateToString(_engineState) +")!");
+		resend();
+	}
+	else
+	{
+		setState(engineState::idle);
+		
+		restartAbortedAnalysis();
+	}
 }
 
 void EngineRepresentation::processEngineStoppedReply()
@@ -917,7 +931,7 @@ void EngineRepresentation::runModuleInstallRequestOnProcess(Json::Value request)
 
 	_requestModName	= request["moduleName"].asString();
 
-	sendString(request.toStyledString());
+	sendString(request);
 }
 
 void EngineRepresentation::runModuleLoadRequestOnProcess(Json::Value request)
@@ -928,7 +942,7 @@ void EngineRepresentation::runModuleLoadRequestOnProcess(Json::Value request)
 
 	_requestModName	= request["moduleName"].asString();
 
-	sendString(request.toStyledString());
+	sendString(request);
 }
 
 void EngineRepresentation::processModuleRequestReply(Json::Value & json)
@@ -983,7 +997,7 @@ void EngineRepresentation::sendLogCfg()
 	Json::Value msg		= Log::createLogCfgMsg();
 	msg["typeRequest"]	= engineStateToString(_engineState);
 
-	sendString(msg.toStyledString());
+	sendString(msg);
 }
 
 void EngineRepresentation::processLogCfgReply()
@@ -1084,7 +1098,7 @@ void EngineRepresentation::sendSettings()
 	Json::Value msg			= Json::objectValue;
 	msg["typeRequest"]		= engineStateToString(_engineState);
 	addSettingsToJson(msg);
-	sendString(msg.toStyledString());
+	sendString(msg);
 
 	_settingsChanged = false;
 }
@@ -1100,7 +1114,7 @@ void EngineRepresentation::sendReloadData()
 	Json::Value msg			= Json::objectValue;
 	msg["typeRequest"]		= engineStateToString(_engineState);
 
-	sendString(msg.toStyledString());
+	sendString(msg);
 }
 
 void EngineRepresentation::addSettingsToJson(Json::Value & msg)

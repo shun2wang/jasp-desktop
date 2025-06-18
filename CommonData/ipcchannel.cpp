@@ -366,13 +366,13 @@ void IPCChannel::doubleMemoryOut()
 	Log::log() << *_sizeOut << "\n" << std::flush;
 }
 
-void IPCChannel::send(string &&data, bool alreadyLockedMutex)
+void IPCChannel::send(const string && data, bool alreadyLockedMutex)
 {
 	send(data, alreadyLockedMutex);
 }
 
 
-void IPCChannel::send(string &data, bool alreadyLockedMutex)
+void IPCChannel::send(const string & data, bool alreadyLockedMutex)
 {
 	try
 	{
@@ -407,6 +407,38 @@ retryAfterDoublingMemory:
 		doubleMemoryOut();
 
 		send(data, true); //try again!
+}
+
+void IPCChannel::resend()
+{
+	if(_dataOut->size() == 0)
+	{
+		Log::log() << "IPCChannel::resend() called but no message to resend..." << std::endl;
+		return;
+	}
+	
+	Log::log() << "Resending last message" << std::endl;
+	
+	try
+	{
+		_mutexOut->lock();
+
+		(*_dataOut)[0] = std::to_string(_msgIDSend % 10).c_str()[0]; // replace the one character prefix msg ID
+		_msgIDSend++;
+	}
+	catch (boost::interprocess::interprocess_exception &e)
+	{
+		Log::log()	<< "IPCChannel(" << _baseName << ", " << _channelNumber << ", " << (_isSlave ? "slave" : "master") << "): "
+					<< "IPCChannel::send encountered an exception trying to acquire the lock: " << e.what() << std::endl;
+		throw e;
+	}
+	catch (std::exception & e)
+	{
+		Log::log() << "IPCChannel::send encountered an exception: " << e.what() << std::endl;
+		throw e; //no need to unlock because this will crash stuff
+	}
+
+	_mutexOut->unlock();
 }
 
 bool IPCChannel::receive(string &data, int timeout)

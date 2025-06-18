@@ -128,7 +128,8 @@ protected:
 	void			processLogCfgReply();
 	void			processSettingsReply();
 
-	void			sendString(std::string str);
+	void			sendString(const Json::Value & val);
+	void			resend();
 
 public slots:
 	void			analysisRemoved(Analysis * analysis);
