@@ -29,7 +29,7 @@ Window
 	width:				1280
 	height:				720
 	flags:				Qt.Window | Qt.WindowFullscreenButtonHint
-	color:				mainwWindow.hadFatalError ? jaspTheme.red : jaspTheme.white
+	color:				mainWindow.hadFatalError ? jaspTheme.red : jaspTheme.white
 	minimumWidth:		jaspTheme.formWidth + 2 * jaspTheme.splitHandleWidth + jaspTheme.scrollbarBoxWidthBig + 3
 	minimumHeight:		400 * jaspTheme.uiScale
 	visibility:			!preferencesModel.startMaximized ? Window.Windowed : Window.Maximized
