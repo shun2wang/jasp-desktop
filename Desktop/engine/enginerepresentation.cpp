@@ -314,7 +314,7 @@ void EngineRepresentation::processReplies()
 			case engineState::logCfg:				processLogCfgReply();				break;
 			case engineState::settings:				processSettingsReply();				break;
 			case engineState::reloadData:			processReloadDataReply();			break;
-			default:								throw std::logic_error("If you define new engineStates you should add them to the switch in EngineRepresentation::process()!");
+			default:								throw std::logic_error("If you define/send-from-engine new engineStates ("+engineStateToString(typeRequest)+") you should add them to the switch in EngineRepresentation::processReplies()!");
 			}
 	}
 	else if(_engineState == engineState::initializing && !_stopRequested)

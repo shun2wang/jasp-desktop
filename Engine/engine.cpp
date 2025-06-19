@@ -913,6 +913,7 @@ void Engine::stopEngine()
 
 void Engine::sendEngineStopped()
 {
+	_engineState					= engineState::stopped;
 	Json::Value rCodeResponse		= Json::objectValue;
 	rCodeResponse["typeRequest"]	= engineStateToString(_engineState);
 	sendString(rCodeResponse);
