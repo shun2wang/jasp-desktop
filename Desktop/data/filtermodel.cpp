@@ -173,8 +173,10 @@ void FilterModel::setGeneratedFilter(QString newGeneratedFilter)
 bool FilterModel::_setGeneratedFilter(const QString& newGeneratedFilter)
 {
 	JASPTIMER_SCOPE(FilterModel::_setGeneratedFilter);
+	
+	const QString oldGeneratedFilter = generatedFilter();
 
-	if (newGeneratedFilter != generatedFilter())
+	if (newGeneratedFilter != oldGeneratedFilter)
 	{
 		if(DataSetPackage::filter())
 			DataSetPackage::filter()->setGeneratedFilter(fq(newGeneratedFilter));

@@ -13,7 +13,7 @@ UndoStack::UndoStack(QObject* parent) : QUndoStack(parent)
 {
 	_undoStack = this;
 
-	connect(this, &QUndoStack::indexChanged, []() { DataSetPackage::pkg()->setModified(true); });
+	connect(this, &QUndoStack::indexChanged, DataSetPackage::pkg(), []() { DataSetPackage::pkg()->setModified(true); });
 }
 
 void UndoStack::pushCommand(UndoModelCommand *command)
