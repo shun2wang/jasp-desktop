@@ -431,14 +431,18 @@ void EngineSync::process()
 
 	processSettingsChanged();
 	
-	if(!anEngineIsLoadingData)
+	if(!anEngineIsLoadingData || !_engines.size())
 		processFilterScript();
 		
 	processLogCfgRequests();
 
 	if(_stopProcessing || _dataMode || _filterRunning)
 	{
-		processComputedColumnQueue();
+		bool needEngine = processComputedColumnQueue();
+		
+		if(needEngine)
+			createNewEngine();
+		
 		return;
 	}
 
@@ -577,11 +581,14 @@ void EngineSync::processFilterScript()
 	JASPTIMER_SCOPE(EngineSync::processFilterScript);
 
 	//First we make sure nothing else is running before we ask the engine to run the filter
-	if(!_dataMode && !_filterRunning)
+	if(!_engines.size() || (!_dataMode && !_filterRunning))
 	{
 		pauseEngines();
-		_filterRunning = true;	
+		_filterRunning = true;
 		resumeEngines();
+		
+		if(!_engines.size())
+			createNewEngine();
 	}
 	else //So previous loop we made sure nothing else is running by switching to data editing mode or not having analyses
 	{
