@@ -445,10 +445,23 @@ int main(int argc, char *argv[])
 
 	qInstallMessageHandler(qtMessageHandler);
 	
+#ifdef _WIN32
+	if(DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() == RuntimeEnvironment::MSIX) {
+		QCoreApplication::setOrganizationName("JASP-Stats-MSIX");
+		QCoreApplication::setOrganizationDomain("jasp-stats.org");
+		QCoreApplication::setApplicationName("JASPDesktop");
+	}
+	else {
+		QCoreApplication::setOrganizationName("JASP");
+		QCoreApplication::setOrganizationDomain("jasp-stats.org");
+		QCoreApplication::setApplicationName("JASP");
+	}
+#else
 	QCoreApplication::setOrganizationName("JASP");
 	QCoreApplication::setOrganizationDomain("jasp-stats.org");
 	QCoreApplication::setApplicationName("JASP");
 
+#endif
 	parseArguments(argc, argv, filePath, newData, unitTest, dirTest, timeOut, save, logToFile, hideJASP, safeGraphics, containForce, contain, dbJson, reportingDir);
 
 	if(safeGraphics)		Settings::setValue(Settings::SAFE_GRAPHICS_MODE, true);
