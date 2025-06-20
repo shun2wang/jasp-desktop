@@ -206,7 +206,13 @@ const char* STDCALL syntaxBridgeGenerateModuleWrappers(const char* modulePath, b
 				else if (line.startsWith("qml"))
 					qmlFileName = line.split(":")[1].trimmed().replace('"', "");
 				else if (line.startsWith("title"))
-					analysisTitle = line.split(":")[1].trimmed().remove(0, std::string("qsTr(\"").length()).chopped(2);
+				{
+					analysisTitle = line.split(":")[1].trimmed();
+					if (analysisTitle.startsWith("qsTr"))
+						analysisTitle = analysisTitle.remove(0, std::string("qsTr(\"").length()).chopped(1);
+
+					analysisTitle = analysisTitle.replace('"', "");
+				}
 			}
 
 			if (!analysisName.isEmpty())
