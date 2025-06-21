@@ -5491,3 +5491,33 @@ msgstr ""
 msgctxt "ImportDataSet|"
 msgid "Originally imported into %1 on %2"
 msgstr ""
+
+msgctxt "FileEvent|"
+msgid "Loading R Data File"
+msgstr ""
+
+msgctxt "RDataImporter|"
+msgid "0 valid columns were read from the file, please check your data file."
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Salvaging"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid ""
+"We're very sorry JASP has had a fatal error.\n"
+"To allow you to salvage or recover something out of this mess JASP will stay "
+"partly functional.\n"
+"\n"
+"You can for instance save your current workspace, or try changing a setting "
+"to perhaps prevent the problem next time.\n"
+"\n"
+"Analyses or computed columns and the like will not function anymore until "
+"you restart JASP."
+msgstr ""
+
+#, qt-format
+msgctxt "Computer|"
+msgid "R Data files %1"
+msgstr ""
