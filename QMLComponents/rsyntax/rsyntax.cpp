@@ -143,6 +143,20 @@ QString RSyntax::generateSyntax(bool showAllOptions, bool useHtml) const
 
 QString RSyntax::generateWrapper(const QString& moduleName, const QString& analysisName, const QString& qmlFileName, const QString& analysisTitle, bool preloadData) const
 {
+	auto addDoxygenComment = [](const QString& str) -> QString
+	{
+		QString trimmedStr = str.trimmed();
+		if (trimmedStr.isEmpty())
+			return "";
+
+		QString result;
+
+		for (const QString& line : trimmedStr.split('\n'))
+			result += (!line.startsWith("#' ") ? "#' " : "") + line + '\n';
+
+		return result;
+	};
+
 	const Json::Value& boundValues = _form->boundValues();
 
 	QString result = "\
@@ -170,14 +184,14 @@ QString RSyntax::generateWrapper(const QString& moduleName, const QString& analy
 	result += "#'\n";
 	if (!form()->info().isEmpty())
 	{
-		result += "#' " + form()->info() + "\n";
+		result += addDoxygenComment(form()->info());
 		result += "#'\n";
 	}
 	for (const std::string& member : boundValues.getMemberNames())
 	{
 		JASPControl* control = _form->getControl(tq(member));
 		if (control)
-			result += control->generateDoxygenHelp();
+			result += addDoxygenComment(control->generateDoxygenHelp());
 	}
 
 	result += analysisName + " <- function(\n";
