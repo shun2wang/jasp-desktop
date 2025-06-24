@@ -53,7 +53,8 @@ class JASPControl : public QQuickItem
 protected:
 	typedef std::set<JASPControl*>			Set;
 	typedef std::set<const JASPControl*>	SetConst;
-
+	typedef std::vector<JASPControl*>		JASPControls;
+	
 public:
 	struct ParentKey
 	{
@@ -119,7 +120,6 @@ public:
 	virtual bool		infoLabelItalic()			const	{ return  false;					}
 
 	QString				toolTip()					const	{ return _toolTip;					}
-	std::vector<JASPControl*> getMDSubItems()		const;
 	virtual QString		generateMDHelp(int depth = 0) const;
 	virtual QString		generateDoxygenHelp()		const;
 	virtual bool		hasInfoSomewhere()					const;
@@ -260,21 +260,22 @@ signals:
 	void	usedVariablesChanged();
 	void	explicitDependsChanged();
 
-	void				requestColumnCreation(std::string columnName, columnType columnType);
-	void				requestComputedColumnCreation(std::string columnName);
-	void				requestComputedColumnDestruction(std::string columnName);
+	void					requestColumnCreation(std::string columnName, columnType columnType);
+	void					requestComputedColumnCreation(std::string columnName);
+	void					requestComputedColumnDestruction(std::string columnName);
 
 protected:
-	void				componentComplete()									override;
-	void				setCursorShape(int shape);
-	void				setParentDebugToChildren(bool debug);
-	void				focusInEvent(QFocusEvent* event)					override;
-	bool				eventFilter(QObject *watched, QEvent *event)		override;
-	bool				checkOptionName(const QString& name);
-	void				_addExplicitDependency(const QVariant& depends);
-	bool				dependingControlsAreInitialized();
-	virtual void		_setInitialized(const Json::Value &value);
-	virtual QString		printLabelMD(int depth)								const;
+	void					componentComplete()									override;
+	void					setCursorShape(int shape);
+	void					setParentDebugToChildren(bool debug);
+	void					focusInEvent(QFocusEvent* event)					override;
+	bool					eventFilter(QObject *watched, QEvent *event)		override;
+	bool					checkOptionName(const QString& name);
+	void					_addExplicitDependency(const QVariant& depends);
+	bool					dependingControlsAreInitialized();
+	virtual void			_setInitialized(const Json::Value &value);
+	virtual QString			printLabelMD(int depth)												const;
+	virtual JASPControls	getMDSubItems(const QQuickItem* parentItem = nullptr)	const;
 
 protected:
 	Set						_depends;
@@ -327,5 +328,6 @@ protected:
 	static const QStringList						_optionReservedNames;
 };
 
+typedef std::vector<JASPControl*> JASPControls;
 
 #endif // JASPCONTROL_H

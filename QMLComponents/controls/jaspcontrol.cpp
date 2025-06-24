@@ -602,16 +602,19 @@ bool JASPControl::hasLabelOrInfo() const
 	return !fullLabel().isEmpty() || !info().isEmpty();
 }
 
-std::vector<JASPControl*> JASPControl::getMDSubItems() const
+JASPControls JASPControl::getMDSubItems(const QQuickItem* parentItem) const
 {
-	std::vector<JASPControl*> MDSubItems;
+	JASPControls MDSubItems;
 
-	for (JASPControl* childControl : getChildJASPControls(_childControlsArea ? _childControlsArea : this, true))
+	if (!parentItem)
+		parentItem = _childControlsArea ? _childControlsArea : this;
+
+	for (JASPControl* childControl : getChildJASPControls(parentItem, true))
 	{
 		// In case of RadioButtonGroup, if at least one of the RadioButton has info, then all RadioButtons should be listed even if they don't have any info
 		if (childControl->hasInfoSomewhere() || (controlType() == ControlType::RadioButtonGroup && childControl->controlType() == ControlType::RadioButton))
 		{
-			std::vector<JASPControl*> MDGrandChilren = childControl->getMDSubItems();
+			JASPControls MDGrandChilren = childControl->getMDSubItems();
 
 			if (!childControl->hasLabelOrInfo())
 				// The child does not have label nor info: just add its own children to the parent
@@ -626,7 +629,7 @@ std::vector<JASPControl*> JASPControl::getMDSubItems() const
 
 QString JASPControl::generateMDHelp(int depth) const
 {
-	std::vector<JASPControl*> MDSubItems = getMDSubItems();
+	JASPControls MDSubItems = getMDSubItems();
 	QStringList markdown;
 	markdown << printLabelMD(depth) << info() << "\n";
 
