@@ -25,13 +25,28 @@ if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     OUTPUT_VARIABLE GIT_COMMIT
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-  message(CHECK_PASS "done.")
-
+  if(WIN32)
+      set(GET_DATE_COMMAND powershell.exe -Command "Get-Date -UFormat \"%Y-%m-%d_%R\"")
+  else()
+      set(GET_DATE_COMMAND date -u \+%Y-%m-%d\ %H:%M)
+  endif()
+  
+  execute_process(
+      COMMAND ${GET_DATE_COMMAND}
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      OUTPUT_VARIABLE BUILD_TIMESTAMP
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  
+  message(STATUS "build_timestamp is now set as: ${BUILD_TIMESTAMP}")
+  
   set(GIT_CURRENT_BRANCH ${GIT_BRANCH})
   set(GIT_CURRENT_COMMIT ${GIT_COMMIT})
 
   cmake_print_variables(GIT_CURRENT_BRANCH)
   cmake_print_variables(GIT_CURRENT_COMMIT)
+  
+  message(CHECK_PASS "done.")
 endif()
 
 set(JASP_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
