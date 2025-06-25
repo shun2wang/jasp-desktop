@@ -907,7 +907,7 @@ void EngineRepresentation::processEngineResumedReply(Json::Value & json)
 void EngineRepresentation::processEngineStoppedReply()
 {
 	Log::log() << "EngineRepresentation::processEngineStoppedReply() for engine #" << channelNumber() << std::endl;
-	checkIfExpectedReplyType(engineState::stopRequested);
+	//checkIfExpectedReplyType(engineState::stopRequested);
 
 	setState(engineState::stopped);
 
