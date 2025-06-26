@@ -511,6 +511,11 @@ void EngineSync::process()
 	// This will make it seem smoother to the user, because they will have to wait less for data loading
 	if(enginesStartableCount() > 0)
 		startExtraEngines();*/
+	
+	//There seem to be some scenarios where engines get stuck in a paused state, this doesn't seem right and if we manage to get all the way down here we can probably try and resume them
+	for(auto * engine : _engines)
+		if(engine->paused())
+			engine->resumeEngine();
 }
 
 int EngineSync::sendFilter(const QString & generatedFilter, const QString & filter)

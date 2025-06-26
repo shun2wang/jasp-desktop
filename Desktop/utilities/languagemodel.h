@@ -105,7 +105,6 @@ signals:
 	void									altTerritoriesChanged();
 	void									aboutToChangeLanguage();
 	void									languageChangeDone();
-	void									pauseEngines(bool unloadData = false);
 	void									stopEngines();
 	void									resumeEngines();
 	
