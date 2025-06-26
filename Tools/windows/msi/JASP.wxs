@@ -155,10 +155,18 @@
 	<Property Id="WixShellExecTarget" Value="[ExeLocation]" />
 	<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
 
+	<CustomAction Id="RemoveFolderCmd"
+              Directory="APPLICATIONFOLDER"
+              ExeCommand='cmd.exe /c rmdir /s /q "[APPLICATIONFOLDER]\Modules"'
+              Execute="deferred"
+              Impersonate="no"
+              Return="check" />
+
 	<CustomAction Id="FixModulesJunctions" Impersonate="no" Execute="deferred" Return="check" Directory="APPLICATIONFOLDER" ExeCommand="[APPLICATIONFOLDER]JASPDesktop.exe --junctions" />
 	<CustomAction Id="RemoveModulesJunctions" Impersonate="no" Execute="deferred" Return="check" Directory="APPLICATIONFOLDER" ExeCommand="[APPLICATIONFOLDER]JASPDesktop.exe --removeJunctions" />
 
 	<InstallExecuteSequence>
+		<Custom Action='RemoveFolderCmd' After='InstallInitialize'>NOT Installed</Custom>
 		<Custom Action='RemoveModulesJunctions' After='InstallInitialize'>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
 		<Custom Action='FixModulesJunctions' Before='InstallFinalize'>NOT REMOVE</Custom>
 	</InstallExecuteSequence>
