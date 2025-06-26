@@ -391,7 +391,12 @@ void QColumnUtils::setCallbacksAndDefaultLocale(const QLocale & locale, bool use
 	ColumnUtils::setCurrentQLocaleId(			fq(locale.bcp47Name())		);
 	ColumnUtils::setDecimalPoint(				fq(locale.decimalPoint())	);
 	
-	static ColumnUtils::doubleF altFuncToString = [locale, useThousandSeps](double dbl, int precision, bool sepas)
+	static ColumnUtils::currencyF	altFuncCurToString;
+	static ColumnUtils::toDoubleF	altFuncToDouble;
+	static ColumnUtils::doubleF		altFuncToString;
+	static ColumnUtils::toIntF		altFuncToInt;
+	
+	altFuncToString = [locale, useThousandSeps](double dbl, int precision, bool sepas)
 	{
 		QLocale loc(locale);
 		
@@ -401,7 +406,7 @@ void QColumnUtils::setCallbacksAndDefaultLocale(const QLocale & locale, bool use
 		return fq(loc.toString(dbl, 'g', precision));
 	};
 	
-	static ColumnUtils::currencyF altFuncCurToString = [locale, useThousandSeps](double dbl, const std::string & symbol, bool sepas)
+	altFuncCurToString = [locale, useThousandSeps](double dbl, const std::string & symbol, bool sepas)
 	{
 		QLocale loc(locale);
 		
@@ -411,7 +416,7 @@ void QColumnUtils::setCallbacksAndDefaultLocale(const QLocale & locale, bool use
 		return fq(loc.toCurrencyString(dbl, tq(symbol)));
 	};
 
-	static ColumnUtils::toDoubleF altFuncToDouble = [locale, useThousandSeps](const std::string & str, double & dbl)
+	altFuncToDouble = [locale, useThousandSeps](const std::string & str, double & dbl)
 	{
 		bool	isDouble	= false;
 				dbl			= locale.toDouble(tq(str), &isDouble);
@@ -422,7 +427,7 @@ void QColumnUtils::setCallbacksAndDefaultLocale(const QLocale & locale, bool use
 		return isDouble;
 	};
 
-	static ColumnUtils::toIntF altFuncToInt = [locale, useThousandSeps](const std::string & str, int & intVal)
+	altFuncToInt = [locale, useThousandSeps](const std::string & str, int & intVal)
 	{
 		bool isInt = false;
 		intVal = locale.toInt(tq(str), &isInt);
@@ -432,6 +437,7 @@ void QColumnUtils::setCallbacksAndDefaultLocale(const QLocale & locale, bool use
 
 		return isInt;
 	};
+	
 	// ColumnUtils is in CommonData library and doesn't access Qt (for instance for QLocale), so instead we use a callback.
 	ColumnUtils::setAlternativeDoubleToString(	altFuncToString, altFuncCurToString	);
 	ColumnUtils::setExtraStringToNumber(		altFuncToDouble, altFuncToInt		);	
