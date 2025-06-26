@@ -1453,14 +1453,12 @@ void DatabaseInterface::labelsLoad(Column * column)
 		if (originalValueJson.isNull() && !originalValueJsonStr.empty())
 			originalValueJson = originalValueJsonStr; // For backward compatibility: in some JASP files the originalValueJson is not a json string but just the original string.
 
-		column->labelsSet(order,	value, label, filterAllows, description, originalValueJson, order, id);
-
-		labelsSize = std::max(labelsSize, order);
+		column->labelsSet(labelsSize++,	value, label, filterAllows, description, originalValueJson, order, id);
 	};
 
 	runStatements("SELECT id, value, label, ordering, filterAllows, description, originalValueJson FROM Labels WHERE columnId = ? ORDER BY ordering;", prepare, processRow);
 
-	column->labelsRemoveBeyond(labelsSize);
+	column->labelsShrinkOnlyToSize(labelsSize);
 	 
 	column->endBatchedLabelsDB(false);
 	
@@ -1540,8 +1538,7 @@ void DatabaseInterface::labelsLoad(const Columns &columns)//, std::function<void
 			//	<< "')\n";
 			//Log::log() << str.str() << std::flush;
 
-			localColMap.at(columnId)->labelsSet(order,	value, label, filterAllows, description, originalValueJson, order, id);
-			labelsPerCol[columnId] = std::max(order, labelsPerCol[columnId]);
+			localColMap.at(columnId)->labelsSet(labelsPerCol[columnId]++,	value, label, filterAllows, description, originalValueJson, order, id);
 		}
 	};
 
@@ -1549,7 +1546,7 @@ void DatabaseInterface::labelsLoad(const Columns &columns)//, std::function<void
 
 	for(Column * column : columns)
 	{
-		column->labelsRemoveBeyond(labelsPerCol[column->id()]);
+		column->labelsShrinkOnlyToSize(labelsPerCol[column->id()]);
 		column->endBatchedLabelsDB(false);
 	}
 	
