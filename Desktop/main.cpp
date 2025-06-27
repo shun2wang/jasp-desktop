@@ -30,6 +30,7 @@
 #include "utilities/plotschemehandler.h"
 #include "utilities/imgschemehandler.h"
 #include <json/json.h>
+#include "utilities/appdirs.h"
 
 #ifdef linux
 #include "utilities/qmlutils.h"
@@ -44,7 +45,6 @@ const std::string	jaspExtension		= ".jasp",
 
 #ifdef _WIN32
 #include "utilities/dynamicruntimeinfo.h"
-#include "utilities/appdirs.h"
 #include "utilities/processhelper.h"
 // This function simply sets the proper environment of jaspengine, and starts it in junction-fixing mode or remove-junction mode.
 // The junction-fixining mode is called after the installer runs to fix the junctions in Modules that actually point to renv-cache instead of nowhere
@@ -62,7 +62,7 @@ bool runJaspEngineJunctionFixer(int argc, char *argv[], bool removeJunctions = f
 	engine.setWorkingDirectory(workDir);
 	engine.setProgram("JASPEngine.exe");
 
-	//remove any leftover ModuleDir 
+	//remove any leftover ModuleDir
 	QDir modulesDir(AppDirs::bundledModulesDir());
 	if(modulesDir.exists() && AppDirs::bundledModulesDir().contains("Modules", Qt::CaseInsensitive) && DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() != RuntimeEnvironment::ZIP)
 	{
@@ -444,9 +444,9 @@ int main(int argc, char *argv[])
 	Json::Value	dbJson;
 
 	qInstallMessageHandler(qtMessageHandler);
-	
+
 #ifdef _WIN32
-	if(DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() == RuntimeEnvironment::MSIX) {
+	if(DynamicRuntimeInfo::getRuntimeEnvironment() == RuntimeEnvironment::MSIX) {
 		QCoreApplication::setOrganizationName("JASP-Stats-MSIX");
 		QCoreApplication::setOrganizationDomain("jasp-stats.org");
 		QCoreApplication::setApplicationName("JASPDesktop");
@@ -460,13 +460,14 @@ int main(int argc, char *argv[])
 	QCoreApplication::setOrganizationName("JASP");
 	QCoreApplication::setOrganizationDomain("jasp-stats.org");
 	QCoreApplication::setApplicationName("JASP");
-
 #endif
+	Dirs::setLocalAppdataDir(AppDirs::appData(false).toStdString());
+
 	parseArguments(argc, argv, filePath, newData, unitTest, dirTest, timeOut, save, logToFile, hideJASP, safeGraphics, containForce, contain, dbJson, reportingDir);
 
 	if(safeGraphics)		Settings::setValue(Settings::SAFE_GRAPHICS_MODE, true);
 	else					safeGraphics = Settings::value(Settings::SAFE_GRAPHICS_MODE).toBool();
-	
+
 	if(containForce)		Settings::setValue(Settings::ENGINE_SANDBOX,	contain);
 	else					contain = Settings::value(Settings::ENGINE_SANDBOX).toBool();
 
