@@ -582,7 +582,7 @@ MoveLabelCommand::MoveLabelCommand(QAbstractItemModel *model, const std::vector<
         _colId = _columnModel->chosenColumn();
 		_labels.clear();
 
-		QStringList allLabels = DataSetPackage::pkg()->getColumnLabelsAsStringList(_colId);
+		QStringList allLabels = tq(DataSetPackage::pkg()->getColumnLevelsAsStrVec(_colId));
 		for (int i : indexes)
 		{
 			if (i < allLabels.count())
@@ -615,7 +615,7 @@ MoveLabelCommand::MoveLabelCommand(QAbstractItemModel *model, const std::vector<
 std::vector<size_t> MoveLabelCommand::_getIndexes()
 {
 	std::vector<size_t> indexes;
-	QStringList allLabels = DataSetPackage::pkg()->getColumnLabelsAsStringList(_colId);
+	QStringList allLabels = tq(DataSetPackage::pkg()->getColumnLevelsAsStrVec(_colId));
 	for (const QString& label : _labels)
 	{
 		int i = allLabels.indexOf(label);
