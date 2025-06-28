@@ -781,6 +781,8 @@ void Column::_resetLabelValueMap()
 	
 	_highestIntsId = 0;
 	
+	
+	
 	for(Label * label : _labels)
 		_labelMapIt(label);
 }
@@ -1074,7 +1076,7 @@ int Column::labelIndexNonEmpty(Label *label) const
 	return !_labelNonEmptyIndexByLabel.count(label) ? -1 : _labelNonEmptyIndexByLabel.at(label);
 }
 
-Label * Column::labelByIndexNotEmpty(int index) const
+Label * Column::labelByIndexNonEmpty(int index) const
 {
 	return !_labelByNonEmptyIndex.count(index) ? nullptr : _labelByNonEmptyIndex.at(index);
 }
@@ -1184,6 +1186,18 @@ stringvec Column::labelsAsStrings() const
 	
 	for(size_t i=0; i<returnMe.size(); i++)
 		returnMe[i] = getLabel(i);
+	
+	return returnMe;
+}
+
+stringvec Column::nonEmptyLevelsStrings() const
+{
+	
+	stringvec returnMe;
+	returnMe.resize(labelsNonEmptyCount());
+	
+	for(size_t i=0; i<returnMe.size(); i++)
+		returnMe[i] = labelByIndexNonEmpty(i)->label();
 	
 	return returnMe;
 }

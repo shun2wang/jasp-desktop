@@ -145,6 +145,7 @@ public:
 			std::string				getLabel(	size_t row,	bool fancyEmptyValue = false, bool ignoreEmptyValue = false, bool sepas = true)	const;
 			stringvec				valuesAsStrings()																						const;
 			stringvec				labelsAsStrings()																						const;
+			stringvec				nonEmptyLevelsStrings()																					const;
 			stringvec				displaysAsStrings()																						const;
 			stringvec				dataAsRLevels(intvec & values, const boolvec & filter, bool useLabels = true)			; ///< values is output! If filter is of different length than the data an error is thrown, if length is zero it is ignored. useLabels indicates whether the levels will be based on the label or on the value as specified in the label editor.
 			doublevec				dataAsRDoubles(const boolvec & filter)													const; ///< If filter is of different length than the data an error is thrown, if length is zero it is ignored
@@ -178,7 +179,7 @@ public:
 			Label				*	labelByValue(			const std::string	&	value)									const; ///< Might be nullptr for missing label, returns the first of labelsByValue
 			Label				*	labelByIntsId(			int						intsId)									const; ///< Might be nullptr for missing label
 			Label				*	labelByDisplay(			const std::string	&	display)								const; ///< Might be nullptr for missing label, returns the first of labelsByDisplay
-			Label				*	labelByIndexNotEmpty(	int						index)									const;
+			Label				*	labelByIndexNonEmpty(	int						index)									const;
 			Label				*	labelByValueAndDisplay(	const std::string	&	value, const std::string &	label)		const; ///< Might be nullptr for missing label, assumes you ran labelsMergeDuplicates before
 			void					labelsHandleAutoSort(	bool					doDbUpdateEtc = true);
 

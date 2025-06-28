@@ -69,7 +69,7 @@ std::string	labelFilterGenerator::generateLabelFilter(size_t col)
 	DataSetPackage	*	pkg				= DataSetPackage::pkg();
 	std::string			columnName		= pkg->getColumnName(col);
 	boolvec				filterAllows	= pkg->getColumnFilterAllows(col);
-	stringvec			labels			= pkg->getColumnLabelsAsStrVec(col);
+	stringvec			labels			= pkg->getColumnLevelsAsStrVec(col);
 	int					pos				= std::count_if(filterAllows.begin(), filterAllows.end(), [](bool f){ return f; }), 
 						cnt				= 0;
 	bool				bePositive		= pos <= filterAllows.size() - pos;

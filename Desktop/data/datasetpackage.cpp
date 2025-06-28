@@ -267,7 +267,7 @@ QModelIndex DataSetPackage::index(int row, int column, const QModelIndex &parent
 			case dataSetBaseNodeType::column:
 			{
 				Column	* col	= dynamic_cast<Column*>(parentNode);
-				Label	* lab	= col->labelByIndexNotEmpty(row);
+				Label	* lab	= col->labelByIndexNonEmpty(row);
 				pointer			= dynamic_cast<const void*>(lab);
 				break;
 			}
@@ -572,10 +572,10 @@ QVariant DataSetPackage::data(const QModelIndex &index, int role) const
 		case int(specialRoles::valuesDblList):					return getColumnValuesAsDoubleList(getColumnIndex(column->name()));
 		case int(specialRoles::description):					return index.row() >= labels.size() ? "" : tq(labels[index.row()]->description());
 		case int(specialRoles::filter):							return index.row() >= labels.size() || labels[index.row()]->filterAllows();
-		case int(specialRoles::value):							return tq(column->labelByIndexNotEmpty(index.row())->originalValueAsString());
+		case int(specialRoles::value):							return tq(column->labelByIndexNonEmpty(index.row())->originalValueAsString());
 		case int(specialRoles::lines):							return getDataSetViewLines(index.row() == 0, index.column() == 0, true, true);
 		case int(specialRoles::label):							[[fallthrough]];
-		case Qt::DisplayRole:									return tq(column->labelByIndexNotEmpty(index.row())->labelDisplay());
+		case Qt::DisplayRole:									return tq(column->labelByIndexNonEmpty(index.row())->labelDisplay());
 		default:												return QVariant();
 		}
 	}
@@ -1861,6 +1861,16 @@ stringvec DataSetPackage::getColumnLabelsAsStrVec(size_t columnIndex) const
 		return list;
 
 	return _dataSet->columns()[columnIndex]->labelsAsStrings();
+}
+
+
+stringvec DataSetPackage::getColumnLevelsAsStrVec(size_t columnIndex) const
+{
+	stringvec list;
+	if(columnIndex < 0 || columnIndex >= dataColumnCount()) 
+		return list;
+
+	return _dataSet->columns()[columnIndex]->nonEmptyLevelsStrings();
 }
 
 
