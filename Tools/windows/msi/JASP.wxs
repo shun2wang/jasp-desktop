@@ -166,7 +166,7 @@
 	<CustomAction Id="RemoveModulesJunctions" Impersonate="no" Execute="deferred" Return="check" Directory="APPLICATIONFOLDER" ExeCommand="[APPLICATIONFOLDER]JASPDesktop.exe --removeJunctions" />
 
 	<InstallExecuteSequence>
-		<Custom Action='RemoveFolderCmd' After='InstallInitialize'>(UPGRADINGPRODUCTCODE) OR (REMOVE="ALL")</Custom>
+		<Custom Action='RemoveFolderCmd' After='InstallInitialize'>NOT Installed</Custom>
 		<Custom Action='RemoveModulesJunctions' After='InstallInitialize'>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
 		<Custom Action='FixModulesJunctions' Before='InstallFinalize'>NOT REMOVE</Custom>
 	</InstallExecuteSequence>
