@@ -160,13 +160,13 @@
               ExeCommand='cmd.exe /c rmdir /s /q "[APPLICATIONFOLDER]\Modules"'
               Execute="deferred"
               Impersonate="no"
-              Return="check" />
+              Return="ignore" />
 
 	<CustomAction Id="FixModulesJunctions" Impersonate="no" Execute="deferred" Return="check" Directory="APPLICATIONFOLDER" ExeCommand="[APPLICATIONFOLDER]JASPDesktop.exe --junctions" />
 	<CustomAction Id="RemoveModulesJunctions" Impersonate="no" Execute="deferred" Return="check" Directory="APPLICATIONFOLDER" ExeCommand="[APPLICATIONFOLDER]JASPDesktop.exe --removeJunctions" />
 
 	<InstallExecuteSequence>
-		<Custom Action='RemoveFolderCmd' After='InstallInitialize'>NOT Installed</Custom>
+		<Custom Action='RemoveFolderCmd' After='InstallInitialize'>(UPGRADINGPRODUCTCODE) OR (REMOVE="ALL")</Custom>
 		<Custom Action='RemoveModulesJunctions' After='InstallInitialize'>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
 		<Custom Action='FixModulesJunctions' Before='InstallFinalize'>NOT REMOVE</Custom>
 	</InstallExecuteSequence>
