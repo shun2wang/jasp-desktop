@@ -377,7 +377,7 @@ void FileMenu::analysisAdded(Analysis *analysis)
 
 void FileMenu::workspaceModified()
 {
-	if(DataSetPackage::pkg()->isLoaded())
+	if(DataSetPackage::pkg()->isLoaded() && !DataSetPackage::pkg()->dataFileReadOnly())
 		_actionButtons->setEnabled(ActionButtons::Save, DataSetPackage::pkg()->isModified());
 }
 
