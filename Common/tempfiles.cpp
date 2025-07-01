@@ -304,15 +304,23 @@ vector<string> TempFiles::retrieveList(int id)
 	if (error)
 		return files;
 
+    std::string sessionPath = std::filesystem::path(_sessionDirName).generic_string();
+
+    Log::log() << "TempFiles::retrieveList uses sessionpath " << sessionPath << " and finds: ";
+
 	for (; itr != std::filesystem::directory_iterator(); itr++)
 		if (std::filesystem::is_regular_file(itr->status()))
 		{
 			std::filesystem::path pad = itr->path();
 			string absPath = pad.generic_string();
-			string relPath = absPath.substr(_sessionDirName.size()+1);
+            string relPath = absPath.substr(sessionPath.size()+1);
+
+            Log::log(false) << relPath << " from " << absPath << " || ";
 
 			files.push_back(relPath);
 		}
+
+    Log::log(false) << std::endl;
 
 	return files;
 }

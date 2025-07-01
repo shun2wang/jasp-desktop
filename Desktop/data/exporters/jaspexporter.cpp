@@ -120,8 +120,14 @@ void JASPExporter::saveTempFile(archive *a, const std::string & filePath)
 		archive_entry_free(entry);
 	}
 	else
+    {
 		Log::log() << "JASP Export: cannot find/open file " << filePath << std::endl;;
-
+#ifdef JASP_DEBUG
+        //If we are building jasp ourselves or debuging it might be helpful to know stuff is not getting written.
+        //A normal user should however not be forced to endure a crash for that. Because half a jasp file could be better than nothing
+        throw std::runtime_error("JASP Export: cannot find/open file " + filePath);
+#endif
+    }
 	readTempFile.close();
 }
 
