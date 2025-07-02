@@ -2080,6 +2080,8 @@ void DatabaseInterface::create()
 	//runStatements("pragma journal_mode=wal;");
 	//runStatements("pragma synchronous=full;");
 	
+	sqlite3_busy_timeout(_dbCreated, 100);
+	
 	bool	constructionWorked	= false;
 	size_t	constructionAttempt = 0; 
 isItReallyALabel:
@@ -2163,6 +2165,8 @@ void DatabaseInterface::load()
             Log::log() << "Opened internal sqlite database for loading at '" << dbFile() << "'. This is for thread " << std::this_thread::get_id() << std::endl;
 
         _dbs[std::this_thread::get_id()] = db;
+		
+		sqlite3_busy_timeout(db, 100);
 
         try
         {
@@ -2309,6 +2313,7 @@ void DatabaseInterface::truncateAllTables()
 	DELETE FROM Columns;
 	DELETE FROM Filters;
 	DELETE FROM DataSets;
+	VACUUM;
 )MultiPower");
 	
 	
