@@ -204,7 +204,7 @@ void ListModelFactorsForm::factorAdded(int index, VariablesListBase* listView)
 
 void ListModelFactorsForm::ensureNesting()
 {
-	if (_ensuringNesting || !_factorsForm->nested()) return;
+	if (_ensuringNesting || !_factorsForm->nested() || !_factorsForm->initialized()) return;
 
 	ListModelDraggable	*currentModel	= qobject_cast<ListModelDraggable*>(sender()),
 						*onderModel		= nullptr,
