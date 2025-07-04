@@ -133,7 +133,7 @@ signals:
 public:
 	ListModel			*	getModel(const QString& modelName)								const	{ return _modelMap.count(modelName) > 0 ? _modelMap[modelName] : nullptr;	} // Maps create elements if they do not exist yet
 	void					addModel(ListModel* model)												{ if (!model->name().isEmpty())	_modelMap[model->name()] = model;			}
-	JASPControl			*	getControl(const QString& name)											{ return _controls.contains(name) ? _controls[name] : nullptr;				}
+	Q_INVOKABLE JASPControl* getControl(const QString& name)										{ return _controls.contains(name) ? _controls[name] : nullptr;				}
 	void					addListView(JASPListControl* listView, JASPListControl* sourceListView);
 	void					addControl(JASPControl* control);
 

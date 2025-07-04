@@ -23,24 +23,26 @@ import JASP
 
 VariablesList
 {
+	id						: modelTermsList
 	dropMode				: JASP.DropInsert
 	name					: "modelTerms"
-	title					: qsTr("Model Terms")
+	title					: qsTr("Model Terms!!")
 	listViewType			: JASP.Interaction
 	allowTypeChange			: false
 
-	rowComponentTitle		: qsTr("Add to null model")
+	rowComponentTitle		: qsTr("Add to null mode????")
 	interactionHighOrderCheckBox : "isNuisance"
 
-	property var randomFactorsList
+	property string checkedPerDefault: "randomFactors"
 
 	rowComponent			: CheckBox
 	{
 		name: "isNuisance"
 		Component.onCompleted:
 		{
-			if ((typeof(isNew) !== 'undefined') && isNew && randomFactorsList)
-				checked = randomFactorsList.columnsNames.includes(rowValue)
+			var varList = form.getControl(modelTermsList.checkedPerDefault)
+			if ((typeof(isNew) !== 'undefined') && isNew && varList)
+				checked = varList.columnsNames.includes(rowValue)
 		}
 	}
 }
