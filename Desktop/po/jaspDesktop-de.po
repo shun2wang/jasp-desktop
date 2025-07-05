@@ -59,14 +59,6 @@ msgctxt "InputListView|"
 msgid "New Value"
 msgstr "Neuer Wert"
 
-msgctxt "ModelTermsList|"
-msgid "Model Terms"
-msgstr "Modellterme"
-
-msgctxt "ModelTermsList|"
-msgid "Add to null model"
-msgstr "Zu Nullmodell hinzufügen"
-
 msgctxt "TableView|"
 msgid "Row #"
 msgstr "Zeile #"
@@ -5952,3 +5944,30 @@ msgstr ""
 msgctxt "Computer|"
 msgid "R Data files %1"
 msgstr "R-Datendateien %1"
+
+msgctxt "ModelTermsList|"
+msgid "Model Terms!!"
+msgstr ""
+
+msgctxt "ModelTermsList|"
+msgid "Add to null mode????"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Open file"
+msgstr ""
+
+#, qt-format
+msgctxt "MainWindow|"
+msgid "Cannot access file %1"
+msgstr ""
+
+#, qt-format
+msgctxt "MainWindow|"
+msgid "File %1 is not found."
+msgstr ""
+
+#, qt-format
+msgctxt "MainWindow|"
+msgid "JASP does not support this file type %1."
+msgstr ""

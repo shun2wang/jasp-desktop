@@ -12,10 +12,6 @@ msgctxt "SortMenuModel|"
 msgid "None"
 msgstr "Ningún"
 
-msgctxt "ModelTermsList|"
-msgid "Model Terms"
-msgstr "Elementos do Modelo"
-
 msgctxt "AnalysisForm|"
 msgid "Plot"
 msgstr "Gráfica"
@@ -1973,10 +1969,6 @@ msgid "Could not find edit options of plot %1 so plot editing will not work..."
 msgstr ""
 "Non se poden atopar as opcións de edición da gráfica %1, entón a edición de "
 "gráficas non funcionará..."
-
-msgctxt "ModelTermsList|"
-msgid "Add to null model"
-msgstr "Engadir ao modelo nulo"
 
 #, qt-format
 msgctxt "TextField|"
@@ -5930,3 +5922,30 @@ msgstr ""
 msgctxt "Computer|"
 msgid "R Data files %1"
 msgstr "Ficheiros %1 de datos de R"
+
+msgctxt "ModelTermsList|"
+msgid "Model Terms!!"
+msgstr ""
+
+msgctxt "ModelTermsList|"
+msgid "Add to null mode????"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Open file"
+msgstr ""
+
+#, qt-format
+msgctxt "MainWindow|"
+msgid "Cannot access file %1"
+msgstr ""
+
+#, qt-format
+msgctxt "MainWindow|"
+msgid "File %1 is not found."
+msgstr ""
+
+#, qt-format
+msgctxt "MainWindow|"
+msgid "JASP does not support this file type %1."
+msgstr ""
