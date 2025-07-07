@@ -163,8 +163,11 @@ void HelpModel::showOrToggleParticularPageForAnalysis(Analysis * analysis, QStri
 	{
 		_analysis = analysis;
 		emit analysisChanged();
-		
-		if((loadHelpContent(pagePath, false, renderFunc, contentMD) || loadHelpContent(pagePath, true, renderFunc, contentMD)) && renderFunc == "window.render")
+
+		if((loadHelpContent(pagePath, false, renderFunc, contentMD)
+			 || loadHelpContent(pagePath, true, renderFunc, contentMD)
+			 || (!helpPage.isEmpty() && loadHelpContent(helpPage, true, renderFunc, contentMD)))
+			&& renderFunc == "window.render")
 		{
 			//If we get here the file exists and it is a markdown file.
 			setMarkdown(contentMD);
