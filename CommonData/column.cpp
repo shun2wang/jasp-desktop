@@ -129,6 +129,9 @@ bool Column::setName(const std::string &name)
 	std::string orgName = _name;
 	_name = getUniqueName(name);
 
+	if (orgName == _name) // Special case when the getUniqueName gives back the original name (e.g 2 columns 'test' and 'test 2' and the user rename 'test 2' to 'test')
+		return false;
+
 	if(_title.empty() || _title == orgName)
 		setTitle(_name);
 
