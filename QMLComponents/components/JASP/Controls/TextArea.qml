@@ -201,9 +201,10 @@ TextAreaBase
 	Rectangle
 	{
 		anchors.fill:			infoText
-		anchors.margins:		4 * preferencesModel.uiScale
-		opacity:				.8
+		opacity:				textArea.hasScriptError ? 1 : .8
+		color:					textArea.hasScriptError ? jaspTheme.errorMessagesBackgroundColor : flickableRectangle.color
 	}
+
 	Text
 	{
 		id:						infoText
@@ -222,11 +223,5 @@ TextAreaBase
 		color:					!enabled ? jaspTheme.textDisabled : textArea.hasScriptError ? jaspTheme.textEnabled : jaspTheme.grayDarker
 		wrapMode:				Text.Wrap
 		width:					implicitWidth > textArea.width - 2 * anchors.margins ? textArea.width - 2 * anchors.margins : implicitWidth
-
-		Rectangle
-		{
-			anchors.fill:	infoText
-			color:			textArea.hasScriptError ? jaspTheme.errorMessagesBackgroundColor : "transparent"
-		}
 	}
 }
