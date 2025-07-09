@@ -1157,15 +1157,15 @@ void EngineSync::enginesPrepareForData()
 			e->pauseEngine(true);
 		}
 
-	int64_t tryTill = Utils::currentMillis() + ENGINE_KILLTIME;
+	//int64_t tryTill = Utils::currentMillis() + ENGINE_KILLTIME;
 
-	while(!allEnginesPaused(pauseOrKillThese) && tryTill >= Utils::currentMillis())
-		for (auto * engine : pauseOrKillThese)
-			engine->processReplies();
+	//while(!allEnginesPaused(pauseOrKillThese) && tryTill >= Utils::currentMillis())
+	//	for (auto * engine : pauseOrKillThese)
+	//		engine->processReplies();
 
-	for (auto * engine : pauseOrKillThese)
-		if(!engine->paused())
-			engine->killEngine();
+	//for (auto * engine : pauseOrKillThese)
+	//	if(!engine->paused())
+	//		engine->killEngine();
 }
 
 void EngineSync::enginesReceiveNewData()
