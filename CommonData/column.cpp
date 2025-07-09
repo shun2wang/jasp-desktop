@@ -1926,24 +1926,16 @@ void Column::upgradeSetDoubleLabelsInInts()
 }
 
 void Column::upgradeDoublesToLabels()
-{
-	doubleset dbls(_dbls.begin(), _dbls.end());
-	
-	std::map<double, int> dblToIntsId;
-	
+{	
 	beginBatchedLabelsDB();
 	
-	for(double dbl : dbls)
-		if(!dblToIntsId.count(dbl))
-		{
-			std::string		dblStr	= Column::doubleToDisplayString(dbl);
-			Label		*	label	= labelByValue(dblStr);
-			dblToIntsId		[dbl]	= label ? label->intsId() : labelsAdd(dblStr);
-		}
-	
 	for(size_t row=0; row<_dbls.size(); row++)
-		if(_ints[row] == Label::NO_LABEL && dblToIntsId.count(_dbls[row]))
-			_ints[row] = dblToIntsId[_dbls[row]];
+		if(!std::isnan(_dbls[row]) && _ints[row] == Label::NO_LABEL)
+		{
+			std::string		dblStr	= Column::doubleToDisplayString(_dbls[row], false, false);
+			Label		*	label	= labelByValue(dblStr);
+			_ints[row]				= label ? label->intsId() : labelsAdd(dblStr);
+		}
 }
 
 void Column::upgradeExtractDoublesIntsFromLabels()
