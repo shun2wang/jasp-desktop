@@ -5514,14 +5514,6 @@ msgctxt "Computer|"
 msgid "R Data files %1"
 msgstr ""
 
-msgctxt "ModelTermsList|"
-msgid "Model Terms!!"
-msgstr ""
-
-msgctxt "ModelTermsList|"
-msgid "Add to null mode????"
-msgstr ""
-
 msgctxt "MainWindow|"
 msgid "Open file"
 msgstr ""
@@ -5539,4 +5531,12 @@ msgstr ""
 #, qt-format
 msgctxt "MainWindow|"
 msgid "JASP does not support this file type %1."
+msgstr ""
+
+msgctxt "ModelTermsList|"
+msgid "Model Terms"
+msgstr ""
+
+msgctxt "ModelTermsList|"
+msgid "Add to null model"
 msgstr ""
