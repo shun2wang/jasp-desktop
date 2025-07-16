@@ -26,7 +26,7 @@ VariablesList
 	id						: modelTermsList
 	dropMode				: JASP.DropInsert
 	name					: "modelTerms"
-	title					: qsTr("Model Terms!!")
+	title					: qsTr("Model Terms")
 	listViewType			: JASP.Interaction
 	allowTypeChange			: false
 
