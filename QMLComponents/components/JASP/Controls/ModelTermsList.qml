@@ -30,7 +30,7 @@ VariablesList
 	listViewType			: JASP.Interaction
 	allowTypeChange			: false
 
-	rowComponentTitle		: qsTr("Add to null mode????")
+	rowComponentTitle		: qsTr("Add to null mode")
 	interactionHighOrderCheckBox : "isNuisance"
 
 	property string checkedPerDefault: "randomFactors"
