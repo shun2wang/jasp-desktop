@@ -432,6 +432,13 @@ void EngineSync::process()
 		
 	processLogCfgRequests();
 
+	if(_stopProcessing || _dataMode || _filterRunning)
+	{
+		if ((_dataMode) && processComputedColumnQueue())
+			startExtraEngines(1);
+		return;
+	}
+
 	//if(_engines.size() == 0)
 	//	startExtraEngines();
 	
