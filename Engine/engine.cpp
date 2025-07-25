@@ -173,6 +173,7 @@ void Engine::beIdle(bool newlyIdle)
 	{
 		Log::log() << "Attempting to clean up memory used by engine/R a bit." << std::endl;
 		rbridge_memoryCleaning();
+		Log::log() << "Memory is cleaned up" << std::endl;
 		idleStartTime = -1;
 	}
 
