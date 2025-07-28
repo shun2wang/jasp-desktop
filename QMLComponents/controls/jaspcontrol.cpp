@@ -247,10 +247,13 @@ void JASPControl::componentComplete()
 
 		JASPListControl* listControl = qobject_cast<JASPListControl*>(this);
 		if (listControl)
-			listControl->setUpModel();
+			listControl->setUpModel(); // setUpModel must be called before setUp.
+
+		// For controls made via row components, wait for all controls to be created before calling the setUp: setUp links the controls together via their sources. So in this case, the rowControls calls the setUp once all the controls are made.
 		if (parentlistView)
 			parentlistView->addRowControl(_parentListViewKey, this);
-
+		else
+			setUp(); // For controls not made via a row components (as in FactorsForm), setUp must be called
 	}
 
 	if (_background == nullptr && _innerControl != nullptr)
