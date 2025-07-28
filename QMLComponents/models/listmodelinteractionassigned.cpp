@@ -57,7 +57,7 @@ void ListModelInteractionAssigned::initTerms(const Terms &terms, const Terms::Re
 			}
 		}
 	}
-	_addTerms(newTerms);
+	_setTerms(newTerms);
 	ListModelAssignedInterface::initTerms(this->terms(), allValuesMap, reInit);
 }
 
