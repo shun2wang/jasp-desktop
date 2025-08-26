@@ -308,7 +308,7 @@ void EngineSync::start(int )
 	_timerProcess	= new QTimer(this);
 	_timerBeat		= new QTimer(this);
 
-	connect(_timerProcess,	&QTimer::timeout, this, &EngineSync::process,				Qt::QueuedConnection);
+	connect(_timerProcess,	&QTimer::timeout, this, &EngineSync::process,				Qt::DirectConnection);
 	connect(_timerBeat,		&QTimer::timeout, this, &EngineSync::heartbeatTempFiles,	Qt::QueuedConnection);
 
 	_timerProcess->start(100);
