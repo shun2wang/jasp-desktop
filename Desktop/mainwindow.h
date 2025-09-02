@@ -277,6 +277,7 @@ private slots:
 	bool checkDoSync();
 	void unitTestTimeOut();
 	void saveJaspFileHandler();
+	void saveTmpFileHandler();
 	void logToFileChanged(bool logToFile);
 	void logRemoveSuperfluousFiles(int maxFilesToKeep);
 
