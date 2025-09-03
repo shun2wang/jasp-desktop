@@ -27,10 +27,10 @@ void DatabaseInterface::upgradeDBFromVersion(Version originalVersion)
 {
 	transactionWriteBegin();
 
-	if(originalVersion < "0.18.2")
+	if((originalVersion < "0.18.2") && !tableHasColumn("DataSets", "description"))
 		runStatements("ALTER TABLE DataSets ADD COLUMN description     TEXT;");
 
-	if(originalVersion < "0.19.0")
+	if((originalVersion < "0.19.0") && tableHasColumn("Columns", "isComputed"))
 		runStatements("ALTER TABLE Columns  DROP 	COLUMN isComputed;");		// was removed in 0.18.3
 	
 	if(originalVersion <= "0.19.0")
