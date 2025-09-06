@@ -1,15 +1,9 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-08-30 21:22+0000\n"
-"Last-Translator: Shun Wang <shuonwang@gmail.com>\n"
-"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
-"projects/jasp/jaspdesktop/zh_Hans/>\n"
-"Language: zh_Hans\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13.1-dev\n"
 "X-Language: zh_Hans\n"
 "X-Qt-Contexts: true\n"
 
@@ -5733,3 +5727,79 @@ msgstr ""
 "此分析存储时没有分析状态，要调整图像大小，必须先刷新分析。\n"
 "\n"
 "是否刷新分析？"
+
+msgctxt "AutoSaves|"
+msgid "Recovery"
+msgstr ""
+
+msgctxt "AutoSaves|"
+msgid "No recovery files found"
+msgstr ""
+
+msgctxt "AutoSaves|"
+msgid "Recovery files are deleted after a month"
+msgstr ""
+
+msgctxt "PrefsData|"
+msgid "Save settings"
+msgstr ""
+
+msgctxt "PrefsData|"
+msgid "Automatically save a backup of your workspace"
+msgstr ""
+
+msgctxt "PrefsData|"
+msgid ""
+"When enabled this will save a copy of your workspace in a folder next to the "
+"logs. If JASP crashes with otherwise unsaved changes this backup will make "
+"sure you don't lose all your work."
+msgstr ""
+
+msgctxt "PrefsData|"
+msgid "Autosave interval in minutes"
+msgstr ""
+
+msgctxt "PrefsData|"
+msgid "Interval in minutes between autosaves."
+msgstr ""
+
+#, qt-format
+msgctxt "DataSetPackage|"
+msgid "%1 autosaved"
+msgstr ""
+
+#, qt-format
+msgctxt "DataSetPackage|"
+msgid "Full path: %1"
+msgstr ""
+
+msgctxt "DataSetPackage|"
+msgid "Unsaved workspace"
+msgstr ""
+
+#, qt-format
+msgctxt "DataSetPackage|"
+msgid "Unsaved workspace of datafile %1"
+msgstr ""
+
+msgctxt "DataSetPackage|"
+msgid "Autosave"
+msgstr ""
+
+msgctxt "FileEvent|"
+msgid "Saving autosave JASP File"
+msgstr ""
+
+#, qt-format
+msgctxt "AutoSaveFileSystem|"
+msgid "Saved at %1"
+msgstr ""
+
+#, qt-format
+msgctxt "AutoSaveFileSystem|"
+msgid "Saved %1 seconds ago, might still be loaded in another JASP."
+msgstr ""
+
+msgctxt "ResourceButtons|"
+msgid "Recovery"
+msgstr ""
