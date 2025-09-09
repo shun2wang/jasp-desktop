@@ -1468,6 +1468,7 @@ void MainWindow::dataSetIOCompleted(FileEvent *event)
 			_package->reset(false);
 			_ribbonModel->showStatistics();
 			_fileMenu->buttonsForEmptyWorkspace();
+			_filterModel->reset();
 
 			if(!_applicationExiting)
 				_engineSync->cleanRestart();
