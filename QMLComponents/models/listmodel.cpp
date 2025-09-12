@@ -76,9 +76,10 @@ void ListModel::addControlError(const QString &error) const
 	_listView->addControlError(error);
 }
 
-void ListModel::initTerms(const Terms &terms, const Terms::RelatedValuesPerTerm& allValuesMap, bool)
+void ListModel::initTerms(const Terms &terms, const Terms::RelatedValuesPerTerm& allValuesMap, bool reInit)
 {
-	_initTerms(terms, allValuesMap, true);
+
+	_initTerms(terms, allValuesMap, reInit);
 }
 
 void ListModel::_initTerms(const Terms &terms, const Terms::RelatedValuesPerTerm& allValuesMap, bool initRowControls)
@@ -86,13 +87,19 @@ void ListModel::_initTerms(const Terms &terms, const Terms::RelatedValuesPerTerm
 	beginResetModel();
 	if (initRowControls)
 	{
+		for(auto & k : _rowControlsMap.keys())
+		{
+			_rowControlsMap[k]->disconnectAndDeleteControls();
+			_rowControlsMap[k]->deleteLater();
+		}
 		_rowControlsMap.clear();
 		_rowControlsValues = allValuesMap;
 	}
 	_setTerms(terms);
 	endResetModel();
 
-	if (initRowControls)	_connectAllSourcesControls();
+	if (initRowControls)	
+		_connectAllSourcesControls();
 }
 
 void ListModel::_connectAllSourcesControls()
@@ -158,6 +165,7 @@ void ListModel::_connectSourceControls(SourceItem* sourceItem)
 				{
 					connect(control, &JASPControl::boundValueChanged, this, &ListModel::sourceTermsReset);
 					_rowControlsConnected.push_back(boundControl);
+					
 				}
 			}
 			else
@@ -193,6 +201,7 @@ void ListModel::setUpRowControls()
 	{
 		if (!_rowControlsMap.contains(term.value()))
 		{
+			
 			bool hasOptions = _rowControlsValues.contains(term.value());
 			RowControls* rowControls = new RowControls(this, _rowComponent, _rowControlsValues[term.value()]);
 			_rowControlsMap[term.value()] = rowControls;
@@ -202,7 +211,7 @@ void ListModel::setUpRowControls()
 			_rowControlsMap[term.value()]->setContext(row, term);
 		row++;
 	}
-
+	
 	QStringList removedKeys;
 	for (const QString& key : _rowControlsMap.keys())
 		if (!terms().containsValue(key))
@@ -437,6 +446,11 @@ void ListModel::selectAllItems()
 
 	emit dataChanged(index(0, 0), index(nbTerms - 1, 0), { ListModel::SelectedRole });
 	emit selectedItemsChanged();
+}
+
+void ListModel::cleanUp()
+{
+	disconnect();
 }
 
 void ListModel::sourceTermsReset()

@@ -105,7 +105,7 @@ public:
 	Q_INVOKABLE void				selectAllItems();
 	Q_INVOKABLE QList<int>			selectedItems()															{ return _selectedItems; }
 
-
+				void				cleanUp();
 signals:
 			void termsChanged();		// Used to signal all kinds of changes in the model. Do not call it directly
 			void variableNamesChanged(QMap<QString, QString> map);
@@ -155,6 +155,7 @@ private:
 
 			JASPListControl*				_listView = nullptr;
 			Terms							_terms;
+			
 
 };
 

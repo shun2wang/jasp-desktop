@@ -80,7 +80,7 @@ bool Application::notify(QObject *receiver, QEvent *event)
 		{
 			static int	eventEnumIndex	= QEvent::staticMetaObject.indexOfEnumerator("Type");
 			QString		name			= QEvent::staticMetaObject.enumerator(eventEnumIndex).valueToKey(event->type()),
-						logThis			= "Application::notify event type: " + (name != "" ? name : QString(event->type())) + " for receiver: '" + receiver->objectName() + "'";
+						logThis			= "Application::notify event type: " + (name != "" ? name : QString::number(event->type())) + " for receiver: '" + receiver->objectName() + "'";
 
 			Log::log()  << logThis << std::endl;
 		}*/

@@ -4,8 +4,12 @@ var useThousandsSeparators = true
 
 function setCurrentLocaleID(id, useThousandsSeps)
 {
-	currentLocale			= new Intl.Locale(id)
-	currentLocaleId			= id
+	if(currentLocaleId != id)
+	{
+		currentLocale			= new Intl.Locale(id)
+		currentLocaleId			= id
+	}
+	
 	useThousandsSeparators	= useThousandsSeps
 }
 

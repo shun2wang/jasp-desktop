@@ -39,8 +39,9 @@ void ListModelTermsAvailable::initTerms(const Terms &terms, const Terms::Related
 	if (currentSortType() != SortType::None)
 		Sortable::sortItems();
 
-	removeTermsInAssignedList();
 	endResetModel();
+	
+	removeTermsInAssignedList();
 }
 
 void ListModelTermsAvailable::sortItems(SortType sortType)

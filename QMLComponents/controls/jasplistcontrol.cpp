@@ -73,7 +73,10 @@ void JASPListControl::_checkAllSourcesAreConnected(bool addConnect)
 void JASPListControl::_setupSources()
 {
 	for (SourceItem* sourceItem : _sourceItems)
-		delete sourceItem;
+	{
+		sourceItem->deleteLater();
+		sourceItem->disconnect();
+	}
 
 	_sourceItems = SourceItem::readAllSources(this);
 
@@ -176,7 +179,7 @@ void JASPListControl::cleanUp()
 
 		if (_model)
 		{
-			_model->disconnect();
+			_model->cleanUp();
 			for (RowControls* rowControls : _model->getAllRowControls().values())
 				for (JASPControl* control : rowControls->getJASPControlsMap().values())
 					control->cleanUp();
