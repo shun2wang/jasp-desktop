@@ -343,13 +343,10 @@ void DataSetViewBase::viewportChanged()
 	determineCurrentViewPortIndices();
     storeOutOfViewItems();
 	
-	if(_viewportW > 0 && _viewportH > 0)
+	if(_viewportW >= 0 && _viewportH >= 0)
 	{
 		buildNewLinesAndCreateNewItems();
-	
-		JASPTIMER_RESUME(DataSetViewBase::updateCalledForRender);
 		update();
-		JASPTIMER_STOP(DataSetViewBase::updateCalledForRender);
 	}
 
 	_previousViewportColMin = _currentViewportColMin;
