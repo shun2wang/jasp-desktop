@@ -25,7 +25,10 @@
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/Windows-x86_64/jaspReliability.JASPModule",             "checksum" : "c60acf889cd9561fcbea0aad4362ba293351e7cc6e1fc17f78dda81f48d43c77"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/Windows-x86_64/jaspMetaAnalysis.JASPModule",            "checksum" : "0830e413209f33f43252e1ff9df647e5819e985fa8d352037b995c96c0015aa4"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/Windows-x86_64/jaspProcess.JASPModule",                 "checksum" : "e685ca891548137c4dfd2674989ee6d21b3aec74c3f1e55fbdbb2da82e5e2e55"},
-{"url" : "https://repo.jasp-stats.org/bundles-20-08/Windows-x86_64/jaspRegression.JASPModule",              "checksum" : "f480bdc33fc05187bacb079c99b28d69699dcaf9545693d4f8ac2959d005e691"},
+{
+	"url": "https://github.com/jasp-stats-modules/jaspRegression/releases/download/bd382e0e_R-4-5-1/jaspRegression_0.95.0_Windows_x86-64_R-4-5-1.JASPModule",
+	"checksum": "81b3289da1ff389d7618f741e8e4278e24f0f18cae176e6ac6eb73a92042133c"
+},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/Windows-x86_64/jaspCochrane.JASPModule",                "checksum" : "f1ce002042cf3d3d68069cc9fbb1ae370bccd9406afff3fe97d679935a1002cf"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/Windows-x86_64/jaspPredictiveAnalytics.JASPModule",     "checksum" : "9997333baca97f1e22d2e9a76c2e1b6f428401d8aba675fc49f518225d529c09"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/Windows-x86_64/jaspFactor.JASPModule",                  "checksum" : "597456c13e5fe537931d64c93a828f53944307faeda4d8bb9da83b696120cbc5"},
@@ -41,7 +44,10 @@
 "MacOS-arm64" : [
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-arm64/jaspAcceptanceSampling.JASPModule",      "checksum" : "d0e15b73ef9a3a32bd133e4762e4735e8226be297c278625a769cd8023110962"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-arm64/jaspPower.JASPModule",                   "checksum" : "a503061440a8972dd1b1ea4776cc77fceb0889c5f23ccb4f8bea296f15df037c"},
-{"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-arm64/jaspRegression.JASPModule",              "checksum" : "93400e60bd4c9a4691f42cb43215a86007198c60a4ea1f7bce1bb1f86d452b1a"},
+{
+	"url": "https://github.com/jasp-stats-modules/jaspRegression/releases/download/bd382e0e_R-4-5-1/jaspRegression_0.95.0_MacOS_arm64_R-4-5-1.JASPModule",
+	"checksum": "3472cd29e92f4d22408942d3da0b1eb96eea75f0c08ab629437f66b540c18b71"
+},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-arm64/jaspProphet.JASPModule",                 "checksum" : "59f24e4ef6673fbf0cfe5703520de1e16d9c000f8a6c3b569186318d66974bd3"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-arm64/jaspMixedModels.JASPModule",             "checksum" : "60aa867bd673dd6a646e810bceb5c883b969f0f39bcb8cbf8bc6064e00973ac3"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-arm64/jaspCochrane.JASPModule",                "checksum" : "c106ef777dd8deec19173d95b97aa71293f17723275f76645cab9bb2eaa59d72"},
@@ -103,7 +109,10 @@
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-x86_64/jaspBsts.JASPModule",                    "checksum" : "5b3022c221163f59498e09c31a282f4594e6bd40929c4855e1c45e5928af9114"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-x86_64/jaspAnova.JASPModule",                   "checksum" : "4b0d1c343bdd417a5975c969874a0e0f0a71dc73144b1afdbd9b2fa8432ef06a"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-x86_64/jaspEsci.JASPModule",                    "checksum" : "5fce4f74292c102546a6ca5a5b5fcfbd4a54f938f3982e5b7bdb8ee47e0e2a62"},
-{"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-x86_64/jaspRegression.JASPModule",              "checksum" : "d7e5e9ece2f91be53243a1df1467cde98aaec4f442f202bf53b2b5efccbeffc6"},
+{
+	"url": "https://github.com/jasp-stats-modules/jaspRegression/releases/download/bd382e0e_R-4-5-1/jaspRegression_0.95.0_MacOS_x86_64_R-4-5-1.JASPModule",
+	"checksum": "1145550dcea3ac57b91bf388f0b5d23bfb76aab5e322fa75c6cdc4c314afe875"
+},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-x86_64/jaspCochrane.JASPModule",                "checksum" : "dd9b4159171ccaecd6d5a19c617e4fbf5d5311fa3189a0929c24091ab561d463"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-x86_64/jaspFactor.JASPModule",                  "checksum" : "72cf3947739e529037981bce06b5b79b83e02e2031131ee3136e7e8db25febe5"},
 {"url" : "https://repo.jasp-stats.org/bundles-20-08/MacOS-x86_64/jaspAcceptanceSampling.JASPModule",      "checksum" : "9ae10aba911dd3acf4658e77b6aca3c06b1593555732f1a9bafc8bc05646d447"},
