@@ -110,7 +110,7 @@ void DataSetPackage::setEngineSync(EngineSync * engineSync)
 
 bool DataSetPackage::isThisTheSameThreadAsEngineSync()
 {
-	return	QThread::currentThread() == _engineSync->thread();
+	return	_engineSync && QThread::currentThread() == _engineSync->thread();
 }
 
 void DataSetPackage::enginesPrepareForData()

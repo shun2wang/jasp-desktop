@@ -187,6 +187,7 @@ public:
 	int			transactionReadDepth()	{ return _transactionReadDepth;  }
 
     void        preloadInterfaceForThread();
+	void		close();					///< Closes the loaded database and disconnects
 
 private:
 	sqlite3	*	_db();
@@ -197,7 +198,7 @@ private:
 
 	void		create();					///< Creates a new sqlite database in sessiondir and loads it
 	void		load();						///< Loads a sqlite database from sessiondir (after loading a jaspfile)
-	void		close();										///< Closes the loaded database and disconnects
+
 	
 
 	int			_transactionWriteDepth	= 0,

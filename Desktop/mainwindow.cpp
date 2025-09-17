@@ -36,11 +36,11 @@
 #include "appinfo.h"
 #include "tempfiles.h"
 #include "processinfo.h"
-
 #include "mainwindow.h"
 
-#include "gui/jaspversionchecker.h"
 #include "gui/preferencesmodel.h"
+#include "utilities/application.h"
+#include "gui/jaspversionchecker.h"
 #include "ALTNavigation/altnavcontrol.h"
 #include "utilities/messageforwarder.h"
 
@@ -73,7 +73,7 @@ using namespace Modules;
 
 MainWindow * MainWindow::_singleton	= nullptr;
 
-MainWindow::MainWindow(QApplication * application) : QObject(application), _application(application)
+MainWindow::MainWindow(Application * application) : QObject(application), _application(application)
 {
 	std::cout << "MainWindow constructor started" << std::endl;
 	connect(this, &MainWindow::exitSignal, this, &QApplication::exit, Qt::QueuedConnection);
@@ -174,7 +174,7 @@ MainWindow::MainWindow(QApplication * application) : QObject(application), _appl
 
 void MainWindow::checkForUpdates()
 {
-	if(resultXmlCompare::compareResults::theOne()->testMode())
+	if(resultXmlCompare::compareResults::theOne()->testMode() || QCoreApplication::applicationName() == "JASPTest")
 		return;
 	
 	if(PreferencesModel::prefs()->checkUpdatesAskUser())

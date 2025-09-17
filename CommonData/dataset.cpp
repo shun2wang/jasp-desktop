@@ -687,3 +687,19 @@ stringset DataSet::findUsedColumnNames(std::string searchThis)
 
 
 
+
+Json::Value DataSet::jsonForCompare() const
+{
+	Json::Value json(Json::objectValue);
+
+	//json["description"]			= _description; //Contains datetime...
+	json["customEmptyValues"]	= _emptyValues->toJson();
+	json["columns"]				= Json::arrayValue;
+
+	for(Column * column : _columns)
+		json["columns"].append(column->jsonForCompare());
+
+	//std::cerr << json.toStyledString() << std::endl;
+
+	return json;
+}

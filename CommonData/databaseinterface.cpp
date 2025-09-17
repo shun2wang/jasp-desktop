@@ -2049,7 +2049,7 @@ sqlite3 * DatabaseInterface::_db()
 
 	if(_dbCreated && _dbCreator == id)
 		return _dbCreated;
-	
+
 	if(!_dbs.count(id))
 		load();
 

@@ -210,6 +210,7 @@ public:
 			const	stringset	 &	dependsOnColumns(bool refresh = true);
 			Json::Value				serialize()																const;
 			Json::Value				serializeLabels()														const;
+			Json::Value				jsonForCompare()														const;
 			void					deserialize(				const Json::Value & info);
 			void					deserializeLabelsForCopy(	const Json::Value & info);
 			void					deserializeLabelsForRevert(	const Json::Value & info);

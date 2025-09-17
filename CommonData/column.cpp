@@ -2053,6 +2053,41 @@ Json::Value	Column::serializeLabels() const
 	return jsonLabels;
 }
 
+Json::Value Column::jsonForCompare() const
+{
+	Json::Value json(Json::objectValue);
+
+	json["name"]			= _name;
+	json["title"]			= _title;
+	json["rCode"]			= _rCode;
+	//json["analysisId"]		= _analysisId;
+	//json["invalidated"]		= _invalidated;
+	json["constructorJson"] = _constructorJson;
+	json["autoSortByValue"] = _autoSortByValue;
+	json["description"]		= _description;
+	json["codeType"]		= computedColumnTypeToString(_codeType);
+	//json["error"]			= _error;
+	json["type"]			= columnTypeToString(_type);
+	json["customEmptyValues"]	= _emptyValues->toJson();
+	json["data"]				= Json::arrayValue;
+
+	for(int i=0; i<rowCount(); i++)
+	{
+		std::string label		= getLabel(i, true),
+					value		= getValue(i, true);
+		Json::Value row			= label == value ? Json::Value(label) : Json::objectValue;
+		if(row.type() == Json::objectValue)
+		{
+			row["l"] = label;
+			row["v"] = value;
+		}
+
+		json["data"].append(row);
+	}
+
+	return json;
+}
+
 void Column::deserializeLabelsForCopy(const Json::Value & labels)
 {
 	labelsClear();
