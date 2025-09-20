@@ -5805,3 +5805,11 @@ msgstr "%1 秒前保存，可被加载到另一个 JASP 中。"
 msgctxt "ResourceButtons|"
 msgid "Recovery"
 msgstr "恢复"
+
+msgctxt "RibbonModel|"
+msgid "Test"
+msgstr ""
+
+msgctxt "RibbonModel|"
+msgid "Run tests"
+msgstr ""

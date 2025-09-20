@@ -6093,3 +6093,11 @@ msgstr ""
 msgctxt "ResourceButtons|"
 msgid "Recovery"
 msgstr "Wiederherstellung"
+
+msgctxt "RibbonModel|"
+msgid "Test"
+msgstr ""
+
+msgctxt "RibbonModel|"
+msgid "Run tests"
+msgstr ""

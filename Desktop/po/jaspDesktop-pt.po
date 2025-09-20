@@ -6056,3 +6056,11 @@ msgstr "Salvo a %1 segundos atrás, pode ainda estar carregado em outro JASP."
 msgctxt "ResourceButtons|"
 msgid "Recovery"
 msgstr "Recuperação"
+
+msgctxt "RibbonModel|"
+msgid "Test"
+msgstr ""
+
+msgctxt "RibbonModel|"
+msgid "Run tests"
+msgstr ""

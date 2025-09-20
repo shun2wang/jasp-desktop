@@ -5545,3 +5545,11 @@ msgstr ""
 msgctxt "ResourceButtons|"
 msgid "Recovery"
 msgstr ""
+
+msgctxt "RibbonModel|"
+msgid "Test"
+msgstr ""
+
+msgctxt "RibbonModel|"
+msgid "Run tests"
+msgstr ""
