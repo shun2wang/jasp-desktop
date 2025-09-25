@@ -183,8 +183,8 @@ public:
 	void		truncateAllTables();
 	bool		tableHasColumn(const std::string & tableName, const std::string & columnName);
 	bool		tableExists(const std::string & name);
-	int			transactionWriteDepth() { return _transactionWriteDepth; }
-	int			transactionReadDepth()	{ return _transactionReadDepth;  }
+	int			transactionWriteDepth();
+	int			transactionReadDepth();
 
     void        preloadInterfaceForThread();
 	void		close();					///< Closes the loaded database and disconnects
@@ -198,11 +198,6 @@ private:
 
 	void		create();					///< Creates a new sqlite database in sessiondir and loads it
 	void		load();						///< Loads a sqlite database from sessiondir (after loading a jaspfile)
-
-	
-
-	int			_transactionWriteDepth	= 0,
-				_transactionReadDepth	= 0;
 
 	std::map<std::thread::id, sqlite3*>		_dbs;
 	std::thread::id							_dbCreator;
