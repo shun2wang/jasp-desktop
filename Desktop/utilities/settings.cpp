@@ -42,7 +42,7 @@ const Settings::Setting Settings::Values[] = {
 	{"useAlternativeLocale",		true},
 	{"alternativeLocLanguage",		QLocale(QLocale::English, QLocale::UnitedStates).nativeLanguageName() },
 	{"alternativeLocRegion",		QLocale(QLocale::English, QLocale::UnitedStates).nativeTerritoryName() },
-	{"useThousandSeparators",		true },
+	{"useThousandSeparators",		false },
 	{"themeName",					"lightTheme"},
 	{"useNativeFileDialog",			true},
 	{"disableAnimations",			false},
