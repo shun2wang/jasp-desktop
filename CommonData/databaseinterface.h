@@ -203,7 +203,8 @@ private:
 	std::thread::id							_dbCreator;
 	sqlite3*								_dbCreated = nullptr;
 	bool									_inMemory;
-    std::mutex                              _loadMutex;
+	std::mutex                              _loadMutex,
+											_dbCheckMutex;
 
 	static			std::string _wrap_sqlite3_column_text(sqlite3_stmt * stmt, int iCol);
 	static const	std::string _dbConstructionSql;

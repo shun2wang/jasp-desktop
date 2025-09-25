@@ -147,7 +147,7 @@ public:
 			stringvec				labelsAsStrings()																						const;
 			stringvec				nonEmptyLevelsStrings()																					const;
 			stringvec				displaysAsStrings()																						const;
-			stringvec				dataAsRLevels(intvec & values, const boolvec & filter, bool useLabels = true)			; ///< values is output! If filter is of different length than the data an error is thrown, if length is zero it is ignored. useLabels indicates whether the levels will be based on the label or on the value as specified in the label editor.
+			stringvec				dataAsRLevels(intvec & values, const boolvec & filter)			; ///< values is output! If filter is of different length than the data an error is thrown, if length is zero it is ignored. useLabels indicates whether the levels will be based on the label or on the value as specified in the label editor.
 			doublevec				dataAsRDoubles(const boolvec & filter)													const; ///< If filter is of different length than the data an error is thrown, if length is zero it is ignored
 
 			void					labelValueChanged(		Label * label,	const Json::Value & previousOriginal); ///< Pass NaN for non-convertible values

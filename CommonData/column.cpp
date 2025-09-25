@@ -1221,7 +1221,7 @@ stringvec Column::displaysAsStrings() const
 	return returnMe;
 }
 
-stringvec Column::dataAsRLevels(intvec & values, const boolvec & filter, bool useLabels )
+stringvec Column::dataAsRLevels(intvec & values, const boolvec & filter)
 {
 	JASPTIMER_SCOPE(Column::dataAsRLevels);
 
@@ -1231,7 +1231,8 @@ stringvec Column::dataAsRLevels(intvec & values, const boolvec & filter, bool us
 	const bool 	useFilter 	= filter.size() == rowCount();
 	int  		valuesSize	= 0;
 
-	intset ids, usedIds;
+	intset		ids;
+	stringset	usedLevels; //https://github.com/jasp-stats/jasp-issues/issues/3721 points out rightly that if you map multiple values to the same label, they should then be 1 label in ordinal/nominal!
 
 	for(size_t row=0; row<rowCount(); row++)
 		if(!useFilter || filter[row])
@@ -1244,21 +1245,21 @@ stringvec Column::dataAsRLevels(intvec & values, const boolvec & filter, bool us
 		if(id != Label::NO_LABEL && id != EmptyValues::missingValueInteger)
 		{
 			Label * label = labelByIntsId(id);
-			
+
 			if(label && !label->isEmptyValue())
-				usedIds.insert(id);
+				usedLevels.insert(label->label());
 		}
 	
 	stringvec levels;
-	levels.reserve(usedIds.size());
+	levels.reserve(usedLevels.size());
 
-	intintmap idToLevel;
+	strintmap labelToLevel;
 
 	for(Label * label : _labels)
-		if(usedIds.count(label->intsId()) || !shouldDropLevels())
+		if(!labelToLevel.count(label->label()) && (usedLevels.count(label->label()) || !shouldDropLevels()))
 		{
-			levels.push_back(useLabels ? label->label() : label->originalValueAsString(false));
-			idToLevel[label->intsId()] = levels.size();
+			levels.push_back(label->label());
+			labelToLevel[label->label()] = levels.size();
 		}
 		
 	values.resize(valuesSize);
@@ -1268,8 +1269,13 @@ stringvec Column::dataAsRLevels(intvec & values, const boolvec & filter, bool us
 		{
 			values[valueRow] = EmptyValues::missingValueInteger;
 
-			if(_ints[row] != Label::NO_LABEL && _ints[row] != EmptyValues::missingValueInteger && idToLevel.count(_ints[row]))
-				values[valueRow] = idToLevel.at(_ints[row]);
+			if(_ints[row] != Label::NO_LABEL && _ints[row] != EmptyValues::missingValueInteger)
+			{
+				Label * label = labelByIntsId(_ints[row]);
+
+				if(label && labelToLevel.count(label->label()))
+					values[valueRow] = labelToLevel.at(label->label());
+			}
 			
 			valueRow++;
 		}

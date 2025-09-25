@@ -760,7 +760,7 @@ void DatabaseInterface::dataSetBatchedValuesLoad(DataSet *data, std::function<vo
 			cols.push_back(data->column(curCol));
 		
 		
-        threads.push_back(std::thread([cols, group, &loadBatchOfColumns,this]()
+		threads.push_back(std::thread([cols, group, &loadBatchOfColumns,this]()
 		{
 			preloadInterfaceForThread();
 			loadBatchOfColumns(cols, group);
@@ -2054,10 +2054,18 @@ sqlite3 * DatabaseInterface::_db()
 	if(_dbCreated && _dbCreator == id)
 		return _dbCreated;
 
-	if(!_dbs.count(id))
+	_dbCheckMutex.lock();
+	bool itsNotThereYet = !_dbs.count(id); //tip toe around the map
+	_dbCheckMutex.unlock();
+
+	if(itsNotThereYet)
 		load();
 
-	return _dbs.at(id);
+	_dbCheckMutex.lock();
+	sqlite3 * dbFound = _dbs.at(id);
+	_dbCheckMutex.unlock();
+
+	return dbFound;
 }
 
 void DatabaseInterface::create()
@@ -2071,7 +2079,7 @@ void DatabaseInterface::create()
 		std::filesystem::remove(dbFile());
 	}
 	
-    int ret = sqlite3_open_v2(dbFile().c_str(), &_dbCreated, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX, NULL);
+	int ret = sqlite3_open_v2(dbFile().c_str(), &_dbCreated, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX, NULL);
 
 	if(ret != SQLITE_OK)
 	{
@@ -2132,29 +2140,29 @@ void DatabaseInterface::doWalCheckPoint()
 
 void DatabaseInterface::preloadInterfaceForThread()
 {
-    //Load the interface by asking for it
-    _db();
+	//Load the interface by asking for it
+	_db();
 }
 
 void DatabaseInterface::load()
 {
-    JASPTIMER_SCOPE(DatabaseInterface::load);
-    assert(!_dbCreated || std::this_thread::get_id() != _dbCreator);
+	JASPTIMER_SCOPE(DatabaseInterface::load);
+	assert(!_dbCreated || std::this_thread::get_id() != _dbCreator);
 
-    _loadMutex.lock();
-    if(_dbs.count(std::this_thread::get_id()))
-    {
-        sqlite3* connection = _dbs.at(std::this_thread::get_id());
-        _loadMutex.unlock();
+	_loadMutex.lock();
+	if(_dbs.count(std::this_thread::get_id()))
+	{
+		sqlite3* connection = _dbs.at(std::this_thread::get_id());
+		_loadMutex.unlock();
 		return;
-    }
+	}
 
-    if(!std::filesystem::exists(dbFile()))
-        throw std::runtime_error("Trying to load '" + dbFile() + "' but it doesn't exist!");
+	if(!std::filesystem::exists(dbFile()))
+		throw std::runtime_error("Trying to load '" + dbFile() + "' but it doesn't exist!");
 
-    bool        loadingWorked	= false;
-    size_t      loadingAttempt	= 0;
-    sqlite3 *   db              = nullptr;
+	bool        loadingWorked	= false;
+	size_t      loadingAttempt	= 0;
+	sqlite3 *   db              = nullptr;
 
 	int ret = sqlite3_open_v2(dbFile().c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_NOMUTEX, NULL);
 
@@ -2166,38 +2174,40 @@ void DatabaseInterface::load()
 	else
 		Log::log() << "Opened internal sqlite database for loading at '" << dbFile() << "'. This is for thread " << std::this_thread::get_id() << std::endl;
 
+	_dbCheckMutex.lock();
 	_dbs[std::this_thread::get_id()] = db;
+	_dbCheckMutex.unlock();
 	_loadMutex.unlock();
 
-    for(bool loadingWorked = false; !loadingWorked; )
-    {
+	for(bool loadingWorked = false; !loadingWorked; )
+	{
 		sqlite3_busy_timeout(db, 100);
 
-        try
-        {
-            int tableCount = runStatementsId("SELECT COUNT(*) FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
-            if(tableCount < 0)
-                throw dbMalformedException();
+		try
+		{
+			int tableCount = runStatementsId("SELECT COUNT(*) FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
+			if(tableCount < 0)
+				throw dbMalformedException();
 
-            Log::log() << "Loaded a database with #" << tableCount << " tables." << std::endl;
-            loadingWorked = true;
-        }
-        catch(dbMalformedException & e)
-        {
-            //Unfortunate, but perhaps we were too quick?
-            loadingWorked = false;
-            loadingAttempt++;
-        }
+			Log::log() << "Loaded a database with #" << tableCount << " tables." << std::endl;
+			loadingWorked = true;
+		}
+		catch(dbMalformedException & e)
+		{
+			//Unfortunate, but perhaps we were too quick?
+			loadingWorked = false;
+			loadingAttempt++;
+		}
 
-        if(!loadingWorked)
-        {
+		if(!loadingWorked)
+		{
 			if(loadingAttempt > 10 * 60) //Timeout is 0.1 sec, so this lets the db try for 1 minute to connect...
-                throw dbMalformedException();
+				throw dbMalformedException();
 
-            Log::log() << "There was a problem loading the database, retrying for the #" << loadingAttempt << " time" << std::endl;
+			Log::log() << "There was a problem loading the database, retrying for the #" << loadingAttempt << " time" << std::endl;
 			std::this_thread::sleep_for(std::chrono::nanoseconds(100000000));
-        }
-    }
+		}
+	}
 
 	return;
 }
@@ -2208,6 +2218,8 @@ void DatabaseInterface::close()
 	
 	std::set<sqlite3*> waitingFor;
 	
+	_dbCheckMutex.lock();
+
 	for(auto & idDb : _dbs)
 		waitingFor.insert(idDb.second);
 					
@@ -2228,6 +2240,8 @@ void DatabaseInterface::close()
 	while(waitingFor.size() > 0);
 		
 	_dbs.clear();
+
+	_dbCheckMutex.unlock();
 	
 	while(sqlite3_close(_dbCreated) != SQLITE_OK)
 	{
