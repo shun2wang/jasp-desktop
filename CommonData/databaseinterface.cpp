@@ -1647,7 +1647,7 @@ void DatabaseInterface::labelsWrite(const Columns & columns, std::function<void(
 		 bindParametersType _bindParams =  [&](sqlite3_stmt *stmt)
 		 {
 			 const Label			*	label			= *labelIter;
-			 const std::string			labelDisplay	= label->label(),
+			 const std::string			labelDisplay	= label->label(false),
 										origValJson		= label->originalValue().toStyledString();
 			 
 			 Column					*	column			= static_cast<Column*>(label->parent());

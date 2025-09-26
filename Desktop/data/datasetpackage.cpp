@@ -1266,10 +1266,7 @@ void DataSetPackage::prepareForLanguageChange()
 void DataSetPackage::languageChangeDone()
 {
 	_waitingForLanguageChange = false; //Dont accept changes while the interface changes
-	
-	if(_dataSet)
-		_dataSet->updateLabelsPostLocaleChange();
-	
+
 	refresh();
 }
 
@@ -1493,7 +1490,7 @@ void DataSetPackage::loadDataSet(std::function<void(float)> progressCallback)
 	_db->load();		
 	_db->upgradeDBFromVersion(_jaspVersion);
 	
-	bool do019Upgrade = _jaspVersion < "0.19";
+	bool 	do019Upgrade  = _jaspVersion < "0.19";
 	
 	_dataSet = new DataSet(0);
 	_dataSet->dbLoad(1, progressCallback, _jaspVersion); //Right now there can only be a dataSet with ID==1 so lets keep it simple

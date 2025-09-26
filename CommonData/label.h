@@ -36,7 +36,7 @@ public:
 			int					dbId()						const	{ return _dbId;				}
 			bool				userAdded()					const	{ return _userAdded;		}
 	const	std::string		&	description()				const	{ return _description;		}
-			std::string			label()						const	{ return _label;			}
+			std::string			label(bool lie=true)		const;
 			std::string			labelDisplay()				const;
 			int					intsId()					const	{ return _intsId;			}
 			bool				isEmptyValue()				const;
@@ -61,8 +61,6 @@ public:
 			bool				setFilterAllows(	bool allowFilter);
 			void				setUserAdded(		bool userAddedIt);
 			void				setInformation(Column * column, int id, int order, const std::string &label, int value, bool filterAllows, const std::string & description, const Json::Value & originalValue);
-			
-			void				updateDoubleLabelsPostLocaleChange();
 
 			Json::Value			serialize()	const;
 

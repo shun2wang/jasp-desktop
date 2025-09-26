@@ -1,10 +1,10 @@
 ﻿#include "log.h"
+#include <cassert>
 #include "column.h"
 #include "timers.h"
 #include "dataset.h"
 #include "columnutils.h"
 #include "databaseinterface.h"
-#include <cassert>
 
 bool Column::_autoSortByValuesByDefault = true;
 
@@ -492,16 +492,6 @@ stringset Column::mergeOldMissingDataMap(const Json::Value &missingData)
 	foundEmpty.erase(""); //So for some currently inscrutable reason empty strings were also stored in the missing data map... Remove any occurences.
 	
 	return foundEmpty;
-}
-
-void Column::updateLabelsPostLocaleChange()
-{
-	beginBatchedLabelsDB();
-	
-	for(Label * label : _labels)
-		label->updateDoubleLabelsPostLocaleChange();
-	
-	endBatchedLabelsDB(true);	
 }
 
 columnType Column::setValues(const stringvec & values, const stringvec & labels, int thresholdScale, bool * aChange, bool useLocale)
@@ -1343,7 +1333,7 @@ void Column::_labelMapUpdates(Label * label, const std::string & previousDisplay
 	bool	valueChanged	= previousOriginal		!= label->originalValueAsString(),
 			displayChanged	= previousDisplay		!= label->label(),
 			previousSame	= previousOriginal		== previousDisplay,
-			newSame			= label->label()	== label->originalValueAsString();
+			newSame			= label->label()		== label->originalValueAsString();
 
 	if(valueChanged)
 	{
