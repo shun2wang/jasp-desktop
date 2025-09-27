@@ -258,7 +258,7 @@ if(WIN32)
 
   include(FindRToolsDLLPath)
   
-  find_package(freexl 2.0.99 REQUIRED)
+  find_package(freexl REQUIRED)
 
   copy_rtools_header(RTOOLS_LIBREADSTAT_H	readstat.h		${CMAKE_SOURCE_DIR}/Desktop/data/importers/readstat/readstat.h)
   copy_rtools_header(RTOOLS_LIBRDATA_H		rdata.h			${CMAKE_SOURCE_DIR}/Desktop/data/importers/rdata/rdata.h)
