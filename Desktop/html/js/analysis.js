@@ -668,6 +668,16 @@ JASPWidgets.AnalysisView = JASPWidgets.View.extend({
 		if (results.error)
 			this.setHeightErroredAnalysis($innerElement);
 
+		this.$el.sortable({
+				items: "> .jasp-display-item",
+				handle: ".jasp-display-item",
+				revert: true,
+				tolerance: "pointer",
+				cursor: "move",
+				placeholder: "ui-state-highlight"
+			})
+			.disableSelection();
+
 		return this;
 	},
 
