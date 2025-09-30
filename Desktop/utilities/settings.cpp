@@ -114,7 +114,7 @@ const Settings::Setting Settings::Values[] = {
 	{"localConfigurationPath",		""		},
 	{"useConfigurationFile",		true	},
 	{"startMaximized",				false	},
-	{"storeStateEtc",				false	},
+	{"storeStateEtc",				true	},
 	{"autoSaveOn",					true	},
 	{"autoSaveInterval",			5*60	},
 };	
@@ -122,7 +122,11 @@ const Settings::Setting Settings::Values[] = {
 QVariant Settings::value(Settings::Type key)
 {
 	if(resultXmlCompare::compareResults::theOne()->testMode())
-		return defaultValue(key);
+		switch(key)
+		{
+		default:						return defaultValue(key);
+		case Type::STORE_STATE_ETC:		return false; //Dont store state in the data library
+		}
 	
 	return getSettings()->value(Settings::Values[key].type, defaultValue(key));
 }
