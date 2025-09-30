@@ -670,13 +670,15 @@ JASPWidgets.AnalysisView = JASPWidgets.View.extend({
 
 		this.$el.sortable({
 				items: "> .jasp-display-item",
-				handle: ".jasp-display-item",
+				handle: ".jasp-toolbar, .object-body",
+				cancel: ".ql-container, .ql-editor, .ql-toolbar, .jasp-notes",
 				revert: true,
 				tolerance: "pointer",
 				cursor: "move",
+				forceHelperSize: true,
+				forcePlaceholderSize: true,
 				placeholder: "ui-state-highlight"
 			})
-			.disableSelection();
 
 		return this;
 	},

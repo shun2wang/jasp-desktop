@@ -636,3 +636,12 @@ iframe.ql-video {
     transform: translateX(0);
   }
 }
+
+#results
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+	border: 1px solid #97C4F2;
+	background: #DCF1FB;
+	color: #97C4F2;
+}
