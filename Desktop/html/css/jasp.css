@@ -68,8 +68,30 @@ h6, .h6-toolbar .jasp-menu {
 }
 
 .jasp-display-item-flat {
-	padding-left: 0;
+	padding-left: 0.6em;
 }
+
+.jasp-analysis > .jasp-display-item {
+	position: relative;
+}
+
+.jasp-analysis > .jasp-display-item:hover::before {
+	content: "";
+	position: absolute;
+	left: -7px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 24px;
+	height: 24px;
+	background: url("../img/jasp-drag-handle.svg") no-repeat left center;
+	background-size: contain;
+	cursor: move;
+}
+
+.jasp-analysis > .jasp-display-item:hover {
+	box-shadow: -2px 0 0 0 rgba(151, 196, 242, 0.7);
+}
+
 
 .jasp-table-primitive {
 	padding-left: 0.6em ;
