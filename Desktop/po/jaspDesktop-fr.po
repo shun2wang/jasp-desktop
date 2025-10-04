@@ -5984,3 +5984,28 @@ msgstr ""
 msgctxt "RibbonModel|"
 msgid "Run tests"
 msgstr ""
+
+msgctxt "PlotEditor::PlotEditorModel|"
+msgid "Stored without state"
+msgstr ""
+
+msgctxt "PlotEditor::PlotEditorModel|"
+msgid ""
+"This analysis was stored without state, to edit the plot it must be "
+"refreshed first.\n"
+"\n"
+"Refresh the analysis?"
+msgstr ""
+
+#, fuzzy
+msgctxt "PlotEditor::PlotEditorModel|"
+msgid "Version incompatibility"
+msgstr "Incompatibilité de version"
+
+msgctxt "PlotEditor::PlotEditorModel|"
+msgid ""
+"This analysis was created in an older version of JASP, to edit the plot it "
+"must be refreshed first.\n"
+"\n"
+"Refresh the analysis?"
+msgstr ""
