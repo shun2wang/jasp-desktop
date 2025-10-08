@@ -205,6 +205,8 @@ void Column::setHasCustomEmptyValues(bool hasCustom)
 	_emptyValues->setHasCustomEmptyValues(hasCustom);
 	db().columnSetEmptyVals(_id, _emptyValues->toJson().toStyledString());
 	
+	nonFilteredCountersReset();
+	
 	incRevision();
 }
 
@@ -879,6 +881,8 @@ int Column::_labelMapIt(Label * label)
 	_labelsByDisplay	[ label->label()				].insert(	label);
 	_labelByValDis		[ label->origValDisplay()		] =			label;
 	_labelsByValue		[ label->originalValueAsString()].insert(	label);
+	
+	label->rememberCurrentOrigValDisplay(); 
 
 	_highestIntsId = std::max(_highestIntsId, label->intsId());
 	_maxWidthValue = std::max(_maxWidthValue, int(stringUtils::approximateVisualLength(label->originalValueAsString(true, false))));
@@ -894,7 +898,9 @@ int Column::labelsAdd(int value, const std::string & display, bool filterAllows,
 {
 	JASPTIMER_SCOPE(Column::labelsAdd lotsa arg);
 
-	auto valDisplay = std::make_pair(Label::originalValueAsString(this, originalValue), display);
+	std::string oriString			= Label::originalValueAsString(this, originalValue),
+				displayProcessed	= Label::processLabel(display, oriString);
+	auto		valDisplay			= std::make_pair(oriString, displayProcessed);
 
 	if(_labelByValDis.count(valDisplay))
 		return _labelByValDis.at(valDisplay)->intsId();
@@ -1061,10 +1067,13 @@ stringvec Column::nonFilteredLevels()
 	return _nonFilteredLevels;
 }
 
-void Column::nonFilteredCountersReset()
+void Column::nonFilteredCountersReset(bool updateLabelIndexes)
 {
 	_nonFilteredLevels.clear();
 	_nonFilteredNumericsCount = -1;
+	
+	if(updateLabelIndexes)
+		_updateNonEmptyIndexesAndLabelOrder();
 }
 
 int Column::labelIndexNonEmpty(Label *label) const
@@ -1299,11 +1308,11 @@ void Column::labelValueChanged(Label *label, const Json::Value & previousOrigina
 	auto oldValDis	= std::make_pair(prevOrigV, label->label());
 	bool merged		= _labelByValDis.count(label->origValDisplay()) != 0;
 	
-	if(merged)
+	if(merged && _labelByValDis.at(label->origValDisplay()) != label)
 		labelsMergeDuplicateInto(label);
 	
 	//Make sure it was registered before:
-	assert(_labelByValDis[oldValDis] == label);
+	assert(_labelByValDis[label->lastOrigValDisplay()] == label);
 	//And that its new location is free:
 	assert(_labelByValDis.count(label->origValDisplay()) == 0 || _labelByValDis.at(label->origValDisplay()) == label);
 
@@ -1313,7 +1322,7 @@ void Column::labelValueChanged(Label *label, const Json::Value & previousOrigina
 		if(_ints[r] == label->intsId())
 			_dbls[r] = theDouble;
 
-	_labelMapUpdates(label, label->label(), prevOrigV);
+	_labelMapUpdates(label, label->lastOrigValDisplay().second, label->lastOrigValDisplay().first);
 
 	if(merged)
 		_dbUpdateLabelOrder();
@@ -1831,6 +1840,7 @@ void Column::valuesReverse()
 	for(size_t i=0; i<asc.size(); i++)
 		flipIt[asc[i]] = dsc[i];
 	
+	beginBatchedLabelsDB();
 	//and now to write them back into the data
 	for(Label * label : _labels)
 	{
@@ -1842,10 +1852,21 @@ void Column::valuesReverse()
 			ColumnUtils::getDoubleValue(label->originalValueAsString(), aValue);
 		
 		if(!std::isnan(aValue)) //not isEmptyValue because we want to use the output to rewrite the data again
-			label->setOriginalValue(flipIt[aValue]);
+		{
+			std::string oldLabel = label->label();
+			label->_setOriginalValue(flipIt[aValue]); //Dont trigger the mapping stuff!
+			label->_label = Label::processLabel(oldLabel, label->originalValueAsString());
+		}
 	}
 	
-	_dbUpdateLabelOrder();
+	upgradeExtractDoublesIntsFromLabels(); //Make sure _dbls reflect _ints
+	dbUpdateValues();
+	
+	labelsHandleAutoSort(false);
+	_resetLabelValueMap();
+	nonFilteredCountersReset(false); //dont update indexes because its done in _dbUpdateLabelOrder()
+	endBatchedLabelsDB();
+
 }
 
 
@@ -2053,11 +2074,11 @@ Json::Value Column::serialize() const
 	return json;
 }
 
-Json::Value	Column::serializeLabels() const
+Json::Value	Column::serializeLabels(bool forCompare) const
 {
 	Json::Value jsonLabels(Json::arrayValue);
 	for (const Label* label : _labels)
-		jsonLabels.append(label->serialize());
+		jsonLabels.append(label->serialize(forCompare));
 	
 	return jsonLabels;
 }
@@ -2078,6 +2099,7 @@ Json::Value Column::jsonForCompare() const
 	//json["error"]			= _error;
 	json["type"]			= columnTypeToString(_type);
 	json["customEmptyValues"]	= _emptyValues->toJson();
+	json["labels"]				= serializeLabels(true);
 	json["data"]				= Json::arrayValue;
 
 	for(int i=0; i<rowCount(); i++)

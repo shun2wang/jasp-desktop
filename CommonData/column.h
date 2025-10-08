@@ -131,7 +131,7 @@ public:
 			
 			int						nonFilteredNumericsCount();
             stringvec				nonFilteredLevels();
-			void					nonFilteredCountersReset();
+			void					nonFilteredCountersReset(bool updateLabelIndexes = true);
 
 			std::set<size_t>		labelsMoveRows(std::vector<size_t> rows, bool up);
 			void					labelsReverse();
@@ -209,7 +209,7 @@ public:
 			void					checkForLoopInDependencies(std::string code);
 			const	stringset	 &	dependsOnColumns(bool refresh = true);
 			Json::Value				serialize()																const;
-			Json::Value				serializeLabels()														const;
+			Json::Value				serializeLabels(bool forCompare = false)								const;
 			Json::Value				jsonForCompare()														const;
 			void					deserialize(				const Json::Value & info);
 			void					deserializeLabelsForCopy(	const Json::Value & info);
