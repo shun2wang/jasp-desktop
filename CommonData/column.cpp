@@ -64,7 +64,6 @@ void Column::dbLoad(int id, bool getValues)
 	
 	
 	_emptyValues->fromJson(emptyVals);
-	_resetLabelValueMap();
 	
 	if(getValues)
 	{
@@ -72,6 +71,7 @@ void Column::dbLoad(int id, bool getValues)
 		db().columnGetValues(_id, _ints, _dbls);
 	}
 
+	_resetLabelValueMap();
 
 	db().transactionReadEnd();
 }
