@@ -171,7 +171,7 @@ public:
 
 	void initialize();
 	void loadDescriptionQml(const QString		& descriptionTxt,	const QUrl		& url);
-	void loadDESCRIPTION(	const QString		& descriptionText);
+	void loadDESCRIPTION(		  QString		  descriptionText);
 	void loadUpgradesQML(	const QString		& upgradesTxt,		const QUrl		& url);
 	bool hasUpgradesToApply(const std::string	& function,			const Version	& version);
 	void applyUpgrade(		const std::string	& function,			const Version	& version, Json::Value & analysesJson, UpgradeMsgs & msgs, StepsTaken & stepsTaken);

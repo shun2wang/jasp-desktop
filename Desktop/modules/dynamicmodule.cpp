@@ -297,13 +297,16 @@ void DynamicModule::loadRequiredModulesFromDESCRIPTIONTxt(const QString & DESCRI
 }
 
 
-void DynamicModule::loadDESCRIPTION(const QString &descriptionText)
+void DynamicModule::loadDESCRIPTION(QString descriptionText)
 {
 	assert(_description);
 	
 	std::map<QString, QString> entries;
-	
-	static QRegularExpression entriesRegex("(\\S+):\\s*(.+(\\n\\s.+)*)\\n");
+
+#ifdef _WIN32
+	descriptionText.replace('\r', "");
+#endif
+	static QRegularExpression entriesRegex("(\\S+):\\s*(.+(\\n\\s.+)*)\\n"); // \\r? is because of windows *sigh*
 	
 
 	for(auto & m : entriesRegex.globalMatch(descriptionText))

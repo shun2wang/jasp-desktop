@@ -13,6 +13,7 @@ endif()
 
 if(WIN32)
   add_compile_options(/utf-8)  #Make sure to compile in utf-8 on the locale code page.
+  add_compile_options(/std:c++20)
 endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
