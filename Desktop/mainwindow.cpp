@@ -1465,7 +1465,7 @@ void MainWindow::dataSetIOCompleted(FileEvent *event)
 			_analyses->setVisible(false);
 			_analyses->clear();
 			_package->dbDelete();
-			_package->reset(false);
+			_package->reset(true);
 			_ribbonModel->showStatistics();
 			_fileMenu->buttonsForEmptyWorkspace();
 			_filterModel->reset();
