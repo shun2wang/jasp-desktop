@@ -158,7 +158,7 @@ MainWindow::MainWindow(Application * application) : QObject(application), _appli
 
 	_languageModel->setApplicationEngine(_qml);
 
-	_engineSync->start(_preferences->plotPPI());
+	_engineSync->start();
 	
 	checkForUpdates();
 

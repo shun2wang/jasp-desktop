@@ -6,10 +6,6 @@
 #include "databaseinterface.h"
 #include "data/datasetpackage.h"
 #include "data/importers/csvimporter.h"
-#include "data/importers/odsimporter.h"
-#include "data/importers/excelimporter.h"
-#include "data/importers/rdataimporter.h"
-#include "data/importers/readstatimporter.h"
 
 void TestDebugData::initTestCase()
 {

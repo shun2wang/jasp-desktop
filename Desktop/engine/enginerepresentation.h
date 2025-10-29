@@ -36,7 +36,7 @@ public:
 
 	void			handleRunningAnalysisStatusChanges();
 
-	void			runAnalysisOnProcess(	Analysis			*analysis);
+	void			runAnalysisOnProcess(	Analysis			* analysis);
 	void			runScriptOnProcess(		RFilterStore		* filterStore);
 	void			runScriptOnProcess(		RScriptStore		* scriptStore);
 	void			runScriptOnProcess(		const QString		& rCmdCode);
@@ -79,7 +79,7 @@ public:
 	bool			killed()				const { return _engineState == engineState::killed;										}
 	bool			idle()					const { return _engineState == engineState::idle;										}
 	bool			installingModule()		const { return _engineState == engineState::moduleInstallRequest;						}
-	bool			reloadingData()			const { return _engineState == engineState::reloadData;						}
+	bool			reloadingData()			const { return _engineState == engineState::reloadData;									}
 	bool			moduleLoading()			const { return _engineState == engineState::moduleLoadRequest;							}
 	bool			idleSoon()				const;
 	bool			shouldSendSettings()	const { return idle() && _settingsChanged;												}
