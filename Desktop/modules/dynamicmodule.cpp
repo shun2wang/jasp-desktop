@@ -954,11 +954,12 @@ QString DynamicModule::patchLibPathHelperFunc(QString libpath) {
 	for (const auto& pkg : pkgPatchList) {
 		std::filesystem::remove_all(patchedPath / pkg.filename());
 		copy(pkg, patchedPath / pkg.filename(), std::filesystem::copy_options::recursive);
-		try {
-			_moduleLibraryFixer(patchedPath, true, true, true);
-		} catch (std::exception& e) {
-			MessageForwarder::showWarning(e.what());
-		}
+	}
+	
+	try {
+		_moduleLibraryFixer(patchedPath, true, true, true);
+	} catch (std::exception& e) {
+		MessageForwarder::showWarning(e.what());
 	}
 
 	return tq(patchedPath.generic_string());
