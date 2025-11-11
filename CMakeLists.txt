@@ -115,9 +115,6 @@ include(Programs)
 # Looking for libraries, e.g., Boost, Qt
 include(Libraries)
 
-# Preparing irregular dependencies, e.g., ReadStat
-include(Dependencies)
-
 # Setting JASP's parameters, e.g., JASP_VERSION
 include(JASP)
 
