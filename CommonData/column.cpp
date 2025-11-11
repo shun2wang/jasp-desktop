@@ -1517,7 +1517,7 @@ bool Column::setStringValue(size_t row, const std::string & userEntered, const s
 	double		newDoubleToSet	= EmptyValues::missingValueDouble;
 	bool		itsADouble		= ColumnUtils::getDoubleValue(userEntered, newDoubleToSet),
 				itsMissingVal	= isEmptyValue(userEntered);	
-	bool		nothingThereYet	=	std::none_of(_ints.begin(), _ints.end(), [&](int i)		{ return !(i == Label::NO_LABEL || i == EmptyValues::missingValueInteger || labelByIntsId(i)->isEmptyValue()); }) 
+	bool		nothingThereYet	=	std::none_of(_ints.begin(), _ints.end(), [&](int i)		{ return !(i == Label::NO_LABEL || i == EmptyValues::missingValueInteger || (!labelByIntsId(i) || labelByIntsId(i)->isEmptyValue())); })
 								&&	std::none_of(_dbls.begin(), _dbls.end(), [&](double d)	{ return !(std::isnan(d) || isEmptyValue(d)); });	
 	
 	if(nothingThereYet && !itsMissingVal)
@@ -1871,7 +1871,6 @@ void Column::valuesReverse()
 
 }
 
-
 DatabaseInterface & Column::db()
 {
 	return _data->db();
@@ -1894,7 +1893,6 @@ bool Column::hasFilter() const
 {
 	return !allLabelsPassFilter();
 }
-
 
 void Column::resetFilter()
 {

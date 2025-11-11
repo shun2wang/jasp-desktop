@@ -103,6 +103,7 @@ public:
 	Q_INVOKABLE void				selectItem(int _index, bool _select);
 	Q_INVOKABLE void				clearSelectedItems(bool emitSelectedChange = true);
 	Q_INVOKABLE void				setSelectedItem(int _index);
+	Q_INVOKABLE void				setSelectedItemWithName(QString name);
 	Q_INVOKABLE void				selectAllItems();
 	Q_INVOKABLE QList<int>			selectedItems()															{ return _selectedItems; }
 

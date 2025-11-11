@@ -434,6 +434,21 @@ void ListModel::setSelectedItem(int _index)
 	selectItem(_index, true);
 }
 
+void ListModel::setSelectedItemWithName(QString name)
+{
+	int i = 0;
+
+	for (const Term& term : terms())
+	{
+		if (term.label() == name)
+		{
+			setSelectedItem(i);
+			break;
+		}
+		i++;
+	}
+}
+
 void ListModel::selectAllItems()
 {
 	int nbTerms = rowCount();
