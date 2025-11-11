@@ -173,6 +173,7 @@ target_link_libraries(
     ${LIBFREEXL_LIBRARIES}
     $<$<NOT:$<BOOL:${LINUX}>>:freexl::freexl>
     # ReadStat -----------------------------------
+    ${LIBREADSTAT_LIBRARIES}
     $<$<NOT:$<BOOL:${LINUX}>>:readstat::readstat>
     # librdata -----------------------------------
     ${LIBRDATA_LIBRARIES}
