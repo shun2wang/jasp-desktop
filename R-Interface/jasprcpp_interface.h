@@ -82,7 +82,7 @@ typedef int							(STDCALL *GetColumnType)				(const char* columnName);
 typedef int							(STDCALL *GetColumnAnalysisId)			(const char* columnName);
 typedef const char *				(STDCALL *CreateColumn)					(const char* columnName);
 typedef bool						(STDCALL *DeleteColumn)					(const char* columnName);
-typedef bool						(STDCALL *SetColumnDataAndType)			(const char* columnName, const char **	nominalData,	size_t length, int columnTYpe);
+typedef bool						(STDCALL *SetColumnDataAndType)			(const char* columnName, const char **	nominalData,	size_t length, int columnTYpe, bool computed);
 typedef int							(STDCALL *DataSetRowCount)              ();
 typedef const char *				(STDCALL *EnDecodeDef)					(const char *);
 typedef int							(STDCALL *DecodeTypeDef)				(const char *);

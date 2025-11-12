@@ -138,12 +138,12 @@ bool DataBridge::deleteColumn(const std::string &columnName)
 	return true;
 }
 
-bool DataBridge::setColumnDataAndType(const std::string &columnName, const std::vector<std::string> &data, columnType colType)
+bool DataBridge::setColumnDataAndType(const std::string &columnName, const std::vector<std::string> &data, columnType colType, bool computed)
 {
 	if(!isColumnNameOk(columnName))
 		return false;
 
-	return provideAndUpdateDataSet()->column(columnName)->overwriteDataAndType(data, colType);
+	return provideAndUpdateDataSet()->column(columnName)->overwriteDataAndType(data, colType, computed);
 }
 
 void DataBridge::reloadColumnNames()

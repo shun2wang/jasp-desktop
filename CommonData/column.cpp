@@ -258,7 +258,7 @@ void Column::setCodeType(computedColumnType codeType)
 		_constructorJson["formulas"] = Json::arrayValue;
 	}
 
-	if(_codeType == computedColumnType::analysisNotComputed)
+	if(_codeType == computedColumnType::analysisNotComputed && codeType != computedColumnType::analysis)
 		_analysisId = -1;
 
 	_codeType	= codeType;
@@ -658,7 +658,7 @@ bool Column::setDescriptions(strstrmap labelToDescriptionMap)
 }
 
 
-bool Column::overwriteDataAndType(stringvec colData, columnType colType)
+bool Column::overwriteDataAndType(stringvec colData, columnType colType, bool computed)
 {
 	JASPTIMER_SCOPE(Column::overwriteDataAndType);
 	
@@ -709,6 +709,8 @@ bool Column::overwriteDataAndType(stringvec colData, columnType colType)
 	// In this case, the locale used is just UTF-8/C, so the locale chosen by the user should not be used to convert the values.
 	beginBatchedLabelsDB();
 	setValues(values, labels, 0, &changes, false);
+	if(computed && _codeType == computedColumnType::analysisNotComputed)
+		setCodeType(computedColumnType::analysis);
 	setType(colType);
 	nonFilteredCountersReset();
 	labelsHandleAutoSort();

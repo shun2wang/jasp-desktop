@@ -616,13 +616,13 @@ extern "C" bool STDCALL rbridge_deleteColumn(const char * columnName)
 	return data_bridge->deleteColumn(columnName);
 }
 
-extern "C" bool STDCALL rbridge_setColumnDataAndType(const char* columnName, const char ** nominalData, size_t length, int _columnType)
+extern "C" bool STDCALL rbridge_setColumnDataAndType(const char* columnName, const char ** nominalData, size_t length, int _columnType, bool computed)
 {
 	JASP_COLUMN_DECODE_HERE_STORED_colName;
 
 	std::vector<std::string> nominals(nominalData, nominalData + length);
 
-	return data_bridge->setColumnDataAndType(colName, nominals, columnType(_columnType));
+	return data_bridge->setColumnDataAndType(colName, nominals, columnType(_columnType), computed);
 }
 
 extern "C" int	STDCALL rbridge_dataSetRowCount()
