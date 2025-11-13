@@ -80,7 +80,7 @@ typedef const char*					(STDCALL *RequestTempRootNameCB)        ();
 typedef bool						(STDCALL *RunCallbackCB)                (const char* in, int progress, const char** out);
 typedef int							(STDCALL *GetColumnType)				(const char* columnName);
 typedef int							(STDCALL *GetColumnAnalysisId)			(const char* columnName);
-typedef const char *				(STDCALL *CreateColumn)					(const char* columnName);
+typedef const char *				(STDCALL *CreateColumn)					(const char* columnName, bool computed);
 typedef bool						(STDCALL *DeleteColumn)					(const char* columnName);
 typedef bool						(STDCALL *SetColumnDataAndType)			(const char* columnName, const char **	nominalData,	size_t length, int columnTYpe, bool computed);
 typedef int							(STDCALL *DataSetRowCount)              ();

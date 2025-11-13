@@ -860,9 +860,9 @@ int jaspRCPP_getColumnOriginalIndex(std::string columnName)
 	return dataSetGetColumnOriginalIndex(columnName.c_str()); // columnName decoded in rbridge
 }
 
-std::string jaspRCPP_createColumn(std::string columnName)
+std::string jaspRCPP_createColumn(std::string columnName, bool computed)
 {
-	return dataSetCreateColumn(columnName.c_str());
+	return dataSetCreateColumn(columnName.c_str(), computed);
 }
 
 bool jaspRCPP_deleteColumn(std::string columnName)

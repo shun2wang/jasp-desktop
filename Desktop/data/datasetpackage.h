@@ -243,7 +243,6 @@ public:
 				void						setColumnDropLevels(				size_t					columnIndex, dropLevelsType dropLevels);
 				void						setColumnDescription(				size_t				columnIndex, const std::string	& newDescription);
 				void						setColumnComputedType(				size_t				columnIndex, computedColumnType	type);
-				void						setColumnComputedType(				const std::string &	columnName,	computedColumnType	type);
 				void						setColumnComputeFilter(				size_t columnIndex, const std::string &newFilter);
 				void						setColumnHasCustomEmptyValues(		size_t				columnIndex, bool				  hasCustomEmptyValue);
 				void						setColumnCustomEmptyValues(			size_t				columnIndex, const stringset	& customEmptyValues);

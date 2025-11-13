@@ -261,6 +261,7 @@ void Column::setCodeType(computedColumnType codeType)
 	if(_codeType == computedColumnType::analysisNotComputed && codeType != computedColumnType::analysis)
 		_analysisId = -1;
 
+	Log::log() << "Column " << _name << "'s codeType changes from " << computedColumnTypeToString(_codeType) << " to " << computedColumnTypeToString(codeType) << std::endl;
 	_codeType	= codeType;
 	
 	dbUpdateComputedColumnStuff();
@@ -676,6 +677,7 @@ bool Column::overwriteDataAndType(stringvec colData, columnType colType, bool co
 		colData = newData;
 	}
 	
+	Log::log() << "Column " << _name << " overwriteDataAndType(" << colData.size() << " rows of data, "<<columnTypeToString(colType)<<", bool computed=" << (computed ? "true" : "false") << ")" << std::endl;
 	
 	//Now to make sure that the colData is neither bigger nor smaller than the dataset:
 	colData.resize(_data->rowCount()); //Either add blanks rows add end or drop superfluous data
@@ -709,7 +711,7 @@ bool Column::overwriteDataAndType(stringvec colData, columnType colType, bool co
 	// In this case, the locale used is just UTF-8/C, so the locale chosen by the user should not be used to convert the values.
 	beginBatchedLabelsDB();
 	setValues(values, labels, 0, &changes, false);
-	if(computed && _codeType == computedColumnType::analysisNotComputed)
+	if(computed)
 		setCodeType(computedColumnType::analysis);
 	setType(colType);
 	nonFilteredCountersReset();

@@ -1762,11 +1762,6 @@ void DataSetPackage::setColumnDropLevels(size_t columnIndex, dropLevelsType drop
 }
 
 
-void DataSetPackage::setColumnComputedType(const std::string & columnName, computedColumnType type)
-{
-	setColumnComputedType(getColumnIndex(columnName), type);
-}
-
 void DataSetPackage::setColumnHasCustomEmptyValues(size_t columnIndex, bool hasCustomEmptyValue)
 {
 	if(!_dataSet)

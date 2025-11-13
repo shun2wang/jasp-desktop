@@ -104,7 +104,7 @@ DataSet * DataBridge::provideAndUpdateDataSet()
 	return _dataSet;
 }
 
-std::string DataBridge::createColumn(const std::string &columnName)
+std::string DataBridge::createColumn(const std::string &columnName, bool computed)
 {
 	if(columnName.empty() || isColumnNameOk(columnName))
 		return "";
@@ -113,7 +113,7 @@ std::string DataBridge::createColumn(const std::string &columnName)
 	Column  * col  = data->newColumn(columnName);
 
 	col->setAnalysisId(_analysisId);
-	col->setCodeType(computedColumnType::analysisNotComputed);
+	col->setCodeType(computed ? computedColumnType::analysis : computedColumnType::analysisNotComputed);
 
 	reloadColumnNames();
 

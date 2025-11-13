@@ -627,10 +627,10 @@ extern "C" int STDCALL rbridge_getColumnOriginalIndex(const char * columnName)
 	return data_bridge->getColumnOriginalIndex(colName);
 }
 
-extern "C" const char * STDCALL rbridge_createColumn(const char * columnName)
+extern "C" const char * STDCALL rbridge_createColumn(const char * columnName, bool computed)
 {
 	static std::string lastColumnName;
-	lastColumnName = data_bridge->createColumn(columnName);
+	lastColumnName = data_bridge->createColumn(columnName, computed);
 
 	return lastColumnName.c_str();
 }

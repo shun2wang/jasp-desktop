@@ -983,6 +983,7 @@ void DatabaseInterface::columnGetValues(int columnId, intvec & ints, doublevec &
 	const size_t	rowCount	= dataSetRowCount(dataSet);
 
 	ints.resize(rowCount);
+	dbls.resize(rowCount);
 
 	std::function<void(size_t, sqlite3_stmt *stmt)> processRow = [&](size_t row, sqlite3_stmt *stmt)
 	{
