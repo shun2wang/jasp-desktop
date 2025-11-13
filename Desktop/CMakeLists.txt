@@ -101,6 +101,10 @@ if(LOCAL_MODULES_BUILD)
   add_dependencies(JASP ModulesBuild)
 endif()
 
+if(APPLE)
+  add_dependencies(JASPDesktopLib readstat)
+endif()
+
 if(WINDOWS)
   # This is added to the build folder that JASP doesn't try to recreate the
   # junctions in the build folder, they are there anyway!
@@ -174,7 +178,8 @@ target_link_libraries(
     $<$<NOT:$<BOOL:${LINUX}>>:freexl::freexl>
     # ReadStat -----------------------------------
     ${LIBREADSTAT_LIBRARIES}
-    $<$<NOT:$<BOOL:${LINUX}>>:readstat::readstat>
+    # Rtools's ReadStat
+    $<$<PLATFORM_ID:Windows>:${RTOOLS_LIBREADSTAT_DLL_A}>
     # librdata -----------------------------------
     ${LIBRDATA_LIBRARIES}
     $<$<PLATFORM_ID:Windows>:${RTOOLS_LIBRDATA_DLL_A}>

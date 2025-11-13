@@ -42,9 +42,9 @@ find_package(ZLIB 1.2 REQUIRED)
 find_package(Iconv 1.16 REQUIRED)
 find_package(SQLite3 3.37.0 REQUIRED)
 
-if(USE_CONAN)
-  find_package(readstat REQUIRED)
-endif()
+#if(USE_CONAN)
+#  find_package(jsoncpp 1.9 REQUIRED)
+#endif()
 
 find_package(OpenSSL 1.1.1 COMPONENTS SSL Crypto)
 if(NOT OpenSSL_FOUND)
@@ -236,7 +236,6 @@ if(APPLE)
   find_package(Brotli 1.0.9 REQUIRED)
   find_package(freexl 2.0.99 REQUIRED)
   find_package(librdata REQUIRED)
-  find_package(readstat REQUIRED)
 
 endif()
 
@@ -246,6 +245,7 @@ if(WIN32)
   
   find_package(freexl 2.0.99 REQUIRED)
 
+  copy_rtools_header(RTOOLS_LIBREADSTAT_H	readstat.h		${CMAKE_SOURCE_DIR}/Desktop/data/importers/readstat/readstat.h)
   copy_rtools_header(RTOOLS_LIBRDATA_H		rdata.h			${CMAKE_SOURCE_DIR}/Desktop/data/importers/rdata/rdata.h)
 
   find_rtools_dll_path(RTOOLS_ZLIB_DLL            "zlib1.dll")
@@ -256,7 +256,9 @@ if(WIN32)
   find_rtools_dll_path(RTOOLS_LIBRDATA_DLL        "librdata-0.dll")
   find_rtools_dll_path(RTOOLS_LIBSTDCPP_DLL       "libstdc++-6.dll")
   find_rtools_dll_path(RTOOLS_LIBRDATA_DLL_A      "librdata.dll.a")
+  find_rtools_dll_path(RTOOLS_LIBREADSTAT_DLL     "libreadstat-1.dll")
   find_rtools_dll_path(RTOOLS_LIBGCC_S_SEH_DLL    "libgcc_s_seh-1.dll")
+  find_rtools_dll_path(RTOOLS_LIBREADSTAT_DLL_A   "libreadstat.dll.a")
   find_rtools_dll_path(RTOOLS_LIBWINPTHREAD_DLL   "libwinpthread-1.dll")
 
 endif()
