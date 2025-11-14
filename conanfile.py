@@ -22,9 +22,10 @@ class JaspConanConfig(ConanFile):
         self.requires("openssl/3.4.1")
         self.requires("bison/3.7.6")
         self.requires("brotli/1.1.0")
-        self.requires("sqlite3/3.49.1")
+        self.requires("sqlite3/[>=3.49 <4.0]")
         self.requires("gmp/6.3.0")
         self.requires("mpfr/4.2.1")
+        self.requires("readstat/1.1.9")
         # self.requires("freexl/2.0.99.cci.20250526")
         # librdata is not available for Windows platforms on conan-center yet
         if self.settings_build.os == "Macos":
