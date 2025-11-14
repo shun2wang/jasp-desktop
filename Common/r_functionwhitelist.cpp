@@ -36,6 +36,7 @@ const std::set<std::string> R_FunctionWhiteList::functionWhiteList {
 	"attr",
 	"attributes",
 	"BoxCox",
+    "BoxCoxAuto",
 	"binom.test",
 	"by",
 	"c",
@@ -95,6 +96,7 @@ const std::set<std::string> R_FunctionWhiteList::functionWhiteList {
 	"is.na",
 	"is.null",
 	"is.numeric",
+    "Johnson",
 	"lag",
 	"lapply",
 	"length",
@@ -137,6 +139,7 @@ const std::set<std::string> R_FunctionWhiteList::functionWhiteList {
 	"pmin",
 	"poly",
 	"powerTransform",
+    "powerTransformAuto",
 	"power.t.test",
 	"predict",
 	"print",
@@ -191,6 +194,8 @@ const std::set<std::string> R_FunctionWhiteList::functionWhiteList {
 	"sqrt",
 	"stack",
 	"str",
+	"strftime",
+	"strptime",
 	"strsplit",
 	"sub",
 	"subset",
@@ -218,6 +223,7 @@ const std::set<std::string> R_FunctionWhiteList::functionWhiteList {
 	"which.min",
 	"xtabs",
 	"YeoJohnson",
+    "YeoJohnsonAuto",
 	".setColumnDataAsScale", ".setColumnDataAsOrdinal", ".setColumnDataAsNominal", ".setColumnDataAsNominalText",
 	
 	"function", "stop",
@@ -258,7 +264,9 @@ const std::set<std::string> R_FunctionWhiteList::functionWhiteList {
 	"rowCorrelation",
 	"rowMedian",		"rowMedianNaRm",	
 	"rowMin",			"rowMinNaRm",	
-	"rowMax",			"rowMaxNaRm"
+	"rowMax",			"rowMaxNaRm",
+
+	"row.names", "rownames", "colnames"
 	
 #ifdef JASP_DEBUG
 	,"Sys.sleep", ".crashPlease", "stringi::stri_enc_mark", "stringi::stri_enc_toutf8", "Encoding"
@@ -343,7 +351,7 @@ std::set<std::string> R_FunctionWhiteList::findIllegalFunctionsAliases(std::stri
 
 void R_FunctionWhiteList::scriptIsSafe(const std::string &script)
 {
-    std::string commentFree = stringUtils::stripRComments(script);
+    std::string commentFree = stringUtils::stripRComments(script, true);
 
 	static std::string errorMsg;
 

@@ -1,4 +1,5 @@
 #include "testall.h"
+#include "testinfo.h"
 #include "tempfiles.h"
 #include "processinfo.h"
 #include "utilities/qutils.h"
@@ -6,15 +7,16 @@
 #include "data/datasetpackage.h"
 #include "data/importers/csvimporter.h"
 #include "data/importers/odsimporter.h"
+#include "data/importers/jaspimporter.h"
 #include "data/importers/excelimporter.h"
 #include "data/importers/rdataimporter.h"
+#include "data/importers/jaspimporterold.h"
 #include "data/importers/readstatimporter.h"
-#include "dirs.h"
+
 
 void TestAll::initTestCase()
 {
 	TempFiles::init(ProcessInfo::currentPID()); // needed here so that the LRNAM can be passed the session directory
-
 }
 
 void TestAll::init()
@@ -24,33 +26,31 @@ void TestAll::init()
 
 void TestAll::cleanup()
 {
-	if(_importer)
-		delete _importer;
+	
+	delete _importer;
 	_importer = nullptr;
+
+	DatabaseInterface::singleton()->close();
+	DatabaseInterface::singleton()->closeInterfaces();
+	delete _pkg;
+	_pkg = nullptr;
 }
 
 #define TO_STR2(x) #x
 #define TO_STR(x) TO_STR2(x)
 
-QDir _TestLibrary()
-{
-	static const char *testLibraryDir = TO_STR(TESTLIBRARY_DIR);
-
-	QString altDir = qgetenv("TESTLIBRARY_DIR");
-	return altDir.isEmpty() ? QString(testLibraryDir) : altDir;
-}
 
 void TestAll::testDataImport_data()
 {
 	QTest::addColumn<QString>("folder");
 	QTest::addColumn<QString>("dataFileAbsolutePath");
 
-	for(const QString & folder : _TestLibrary().entryList(QDir::Filter::Dirs | QDir::Filter::NoDotAndDotDot | QDir::Filter::NoSymLinks))
+	for(const QString & folder : _testLibrary().entryList(QDir::Filter::Dirs | QDir::Filter::NoDotAndDotDot | QDir::Filter::NoSymLinks))
 	{
 		if(folder == "jasp")
 			continue;
 
-		QDir subDir(_TestLibrary());
+		QDir subDir(_testLibrary());
 		subDir.cd(folder);
 
 		for(QFileInfo & i : subDir.entryInfoList(QDir::Filter::Files | QDir::Filter::NoDotAndDotDot | QDir::Filter::NoSymLinks))
@@ -59,13 +59,12 @@ void TestAll::testDataImport_data()
 	}
 }
 
-
 void TestAll::testDataImport()
 {
 	QFETCH(QString, folder);
 	QFETCH(QString, dataFileAbsolutePath);
 
-	QDir subDir(_TestLibrary());
+	QDir subDir(_testLibrary());
 	subDir.cd(folder);
 
 	auto getImporter = [&]() -> Importer *
@@ -112,13 +111,15 @@ void TestAll::testDataImport()
 		jsonFile.open(QFile::OpenModeFlag::WriteOnly);
 		jsonFile.write(stringUtils::replaceBy(compareMe.toStyledString(), "\n", " ").c_str());
 		jsonFile.close();
-
 	}
 
 	QVERIFY(jsonFileIn.exists());
 
 	QFile jsonFile(jsonFilePath);
 
+	
+	
+	
 	jsonFile.open(QFile::OpenModeFlag::ReadOnly);
 
 	std::string jsonTxt  = fq(jsonFile.readAll());
@@ -135,14 +136,105 @@ void TestAll::testDataImport()
 
 	QVERIFY2(hardcodedIsSame,			"Hardcoded json is different!");
 
-	delete _importer;
-	_importer = nullptr;
-
-	DatabaseInterface::singleton()->close();
-	DatabaseInterface::singleton()->closeInterfaces();
-	delete _pkg;
-	_pkg = nullptr;
+	
+	DataSet loadMe(dataSet->id());
+	QVERIFY2(dataSet->jsonForCompare() == loadMe.jsonForCompare(), "DataSet isnt the same after dbload!");
 }
 
+
+void TestAll::testJaspDataImport_data()
+{
+	QTest::addColumn<QString>("folder");
+	QTest::addColumn<QString>("dataFileAbsolutePath");
+
+	for(const QString & folder : _testLibrary().entryList(QDir::Filter::Dirs | QDir::Filter::NoDotAndDotDot | QDir::Filter::NoSymLinks))
+	{
+		if(folder != "jasp")
+			continue;
+
+		QDir subDir(_testLibrary());
+		subDir.cd(folder);
+
+		for(QFileInfo & i : subDir.entryInfoList(QDir::Filter::Files | QDir::Filter::NoDotAndDotDot | QDir::Filter::NoSymLinks))
+			if(i.suffix() != "json")
+				QTest::newRow(i.fileName().toUtf8()) << folder << i.absoluteFilePath();
+	}
+}
+
+
+void TestAll::testJaspDataImport()
+{
+	QFETCH(QString, folder);
+	QFETCH(QString, dataFileAbsolutePath);
+
+	QDir subDir(_testLibrary());
+	subDir.cd(folder);
+
+	if(_pkg)
+		delete _pkg;
+
+	if(_importer)
+		delete _importer;
+
+	_pkg = new DataSetPackage(this);
+	
+	std::cerr << "Testing " << dataFileAbsolutePath << std::endl;
+
+	bool useOldImporter = JASPImporterOld::isCompatible(fq(dataFileAbsolutePath)) != JASPImporterOld::Compatibility::NotCompatible;
+
+	std::cerr << (useOldImporter ? "Using old importer" : "Using normal importer") << std::endl;
+	
+	if(useOldImporter)  JASPImporterOld::loadDataSet(fq(dataFileAbsolutePath),	[](int){});
+	else                JASPImporter::loadDataSet(fq(dataFileAbsolutePath),		[](int){});
+	
+	DataSet * dataSet = _pkg->dataSet();
+	QVERIFY2(dataSet,						"No dataset!");
+
+	Json::Value compareMe = dataSet->jsonForCompare();
+
+	QString jsonFilePath = dataFileAbsolutePath,
+			ext			 = QFileInfo(dataFileAbsolutePath).suffix();
+
+	jsonFilePath.replace(jsonFilePath.size() - (ext.size() + 1), ext.size() + 1, ".json");
+
+	QFileInfo jsonFileIn(jsonFilePath);
+
+	if(!jsonFileIn.exists())
+	{
+		std::cerr << "Json does not exist yet, creating it now!" << std::endl;
+		QFile jsonFile(jsonFilePath);
+		jsonFile.open(QFile::OpenModeFlag::WriteOnly);
+		jsonFile.write(stringUtils::replaceBy(compareMe.toStyledString(), "\n", " ").c_str());
+		jsonFile.close();
+
+	}
+
+	QVERIFY(jsonFileIn.exists());
+
+	QFile jsonFile(jsonFilePath);
+
+	
+	
+	
+	jsonFile.open(QFile::OpenModeFlag::ReadOnly);
+
+	std::string jsonTxt  = fq(jsonFile.readAll());
+
+	Json::Reader parser;
+	Json::Value  hardcoded;
+
+	QVERIFY2(parser.parse(jsonTxt, hardcoded),	"Parsing json failed!");
+
+	bool hardcodedIsSame = hardcoded == compareMe;
+
+	if(!hardcodedIsSame)
+		std::cerr << stringUtils::replaceBy(compareMe.toStyledString(), "\n", " ") << std::endl;
+
+	QVERIFY2(hardcodedIsSame,			"Hardcoded json is different!");
+
+	
+	DataSet loadMe(dataSet->id());
+	QVERIFY2(dataSet->jsonForCompare() == loadMe.jsonForCompare(), "DataSet isnt the same after dbload!");
+}
 
 QTEST_MAIN(TestAll)

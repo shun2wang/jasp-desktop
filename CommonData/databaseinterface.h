@@ -89,9 +89,9 @@ public:
 	int			dataSetGetId();
 	bool		dataSetExists(			int dataSetId);
 	void		dataSetDelete(			int dataSetId);
-	int			dataSetInsert(							const std::string & dataFilePath = "", long dataFileTimestamp = 0, const std::string & description = "", const std::string & databaseJson = "", const std::string & emptyValuesJson = "", bool dataSynch = false);		///< Inserts a new DataSet row into DataSets and creates an empty DataSet_#id. returns id
-	void		dataSetUpdate(			int dataSetId,	const std::string & dataFilePath = "", long dataFileTimestamp = 0, const std::string & description = "", const std::string & databaseJson = "", const std::string & emptyValuesJson = "", bool dataSynch = false);		///< Updates an existing DataSet row in DataSets
-	void		dataSetLoad(			int dataSetId,		  std::string & dataFilePath,	long & dataFileTimestamp,		 std::string & description,			   std::string & databaseJson,			  std::string & emptyValuesJson, int & revision, bool & dataSynch);	///< Loads an existing DataSet row into arguments
+	int			dataSetInsert(							const std::string & dataFilePath = "", long dataFileTimestamp = 0, const std::string & description = "", const std::string & databaseJson = "", const std::string & emptyValuesJson = "", bool dataSynch = false, bool showRSyntax = false);		///< Inserts a new DataSet row into DataSets and creates an empty DataSet_#id. returns id
+	void		dataSetUpdate(			int dataSetId,	const std::string & dataFilePath = "", long dataFileTimestamp = 0, const std::string & description = "", const std::string & databaseJson = "", const std::string & emptyValuesJson = "", bool dataSynch = false, bool showRSyntax = false);		///< Updates an existing DataSet row in DataSets
+	void		dataSetLoad(			int dataSetId,		  std::string & dataFilePath,	long & dataFileTimestamp,		 std::string & description,			   std::string & databaseJson,			  std::string & emptyValuesJson, int & revision, bool & dataSynch, bool & showRSyntax);	///< Loads an existing DataSet row into arguments
 	static int	dataSetColCount(		int dataSetId);
 	static int	dataSetRowCount(		int dataSetId);
 	void		dataSetSetRowCount(		int dataSetId, size_t rowCount);
@@ -183,8 +183,8 @@ public:
 	void		truncateAllTables();
 	bool		tableHasColumn(const std::string & tableName, const std::string & columnName);
 	bool		tableExists(const std::string & name);
-	int			transactionWriteDepth() { return _transactionWriteDepth; }
-	int			transactionReadDepth()	{ return _transactionReadDepth;  }
+	int			transactionWriteDepth();
+	int			transactionReadDepth();
 
     void        preloadInterfaceForThread();
 	void		close();					///< Closes the loaded database and disconnects
@@ -199,16 +199,12 @@ private:
 	void		create();					///< Creates a new sqlite database in sessiondir and loads it
 	void		load();						///< Loads a sqlite database from sessiondir (after loading a jaspfile)
 
-	
-
-	int			_transactionWriteDepth	= 0,
-				_transactionReadDepth	= 0;
-
 	std::map<std::thread::id, sqlite3*>		_dbs;
 	std::thread::id							_dbCreator;
 	sqlite3*								_dbCreated = nullptr;
 	bool									_inMemory;
-    std::mutex                              _loadMutex;
+	std::mutex                              _loadMutex,
+											_dbCheckMutex;
 
 	static			std::string _wrap_sqlite3_column_text(sqlite3_stmt * stmt, int iCol);
 	static const	std::string _dbConstructionSql;

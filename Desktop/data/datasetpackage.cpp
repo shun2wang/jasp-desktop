@@ -50,7 +50,7 @@ DataSetPackage::DataSetPackage(QObject * parent) : QAbstractItemModel(parent)
 	_db			= new DatabaseInterface(true);
 
 	_dataSet	= new DataSet(); //We create one here to make sure filter() etc can actually work
-	setDefaultWorkspaceEmptyValues();
+	setDefaultWorkspaceValues();
 	
 	connect(this, &DataSetPackage::isModifiedChanged,					this, &DataSetPackage::windowTitleChanged);
 	connect(this, &DataSetPackage::loadedChanged,						this, &DataSetPackage::windowTitleChanged);
@@ -1266,10 +1266,7 @@ void DataSetPackage::prepareForLanguageChange()
 void DataSetPackage::languageChangeDone()
 {
 	_waitingForLanguageChange = false; //Dont accept changes while the interface changes
-	
-	if(_dataSet)
-		_dataSet->updateLabelsPostLocaleChange();
-	
+
 	refresh();
 }
 
@@ -1428,12 +1425,14 @@ void DataSetPackage::beginLoadingData(bool)
 
 void DataSetPackage::stopEngines()
 {
-	EngineSync::singleton()->stopEngines();
+	if(EngineSync::singleton()) //During testing this may be false
+		EngineSync::singleton()->stopEngines();
 }
 
 void DataSetPackage::restartEngines()
 {
-	EngineSync::singleton()->restartEngines();
+	if(EngineSync::singleton()) //During testing this may be false
+		EngineSync::singleton()->restartEngines();
 }
 
 
@@ -1474,7 +1473,7 @@ void DataSetPackage::createDataSet()
 	dbDelete();
 	deleteDataSet();
 	_dataSet = new DataSet();
-	setDefaultWorkspaceEmptyValues();
+	setDefaultWorkspaceValues();
 	_dataSubModel->selectNode(_dataSet->dataNode());
 	_filterSubModel->selectNode(_dataSet->filtersNode());
 	
@@ -1493,7 +1492,7 @@ void DataSetPackage::loadDataSet(std::function<void(float)> progressCallback)
 	_db->load();		
 	_db->upgradeDBFromVersion(_jaspVersion);
 	
-	bool do019Upgrade = _jaspVersion < "0.19";
+	bool 	do019Upgrade  = _jaspVersion < "0.19";
 	
 	_dataSet = new DataSet(0);
 	_dataSet->dbLoad(1, progressCallback, _jaspVersion); //Right now there can only be a dataSet with ID==1 so lets keep it simple
@@ -1763,11 +1762,6 @@ void DataSetPackage::setColumnDropLevels(size_t columnIndex, dropLevelsType drop
 }
 
 
-void DataSetPackage::setColumnComputedType(const std::string & columnName, computedColumnType type)
-{
-	setColumnComputedType(getColumnIndex(columnName), type);
-}
-
 void DataSetPackage::setColumnHasCustomEmptyValues(size_t columnIndex, bool hasCustomEmptyValue)
 {
 	if(!_dataSet)
@@ -2032,21 +2026,37 @@ const stringset& DataSetPackage::workspaceEmptyValues() const
 	return _dataSet ? _dataSet->workspaceEmptyValues() : emptyVec;
 }
 
-void DataSetPackage::setDefaultWorkspaceEmptyValues()
+bool DataSetPackage::workspaceShowRSyntax() const
 {
+	return _dataSet ? _dataSet->showRSyntax() : PreferencesModel::prefs()->showRSyntaxInResults();
+}
+
+void DataSetPackage::setDefaultWorkspaceValues()
+{
+	_dataSet->setShowRSyntax(PreferencesModel::prefs()->showRSyntaxInResults());
+
 	stringvec prefs = fq(PreferencesModel::prefs()->emptyValues());
-	setWorkspaceEmptyValues(stringset(prefs.begin(), prefs.end()));
+	setWorkspaceEmptyValues(stringset(prefs.begin(), prefs.end()));	
 }
 
 void DataSetPackage::setWorkspaceEmptyValues(const stringset &emptyValues, bool reset)
 {
-	if (!_dataSet) return;
+	if (!_dataSet || _dataSet->workspaceEmptyValues() == emptyValues) return;
 	
 	if(reset)	beginResetModel();
 	_dataSet->setWorkspaceEmptyValues(emptyValues);
 	if(reset)	endResetModel();
 	
 	emit workspaceEmptyValuesChanged();
+}
+
+void DataSetPackage::setWorkspaceShowRSyntax(bool show)
+{
+	if (!_dataSet || _dataSet->showRSyntax() == show) return;
+
+	_dataSet->setShowRSyntax(show);
+
+	setModified(true);
 }
 
 void DataSetPackage::pasteSpreadsheet(size_t row, size_t col, const std::vector<std::vector<QString>> & values, const std::vector<std::vector<QString>> &  labels, const intvec & coltypes, const QStringList & colNames, const std::vector<boolvec> & selected)
@@ -2526,7 +2536,7 @@ bool DataSetPackage::filePathIsNonSaveable(const QString & path) const
 {
 	QFileInfo fileDir(path);
 
-	return fileDir.dir() == QDir(AppDirs::examples()) || fileDir.dir() == QDir(AppDirs::autoSaveDir());
+	return fileDir.dir().absolutePath().startsWith(AppDirs::examples()) || fileDir.dir() == QDir(AppDirs::autoSaveDir());
 }
 
 void DataSetPackage::setAnalysesData(const Json::Value &analysesData)

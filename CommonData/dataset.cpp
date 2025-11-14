@@ -267,7 +267,7 @@ void DataSet::dbCreate()
 	db().transactionWriteBegin();
 
 	//The variables are probably empty though:
-	_dataSetID	= db().dataSetInsert(_dataFilePath, _dataFileTimestamp, _description, _databaseJson, _emptyValues->toJson().toStyledString(), _dataFileSynch);
+	_dataSetID	= db().dataSetInsert(_dataFilePath, _dataFileTimestamp, _description, _databaseJson, _emptyValues->toJson().toStyledString(), _dataFileSynch, _showRSyntax);
 	
 	assert(_dataSetID == 1);
 	
@@ -283,7 +283,7 @@ void DataSet::dbCreate()
 void DataSet::dbUpdate()
 {
 	assert(_dataSetID > 0);
-	db().dataSetUpdate(_dataSetID, _dataFilePath, _dataFileTimestamp, _description, _databaseJson, _emptyValues->toJson().toStyledString(), _dataFileSynch);
+	db().dataSetUpdate(_dataSetID, _dataFilePath, _dataFileTimestamp, _description, _databaseJson, _emptyValues->toJson().toStyledString(), _dataFileSynch, _showRSyntax);
 	incRevision();
 }
 
@@ -309,7 +309,7 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, Ver
 
 	std::string emptyVals;
 
-	db().dataSetLoad(_dataSetID, _dataFilePath, _dataFileTimestamp, _description, _databaseJson, emptyVals, _revision, _dataFileSynch);
+	db().dataSetLoad(_dataSetID, _dataFilePath, _dataFileTimestamp, _description, _databaseJson, emptyVals, _revision, _dataFileSynch, _showRSyntax);
 	progressCallback(0.1);
 
 	if(!_filter)
@@ -322,7 +322,18 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, Ver
 	//Log::log() << "colCount: " << colCount << ", " << "rowCount: " << rowCount() << std::endl;
 
 	float colProgressMult = 1.0 / colCount;
-			
+
+	Json::Value emptyValsJson;
+	Json::Reader().parse(emptyVals, emptyValsJson);
+
+	bool	do019Fix	= doUpgradeFrom != Version() && doUpgradeFrom < "0.19",
+			do095Fix	= doUpgradeFrom != Version() && doUpgradeFrom < "0.95";
+
+	//Ideally we have the emptyvalues before loading the columns, so we get the right labels in the labeleditor, butr for older than 0.19 stuff is complicated so we do that later.
+
+	if(!do019Fix)
+		_emptyValues->fromJson(emptyValsJson);
+
 	for(size_t i=0; i<colCount; i++)
 	{
 		if(_columns.size() == i)
@@ -340,18 +351,13 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, Ver
 
 	db().dataSetBatchedValuesLoad(this, [&](float p){ progressCallback(0.50 + (p * 0.25)); });
 	db().dataSetBatchedLabelsLoad(this, [&](float p){ progressCallback(0.75 + (p * 0.25)); });
-	
-	Json::Value emptyValsJson;
-	Json::Reader().parse(emptyVals, emptyValsJson);
-	
-	bool	do019Fix	= doUpgradeFrom != Version() && doUpgradeFrom < "0.19",
-			do095Fix	= doUpgradeFrom != Version() && doUpgradeFrom < "0.95";
+
+
 	
 	if(do095Fix)
 		beginBatchedToDB();
 	
 	if(do019Fix)	upgradeTo019(emptyValsJson);
-	else			_emptyValues->fromJson(emptyValsJson);
 	
 	if(do095Fix)
 	{
@@ -477,11 +483,11 @@ void DataSet::setColumnCount(size_t colCount)
 		db().dataSetCreateTable(this);
 }
 
-void DataSet::setRowCount(size_t rowCount)
+void DataSet::setRowCount(size_t rowCount, bool alsoLoadData)
 {
 	_rowCount = rowCount; //Make sure we do set the rowCount variable here so the batch can easily see how big it ought to be in DatabaseInterface::dataSetBatchedValuesUpdate
 
-	if(!writeBatchedToDB())
+	if(!writeBatchedToDB() && alsoLoadData)
 	{
 		db().dataSetSetRowCount(_dataSetID, rowCount);
 		dbLoad(); //Make sure columns have the right data in them
@@ -653,12 +659,6 @@ void DataSet::setDescription(const std::string &desc)
 {
 	_description = desc;
 	dbUpdate();
-}
-
-void DataSet::updateLabelsPostLocaleChange()
-{
-	for(Column * column : _columns)
-		column->updateLabelsPostLocaleChange();
 }
 
 DatabaseInterface &DataSet::db()	

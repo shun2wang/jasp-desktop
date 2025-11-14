@@ -431,7 +431,7 @@ void Analyses::loadAnalysesFromDatasetPackage(bool & errorFound, stringstream & 
 				}
 			}
 
-			JASPTIMER_START(Analyses::loadAnalysesFromDatasetPackage f-o-r analysisData in analysesDataList);
+			JASPTIMER_START(Analyses::loadAnalysesFromDatasetPackage for analysisData : analysesDataList);
 
 			Log::log() << "Loading analyses from jasp-file, entering loop." << std::endl;
 			
@@ -747,11 +747,11 @@ void Analyses::moveAnalysesResults(Analysis* fromAnalysis, int index)
 
 void Analyses::showRSyntaxInResults(bool show)
 {
-	Settings::setValue(Settings::SHOW_RSYNTAX_IN_RESULTS, show);
+	DataSetPackage::pkg()->setWorkspaceShowRSyntax(show);
 
 	applyToAll([&](Analysis * a)
 	{
-		a->setRSyntaxTextInResult();
+		a->setRSyntaxTextInResult(show);
 	});
 }
 
