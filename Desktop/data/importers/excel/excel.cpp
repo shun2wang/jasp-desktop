@@ -18,7 +18,7 @@
 #include "excel.h"
 #include "utilities/qutils.h"
 #include <stringutils.h>
-
+#include <columnutils.h>
 #include <QFileInfo>
 #include <QDebug>
 
@@ -95,7 +95,7 @@ void Excel::getCellValue(uint32_t &row, uint16_t &col, std::string &cellValue)
 		cellValue = std::to_string(cell.value.int_value);
 		break;
 	case FREEXL_CELL_DOUBLE:
-		cellValue = std::to_string(cell.value.double_value);
+		cellValue = ColumnUtils::doubleToStringMaxPrec(cell.value.double_value, false);
 		break;
 	case FREEXL_CELL_NULL:
 	default:
