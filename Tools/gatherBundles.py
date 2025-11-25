@@ -68,7 +68,7 @@ def main():
     modules = ['jasp-stats-modules/' + y.name for y in path.glob('core-modules/*') if y.is_dir()] + ['jasp-stats-modules/' + y.name for y in path.glob('jasp-modules/*') if y.is_dir()]
     if args.prerelease:
         modules +=  ['jasp-stats-modules/' + y.name for y in path.glob('beta-modules/*') if y.is_dir()]
-
+    print(F"Gathering modules: {modules}")
     gatherMod(modules, token, args.prerelease, args.flatpak)
 
 
