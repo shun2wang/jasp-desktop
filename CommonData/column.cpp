@@ -711,7 +711,7 @@ bool Column::overwriteDataAndType(stringvec colData, columnType colType, bool co
 	// In this case, the locale used is just UTF-8/C, so the locale chosen by the user should not be used to convert the values.
 	beginBatchedLabelsDB();
 	setValues(values, labels, 0, &changes, false);
-	if(computed)
+	if(computed && _codeType == computedColumnType::analysisNotComputed && _analysisId != -1)
 		setCodeType(computedColumnType::analysis);
 	setType(colType);
 	nonFilteredCountersReset();
