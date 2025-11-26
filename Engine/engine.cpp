@@ -543,7 +543,7 @@ void Engine::runComputeColumn(const std::string & computeColumnName, const std::
 			std::string useThisFilter				= compCol->computeFilter(),
 						computeColumnResultStr		= rbridge_evalRComputedColumn(
 							computeColumnCode, 
-							"toString("+ setColumnFunction.at(computeColumnType) + "('" + computeColumnNameEnc +"', .calcedVals))",
+							"toString("+ setColumnFunction.at(computeColumnType) + "('" + computeColumnNameEnc +"', .calcedVals, 1))",
 							useThisFilter);
 	
 			computeColumnResponse["result"]			= computeColumnResultStr;
