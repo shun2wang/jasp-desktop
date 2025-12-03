@@ -16,7 +16,7 @@ class JaspConanConfig(ConanFile):
         self.requires("libiconv/1.18", force=True)
         self.requires("boost/1.86.0")
         self.requires("zlib/1.3.1")
-        self.requires("libarchive/3.7.9")
+        self.requires("libarchive/3.8.1")
         self.requires("zstd/1.5.7")
         self.requires("jsoncpp/1.9.6")
         self.requires("openssl/3.4.1")
