@@ -22,7 +22,7 @@ class JaspConanConfig(ConanFile):
         self.requires("openssl/3.4.1")
         self.requires("bison/3.7.6")
         self.requires("brotli/1.1.0")
-        self.requires("sqlite3/3.49.2]")
+        self.requires("sqlite3/3.50.4]")
         self.requires("gmp/6.3.0")
         self.requires("mpfr/4.2.1")
         self.requires("readstat/1.1.9")
