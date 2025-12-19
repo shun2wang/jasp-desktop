@@ -69,13 +69,18 @@ Item
 		{
 			var dropSpot = parent.parent;
 			
-			return dropSpot != undefined && dropSpot.objectName == "DropSpot" && dropSpot.dropKeys.indexOf(dragKeyToCheck) >= 0	
+			if(dropSpot == undefined || dropSpot.objectName != "DropSpot")
+				return false;
+			
+			for(dragKey in dragKeyToCheck)
+				if(dropSpot.dropKeys.indexOf(dragKeyToCheck))
+					return true;
+			return false;
 		}
 		
 		function columnTypeToRelevantString(columnType)
 		{
-			// maybe ordinal needs more ?
-			return columnType == columnTypeOrdinal ? "ordered" : columnType != columnTypeScale ? "string" : "number"
+			return columnType == columnTypeOrdinal ? ["string", "ordered"] : columnType != columnTypeScale ? ["string"] : ["number"]
 		}
 	}
 	//colName can elide
