@@ -146,10 +146,10 @@ if(WIN32)
         CACHE STRING "Module Merge Name")
     set(VC_TOOLS_REDIST_DIR_VARIABLE "%VCINSTALLDIR%")
     set(VC_TOOLS_REDIST_PATH
-        "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Redist\\MSVC\\v143"
+        "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Redist\\MSVC\\v143"
     )
     set(VC_VARS_PATH_NATIVE
-        "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build"
+        "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build"
     )
   elseif(MSVC_VERSION GREATER "1920")
     set(VC_MERGE_MODULE_NAME
@@ -157,10 +157,10 @@ if(WIN32)
         CACHE STRING "Module Merge Name")
     set(VC_TOOLS_REDIST_DIR_VARIABLE "%VCToolsRedistDir%")
     set(VC_TOOLS_REDIST_PATH
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Redist\\MSVC\\v142"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Redist\\MSVC\\v142"
     )
     set(VC_VARS_PATH_NATIVE
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build"
     )
   endif()
 
