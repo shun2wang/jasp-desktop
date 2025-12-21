@@ -44,6 +44,7 @@ jobs:
              C:\rtools45\msys2_shell.cmd -defterm -here -no-start -ucrt64 -lc "git clone https://github.com/WizardMac/librdata.git"
              C:\rtools45\msys2_shell.cmd -defterm -here -no-start -ucrt64 -lc "cd librdata && ./autogen.sh"
              C:\rtools45\msys2_shell.cmd -defterm -here -no-start -ucrt64 -lc "cd librdata && ./configure --host=$MINGW_CHOST --build=$MINGW_CHOST --prefix=$MINGW_PREFIX && make && make install"
+             C:\rtools45\msys2_shell.cmd -defterm -here -no-start -ucrt64 -lc "ls -R /ucrt64/{include,lib,bin} | head"
       
       - name: Install Conan
         uses: conan-io/setup-conan@v1
