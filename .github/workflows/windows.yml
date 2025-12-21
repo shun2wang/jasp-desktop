@@ -81,7 +81,10 @@ jobs:
             -DCMAKE_BUILD_TYPE="Release" `
             -DCMAKE_PREFIX_PATH="${QT_ROOT_DIR}" `
             -DJASP_TEST_BUILD=ON `
-            -DGITHUB_WORKFLOW_WIN=ON
+            -DGITHUB_WORKFLOW_WIN=ON `
+            -DVC_TOOLS_REDIST_PATH="C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Redist/MSVC/v143" `
+            -DVC_TOOLS_REDIST_DIR_VARIABLE="C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC" `
+            -DVC_VARS_PATH_NATIVE="C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build"
         env:
             VCINSTALLDIR: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC"
 
