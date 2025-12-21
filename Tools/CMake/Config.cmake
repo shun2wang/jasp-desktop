@@ -141,7 +141,7 @@ if(WIN32)
   message(STATUS ${MSVC_TOOLSET_VERSION})
   message(STATUS ${MSVC_VERSION})
 
-  if(MSVC_VERSION GREATER "1930")
+  if(MSVC_VERSION GREATER_EQUAL "1930")
     set(VC_MERGE_MODULE_NAME
         "Microsoft_VC143_CRT_x64.msm"
         CACHE STRING "Module Merge Name")
@@ -164,7 +164,7 @@ if(WIN32)
       )
     endif()
 
-  elseif(MSVC_VERSION GREATER "1920")
+  elseif(MSVC_VERSION EQUAL "1920")
     set(VC_MERGE_MODULE_NAME
         "Microsoft_VC142_CRT_x64.msm"
         CACHE STRING "Module Merge Name")
