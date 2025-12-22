@@ -21,7 +21,7 @@
 
 #include <QObject>
 #include <QString>
-#include <QQmlWebChannel>
+#include <QtWebChannel>
 #include <QAuthenticator>
 #include <QNetworkReply>
 #include <queue>

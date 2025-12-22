@@ -17,7 +17,7 @@
 //
 
 import QtQuick
-import QtWebEngine
+import QtWebView
 import QtWebChannel
 import JASP
 import QtQuick.Controls
@@ -309,12 +309,20 @@ Item
 			}
 		}
 
-		WebEngineView
+		WebView
 		{
 			id:						resultsView
-			clip:                   true
+			// clip:                   true
 			anchors.fill:			parent
 			anchors.leftMargin:		1
+
+			settings 
+			{
+				allowFileAccess: 				true
+				javaScriptEnabled: 				true
+				localContentCanAccessFileUrls: 	true
+				localStorageEnabled: 			true
+			}
 
 			url:					resultsJsInterface.resultsPageUrl
 
@@ -392,7 +400,7 @@ Item
 
 			onLoadingChanged: (loadRequest)=>
 			{
-				resultsJsInterface.resultsLoaded = loadRequest.status === WebEngineView.LoadSucceededStatus;
+				resultsJsInterface.resultsLoaded = loadRequest.status === WebView.LoadSucceededStatus;
 				setTranslatedResultsString();
 				if(resultsJsInterface.resultsLoaded)
 					runJavaScript(`window.sendUrlWhitelist(${JSON.stringify(urlWhitelist)})`); //sent urlWhitelist to js side

@@ -21,14 +21,12 @@
 
 #include "utilities/application.h"
 #include "utilities/settings.h"
-#include <QtWebEngineQuick/qtwebenginequickglobal.h>
+#include <QtWebView>
 #include <codecvt>
 #include "appinfo.h"
 #include <iostream>
 #include "timers.h"
 #include <QMessageBox>
-#include "utilities/plotschemehandler.h"
-#include "utilities/imgschemehandler.h"
 #include <json/json.h>
 #include "utilities/appdirs.h"
 
@@ -498,9 +496,6 @@ int main(int argc, char *argv[])
 				args.push_back("minimal");
 			}
 
-			PlotSchemeHandler::createUrlScheme(); //Needs to be done *before* creating PlotSchemeHandler instance and also before QApplication is instantiated
-			ImgSchemeHandler::createUrlScheme();
-
 			QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 			QCoreApplication::setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, false); //To avoid weird splitterbehaviour with QML and a touchscreen
 
@@ -537,15 +532,12 @@ int main(int argc, char *argv[])
 
 			JASPTIMER_START("JASP");
 
-			QtWebEngineQuick::initialize(); // We can do this here and not in MainWindow::loadQML() (before QQmlApplicationEngine is instantiated) because that is called from a singleshot timer. And will only be executed once we enter a.exec() below!
-			std::cout << "QtWebEngineQuick initialized" << std::endl;
+			QtWebView::initialize(); // We can do this here and not in MainWindow::loadQML() (before QQmlApplicationEngine is instantiated) because that is called from a singleshot timer. And will only be executed once we enter a.exec() below!
+			std::cout << "QtWebView initialized" << std::endl;
 
 			Application a(argvsize, argvs);
 
 			std::cout << "Application initialized" << std::endl;
-
-			PlotSchemeHandler plotSchemeHandler; //Makes sure plots can still be loaded in webengine with Qt6
-			ImgSchemeHandler  imgSchemeHandler;
 
 #ifdef _WIN32
 			auto runtimeEnv = DynamicRuntimeInfo::getInstance()->getRuntimeEnvironmentAsString();

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Window
-import QtWebEngine
+import QtWebView
 import JASP.Widgets
 import JASP.Controls
 

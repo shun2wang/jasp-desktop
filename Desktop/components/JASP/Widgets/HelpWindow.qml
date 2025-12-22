@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Window
-import QtWebEngine
+import QtWebView
 import JASP.Widgets
 import JASP.Controls
 
@@ -30,39 +30,47 @@ Window
 
 	UIScaleNotifier { anchors.centerIn:	parent }
 
-	WebEngineView
+	WebView
 	{
 		id:						helpView
 		url:					helpModel.indexURL()
 		anchors.fill:			parent
 		anchors.bottomMargin:	searchBar.height + (jaspTheme.generalAnchorMargin * 2)
-		zoomFactor:				preferencesModel.uiScale
-		backgroundColor:		jaspTheme.uiBackground
+		// zoomFactor:				preferencesModel.uiScale
+		// backgroundColor:		jaspTheme.uiBackground
+
+		settings {
+			allowFileAccess: true
+			javaScriptEnabled: true
+			localContentCanAccessFileUrls: true
+			localStorageEnabled: true
+		}
+
 		onLoadingChanged:	(loadRequest)=>
 		{
-			if(loadRequest.status === WebEngineView.LoadSucceededStatus)
+			if(loadRequest.status === WebView.LoadSucceededStatus)
 				helpModel.loadingSucceeded()
 			searchBar.search();
 		}
 
-		onNavigationRequested: (request)=>
-		{
-			if(request.navigationType === WebEngineNavigationRequest.LinkClickedNavigation)
-			{
-				Qt.openUrlExternally(request.url);
-				request.reject();
-			}
-		}
+		// onNavigationRequested: (request)=>
+		// {
+		// 	if(request.navigationType === WebEngineNavigationRequest.LinkClickedNavigation)
+		// 	{
+		// 		Qt.openUrlExternally(request.url);
+		// 		request.reject();
+		// 	}
+		// }
 
-		Connections
-		{
-			target:				helpModel
-			function onRunJavaScriptSignal(helpJS)
-			{
-				helpView.runJavaScript(helpJS);
-				searchBar.search();
-			}
-		}
+		// Connections
+		// {
+		// 	target:				helpModel
+		// 	function onRunJavaScriptSignal(helpJS)
+		// 	{
+		// 		helpView.runJavaScript(helpJS);
+		// 		searchBar.search();
+		// 	}
+		// }
 	}
 
 

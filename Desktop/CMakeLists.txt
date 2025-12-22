@@ -142,28 +142,26 @@ target_link_libraries(
     CommonData
     Common
     $<$<PLATFORM_ID:Darwin>:compression>
-    Qt::Core
-    Qt::Gui
-    Qt::OpenGL
-    Qt::Widgets
-    Qt::Qml
-    Qt::WebEngineQuick
-    Qt::WebChannel
-    Qt::WebChannelQuick
-    Qt::Svg
-    Qt::Network
-	#? Qt::PrintSupport
-    Qt::Xml
-    Qt::Sql
-    Qt::Quick
-    Qt::QuickLayouts
-    Qt::QuickControls2
-    Qt::QuickControls2Impl
-    Qt::QuickWidgets
-    Qt::QuickTemplates2
-    Qt::DBus
-    Qt::QmlWorkerScript
-    Qt::LabsFolderListModel
+    Qt6::Core
+    Qt6::Gui
+    Qt6::OpenGL
+    Qt6::Widgets
+    Qt6::Qml
+    Qt6::WebView
+    Qt6::WebChannel
+    Qt6::Svg
+    Qt6::Network
+    Qt6::Xml
+    Qt6::Sql
+    Qt6::Quick
+    Qt6::QuickLayouts
+    Qt6::QuickControls2
+    Qt6::QuickControls2Impl
+    Qt6::QuickWidgets
+    Qt6::QuickTemplates2
+    Qt6::DBus
+    Qt6::QmlWorkerScript
+    Qt6::LabsFolderListModel
     # System
     ZLIB::ZLIB
     Iconv::Iconv

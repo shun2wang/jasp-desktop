@@ -25,7 +25,7 @@
 #include <QQuickItem>
 #include <QQuickStyle>
 #include <QQuickWindow>
-#include <QtWebEngineQuick/qtwebenginequickglobal.h>
+#include <QtWebView>
 #include <QAction>
 #include <QMenuBar>
 #include <exception>

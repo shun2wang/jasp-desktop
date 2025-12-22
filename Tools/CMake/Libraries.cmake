@@ -95,7 +95,7 @@ if(NOT FLATPAK_USED)
   if(NOT USE_QT_STATIC_LIBS)
     find_package(
       Qt6 REQUIRED COMPONENTS
-               WebEngineQuick
+               WebView
                WebChannel
                Svg
                Network

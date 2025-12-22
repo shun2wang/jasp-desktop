@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QStringList>
-#include <QQmlWebChannel>
+#include <QtWebChannel>
 
 namespace Modules
 {
