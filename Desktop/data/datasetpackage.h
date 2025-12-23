@@ -262,7 +262,6 @@ public:
 				bool						labelNeedsFilter(					size_t				columnIndex)				const;
 				void						labelMoveRows(						size_t				columnIndex, std::vector<size_t> rows, bool up);
 				void						labelReverse(						size_t				columnIndex);
-				bool						setFilterData(const std::string & filter, const boolvec & filterResult);
 				void						resetAllFilters();
 				std::vector<bool>			filterVector();
 				void						setFilterVectorWithoutModelUpdate(std::vector<bool> newFilterVector) { if(_dataSet) _dataSet->filter()->setFilterVector(newFilterVector); }

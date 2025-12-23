@@ -16,7 +16,6 @@ ListView
 
 	delegate: MouseArea
 	{
-	
 		implicitWidth:  orientation === ListView.Horizontal ? elementLoader.item.width	: ListView.view.width
 		implicitHeight: orientation === ListView.Horizontal ? ListView.view.height	: elementLoader.item.height
 
@@ -112,7 +111,7 @@ ListView
 		Component { id: numberComp;			NumberDrag				{ toolTipText: listToolTip; value: listNumber;									alternativeDropFunction: alternativeDropFunctionDef } }
 		Component { id: stringComp;			StringDrag				{ toolTipText: listToolTip; text: listText;										alternativeDropFunction: alternativeDropFunctionDef } }
 		Component { id: separatorComp;		Item					{ height: filterConstructor.blockDim; width: listWidth - listOfStuff.widthMargin; Rectangle { height: 1; color: jaspTheme.black; width: parent.width ; anchors.centerIn: parent }  } }
-		Component { id: defaultComp;		Text					{ text: "Something wrong!"; color: jaspTheme.red }  }
+		Component { id: defaultComp;		Text					{ text: "???"; color: jaspTheme.textDisabled }  }
 		Component {	id: columnComp;			ColumnDrag				{ columnName: listColName;	columnTypeUser:	-1;				acceptsDrops: false;	alternativeDropFunction: alternativeDropFunctionDef; maxSize: listOfStuff.maxWidth } }
 	}
 

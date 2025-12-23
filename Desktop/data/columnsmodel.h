@@ -8,7 +8,7 @@
 /// 
 /// Model used by the filter-drag-n-drop to give all the columns and their datatypes
 /// The columns are layed out as rows to facilitate that
-class ColumnsModel  : public QTransposeProxyModel, public VariableInfoProvider
+class ColumnsModel  : public QAbstractTableModel, public VariableInfoProvider
 {
 	Q_OBJECT
 public:
@@ -24,6 +24,8 @@ public:
 											~ColumnsModel()		override;
 
 				QVariant					data(			const QModelIndex & index, int role = Qt::DisplayRole)				const	override;
+				int							rowCount(		const QModelIndex &parent = QModelIndex())							const override;
+				int							columnCount(	const QModelIndex &parent = QModelIndex())							const override;
 				QHash<int, QByteArray>		roleNames()																			const	override;
 				int							getColumnIndex(const std::string & col)												const				{ return _tableModel->getColumnIndex(col);	}
 				QStringList					getColumnNames()																	const;
@@ -45,6 +47,7 @@ public:
 
 public slots:
 	void datasetChanged(QStringList changedColumns, QStringList missingColumns, QMap<QString, QString> changeNameColumns, bool rowCountChanged, bool hasNewColumns);
+	void refresh() { beginResetModel(); endResetModel(); }
 
 signals:
 	void columnNamesChanged(QMap<QString, QString>	changedNames);

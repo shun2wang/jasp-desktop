@@ -6,20 +6,20 @@
 ColumnsModel * ColumnsModel::_singleton = nullptr;
 
 ColumnsModel::ColumnsModel(DataSetTableModel *tableModel) 
-: QTransposeProxyModel(tableModel), _tableModel(tableModel)
+: QAbstractTableModel(tableModel), _tableModel(tableModel)
 {
 	assert(!_singleton);
 	_singleton = this;
 	
-	setSourceModel(tableModel);
-
 	connect(_tableModel, &DataSetTableModel::columnTypeChanged,		this, [&](QString col, int) { emit columnTypeChanged(col); });
 	connect(_tableModel, &DataSetTableModel::labelChanged,			this, [&](QString col, QString orgLabel, QString newLabel) { emit labelsChanged(col, {std::make_pair(orgLabel, newLabel) }); } );
 	connect(_tableModel, &DataSetTableModel::labelsReordered,		this, &ColumnsModel::labelsReordered	);
 	connect(_tableModel, &DataSetTableModel::emptyValuesChanged,	this, &ColumnsModel::dataSetChanged		);
+	connect(_tableModel, &DataSetTableModel::modelReset,			this, &ColumnsModel::refresh			);
+	connect(_tableModel, &DataSetTableModel::dataChanged,			this, &ColumnsModel::refresh			);
+	
 
 	auto * info = new VariableInfo(_singleton);
-
 
 	connect(this, &ColumnsModel::columnNamesChanged,					info, &VariableInfo::variableNamesChanged	);
 	connect(this, &ColumnsModel::columnsChanged,						info, &VariableInfo::variablesChanged		);
@@ -29,14 +29,14 @@ ColumnsModel::ColumnsModel(DataSetTableModel *tableModel)
 			emit VariableInfo::info()->variableTypeChanged(term);
 		} );
 
-	connect(this, &ColumnsModel::labelsChanged,							info, &VariableInfo::labelsChanged			);
-	connect(this, &ColumnsModel::labelsReordered,						info, &VariableInfo::labelsReordered		);
-	connect(this, &ColumnsModel::filterChanged,							info, &VariableInfo::filterChanged			);
-	connect(this, &ColumnsModel::dataSetChanged,						info, &VariableInfo::dataSetChanged			);
-	connect(this, &QTransposeProxyModel::columnsInserted,				info, &VariableInfo::rowCountChanged		);
-	connect(this, &QTransposeProxyModel::columnsRemoved,				info, &VariableInfo::rowCountChanged		);
-	connect(this, &QTransposeProxyModel::modelReset,					info, &VariableInfo::rowCountChanged		);
-	connect(MainWindow::singleton(), &MainWindow::dataAvailableChanged, info, &VariableInfo::dataAvailableChanged	);
+	connect(this,						&ColumnsModel::labelsChanged,				info, &VariableInfo::labelsChanged			);
+	connect(this,						&ColumnsModel::labelsReordered,				info, &VariableInfo::labelsReordered		);
+	connect(this,						&ColumnsModel::filterChanged,				info, &VariableInfo::filterChanged			);
+	connect(this,						&ColumnsModel::dataSetChanged,				info, &VariableInfo::dataSetChanged			);
+	connect(this,						&QAbstractTableModel::modelReset,			info, &VariableInfo::rowCountChanged		);
+	connect(_tableModel,				&DataSetTableModel::columnsInserted,		info, &VariableInfo::rowCountChanged		);
+	connect(_tableModel,				&DataSetTableModel::columnsRemoved,			info, &VariableInfo::rowCountChanged		);
+	connect(MainWindow::singleton(),	&MainWindow::dataAvailableChanged,			info, &VariableInfo::dataAvailableChanged	);
 }
 
 ColumnsModel::~ColumnsModel()
@@ -113,11 +113,9 @@ QString ColumnsModel::getColumnTransformedToolTip(const QString &name, columnTyp
 
 QVariant ColumnsModel::data(const QModelIndex &index, int role) const
 {
-	if(index.row() < 0 || index.row() >= rowCount()) return QVariant();
-
-	QString				colName		= QTransposeProxyModel::data(index, int(DataSetPackage::specialRoles::name)).toString();
-	columnType			colType		= static_cast<columnType>			(QTransposeProxyModel::data(index, int(DataSetPackage::specialRoles::columnType			)).toInt());
-	computedColumnType	codeType	= static_cast<computedColumnType>	(QTransposeProxyModel::data(index, int(DataSetPackage::specialRoles::computedColumnType	)).toInt());
+	QString				colName		=									 _tableModel->headerData(index.row(), Qt::Horizontal, int(DataSetPackage::specialRoles::name				)).toString();
+	columnType			colType		= static_cast<columnType>			(_tableModel->headerData(index.row(), Qt::Horizontal, int(DataSetPackage::specialRoles::columnType			)).toInt());
+	computedColumnType	codeType	= static_cast<computedColumnType>	(_tableModel->headerData(index.row(), Qt::Horizontal, int(DataSetPackage::specialRoles::computedColumnType	)).toInt());
 
 	switch(role)
 	{
@@ -139,6 +137,16 @@ QVariant ColumnsModel::data(const QModelIndex &index, int role) const
 	return QVariant();
 }
 
+int ColumnsModel::rowCount(const QModelIndex &) const
+{
+	return _tableModel->columnCount();
+}
+
+int ColumnsModel::columnCount(const QModelIndex &) const
+{
+	return 1;
+}
+
 QVariant ColumnsModel::provideInfo(VariableInfo::InfoType info, const QString& colName, int row) const
 {
 	ColumnsModel* colModel = ColumnsModel::singleton();
@@ -153,31 +161,34 @@ QVariant ColumnsModel::provideInfo(VariableInfo::InfoType info, const QString& c
 		if (colIndex < 0)
 			return QVariant();
 
-		//remember, the model is transposed:
-		QModelIndex qColIndex = index(colIndex, 0),
-					qValIndex = index(colIndex, row);
+		QModelIndex qColIndex	= index(colIndex, 0),
+					tableCIndex	= _tableModel->index(0, colIndex),
+					tableVIndex	= _tableModel->index(row, colIndex);
 
 		//columnType	colTypeHere	= static_cast<columnType>(colTypeInt);
 
 		switch(info)
 		{
-		case VariableInfo::VariableType:				return	data(qColIndex, ColumnsModel::ColumnTypeRole).toInt();
-		case VariableInfo::DoubleValues:				return	QTransposeProxyModel::data(qColIndex,						int(DataSetPackage::specialRoles::valuesDblList));
-		case VariableInfo::TotalNumericValues:			return	QTransposeProxyModel::data(qColIndex,						int(DataSetPackage::specialRoles::nonFilteredNumericValuesCount));
-		case VariableInfo::TotalLevels:					return	QTransposeProxyModel::data(qColIndex,						int(DataSetPackage::specialRoles::nonFilteredLevels)).toStringList().length();
-		case VariableInfo::Labels:						return	QTransposeProxyModel::data(qColIndex,						int(DataSetPackage::specialRoles::nonFilteredLevels));
-		case VariableInfo::NameRole:					return	data(qColIndex, ColumnsModel::NameRole);
-		case VariableInfo::DataSetRowCount:				return  QTransposeProxyModel::columnCount();
-		case VariableInfo::DataSetValue:				return	QTransposeProxyModel::data(qValIndex,						int(DataSetPackage::specialRoles::value));
-		case VariableInfo::DataSetValues:				return	QTransposeProxyModel::data(qColIndex,						int(DataSetPackage::specialRoles::valuesStrList));
-		case VariableInfo::MaxWidth:					return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::maxColString)).toInt();
-		case VariableInfo::SignalsBlocked:				return	_tableModel->synchingData();
+		case VariableInfo::VariableType:				return					data(qColIndex, ColumnsModel::ColumnTypeRole).toInt();
+		case VariableInfo::NameRole:					return					data(qColIndex, ColumnsModel::NameRole);
+		
+		case VariableInfo::DoubleValues:				return	_tableModel->	data(tableCIndex,						int(DataSetPackage::specialRoles::valuesDblList));
+		case VariableInfo::TotalNumericValues:			return	_tableModel->	data(tableCIndex,						int(DataSetPackage::specialRoles::nonFilteredNumericValuesCount));
+		case VariableInfo::TotalLevels:					return	_tableModel->	data(tableCIndex,						int(DataSetPackage::specialRoles::nonFilteredLevels)).toStringList().length();
+		case VariableInfo::Labels:						return	_tableModel->	data(tableCIndex,						int(DataSetPackage::specialRoles::nonFilteredLevels));
+		case VariableInfo::DataSetValues:				return	_tableModel->	data(tableCIndex,						int(DataSetPackage::specialRoles::valuesStrList));
+		case VariableInfo::DataSetRowCount:				return  _tableModel->	rowCount();
+		case VariableInfo::SignalsBlocked:				return	_tableModel->	synchingData();
+		case VariableInfo::DataSetValue:				return	_tableModel->	data(tableVIndex,						int(DataSetPackage::specialRoles::value));
+		
 		case VariableInfo::VariableNames:				return	getColumnNames();
 		case VariableInfo::DataAvailable:				return	MainWindow::singleton()->dataAvailable();
-		case VariableInfo::PreviewScale:				return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::previewScale));
-		case VariableInfo::PreviewOrdinal:				return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::previewOrdinal));
-		case VariableInfo::PreviewNominal:				return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::previewNominal));
-		case VariableInfo::ColumnDescription:			return	QTransposeProxyModel::headerData(colIndex, Qt::Vertical,	int(DataSetPackage::specialRoles::description));
+		
+		case VariableInfo::MaxWidth:					return	_tableModel->headerData(colIndex, Qt::Horizontal,	int(DataSetPackage::specialRoles::maxColString)).toInt();
+		case VariableInfo::PreviewScale:				return	_tableModel->headerData(colIndex, Qt::Horizontal,	int(DataSetPackage::specialRoles::previewScale));
+		case VariableInfo::PreviewOrdinal:				return	_tableModel->headerData(colIndex, Qt::Horizontal,	int(DataSetPackage::specialRoles::previewOrdinal));
+		case VariableInfo::PreviewNominal:				return	_tableModel->headerData(colIndex, Qt::Horizontal,	int(DataSetPackage::specialRoles::previewNominal));
+		case VariableInfo::ColumnDescription:			return	_tableModel->headerData(colIndex, Qt::Horizontal,	int(DataSetPackage::specialRoles::description));
 		case VariableInfo::DataSetPointer:				return	QVariant::fromValue<void*>(DataSetPackage::pkg()->dataSet());
 		}
 	}
@@ -204,18 +215,14 @@ bool ColumnsModel::absorbInfo(VariableInfo::InfoType info, const QString &colNam
 		if (colIndex < 0)
 			return false;
 
-		//remember, the model is transposed:
-		QModelIndex qColIndex = index(colIndex, 0),
-					qValIndex = index(colIndex, row);
-
-		int			colTypeInt	= data(qColIndex, ColumnsModel::ColumnTypeRole).toInt();
-		//columnType	colTypeHere	= static_cast<columnType>(colTypeInt);
+		QModelIndex qColIndex	= _tableModel->index(0, colIndex),
+					qValIndex	= _tableModel->index(row, colIndex);
 
 		switch(info)
 		{
 		default:										return	false;
-		case VariableInfo::DataSetValue:				return	QTransposeProxyModel::setData(qValIndex, value, int(DataSetPackage::specialRoles::value));
-		case VariableInfo::DataSetValues:				return	QTransposeProxyModel::setData(qColIndex, value,	int(DataSetPackage::specialRoles::valuesStrList));
+		case VariableInfo::DataSetValue:				return	_tableModel->setData(qValIndex, value,	int(DataSetPackage::specialRoles::value));
+		case VariableInfo::DataSetValues:				return	_tableModel->setData(qColIndex, value,	int(DataSetPackage::specialRoles::valuesStrList));
 		}
 	}
 	catch(std::exception & e)

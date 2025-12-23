@@ -77,10 +77,10 @@ FocusScope
 				{
 
 					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("Abs");					*/ functionName: "abs";			functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("absolute value") }
-					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("Standard deviation");	*/ 	functionName: "sd";				functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("standard deviation") }
-					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("Variance");			*/ 	functionName: "var";			functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("variance") }
+					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("Standard deviation");	*/ functionName: "sd";			functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("standard deviation") }
+					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("Variance");			*/ functionName: "var";			functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("variance") }
 					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("Sum");					*/ functionName: "sum";			functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("summation") }
-					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("Product");				*/ functionName: "prod";			functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("product of values") }
+					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("Product");				*/ functionName: "prod";		functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("product of values") }
 					ListElement	{ type: "function";	friendlyFunctionName:	""; /* qsTr("ZScores");				*/ functionName: "zScores";		functionParameters: "values";			functionParamTypes: "number";						toolTip: qsTr("Standardizes the variable") }
 
 					ListElement	{ type: "rowfunction";	friendlyFunctionName:	""; /* qsTr("Rowwise mean") ;				*/	functionName: "rowMean";		toolTip: qsTr("Rowwise mean") }

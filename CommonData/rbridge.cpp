@@ -827,22 +827,10 @@ std::vector<bool> rbridge_applyFilter(const std::string & filterCode, const std:
 
 		throw filterException(errorMsg.c_str());
 	}
-
+	
 	std::vector<bool> returnThis;
 
-	bool atLeastOneRow = false;
-	if(arrayLength == rowCount) //Only build boolvector if it matches the desired length.
-		for(int i=0; i<arrayLength; i++)
-		{
-			returnThis.push_back(arrayPointer[i]);
-			if(arrayPointer[i])
-				atLeastOneRow = true;
-		}
-
-	jaspRCPP_freeArrayPointer(&arrayPointer);
-
-	if(!atLeastOneRow)
-		throw filterException("Filtered out all data.");
+	
 
 	if(arrayLength != rowCount)
 	{
@@ -851,6 +839,11 @@ std::vector<bool> rbridge_applyFilter(const std::string & filterCode, const std:
 		errorMsg = msg.str();
 		throw filterException(errorMsg);
 	}
+	
+	for(size_t i=0; i<arrayLength; i++)
+		returnThis.push_back(arrayPointer[i]);
+	
+	jaspRCPP_freeArrayPointer(&arrayPointer);
 
 	return returnThis;
 }

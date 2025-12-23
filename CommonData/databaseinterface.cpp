@@ -153,6 +153,7 @@ void DatabaseInterface::dataSetUpdate(int dataSetId,	const std::string & dataFil
 void DatabaseInterface::dataSetLoad(int dataSetId, std::string & dataFilePath, long & dataFileTimestamp, std::string & description, std::string & databaseJson, std::string & emptyValuesJson, int & revision, bool & dataSynch, bool & showRSyntax)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::dataSetLoad);
+
 	std::function<void(sqlite3_stmt *stmt)>  prepare = [&](sqlite3_stmt *stmt)
 	{
 		sqlite3_bind_int(stmt, 1, dataSetId);

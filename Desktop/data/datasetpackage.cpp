@@ -640,8 +640,8 @@ QVariant DataSetPackage::headerData(int section, Qt::Orientation orientation, in
 		case int(specialRoles::maxRowHeaderString):				return QString::number(_dataSet ? _dataSet->rowCount() : 0 )		+ "XXX";
 		case Qt::TextAlignmentRole:								return QVariant(Qt::AlignCenter);
 		case int(specialRoles::filter):							return		!col ? false							: col->hasFilter() || isColumnUsedInEasyFilter(col->name());
+		case int(specialRoles::name):							[[fallthrough]];
 		case Qt::DisplayRole:									return tq(	!col ? "?"								: col->name());
-		
 		case int(specialRoles::labelsHasFilter):				return		!col ? false							: col->hasFilter();
 		case int(specialRoles::columnIsComputed):				return		!col ? false							: col->isComputed() && col->codeType() != computedColumnType::analysisNotComputed;
 		case int(specialRoles::computedColumnError):			return tq(	!col ? "?"								: col->error());
@@ -1840,27 +1840,6 @@ void DataSetPackage::columnsApply(intset columnIndexes, std::function<bool(Colum
 void DataSetPackage::columnsApply(intset columnIndexes, std::function<bool(Column * column)> applyThis)
 {
 	columnsApply(columnIndexes, [&](Column * column, int){ return applyThis(column); });
-}
-
-bool DataSetPackage::setFilterData(const std::string & rFilter, const boolvec & filterResult)
-{
-	filter()->setRFilter(rFilter);
-
-	bool someFilterValueChanged = filter()->setFilterVector(filterResult);
-	
-	if(_dataSet)
-		_dataSet->filter()->setFilterVector(filterResult);
-
-	if(someFilterValueChanged) //We could also send exactly those cells that were changed if we were feeling particularly inclined to write the code...
-	{
-		//emit dataChanged(index(0, 0, parentModelForType(parIdxType::filter)),	index(rowCount(), 0,				parentModelForType(parIdxType::filter)));
-		//This actually lets the whole application freeze when a filter is undone... -> emit dataChanged(index(0, 0, parentModelForType(parIdxType::data)),		index(rowCount(), columnCount(),	parentModelForType(parIdxType::data)));
-
-		beginResetModel();
-		endResetModel();
-	}
-
-	return someFilterValueChanged;
 }
 
 columnType DataSetPackage::getColumnType(size_t columnIndex) const
