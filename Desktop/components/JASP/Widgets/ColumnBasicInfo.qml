@@ -172,7 +172,7 @@ Item
 				id:					closeButton
 				height:				33 * jaspTheme.uiScale
 				width:				common.closeIcon? height : 0
-				iconSource:			jaspTheme.iconPath + "close-button.png"
+				iconSource:			jaspTheme.iconPath + "collapse.png"
 				onClicked:			{ computedColumnWindow.askIfChangedOrClose(); columnModel.visible = false }
 				toolTip:			qsTr("Close variable window")
 				radius:				height

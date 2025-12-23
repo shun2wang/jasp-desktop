@@ -53,7 +53,7 @@ FocusScope
 
 	function askIfChangedOrClose()
 	{
-		if(computedColumnContainer.changed)	
+		if(columnModel.isComputed && columnModel.computedTypeEditable && computedColumnContainer.changed)	
 			saveDialog.open()
 	}
 
@@ -354,6 +354,10 @@ FocusScope
 			onSave:
 			{
 				computedColumnContainer.applyComputedColumn()
+			}
+			onDiscard:
+			{
+				computedColumnsInterface.refreshProperties()	
 			}
 		}
 	}

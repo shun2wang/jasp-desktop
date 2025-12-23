@@ -42,6 +42,7 @@ class ColumnModel : public DataSetTableProxy
 	Q_PROPERTY(int			rowsTotal					READ rowsTotal													NOTIFY rowsTotalChanged					)
 	Q_PROPERTY(QString		computeFilter				READ computeFilter				WRITE setComputeFilter			NOTIFY computeFilterChanged				)
     Q_PROPERTY(QString		dropLevels					READ dropLevels					WRITE setDropLevels				NOTIFY dropLevelsChanged                )
+	Q_PROPERTY(bool			isComputed					READ isComputed													NOTIFY isComputedChanged				)
 
 public:
 	ColumnModel(DataSetTableModel* dataSetTableModel);
@@ -55,6 +56,7 @@ public:
 	QString			columnDescription()				const;
 	QString			computedType()					const;
 	bool			computedTypeEditable()			const;
+	bool			isComputed()					const;
 	QVariantList	computedTypeValues()			const;
 	QString			currentColumnType()				const;
 	QVariantList	columnTypeValues()				const;
@@ -155,6 +157,7 @@ signals:
 	void chosenColumnChanged();
 	void columnTitleChanged();
 	void computedTypeChanged();
+	void isComputedChanged();
 	void computedTypeEditableChanged();
 	void computedTypeValuesChanged();
 	void columnTypeValuesChanged();

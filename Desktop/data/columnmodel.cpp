@@ -327,6 +327,17 @@ bool ColumnModel::computedTypeEditable() const
 	}
 }
 
+bool ColumnModel::isComputed() const
+{
+	if(_virtual)
+		return false;
+
+	if (!column())
+		return false;
+
+	return column()->isComputed();
+}
+
 void ColumnModel::setColumnDescription(const QString & newColumnDescription)
 {
 	if (_beingRefreshed)
@@ -659,6 +670,7 @@ void ColumnModel::refresh()
 	emit computedTypeChanged();
 	emit emptyValuesChanged();
 	emit columnTypeChanged();
+	emit isComputed();
 
 	emit tabsChanged();
 

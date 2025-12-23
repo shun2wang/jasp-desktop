@@ -151,7 +151,7 @@ FocusScope
 				height:				33 * jaspTheme.uiScale
 				width:				height
 				radius:				height
-				iconSource:			jaspTheme.iconPath + "close-button.png"
+				iconSource:			jaspTheme.iconPath + "collapse.png"
 				onClicked:			easyFilterConstructor.askIfChanged(function() { filterWindow.close() } )
 				toolTip:			qsTr("Close filter window")
 				anchors

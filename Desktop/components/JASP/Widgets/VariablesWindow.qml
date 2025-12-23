@@ -184,7 +184,7 @@ FocusScope
 				id:					closeButton
 				height:				33 * jaspTheme.uiScale
 				width:				columnModel.compactMode ? height : 0
-				iconSource:			jaspTheme.iconPath + "close-button.png"
+				iconSource:			jaspTheme.iconPath + "collapse.png"
 				onClicked:			{ computedColumnWindow.askIfChangedOrClose(); columnModel.visible = false }
 				toolTip:			qsTr("Close variable window")
 				radius:				height
