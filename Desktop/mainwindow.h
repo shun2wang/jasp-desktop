@@ -139,7 +139,7 @@ public slots:
 	void setImageBackgroundHandler(QString value);
 	void plotPPIChangedHandler(int ppi, bool wasUserAction);
 	void setProgressBarProgress(int progressBarProgress);
-	void setProgressBarVisible(bool progressBarVisible);
+	void setProgressBarVisible(bool progressBarVisible, bool wasAutoSave = false);
 	void setWelcomePageVisible(bool welcomePageVisible);
 	void setProgressBarStatus(QString progressBarStatus);
 	void setAnalysesAvailable(bool analysesAvailable);
@@ -187,8 +187,10 @@ public slots:
 	void	openGitHubBugReport() const;
 	void	reloadResults() const;
 
-private:
+private slots:
+	void _setProgressBarVisible(bool progressBarVisible);
 	
+private:
 	void makeConnections();
 	void initLog();
 	void initQWidgetGUIParts();
@@ -272,7 +274,7 @@ private slots:
 
 	void closeVariablesPage();
 	void showProgress();
-	void hideProgress();
+	void hideProgress(bool wasAutoSave = false);
 	void setProgressStatus(QString status, int progress);
 	void showAnalysis();
 
@@ -364,8 +366,8 @@ private:
 									_contactVisible			= false,
 									_communityVisible		= false,
 									_hadFatalError			= false;
-									
 	QFont							_defaultFont;
+	QTimer					*		_progressBarTimer		= nullptr;
 };
 
 #endif // MAINWIDGET_H

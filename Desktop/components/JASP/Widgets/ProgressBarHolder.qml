@@ -28,7 +28,13 @@ Item
 		height:				120 * preferencesModel.uiScale
 		radius:				height
 		width:				Math.min(Math.max(loadingText.implicitWidth + height, parent.width * 0.5), parent.width - height)
-		anchors.centerIn:	parent
+		anchors
+		{
+			top:				parent.top
+			topMargin:			100 * jaspTheme.uiScale
+			horizontalCenter:	parent.horizontalCenter
+		}
+			
 
 		Text
 		{

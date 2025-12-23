@@ -154,7 +154,7 @@ MainWindow::MainWindow(Application * application) : QObject(application), _appli
 
 	_dynamicModules->registerQMLTypes();
 
-	QTimer::singleShot(0, [&]() { loadQML(); });
+	QTimer::singleShot(0, this, [&]() { loadQML(); });
 
 	_languageModel->setApplicationEngine(_qml);
 
@@ -164,9 +164,15 @@ MainWindow::MainWindow(Application * application) : QObject(application), _appli
 
 	QTimer::singleShot(0, this, [&]() { _jaspConfiguration->processConfiguration();  });
 	
+	_progressBarTimer = new QTimer(this);
+	_progressBarTimer->setSingleShot(true);
+	
+	connect(_progressBarTimer, &QTimer::timeout, this, [this](){ _setProgressBarVisible(false); });
+	
 	_languageModel->setDefaultLocaleFromCurrent(); //Make sure (Q)ColumnUtils knows whats up
 
 	Log::log() << "JASP Desktop started and Engines initalized." << std::endl;
+	
 
 	JASPTIMER_FINISH(MainWindowConstructor);
 }
@@ -1336,7 +1342,7 @@ void MainWindow::closeVariablesPage()
 
 void MainWindow::dataSetIOCompleted(FileEvent *event)
 {
-	hideProgress();
+	hideProgress(event->isTmp() && event->operation() == FileEvent::FileSave);
 	
 	if (event->operation() == FileEvent::FileNew)
 	{
@@ -1984,9 +1990,9 @@ void MainWindow::showProgress()
 	setProgressBarVisible(true);
 }
 
-void MainWindow::hideProgress()
+void MainWindow::hideProgress(bool wasAutoSave)
 {
-	setProgressBarVisible(false);
+	setProgressBarVisible(false, wasAutoSave);
 }
 
 
@@ -2098,7 +2104,40 @@ bool MainWindow::enginesInitializing()
 	return _engineSync->allEnginesInitializing();
 }
 
-void MainWindow::setProgressBarVisible(bool progressBarVisible)
+void MainWindow::setProgressBarVisible(bool progressBarVisible, bool wasAutoSave)
+{
+	if(_progressBarVisible == progressBarVisible)
+		return; 
+	
+	const int64_t	minimumShow	 = 1000; //Is this long enough?
+	
+	static int64_t lastShownMs = -1;
+	
+	if(progressBarVisible)
+	{
+		_progressBarTimer->stop();
+		lastShownMs = Utils::currentMillis();
+		_setProgressBarVisible(true);
+	}
+	else
+	{
+		int64_t diff = lastShownMs == -1 ? -1 : Utils::currentMillis() - lastShownMs;
+		
+		
+		if(!wasAutoSave || lastShownMs == -1 || diff >= minimumShow)
+			_setProgressBarVisible(false);
+		else
+		{
+			_progressBarTimer->setInterval(minimumShow-diff);
+			_progressBarTimer->start();
+			//lastShownMs = -1;
+		}
+	}
+	
+	
+}
+
+void MainWindow::_setProgressBarVisible(bool progressBarVisible)
 {
 	if (_progressBarVisible == progressBarVisible)
 		return;
