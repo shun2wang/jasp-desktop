@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies of build system
         run: |     
             sudo apt install libboost-dev libjsoncpp25 libjsoncpp-dev libarchive13 libarchive-dev
-            sudo apt install libxcb-xkb-dev libxcb-xkb1 libxcb-xinerama0 libxkbcommon-dev libxkbcommon-x11-dev autoconf zlib1g zlib1g-dev cmake
+            sudo apt install libxcb-xkb-dev libxcb-xkb1 libxcb-xinerama0 libxcb-cursor0 libxkbcommon-dev libxkbcommon-x11-dev autoconf zlib1g zlib1g-dev cmake
             sudo apt install gfortran build-essential flex libssl-dev libgl1-mesa-dev libsqlite3-dev
             sudo apt install libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev #required by some r packgaes
             sudo apt install libglpk-dev libcurl4-openssl-dev libmpfr-dev libfontconfig1-dev libcairo2-dev netcdf-bin #required by some r packages
@@ -83,5 +83,5 @@ jobs:
         run: |
             cd jasp-build
             export DISPLAY=:1
-            Xvfb :1 -screen 0 1280x1024x24 &
+            sudo Xvfb -ac :1 -screen 0 1280x1024x24 &
             ./Tests/JASPTest &
