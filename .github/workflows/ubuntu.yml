@@ -14,7 +14,7 @@ jobs:
        GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -25,7 +25,7 @@ jobs:
       - name: Install Qt6
         uses: jurplel/install-qt-action@v3
         with:
-            version: 6.8.*
+            version: 6.10.*
             aqtversion: '==3.1.*'
             host: 'linux'
             target: 'desktop'
@@ -68,7 +68,7 @@ jobs:
       - name: Configure JASP desktop
         run: |
             git submodule update --init
-            cmake -S . -B jasp-build -DJASP_TEST_BUILD=ON
+            cmake -S . -B jasp-build -DBUILD_TESTS=ON
         env:
             BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
             Boost_INCLUDE_DIR: "${{steps.install-boost.outputs.BOOST_ROOT}}/include"
