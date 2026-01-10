@@ -82,6 +82,5 @@ jobs:
       - name: Run JASPDesktop Test
         run: |
             cd jasp-build
-            export DISPLAY=:1
-            sudo Xvfb -ac :1 -screen 0 1280x1024x24 &
+            export QT_QPA_PLATFORM="vnc" 
             ./Tests/JASPTest &
