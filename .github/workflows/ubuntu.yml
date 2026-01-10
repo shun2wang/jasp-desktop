@@ -82,5 +82,14 @@ jobs:
       - name: Run JASPDesktop Test
         run: |
             cd jasp-build
-            export QT_QPA_PLATFORM="vnc" 
+            export QT_QPA_PLATFORM=offscreen
             ./Tests/JASPTest &
+            TEST_PID=$!
+      
+            wait $TEST_PID
+            EXIT_CODE=$?
+      
+            if [ $EXIT_CODE -ne 0 ]; then
+              echo "Tests failed with exit code $EXIT_CODE"
+              exit $EXIT_CODE
+            fi
