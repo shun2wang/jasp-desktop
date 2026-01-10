@@ -78,3 +78,10 @@ jobs:
       - name: Build JASP desktop
         run: |
             cmake --build jasp-build --target all
+            
+      - name: Run JASPDesktop Test
+        run: |
+            cd jasp-build
+            export DISPLAY=:1
+            Xvfb :1 -screen 0 1280x1024x24 &
+            ./Tests/JASPTest &
