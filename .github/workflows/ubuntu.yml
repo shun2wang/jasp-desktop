@@ -57,6 +57,11 @@ jobs:
             boost_version: 1.83.0
             platform_version: 22.04
 
+      - name: Install libradata
+        run: |
+            git clone https://github.com/WizardMac/librdata.git
+            cd librdata && ./autogen.sh && ./configure && make && sudo make install
+            
       - name: Install Readstat
         run: |
             wget https://github.com/WizardMac/ReadStat/releases/download/v1.1.9/readstat-1.1.9.tar.gz
