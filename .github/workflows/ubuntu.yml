@@ -43,7 +43,6 @@ jobs:
             sudo apt install libglpk-dev libcurl4-openssl-dev libmpfr-dev libfontconfig1-dev libcairo2-dev netcdf-bin #required by some r packages
             sudo apt install jags
             sudo apt install libminizip-dev # required by freexl
-            sudo apt install librdata-dev
             git clone https://github.com/jasp-stats/freexl.git
             cd freexl && ./configure && make && sudo make install
             
