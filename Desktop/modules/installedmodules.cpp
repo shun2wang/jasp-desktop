@@ -111,7 +111,7 @@ std::map<std::string, std::string> InstalledModules::getInstalledModuleVersions(
 	std::map<std::string, std::string> moduleVersionMap;
 	auto modules = getModules();
 	for(auto& module : modules) {
-		moduleVersionMap[module.name] = module.version.asString();
+		moduleVersionMap[module.name] = module.version.asString(3);
 	}
 	return moduleVersionMap;
 }
