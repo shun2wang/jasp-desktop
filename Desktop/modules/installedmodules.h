@@ -20,11 +20,13 @@
 //		that file instead if you want your changes to reflect in the app
 //
 
-#ifndef ACTIVEMODULES_H
-#define ACTIVEMODULES_H
+#ifndef INSTALLEDMODULES_H
+#define INSTALLEDMODULES_H
 
 #include <vector>
 #include <string>
+#include <map>
+#include "version.h"
 
 /**
  * @brief 		A minimal class for reporting the list active modules, to be used by `loadModules`.
@@ -32,18 +34,29 @@
  * @details 	Reads all available shipped and installed modules and divides them into two groups common (on ribbon) and extra (selectable)
  *				The order equals the order in the Modules/modules.json which specifies these groups
  */
-class ActiveModules {
+class InstalledModules {
 public:
 
-	static std::vector<std::string> getActiveCommonModules();
+	struct ModuleInfo {
+		std::string name = "";
+		std::string libpath = "";
+		bool common = false;
+		bool bundled = false;
+		Version version;
+	};
 
-	static std::vector<std::string> getActiveExtraModules();
+	static std::vector<ModuleInfo> getAllAvailableModules();
+
+	static std::vector<ModuleInfo> getModules();
+
+	static std::map<std::string, std::string> getInstalledModuleVersions();
 
 private:
-	static std::vector<std::string> getModules(bool extra = false);
+
+	static void parseModuleInfo(const std::string& path, ModuleInfo& info);
 
 	static const std::string settingsPath;
 
 };
 
-#endif // ACTIVEMODULES_H
+#endif // INSTALLEDMODULES_H

@@ -26,6 +26,7 @@
 
 #include "modules/ribbonbutton.h"
 #include "gui/preferencesmodel.h"
+#include "installedmodules.h"
 
 ///
 /// This base model holds the RibbonButtons that are currently active and inactive in JASP and makes them available as a list
@@ -65,7 +66,7 @@ public:
 	QVariant						data(const QModelIndex &index, int role = Qt::DisplayRole)	const override;
 	virtual QHash<int, QByteArray>	roleNames()													const override;
 
-	void						loadModules(std::vector<std::string> commonModulesToLoad = {}, std::vector<std::string> extraModulesToLoad = {});
+	void						loadModules(std::vector<InstalledModules::ModuleInfo> commonModulesToLoad = {});
 
 	void						addSpecialRibbonButtonsEarly();
 	void						addSpecialRibbonButtonsLate();
@@ -127,7 +128,7 @@ signals:
 
 public slots:
 	void addRibbonButtonModelFromDynamicModule(Modules::DynamicModule * module);
-	void removeDynamicRibbonButtonModel(QString moduleName)				{ removeRibbonButtonModel(moduleName.toStdString());				}
+	void removeDynamicRibbonButtonModel(QString moduleName)				{ removeRibbonButtonModel(moduleName.toStdString());}
 	void setHighlightedModuleIndex(int highlightedModuleIndex);
 	void analysisClicked(QString analysisFunction, QString analysisQML, QString analysisTitle, QString module);
 	void setCurrentRow(int currentRow);
