@@ -15,7 +15,6 @@ const QStringList & goldTier()
 		"University of Amsterdam",
 		"M&S - Faculty of Social Sciences - Utrecht University",
 		"Nyenrode Business University",
-		"KU Leuven",
 		"Tilburg University",
 	};
 
@@ -42,11 +41,13 @@ const QStringList & bronzeTier()
 	static QStringList list =
 	{
 		"Vrije Universiteit Amsterdam – EMFC/RC program",
-		"NSDSK Academy (The Dutch Foundation for the Deaf and Hard of Hearing Child)",
+		//"NSDSK Academy (The Dutch Foundation for the Deaf and Hard of Hearing Child)",
 		"The Department of Communication at Appalachian State University",
 		"Birmingham Newman University",
 		"Faculty of Behavioural and Movement Sciences, VU Amsterdam",
-		"School of Psychological Science, University of Bristol"
+		"School of Psychological Science, University of Bristol",
+		"KU Leuven",
+		"Center for Translational Research in Aging & Longevity, Texas A&M University"
 	};
 
 	return list;
