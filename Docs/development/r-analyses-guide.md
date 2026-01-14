@@ -1,9 +1,19 @@
 How to Write R Analyses for JASP
 ================================
 
-R code for JASP should follow JASP's [R style guide](https://github.com/jasp-stats/jasp-desktop/blob/development/Docs/development/r-style-guide.md).
+This document will guide you through the process of writing an R analysis for JASP.
 
-This document will guide you through the process of writing an R analysis for JASP. Two things should be noted before we get started. First, this guide assumes that you have knowledge about basic R concepts such as functions. Second, writing an R analysis is necessary but **not** sufficient to create a new module for JASP. For this goal, other files (such as [the QML file for the interface](jasp-qml-guide.md)) need to be created.
+## Prerequisites
+
+In order to get the most out of this guide, we recommend you to fulfill two prerequisites:
+
+First, this guide assumes that you have knowledge about basic R concepts, such as functions and packaging.
+
+Second, be aware that a JASP module also requires working with `QML` files for creating the interface. It is possible to learn this language on the go, especially if you use [our template](https://github.com/jasp-stats/jaspModuleTemplate). This being said, this could be a good moment for taking a look at our [QML guide](jasp-qml-guide.md).
+
+If you feel you're not yet there, we invite you to take a look at our [JASP background materials](jasp-background-materials.md).
+
+---
 
 Every JASP R analysis will consist of several types of functions:
 1. a single main analysis function that organizes the analysis and its output,
@@ -11,6 +21,8 @@ Every JASP R analysis will consist of several types of functions:
 3. one or multiple fill up functions that compute results and fill the output elements.
 
 In the remainder of this document, you will learn how to write these types of functions. Explanations will be illustrated using excerpts from a few JASP analyses, mainly the relatively simple Binomial Test. If you're writing a simple analysis it may suffice to work through steps 1 to 5. During these steps you will learn how to write a straightforward analysis that contains a table and a plot. In the two sections at the end of this guide we'll delve into (1) how multiple related tables or plots may be grouped together and (2) how we write analyses whose tables and plots revolve around a single computed model (as opposed to separately calculating results for each table and/or plot).
+
+Please note that R code for JASP should follow JASP's [R style guide](https://github.com/jasp-stats/jasp-desktop/blob/development/Docs/development/r-style-guide.md).
 
 Table of Contents:
 - [Step 1 - Creating the Main Analysis Function](#step-1---creating-the-main-analysis-function)
@@ -60,7 +72,7 @@ Table of Contents:
 - [ADDENDUM Ⅳ - Math](#addendum-Ⅳ---math)
 
 ## Step 1 - Creating the Main Analysis Function
-Each analysis in JASP needs a main analysis function. This function will provide an overview of all output elements and steps that are needed to conduct the full analysis. The name of your analysis must match the (case sensitive) name you specified in your description.json file under `"function":`.
+Each analysis in JASP needs a main analysis function. This function will provide an overview of all output elements and steps that are needed to conduct the full analysis. The name of your analysis must match the (case sensitive) name you specified in your `inst/description.qml` file under `"function":`.
 
 <details>
 	<summary>Code</summary>
@@ -73,7 +85,7 @@ Each analysis in JASP needs a main analysis function. This function will provide
 
 ### Step 1.1 - The Arguments
 The main analysis function has the following arguments:
-- `jaspResults`: the object that will contain all results from this analysis and connects it to the output
+- `jaspResults`: the object that will contain all results from this analysis and connects them to the output
 - `dataset`: an empty placeholder we will start using in the future when analyses can be run interactively from R through the JASP R package
 - `options`: a named list of interface options selected by the user; each name matches the name of a QML component
 
@@ -87,7 +99,15 @@ The main analysis function has the following arguments:
 </details>
 
 ## Step 2 - Checking if Results can be Computed
-Analyses usually require a certain minimum input before it can run, for example, an analysis might need at least a dependent variable and an independent variable. If this minimum input is not given, we should still show tables but filled with dots instead of actual results; plots should also be displayed but with empty axes (fortunately, this is quite easy as we'll show later). Consequently, it makes sense to determine early in the analysis whether we are ready to compute the results. In the Binomial Test, at least one variable is needed in order to compute results:
+Analyses usually require a minimum input before they can run. For example, an analysis might need at least one value, or some data, to be provided by the user. The behavior of the code should be different depending on this value being already provided or not. For instance, it should show tables but filled with dots instead of actual results, plots inlcuding just the axes, ... See an example in the diagram below: 
+
+```mermaid
+flowchart LR
+A(["Start"]) --> Decision{"Is all input provided?"} --yes--> B["Compute results and show them"]
+Decision --"not yet"--> C["Print empty results placeholder"]
+```
+
+We have to determine early in the analysis whether we are ready to compute the results. In the Binomial Test, at least one variable is needed in order to compute results:
 
 <details>
   <summary>Code</summary>
@@ -95,58 +115,28 @@ Analyses usually require a certain minimum input before it can run, for example,
   ```r
   BinomialTest <- function(jaspResults, dataset, options) {
 
-    ready <- (length(options$variables) > 0)
+    ready <- (length(options$variables) > 0) # Only TRUE if 1 or more variables are provided
+
    ```
 
 </details>
 
 ## Step 3 - Reading the Dataset
-If your R function is called from JASP the dataset will not be provided directly to the analysis. Instead, you must ask for the dataset. This allows you to specify how variables must be read (e.g., as factor) and how missing values should be treated -- they can be ignored or excluded listwise. To read the dataset, call `.readDataSetToEnd()` with the following optional arguments
-- `columns`: columns that must be read without specific coercing to a datatype
-- `columns.as.numeric`: columns that must be read as numeric
-- `columns.as.ordinal`: columns that must be read as ordinal
-- `columns.as.factor`:  columns that must be read as factor
-- `all.columns`: boolean specifying if the entire dataset should be read, as opposed to specific columns
-- `exclude.na.listwise`: columns where missing values should be deleted listwise
+By default, recent versions of JASP immediately load your dataset into your R analysis.
 
-We do have to account for the fact that we do not need data if we're not ready to compute anything (as we verified in [Step 2 - Checking if Results can be Computed](#step-2---checking-if-results-can-be-computed)):
+**Tip**: If you don't want the data to be automatically loaded, you have to set `preloadData: false` in the corresponding `qml` file.
 
-<p><details>
-	<summary>Code</summary>
+Reading data is always a tricky matter. Computers are devoid of common sense, so very often we have to explicitly specify how variables must be interpreted (are they a scale?, a nominal?, an ordinal?, ...). Each column in the data has a type set on it, which is how it is shown in the dataviewer. However, for an analysis you might well want to get a different type, just for that analysis. Or even get a scale *and* a nominal version of the column.
+The preloading of data in JASP actually takes that into account and adds every column selected in any qml component to a dataset, converted to exactly the type requested by the user.
+Just like you can write `columnName.scale` or `columnName.nominal` in a JASP filter or computed column.
 
-  ```r
-  BinomialTest <- function(jaspResults, dataset, options) {
-
-    ready <- (length(options$variables) > 0)
-
-    if (ready)
-      dataset <- .binomReadData(dataset, options)
-  ```
-
-</details></p>
-
-Where `.binomReadData()` looks like
-
-<p><details>
-	<summary>Code</summary>
-
-  ```r
-  .binomReadData <- function(dataset, options) {
-    if (!is.null(dataset))
-      return(dataset)
-    else
-      return(.readDataSetToEnd(columns.as.factor = options$variables))
-  }
-  ```
-
-</details></p>
-
-Take note that the column titles in the data.frame returned by `.readDataSetToEnd()` will look a bit jumbled, e.g., the first column is titled `JaspColumn_.1._Encoded`, the second column is titled `JaspColumn_.2._Encoded`. This is due to the encoding we perform on the column titles, which allows us to handle foreign characters. The values in `options$variables` are NOT encoded and therefore do not match the column names in the dataset. Obviously this will present difficulties if we try to subset data later during the computation phase. The way we solve this is by using `decodeColNames()` to decode column names and `encodeColNames` to encode column names. To exemplify this, the following would return `TRUE`:
+### A note on column names
+Notice that the column titles in the `dataset` will look a bit jumbled, _e.g._, the first column is titled `JaspColumn_.1._Encoded`, the second column is titled `JaspColumn_.2._Encoded`. This is due to the encoding we perform on the column titles, which allows us to handle foreign characters. The values in `options$variables` are also encoded and therefore you can use them directly to subset the data. Usually, the results from an analysis are automatically decoded (e.g., tables will not show `JaspColumn_.1._Encoded` but instead the actual column name in the dataset) and the fact that encoding happens can be completely ignored by the developers. In some scenarios, however, you may need to do the decoding manually. For example, if you use column names as axis tick labels in a plot, then the width of the string becomes relevant, as a longer string means that `ggplot2` reserves more space for the tick label. In this case, you should manually decode the tick labels (Note that for the more common scenario where column names are used as axis titles this is not necessary). To this end, we can use `decodeColNames()` to decode column names and `encodeColNames` to encode column names. To exemplify this, the following would return `TRUE`:
 
 - `"firstColumnTitle" == decodeColNames("JaspColumn_.1._Encoded")`
 - `encodeColNames("firstColumnTitle") == "JaspColumn_.1._Encoded"`
 
-Hence, whenever you wish to match an option to a data.frame column you must encode or decode one of the two. It is quite possible that an analysis crashes when it encounters uncommon characters. Such an error can be caused by the code in the analysis itself, but it can also be caused by a dependency that cannot handle these characters. To play it safe, we recommend only decoding column names at the very last moment before presenting output in a table of plot. To subset in a data set we recommend *encoding* the names in `options$variables`. For example,
+Hence, whenever you wish to match an option to a `dataset` column you must encode or decode one of the two. It is quite possible that an analysis crashes when it encounters uncommon characters. Such an error can be caused by the code in the analysis itself, but it can also be caused by a dependency that cannot handle these characters. To play it safe, we recommend only decoding column names at the very last moment before presenting output in a table of plot. To subset in a data set we recommend *encoding* the names in `options$variables`. For example,
 
 ```r
 dataset[, encodeColNames(options$variables[1])]
@@ -158,11 +148,23 @@ dataset[, options$variables[1]]
 ```
 
 ## Step 4 - Checking for Errors
-If we have the minimum input our analysis requires, it is important to check for errors that could prevent the results from being computed (e.g., a dependent variable that has no variance). The error checks that should be conducted depend on the analysis. Most common error checks are implemented in the convenience function `.hasErrors()`. The arguments you can supply are as follows (\* denotes required arguments):
+Checking for errors is a strong form of what we did in [Step 2 - Checking if Results can be Computed](#step-2---checking-if-results-can-be-computed). Even when an analysis has the right number and types of inputs, it might still crash. Think for instance of divisions by zero, numerical overloads, ...
+
+We can expand our logical diagram with an extra verification step:
+
+```mermaid
+flowchart LR
+A(["Start"]) --> Decision{"Is all input provided?"} --yes--> Test{"The input has errors?"}
+Test --yes--> Interrupt["Don't compute and warn user"]
+Test --"no"--> B["Compute results and show them"]
+Decision --"not yet"--> C["Print empty results placeholder"]
+```
+
+The error checks that should be conducted depend on the analysis. Most common error checks are implemented in the convenience function `.hasErrors()`. The arguments you can supply are as follows (\* denotes required arguments):
 
 - `dataset`\*: the dataset you obtained in the previous step
 - `type`: vector of strings containing names of the checks -- see below.
-- `message`: `short` or `default` [default: `default`], should only the first failure of a check be reported in footnote style (`short`), or should every check failure be mentioned in multi-line form.
+- `message`: `short` or `default` [default: `default`], should only the first failure of a check be reported in footnote style (`short`), or should every check failure be mentioned in multi-line form?
 - `exitAnalysisIfErrors`: boolean [default: `FALSE`], should the entire analysis be aborted when a failing check is encountered (`TRUE`), or should the analysis continue running (`FALSE`).
 - `custom`: either a function or a named list of functions. If you wish to check for something that is not included you can include your own checks here. If a function returns a character string `.hasErrors` assumes it is an error. If a function returns `NULL` then no error will be reported. E.g., `function() { if (options$exProbVar != "" && options$counts == "") return("Expected counts not supported without observed counts.") }`
 - `...`: arguments passed on to each individual error check -- see below.
@@ -297,7 +299,7 @@ Where `.binomCheckErrors()` looks like:
 It is now time to think about our output. What tables and plots do we want to display? In most analyses you will have one main output table that is always shown and then a number of tables and plots that are optional. As a table is almost always shown we will first start explaining how to create it.
 
 ### Step 5.1 - Tables
-At this point we start using `jaspResults` which was passed into our function at the start of the analysis. `jaspResults` is used to store our results and helps us figure out if we can re-use any of our tables and plots between calls to our analysis function. Whereas this may sound complex, there is an easy way to check for it: We can just check whether the table we want to make is defined (i.e. not `NULL`) in `jaspResults`. If it is not defined (i.e. `NULL`), the table needs to be created:
+At this point we start using `jaspResults` which was passed into our function at the start of the analysis. `jaspResults` is used to store all our results. It also helps us figure out if we can re-use any of our tables and plots between calls to our analysis function. Whereas this may sound complex, there is an easy way to check for it: we can just check whether the table we want to make is defined (i.e. not `NULL`) in `jaspResults`. If it is not defined (i.e. `NULL`), the table needs to be created:
 
 <p><details>
 	<summary>Code</summary>
@@ -319,10 +321,10 @@ At this point we start using `jaspResults` which was passed into our function at
 
 </details></p>
 
-Don't worry about the name `"binomialTable"` for now, we'll show where this comes from in [Step 5.1.7 - Adding the Table to the Output](#step-517---adding-the-table-to-the-output).
+Don't worry about the name `"binomialTable"` nor the function `.binomTableMain` for now. We'll show where this comes from in [Step 5.1.7 - Adding the Table to the Output](#step-517---adding-the-table-to-the-output).
 
-#### Step 5.1.1 - Creating a JASP Table
-Unfortunately, we cannot just create a data.frame and call it a day. There is some markup you'll have to add first; the markup will describes properties of the table so JASP knows how to display it correctly. Let's start by creating a JASP table object and giving it a title that will be displayed in the output:
+#### Step 5.1.1 - Title
+A table is a bit more than just a `data.frame`. It contains attributes such as a title, dependencies, etc. Let's start by creating a JASP table object and giving it a title that will be displayed in the output:
 
 <details>
 	<summary>Code</summary>
@@ -401,7 +403,7 @@ We'll also have to specify what columns our table will have. Some columns are al
     binomialTable$addColumnInfo(name = "proportion", title = "Proportion", type = "number")
     binomialTable$addColumnInfo(name = "p",          title = "p",          type = "pvalue")
 
-    if (options$VovkSellkeMPR)
+    if (options$VovkSellkeMPR) # This column is only added if the user selects it
       binomialTable$addColumnInfo(name = "VovkSellkeMPR", title = "VS-MPR", type = "number", format = "sf:4")
 
     if (options$confidenceInterval) {
@@ -435,7 +437,7 @@ Another setting you may consider tweaking is whether JASP should display all col
     binomialTable$addColumnInfo(name = "proportion", title = "Proportion", type = "number")
     binomialTable$addColumnInfo(name = "p",          title = "p",          type = "pvalue")
 
-    if (options$VovkSellkeMPR)
+    if (options$VovkSellkeMPR) # This column is only added if the user selects it
       binomialTable$addColumnInfo(name = "VovkSellkeMPR", title = "VS-MPR", type = "number", format = "sf:4")
 
     if (options$confidenceInterval) {
@@ -453,7 +455,7 @@ Another setting you may consider tweaking is whether JASP should display all col
 In the example given above, the column description added through `$addColumnInfo()` with `name = "VovkSellkeMPR"` will only be included when the VovkSellkeMPR checkbox in the interface is checked. By setting `$showSpecifiedColumnsOnly` to `TRUE` it does not matter if we include the VovkSellkeMPR statistic in our results anyway, as it won't be added to the table.
 
 #### Step 5.1.5 - Expected Table Size
-Optionally, we can tell JASP how many rows (and columns if you did not specify them with `$addColumnInfo()`) our table will have through `$setExpectedSize()`. In analyses that do not take a lot of time to run (i.e., their computations are quick) this is not really required. In this case, JASP will default to showing an empty table with a single row filled with dots until it receives your actual results. However, if your analysis is slow, it's recommended to create an empty table of the correct size and then fill this table row by row. The binomial test is quick, but we'll add it anyway:
+Optionally, we can tell JASP how many rows (and columns if you did not specify them with `$addColumnInfo()`) our table will have through `$setExpectedSize()`. In analyses that do not take a lot of time to run (_i.e._, their computations are quick) this is not really required. In this case, JASP will default to showing an empty table with a single row filled with dots until it receives your actual results. However, if your analysis is slow, it's recommended to create an empty table of the correct size and then fill this table row by row. The binomial test is quick, but we'll add it anyway:
 
 <details>
 	<summary>Code</summary>
@@ -588,10 +590,10 @@ The markup part of the table is complete and we can now give it to `jaspResults`
     )
     binomialTable$addFootnote(message)
 
-    jaspResults[["binomialTable"]] <- binomialTable
+    jaspResults[["binomialTable"]] <- binomialTable # This is the crucial step to output the table
 
     if (!ready)
-      return()
+      return() # If not ready, do nothing
   ```
 
 </details>
@@ -687,7 +689,7 @@ Note that `$addRows()` also takes a second argument: `rowNames`, you can use thi
 
 
 #### Step 5.1.9 - Reporting Errors
-It's entirely possible that an analysis still crashes even after our error checking in [Step 4 - Checking for Errors](#step-4---checking-for-errors). There are two things we can about this. One, nothing at all. If the analysis crashes it will crash hard and message 'the analysis terminated unexpectedly' will be shown. This would be the situation in step 5.1.8. On the other hand, we could also try to still compute other results if possible (i.e., there might be a different part of the analysis which could still be computed) and then exit the analysis normally. To accomplish the second situation you will have to use R's `try()` and combine it with JASP's `$setError()`.
+It's entirely possible that an analysis still crashes even after our error checking in [Step 4 - Checking for Errors](#step-4---checking-for-errors). There are two things we can about this. One, nothing at all. If the analysis crashes it will crash hard and message 'the analysis terminated unexpectedly' will be shown. This would be the situation in step 5.1.8. On the other hand, we could also try to still compute other results if possible (_i.e._, there might be a different part of the analysis which could still be computed) and then exit the analysis normally. To accomplish the second situation you will have to use R's `try()` and combine it with JASP's `$setError()`.
 
 <details>
 	<summary>Code</summary>
@@ -803,7 +805,7 @@ Many analyses in JASP are based on the work of others and it is important we giv
 </details>
 
 #### Step 5.2.4 - Adding the Plot to the Output
-We can now give it to `jaspResults` (and if we're not ready to compute anything we're done all together). When JASP receives a JASP plot object without an actual plot (i.e., ggplot) it will automatically show an empty plot of the correct size in the output.
+We can now give it to `jaspResults` (and if we're not ready to compute anything we're done all together). When JASP receives a JASP plot object without an actual plot (_i.e._, ggplot) it will automatically show an empty plot of the correct size in the output.
 
 <details>
 	<summary>Code</summary>
