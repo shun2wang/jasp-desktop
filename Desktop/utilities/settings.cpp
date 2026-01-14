@@ -115,7 +115,7 @@ const Settings::Setting Settings::Values[] = {
 	{"localConfigurationPath",		""		},
 	{"useConfigurationFile",		true	},
 	{"startMaximized",				false	},
-	{"storeStateEtc",				true	},
+	{"storeStateEtc",				false	},
 	{"autoSaveOn",					true	},
 	{"autoSaveInterval",			5*60	},
 };	
