@@ -1175,14 +1175,6 @@ msgid "Results"
 msgstr "結果"
 
 msgctxt "ModulesMenu|"
-msgid "Install Module"
-msgstr "モジュールのインストール"
-
-msgctxt "ModulesMenu|"
-msgid "Install a module"
-msgstr "モジュールのインストール"
-
-msgctxt "ModulesMenu|"
 msgid "Install Developer Module"
 msgstr "開発者モジュールのインストール"
 
@@ -2883,15 +2875,6 @@ msgid "An error occured trying to load module %1, the error was: '%2'"
 msgstr ""
 "モジュール %1 をロードしようとしてエラーが発生しました。エラーは次の通りで"
 "す。'%2'"
-
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"Something went wrong removing files for module %1 at path '%2' and the error "
-"was: %3"
-msgstr ""
-"パス '%2'にあるモジュール%1のファイルの削除で問題が発生し、エラーは次のとおり"
-"でした：%3"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -5706,14 +5689,6 @@ msgctxt "MainWindow|"
 msgid "Salvage"
 msgstr "回収"
 
-msgctxt "Modules::DynamicModules|"
-msgid "Install complete"
-msgstr ""
-
-msgctxt "Modules::DynamicModules|"
-msgid "Completed installation of Bundles: "
-msgstr ""
-
 msgctxt "QObject|"
 msgid "Security Sandbox Failure"
 msgstr ""
@@ -5993,6 +5968,48 @@ msgid ""
 "parameter is bounded within 'lower' and 'upper' limits."
 msgstr ""
 
-msgctxt "tst_tabViewManual|"
-msgid "H"
+msgctxt "PrefsAdvanced|"
+msgid "Module library URL: "
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Not allowed to show the module library to install modules"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid ""
+"In \"Preferences\" > \"Interface\" the \"Check for updates\" option is "
+"turned off. Please turn it on to see the module library."
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Install Local Module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Install a local module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Downloading module..."
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Installing module..."
+msgstr ""
+
+#, fuzzy
+msgctxt "ModulesMenu|"
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgctxt "ModulesMenu|"
+msgid "Cancel download"
+msgstr ""
+
+#, qt-format
+msgctxt "Modules::DynamicModules|"
+msgid ""
+"The removal of Module %1 failed with the following errormessage:\n"
+"%2"
 msgstr ""

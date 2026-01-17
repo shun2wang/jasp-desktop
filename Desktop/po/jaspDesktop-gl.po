@@ -1819,10 +1819,6 @@ msgid "Problem loading known issues"
 msgstr "Problema ao cargar os problemas xa coñecidos"
 
 msgctxt "ModulesMenu|"
-msgid "Install Module"
-msgstr "Instalar Módulo"
-
-msgctxt "ModulesMenu|"
 msgid "Select a Developer Module"
 msgstr "Escoller un Módulo de Desenvolvemento"
 
@@ -1857,10 +1853,6 @@ msgstr "Desinstalar o módulo "
 msgctxt "ModulesMenu|"
 msgid "Install Developer Module"
 msgstr "Instalar un Módulo de Desenvolvemento"
-
-msgctxt "ModulesMenu|"
-msgid "Install a module"
-msgstr "Instalar un módulo"
 
 #, qt-format
 msgctxt "Modules::Upgrader|"
@@ -2709,15 +2701,6 @@ msgstr ""
 msgctxt "Modules::DynamicModules|"
 msgid "An error occured trying to load module %1, the error was: '%2'"
 msgstr "Ocorreu un fallo ao tratar de cargar o módulo %1; o fallo foi: '%2'"
-
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"Something went wrong removing files for module %1 at path '%2' and the error "
-"was: %3"
-msgstr ""
-"Algo foi mal ao eliminar os ficheiros para o módulo %1 na ruta '%2', e o "
-"fallo foi: %3"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -5830,14 +5813,6 @@ msgctxt "MainWindow|"
 msgid "Salvage"
 msgstr "Rescatar"
 
-msgctxt "Modules::DynamicModules|"
-msgid "Install complete"
-msgstr "Instalación completa"
-
-msgctxt "Modules::DynamicModules|"
-msgid "Completed installation of Bundles: "
-msgstr "Completada a instalación de Paquetes: "
-
 msgctxt "QObject|"
 msgid "Security Sandbox Failure"
 msgstr "Fallo do Contorno seguro de protección"
@@ -6147,6 +6122,48 @@ msgstr ""
 "Transformación de Johnson (transforma calquera valor real). A procura do "
 "lambda óptimo realízase só entre os límites 'inferior' e 'superior'."
 
-msgctxt "tst_tabViewManual|"
-msgid "H"
-msgstr "H"
+msgctxt "PrefsAdvanced|"
+msgid "Module library URL: "
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Not allowed to show the module library to install modules"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid ""
+"In \"Preferences\" > \"Interface\" the \"Check for updates\" option is "
+"turned off. Please turn it on to see the module library."
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Install Local Module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Install a local module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Downloading module..."
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Installing module..."
+msgstr ""
+
+#, fuzzy
+msgctxt "ModulesMenu|"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "ModulesMenu|"
+msgid "Cancel download"
+msgstr ""
+
+#, qt-format
+msgctxt "Modules::DynamicModules|"
+msgid ""
+"The removal of Module %1 failed with the following errormessage:\n"
+"%2"
+msgstr ""

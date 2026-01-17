@@ -1147,14 +1147,6 @@ msgid "Results"
 msgstr "结果"
 
 msgctxt "ModulesMenu|"
-msgid "Install Module"
-msgstr "安装模块"
-
-msgctxt "ModulesMenu|"
-msgid "Install a module"
-msgstr "安装一个模块"
-
-msgctxt "ModulesMenu|"
 msgid "Install Developer Module"
 msgstr "安装开发者模块"
 
@@ -2538,13 +2530,6 @@ msgstr "尝试从目录 %1 初始化模块时发生错误，错误为：%2"
 msgctxt "Modules::DynamicModules|"
 msgid "An error occured trying to load module %1, the error was: '%2'"
 msgstr "在尝试加载模块 %1 时出现错误，错误为：\"%2\""
-
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"Something went wrong removing files for module %1 at path '%2' and the error "
-"was: %3"
-msgstr "在路径“%2”中删除模块 %1 的文件时出错，错误是：%3"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -5583,14 +5568,6 @@ msgctxt "MainWindow|"
 msgid "Salvage"
 msgstr "暂时忽略"
 
-msgctxt "Modules::DynamicModules|"
-msgid "Install complete"
-msgstr "安装完成"
-
-msgctxt "Modules::DynamicModules|"
-msgid "Completed installation of Bundles: "
-msgstr "完成安装绑定包： "
-
 msgctxt "QObject|"
 msgid "Security Sandbox Failure"
 msgstr "安全沙盒故障"
@@ -5881,6 +5858,48 @@ msgstr ""
 "约翰逊变换（可变换任意实数值）。最优参数的搜索范围限定在“lower”和“upper”之"
 "内。"
 
-msgctxt "tst_tabViewManual|"
-msgid "H"
+msgctxt "PrefsAdvanced|"
+msgid "Module library URL: "
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Not allowed to show the module library to install modules"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid ""
+"In \"Preferences\" > \"Interface\" the \"Check for updates\" option is "
+"turned off. Please turn it on to see the module library."
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Install Local Module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Install a local module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Downloading module..."
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Installing module..."
+msgstr ""
+
+#, fuzzy
+msgctxt "ModulesMenu|"
+msgid "Cancel"
+msgstr "取消"
+
+msgctxt "ModulesMenu|"
+msgid "Cancel download"
+msgstr ""
+
+#, qt-format
+msgctxt "Modules::DynamicModules|"
+msgid ""
+"The removal of Module %1 failed with the following errormessage:\n"
+"%2"
 msgstr ""

@@ -1205,14 +1205,6 @@ msgid "Results"
 msgstr "Sonuçlar"
 
 msgctxt "ModulesMenu|"
-msgid "Install Module"
-msgstr "Modül Kurulumu"
-
-msgctxt "ModulesMenu|"
-msgid "Install a module"
-msgstr "Bir modül kurun"
-
-msgctxt "ModulesMenu|"
 msgid "Install Developer Module"
 msgstr "Geliştirici Modülünü Yükle"
 
@@ -2075,15 +2067,6 @@ msgstr ""
 msgctxt "Modules::DynamicModules|"
 msgid "An error occured trying to load module %1, the error was: '%2'"
 msgstr "%1 modülünü yüklemeye çalışırken bir hata oluştu, hata şuydu: '%2'"
-
-#, qt-format
-msgctxt "Modules::DynamicModules|"
-msgid ""
-"Something went wrong removing files for module %1 at path '%2' and the error "
-"was: %3"
-msgstr ""
-"%1 modülü için '%2' yolundaki dosyaları kaldırırken bir sorun oluştu ve hata "
-"şuydu: %3"
 
 #, qt-format
 msgctxt "Modules::DynamicModules|"
@@ -5788,14 +5771,6 @@ msgctxt "MainWindow|"
 msgid "Salvage"
 msgstr "Kurtarma"
 
-msgctxt "Modules::DynamicModules|"
-msgid "Install complete"
-msgstr "Kurulum tamamlandı"
-
-msgctxt "Modules::DynamicModules|"
-msgid "Completed installation of Bundles: "
-msgstr "Paketlerin kurulumu tamamlandı: "
-
 msgctxt "QObject|"
 msgid "Security Sandbox Failure"
 msgstr "Güvenlik Sandbox'ı Arızası"
@@ -6081,6 +6056,48 @@ msgid ""
 "parameter is bounded within 'lower' and 'upper' limits."
 msgstr ""
 
-msgctxt "tst_tabViewManual|"
-msgid "H"
+msgctxt "PrefsAdvanced|"
+msgid "Module library URL: "
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Not allowed to show the module library to install modules"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid ""
+"In \"Preferences\" > \"Interface\" the \"Check for updates\" option is "
+"turned off. Please turn it on to see the module library."
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Install Local Module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Install a local module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Downloading module..."
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Installing module..."
+msgstr ""
+
+#, fuzzy
+msgctxt "ModulesMenu|"
+msgid "Cancel"
+msgstr "İptal Et"
+
+msgctxt "ModulesMenu|"
+msgid "Cancel download"
+msgstr ""
+
+#, qt-format
+msgctxt "Modules::DynamicModules|"
+msgid ""
+"The removal of Module %1 failed with the following errormessage:\n"
+"%2"
 msgstr ""
