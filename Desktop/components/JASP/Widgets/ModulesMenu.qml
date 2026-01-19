@@ -101,12 +101,13 @@ FocusScope
 				bottomMargin:	slidePart.border.width
 			}
 			
-			extraSpace: modulesFlick.contentHeight - (modulesFlick.contentY + modulesFlick.height)
+			extraSpace:		modulesFlick.contentHeight - (modulesFlick.contentY + modulesFlick.height)
+			visible:		!progressOverlay.visible
 		}
 
 		ScrollMoreIndicator 
 		{
-			id: 		scrollingGuideTop
+			id:				scrollingGuideTop
 			anchors
 			{
 				left:		parent.left
@@ -115,8 +116,9 @@ FocusScope
 				topMargin:	slidePart.border.width
 			}
 			
-			upsideDown:	true
-			extraSpace: modulesFlick.contentY
+			upsideDown:		true
+			extraSpace:		modulesFlick.contentY
+			visible:		!progressOverlay.visible
 		}
 		
 		WebEngineProfile {
