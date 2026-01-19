@@ -213,27 +213,12 @@ void TextInputBase::setDisplayValue()
 {
 	int		valueInt;
 	double	valueDbl;
-	bool	isInt = (_value.typeId() == QMetaType::Int),
-			isDbl = (_value.typeId() == QMetaType::Double);
-
-	if (isInt)
-		valueInt = _value.toInt();
-	else if (isDbl)
-		valueDbl = _value.toDouble();
-	else
-	{
-		isInt = QColumnUtils::getIntValue(	_value.toString(), valueInt);
-		isDbl = QColumnUtils::getDoubleValue(	_value.toString(), valueDbl);
-	}
-	
-	QString showThis = _value.toString();
-	
-	if(isInt)
-		showThis = QString::number(valueInt); //QColumnUtils::currentQLocale().toString(valueInt);
-
-	else if(isDbl) // Can be also a formula
-		showThis = QColumnUtils::doubleToString(valueDbl, false);
-
+	QString showThis	= QColumnUtils::getIntValue(_value, valueInt) ? 
+							QString::number(valueInt) 
+						:	QColumnUtils::getDoubleValue(_value, valueDbl) ? 
+								QColumnUtils::doubleToString(valueDbl, false) 
+							:	_value.toString();
+																																				  
 	setProperty("displayValue", showThis);
 }
 

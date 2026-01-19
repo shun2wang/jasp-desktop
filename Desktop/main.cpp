@@ -511,7 +511,7 @@ int main(int argc, char *argv[])
 
 			QLocale::setDefault(QLocale(QLocale::English)); // make decimal points == . in at least R? Anyway, this has been here forever, ill just leave it.
 			
-			char dsteng[] = "LC_ALL=en_US";
+			char dsteng[] = "LC_ALL=en_US.UTF-8"; // See this issue about encoding problems in the results: https://github.com/jasp-stats/jasp-test-release/issues/3099 and https://github.com/jasp-stats/jasp-issues/issues/3867 for xlsx importing
 			putenv(dsteng);
 
 			//Now we convert all these strings in args back to an int and a char * array.

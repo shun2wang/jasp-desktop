@@ -100,11 +100,15 @@ class QColumnUtils
 {
 public:	
 	static bool					getIntValue(	const QString		& value, int	& intValue);
+	static bool					getIntValue(	const QVariant		& value, int	& intValue);
 	static bool					getDoubleValue(	const QString		& value, double	& doubleValue, bool useLocale = true);
+	static bool					getDoubleValue(	const QVariant		& value, double	& doubleValue, bool useLocale = true);
 	static doubleset			getDoubleValues(const QStringList	& values, bool stripNAN = true);
 
 	static bool					isIntValue(		const QString		& value);
+	static bool					isIntValue(		const QVariant		& value);
 	static bool					isDoubleValue(	const QString		& value);
+	static bool					isDoubleValue(	const QVariant		& value);
 	
 	static QLocale				currentQLocale();
 	
@@ -112,7 +116,6 @@ public:
 	static QString				doubleToString(			double dbl, bool sepas = true, int precision = 10);
 	static QString				doubleToStringMaxPrec(	double dbl, bool sepas = true);
 	static QString				currencyString(			double money, const QString &symbol = QString());
-	
 	
     static void					setOmitGroupSeparatorOnQLocale(QLocale & locale);
 	static void					setCallbacksAndDefaultLocale(const QLocale & locale, bool useThousandSeps);

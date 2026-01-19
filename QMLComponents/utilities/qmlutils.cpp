@@ -59,6 +59,26 @@ QJSValue	QmlUtils::decodeJson(const QJSValue	& val, QQuickItem * caller)
 	return tqj(v, caller);
 }
 
+double QmlUtils::variantToDouble(const QVariant &val)
+{
+	double dblVal;
+	
+	if(QColumnUtils::getDoubleValue(val, dblVal))
+		return dblVal;
+	
+	return NAN;
+}
+
+int QmlUtils::variantToInt(const QVariant &val)
+{
+	int intVal;
+	
+	if(QColumnUtils::getIntValue(val, intVal))
+		return intVal;
+	
+	return 0;
+}
+
 //Turning QMLENGINE_DOES_ALL_THE_WORK on also works fine, but has slightly less transparent errormsgs so isn't recommended
 //#define QMLENGINE_DOES_ALL_THE_WORK
 
@@ -200,11 +220,13 @@ void QmlUtils::setGlobalPropertiesInQMLContext(QQmlContext * ctxt)
 
 	bool isWindows = !isMac && !isLinux;
 
-	ctxt->setContextProperty("DEBUG_MODE",				debug);
+	ctxt->setContextProperty("PRO",						false);
 	ctxt->setContextProperty("MACOS",					isMac);
 	ctxt->setContextProperty("LINUX",					isLinux);
 	ctxt->setContextProperty("WINDOWS",					isWindows);
+	ctxt->setContextProperty("DEBUG_MODE",				debug);
 	ctxt->setContextProperty("INTERACTION_SEPARATOR",	Term::separator);
+	
 	ctxt->setContextProperty("dataSetInfo",				VariableInfo::info());
 	ctxt->setContextProperty("messages",				MessageForwarder::msgForwarder());
 	ctxt->setContextProperty("backgroundForms",			nullptr);

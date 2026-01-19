@@ -158,10 +158,10 @@ void ListModelFilteredDataEntry::initialValuesChanged()
 	else if(_tableView->initialValuesSource().toString().isEmpty())
 	{
 		int			rowCount		= requestInfo(VariableInfo::DataSetRowCount).toInt();
-		QVariant	defaultValue	= _tableView->defaultValue();
-		bool		isDbl			= false;
-		double		dblVal			= defaultValue.toDouble(&isDbl);
-		if(isDbl)
+		QVariant	defaultValue	= _tableView->defaultValue();	
+		double		dblVal;
+		
+		if(QColumnUtils::getDoubleValue(defaultValue, dblVal))
 					_initialValues	= doublevec(rowCount, dblVal);
 	}
 	fillTable();

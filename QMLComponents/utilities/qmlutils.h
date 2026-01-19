@@ -38,6 +38,9 @@ public slots:
 
 	QJSValue	encodeJson(				const QJSValue	& val, QQuickItem * caller);
 	QJSValue	decodeJson(				const QJSValue	& val, QQuickItem * caller);
+	
+	double		variantToDouble(		const QVariant	& val);
+	int			variantToInt(			const QVariant	& val);
 
 };
 

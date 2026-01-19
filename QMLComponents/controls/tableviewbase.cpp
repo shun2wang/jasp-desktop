@@ -230,14 +230,16 @@ QVariant TableViewBase::defaultValue(int colIndex, int rowIndex)
 	{
 	case JASPControl::ItemType::Integer:
 	{
-		if (defValue.typeId() == QMetaType::Int)		return defValue;
-		if (defValue.canConvert<int>())					return defValue.toInt();
+		int intVal;
+		if(QColumnUtils::getIntValue(defValue, intVal))
+			return intVal;
 		break;
 	}
 	case JASPControl::ItemType::Double:
 	{
-		if (defValue.typeId() == QMetaType::Double)		return defValue;
-		if (defValue.canConvert<double>())				return defValue.toDouble();
+		double dblVal;
+		if(QColumnUtils::getDoubleValue(defValue, dblVal))
+			return dblVal;
 		break;
 	}
 	case JASPControl::ItemType::String:

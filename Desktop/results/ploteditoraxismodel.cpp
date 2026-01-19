@@ -195,9 +195,9 @@ bool AxisModel::setData(const QModelIndex &index, const QVariant &value, int)
 
 	if(breaks)
 	{
-		double newBreak = value.toDouble();
-
-		if(!Utils::isEqual(_breaks[entry], newBreak))
+		double newBreak;
+		
+		if(QColumnUtils::getDoubleValue(value, newBreak) && !Utils::isEqual(_breaks[entry], newBreak))
 		{
 			double oldBreak = _breaks[entry];
 

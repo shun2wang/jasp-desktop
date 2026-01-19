@@ -325,9 +325,44 @@ bool QColumnUtils::getIntValue(const QString &value, int &intValue)
 	return ColumnUtils::getIntValue(fq(value), intValue);
 }
 
+bool QColumnUtils::getIntValue(const QVariant &value, int &intValue)
+{
+	if(value.typeId() == QMetaType::Int)// || value.canConvert<int>())
+	{
+		intValue = value.toInt();
+		return true;
+	}
+	else if(value.typeId() == QMetaType::QString)
+	{
+		return getIntValue(value.toString(), intValue);	
+	}
+	
+	return false;
+}
+
 bool QColumnUtils::getDoubleValue(const QString &value, double &doubleValue, bool useLocale)
 {
 	return ColumnUtils::getDoubleValue(fq(value), doubleValue, useLocale);
+}
+
+bool QColumnUtils::getDoubleValue(const QVariant &value, double &doubleValue, bool useLocale)
+{
+	if(value.typeId() == QMetaType::Int)
+	{
+		doubleValue = value.toInt();
+		return true;
+	}
+	else if(value.typeId() == QMetaType::Double)// || value.canConvert<double>())
+	{
+		doubleValue = value.toDouble();	
+		return true;
+	}
+	else if(value.typeId() == QMetaType::QString)
+	{
+		return getDoubleValue(value.toString(), doubleValue, useLocale);	
+	}
+	
+	return false;
 }
 
 doubleset QColumnUtils::getDoubleValues(const QStringList &values, bool stripNAN)
@@ -340,9 +375,19 @@ bool QColumnUtils::isIntValue(const QString &value)
 	return ColumnUtils::isIntValue(fq(value));
 }
 
+bool QColumnUtils::isIntValue(const QVariant &value)
+{
+	return value.typeId() == QMetaType::Int || (value.typeId() == QMetaType::QString && isIntValue(value.toString()));
+}
+
 bool QColumnUtils::isDoubleValue(const QString &value)
 {
 	return ColumnUtils::isDoubleValue(fq(value));
+}
+
+bool QColumnUtils::isDoubleValue(const QVariant &value)
+{
+	return value.typeId() == QMetaType::Double || value.typeId() == QMetaType::Int || (value.typeId() == QMetaType::QString && isDoubleValue(value.toString())); 
 }
 
 void QColumnUtils::setOmitGroupSeparatorOnQLocale(QLocale & locale)

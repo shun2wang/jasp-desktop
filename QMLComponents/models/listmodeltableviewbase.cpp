@@ -18,7 +18,6 @@
 
 #include "log.h"
 #include <QSize>
-#include <fstream>
 #include "analysisform.h"
 #include "listmodeltableviewbase.h"
 #include "controls/tableviewbase.h"
@@ -443,8 +442,8 @@ bool ListModelTableViewBase::valueOk(QVariant value, int col, int row)
 	bool	ok	= true;
 	JASPControl::ItemType itemType = _tableView->itemTypePerItem(col, row);
 
-	if		(itemType == JASPControl::ItemType::Double)		value.toDouble(&ok);
-	else if	(itemType == JASPControl::ItemType::Integer)	value.toInt(&ok);
+	if		(itemType == JASPControl::ItemType::Double)		ok = QColumnUtils::isDoubleValue(	value);
+	else if	(itemType == JASPControl::ItemType::Integer)	ok = QColumnUtils::isIntValue(		value);
 
 	return ok;
 }
