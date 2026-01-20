@@ -1967,7 +1967,18 @@ void Column::upgradeDoublesToLabels()
 	beginBatchedLabelsDB();
 	
 	for(size_t row=0; row<_dbls.size(); row++)
-		if(!std::isnan(_dbls[row]) && _ints[row] == Label::NO_LABEL)
+		if(std::isnan(_dbls[row]))
+		{
+			if(_ints[row] == Label::NO_LABEL)
+				continue;
+			
+			Label * label = labelByIntsId(_ints[row]);
+			
+			if(label && !std::isnan(label->originalValueAsDouble()))
+				_dbls[row] = label->originalValueAsDouble();
+			
+		}
+		else if(_ints[row] == Label::NO_LABEL)
 		{
 			std::string		dblStr	= Column::doubleToDisplayString(_dbls[row], false, false);
 			Label		*	label	= labelByValue(dblStr);

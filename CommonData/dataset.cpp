@@ -327,7 +327,7 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, Ver
 	Json::Reader().parse(emptyVals, emptyValsJson);
 
 	bool	do019Fix	= doUpgradeFrom != Version() && doUpgradeFrom < "0.19",
-			do095Fix	= doUpgradeFrom != Version() && doUpgradeFrom < "0.95";
+			do096Fix	= doUpgradeFrom != Version() && doUpgradeFrom < "0.96";
 
 	//Ideally we have the emptyvalues before loading the columns, so we get the right labels in the labeleditor, butr for older than 0.19 stuff is complicated so we do that later.
 
@@ -354,12 +354,12 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, Ver
 
 
 	
-	if(do095Fix)
+	if(do096Fix)
 		beginBatchedToDB();
 	
 	if(do019Fix)	upgradeTo019(emptyValsJson);
 	
-	if(do095Fix)
+	if(do096Fix)
 	{
 		upgrade019To095();
 		endBatchedToDB();
