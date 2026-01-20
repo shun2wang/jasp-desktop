@@ -162,10 +162,10 @@ void JASPExporter::saveAnalyses(archive *a)
 	makeEntry(a, "analyses.json", analysesJson.toStyledString());
 
 	const Json::Value & analysesDataList = analysesJson.isArray() ? analysesJson : analysesJson["analyses"];
-
+	
 	for (const Json::Value & analysisJson : analysesDataList)
 		for (const std::string & path : TempFiles::retrieveList(analysisJson["id"].asInt()))
-			if(PreferencesModel::prefs()->storeStateEtc() || !stringUtils::endsWith(path, "/state"))
+			if(!stringUtils::endsWith(path, "/state") || (PreferencesModel::prefs()->storeStateEtc() && analysisJson.get("saveState", "default").asString() != "never") || analysisJson.get("saveState", "default").asString() == "always")
 				saveTempFile(a, path);
 }
 

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,20 +16,19 @@
 //
 
 #include "log.h"
-#include "utils.h"
-#include "analysis.h"
-#include "tempfiles.h"
-#include "appinfo.h"
 #include "dirs.h"
+#include "utils.h"
+#include "appinfo.h"
+#include "analysis.h"
 #include "analyses.h"
+#include "tempfiles.h"
 #include "analysisform.h"
-//#include <boost/bind.hpp>
 #include "utilities/qutils.h"
-#include "utilities/settings.h"
 #include "utilities/reporter.h"
 #include "gui/preferencesmodel.h"
 #include "results/resultsjsinterface.h"
 #include "utilities/messageforwarder.h"
+#include "modules/description/description.h"
 #include "gui/jaspConfiguration/jaspconfiguration.h"
 
 Analysis::Analysis(size_t id, Modules::AnalysisEntry * analysisEntry, std::string title, std::string moduleVersion, Json::Value *data) :
@@ -424,6 +423,7 @@ Json::Value Analysis::asJSON(bool withRSource) const
 	analysisAsJson["options"]		= boundValues();
 	analysisAsJson["userdata"]		= userData();
 	analysisAsJson["dynamicModule"] = _moduleData->asJsonForJaspFile();
+	analysisAsJson["saveState"]		= _dynamicModule->descriptionQml()->alwaysSaveState()  ? "always" : _dynamicModule->descriptionQml()->neverSaveState() ? "never" : "default";
 
 	if (withRSource)
 		analysisAsJson["rSources"]	= rSources();

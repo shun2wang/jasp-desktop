@@ -112,6 +112,7 @@ public:
 	std::string			license()			const { return _license;								}
 	std::string			maintainer()		const { return _maintainer;								}
 	std::string			description()		const { return _descriptionTxt;							}
+	Description		*	descriptionQml()	const { return _description;							}
 	std::string			modulePackage()		const { return _modulePackage;							}
 	bool				isCommon()			const { return _isCommon;								}
 	bool				hasWrappers()		const { return _hasWrappers;							}

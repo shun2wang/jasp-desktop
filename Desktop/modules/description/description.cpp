@@ -242,4 +242,30 @@ void Description::setPreloadData(bool newPreloadData)
 	emit preloadDataChanged();
 }
 
+bool Description::alwaysSaveState() const
+{
+	return _alwaysSaveState;
+}
+
+void Description::setAlwaysSaveState(bool newAlwaysSaveState)
+{
+	if (_alwaysSaveState == newAlwaysSaveState)
+		return;
+	_alwaysSaveState = newAlwaysSaveState;
+	emit alwaysSaveStateChanged();
+}
+
+bool Description::neverSaveState() const
+{
+	return _neverSaveState;
+}
+
+void Description::setNeverSaveState(bool newNeverSaveState)
+{
+	if (_neverSaveState == newNeverSaveState)
+		return;
+	_neverSaveState = newNeverSaveState;
+	emit neverSaveStateChanged();
+}
+
 }

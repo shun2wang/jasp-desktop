@@ -38,6 +38,8 @@ class Description : public QQuickItem
 	Q_PROPERTY(bool						preloadData		READ preloadData		WRITE setPreloadData		NOTIFY preloadDataChanged		)
 	Q_PROPERTY(Modules::DynamicModule *	dynMod			READ dynMod				WRITE setDynMod				NOTIFY dynModChanged			)
 	Q_PROPERTY(bool						hasWrappers		READ hasWrappers		WRITE setHasWrappers		NOTIFY hasWrappersChanged		)
+	Q_PROPERTY(bool						alwaysSaveState	READ alwaysSaveState	WRITE setAlwaysSaveState	NOTIFY alwaysSaveStateChanged	)
+	Q_PROPERTY(bool						neverSaveState	READ neverSaveState		WRITE setNeverSaveState		NOTIFY neverSaveStateChanged	)
 
 public:
 	Description(QQuickItem *parent = nullptr);
@@ -59,6 +61,8 @@ public:
 	bool			preloadData()		const;
 	DynamicModule * dynMod()			const { return _dynMod;						}
 	bool			hasWrappers()		const { return _hasWrappers;				}
+	bool			alwaysSaveState()	const;	
+	bool			neverSaveState()	const;
 
 	void	addChild(	DescriptionChildBase * child);
 	void	removeChild(DescriptionChildBase * child);
@@ -66,6 +70,9 @@ public:
 	std::vector<AnalysisEntry *>	menuEntries()		const;
 	std::set<std::string>			requiredModules()	const;
 
+	
+	
+	
 	
 public slots:
 	void setName(					QString						name			);
@@ -82,7 +89,9 @@ public slots:
 	void setDynMod(					Modules::DynamicModule	*	dynMod			);
 	void delayedUpdate();
 	void setHasWrappers(			bool						hasWrappers		);
-
+	void setNeverSaveState(			bool						newNeverSaveState);
+	void setAlwaysSaveState(		bool						newAlwaysSaveState);
+	
 signals:
 	void titleChanged(				QString						title			);
 	void iconChanged(				QString						icon			);
@@ -99,7 +108,8 @@ signals:
 	void dynModChanged(				Modules::DynamicModule	*	dynMod			);
 	void iShouldBeUpdated(			Modules::Description	*	desc			);
 	void childChanged();
-
+	void alwaysSaveStateChanged();
+	void neverSaveStateChanged();
 	
 private:
 	void					setUpDelayedUpdate();
@@ -116,7 +126,9 @@ private:
 	Version					_version;
 	bool					_requiresDataDef	= true,
 							_hasWrappers		= false,
-							_preloadData		= true;
+							_preloadData		= true,
+							_alwaysSaveState	= false,
+							_neverSaveState		= false;
 	DynamicModule		*	_dynMod				= nullptr;
 	QList<EntryBase*>		_entries;
 	QTimer					_timer;
