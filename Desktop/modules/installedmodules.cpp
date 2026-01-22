@@ -16,19 +16,13 @@ void InstalledModules::parseModuleInfo(const std::string& path, InstalledModules
 	std::ifstream in(path);
 	Json::Value root;
 	Json::Reader().parse(in, root);
-	Json::Value version = root["version"];
-
+	Json::Value version = root["version"][0];
 	std::string strVersion = "";
-	if(version.isMember("Version"))
-		strVersion = version["Version"].asString();
-	else {
-		version = version[0];
-		for(int i = 0; i < version.size(); i++) {
-			auto x = version[i];
-			strVersion =  strVersion + version[i].asString() + ".";
-		}
-		strVersion.pop_back();
+	for(int i = 0; i < version.size(); i++) {
+		auto x = version[i];
+		strVersion =  strVersion + version[i].asString() + ".";
 	}
+	strVersion.pop_back();
 
 	info.name = root["name"].asString();
 	info.version = Version(strVersion);
