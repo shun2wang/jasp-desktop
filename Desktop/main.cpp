@@ -558,7 +558,7 @@ int main(int argc, char *argv[])
 			{
 				Log::log() << "We need to recreate junctions!" << std::endl;
 
-				QMessageBox *msgBox = MessageForwarder::getInfoBox("Creating Junctions, one moment please", "Creating Junctions, one moment please");
+				QMessageBox *msgBox = MessageForwarder::getInfoBox("Creating junctions, one moment please", "Creating junctions, one moment please");
 				msgBox->show();
 
 				if(!runJaspEngineJunctionFixer(argc, argv, false, false))
