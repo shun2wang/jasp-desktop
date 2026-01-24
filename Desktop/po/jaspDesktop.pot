@@ -5627,3 +5627,8 @@ msgid ""
 "The removal of Module %1 failed with the following errormessage:\n"
 "%2"
 msgstr ""
+
+#, qt-format
+msgctxt "Modules::DynamicModule|"
+msgid "No %1 file found in folder %2"
+msgstr ""
