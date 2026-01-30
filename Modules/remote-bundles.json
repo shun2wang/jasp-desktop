@@ -294,111 +294,147 @@
     "MacOS-x86_64": [
         {
             "url": "https://github.com/jasp-stats-modules/jaspAcceptanceSampling/releases/download/0.95.5_f52d5f57_R-4-5-2_Release/jaspAcceptanceSampling_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "07ae17cdde09b2f5a98674cd517138fb6720afbfe4dfb9970029c47b79b85c84"
+            "checksum": "dac909c4743e78a9a8b50bbfc2641e436dcc102508aa20f62c09d77d3af068a7"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspAudit/releases/download/0.95.5_18a09404_R-4-5-2_Release/jaspAudit_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "74ca7e9805021d38f59752187c37e7c503eceded36bfeb2bae09346384a8f7aa"
+            "checksum": "f249082628ed341348a675085bf432d18ff39635b8e7722c2525f6f0f8eb6aff"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspBain/releases/download/0.95.5_851c18e4_R-4-5-2_Release/jaspBain_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "822d487a5045f37d5497c0069c3e0dfb3875394247081de870951a0f2bca358b"
+            "checksum": "58aaeb2dcac598f08e071c06fcc2a31df41eb57ae2614d74a1ce41ac8c78e4a9"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspBFF/releases/download/0.95.5_0b9c7097_R-4-5-2_Release/jaspBFF_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "a8b4926c2522269a5dfb7258561f55620f6dc0a34b2a383cf970a32a5658cb7a"
+            "checksum": "aff11185f8f0009b0ff3ff3aa21fe4306990412f9b9fc4307c2d5aad82b0d447"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspBfpack/releases/download/0.95.5_e5447b15_R-4-5-2_Release/jaspBfpack_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "0e49352bb7bda1bd228450aea60350de75e35a374399e13d03477f3666c3085b"
+            "checksum": "2acda84d17bf0cd37d171185f804aa1a4c2d7d167c74f84e1aa3074a21b73c89"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspBsts/releases/download/0.95.5_699f1d90_R-4-5-2_Release/jaspBsts_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "3658acb64d32253b35e1bcd33a4afe8ef87c984d331c5bfed4c6aba45b3dde2d"
+            "checksum": "979df417cf5c89ccb91b8babcc4b174a8525e725622d2d950f2bf4a39228cf7a"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspCircular/releases/download/0.95.5_33f107b8_R-4-5-2_Release/jaspCircular_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "ac6fd83d04d60863d327bf67fbfb5e666f64eb9eec960725807305645c2f4cb9"
+            "checksum": "e61ab162d87f9dae41f26fef067e55c5c844d17f326331266eefcee2a301685f"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspCochrane/releases/download/0.95.5_37e2cc66_R-4-5-2_Release/jaspCochrane_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "758aea7bf7f49837a340fa7e2ea6825357c49cfc4e54da961a00a00dce5bc441"
+            "checksum": "ab88b57633e03afc9f6df9c0ddf188a690f95fb05f3b7d8e5a8a2d39166f60bf"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspDistributions/releases/download/0.95.5_da341ddb_R-4-5-2_Release/jaspDistributions_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "5e981deff715e3d7a9b2ed6632ba4c12c51171b3f62aea16200cebd0dd4fbc3f"
+            "checksum": "f111d7d181192d599beee613a948ef5b8415619a57f2bb69026a295a6f7804a2"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspEquivalenceTTests/releases/download/0.95.5_b7f2ad20_R-4-5-2_Release/jaspEquivalenceTTests_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "98fa15e92d035b3cbc2d01d01d91749c2a46b09f61546bb2d1ae7be3e4e6c63b"
+            "checksum": "be27b6657f637f883e6f94e959fb20dcf97eaa7b7efde4c32e8003dcc3e5dae0"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspEsci/releases/download/0.95.5_6b9e0322_R-4-5-2_Release/jaspEsci_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "fe24192f6465fd4f1ffc98d507c2c8a9c03c2aecaef0a99c938404e1c8f06df3"
+            "checksum": "177218cb6b6a3d6627d04f2ef9883651fb497a711d033d70571bf825c6f300c7"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspJags/releases/download/0.95.5_9266b3d0_R-4-5-2_Release/jaspJags_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "4aae9652c767d5b1e1776dd18ee0150733797b8f1f712ae02883e0be81eb2adf"
+            "checksum": "b9fc6d6067b0e17d5d3f05d49404d02f54c52ba57745b45b6457e337055e7953"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspLearnBayes/releases/download/0.95.5_94e34089_R-4-5-2_Release/jaspLearnBayes_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "2bad5983cd7f7e6f32f8281808d2348a6a6d3d623e130daa21f5d9ad024ec130"
+            "checksum": "109923513da1d215ab848b1e8041034a524f8ed800dc9ce5a5f83d89735ee4f0"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspLearnStats/releases/download/0.95.5_d6072f0a_R-4-5-2_Release/jaspLearnStats_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "e1181e0ef157397078f36b644448187231d59abe3734a49cec42e190069d303f"
+            "checksum": "13b2b387eeba150551d069a13395be8a9075a10f1c0e100287af12ab77a02de8"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspMachineLearning/releases/download/0.95.5_f223ff3b_R-4-5-2_Release/jaspMachineLearning_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "ea1548aefb654bdd2b4c1a22300062c748f42e70e36c80a08453598edf009b57"
+            "checksum": "f7148246d4044818d7db615732303222ed3624a6d972b622bd9d717c97d3f768"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspMetaAnalysis/releases/download/0.95.5_7a4d3ae5_R-4-5-2_Release/jaspMetaAnalysis_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "16e623f2c603491d5a699d3f45dd1bef279db4116c918a4a6eeb17fe4b041747"
+            "checksum": "6db86786eecbf1950f48146cf5fdabc4300b16a78d540d9338e7a3e242ab4481"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspNetwork/releases/download/0.95.5_277a3c1d_R-4-5-2_Release/jaspNetwork_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "00b0115897e98ce310f9aa99e56955d76e21c4a3d0e86b42c2bc785d8031e4e6"
+            "checksum": "3b605e2bb383780c68e946ba778fcb8091988c5580ca3b4a866fc7cce698c5e9"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspPower/releases/download/0.95.5_079e0d97_R-4-5-2_Release/jaspPower_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "a84fa0946e4c3b45ff748839f65349e06e2a0cb8fd493b6cee0ee2ec6c5ba28e"
+            "checksum": "3b25fbb19295850d8a024844495b13888c5c5be64fa1b379978240c558d8ab54"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspPredictiveAnalytics/releases/download/0.95.5_2a48941d_R-4-5-2_Release/jaspPredictiveAnalytics_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "3d5700d6ecc2e34239f98f2233ec9c598efed9d65ec6967b649ba4a274307a73"
+            "checksum": "2dca488b391b276490203394cfcb28e1af81035d59477d354ec6930d27dc3e7e"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspProcess/releases/download/0.95.5_b0063f86_R-4-5-2_Release/jaspProcess_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "61ccb51ab8b609e847f28a52fcff1b3ac5231c395ad30f3253f4e5d20c60f750"
+            "checksum": "033bbb20393da3d2fbe820167889fdf97cff73a5c0bf8cd0eaadf6cbdf5d4a21"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspProphet/releases/download/0.95.5_a2482662_R-4-5-2_Release/jaspProphet_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "331be27a2eed812f1bbd3da08c8001c74ca239f99b1ae73e345b9b39b4c19016"
+            "checksum": "1813367afa88cc17e3c0babd0c26b91f3570dbb3b9204f5d7eb5301ca57ae8f2"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspQualityControl/releases/download/0.95.5_4791fbd1_R-4-5-2_Release/jaspQualityControl_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "e7fae2a2457a4413536943bf96ff8bb810b6e8f6ddf3cfbe836670b72c45bf99"
+            "checksum": "a4f06eb46f57d95fea8f185108205f0cca9c3248a3b2fcd0719c220d879c51e8"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspReliability/releases/download/0.95.5_c2a37d79_R-4-5-2_Release/jaspReliability_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "074fc7d1c5a55ee46ac28e5fd1371a1e0209f3940c131a1dfc374d97a58259f8"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspRobustTTests/releases/download/0.95.0_c1fe26b4_R-4-5-2_Release/jaspRobustTTests_0.95.0_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "f6b4f54eca38ad182fe547bb7fcd8bb76d7abfd5da0572863d5ff5bfb7a507d9"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspSem/releases/download/0.95.5_e0fa2766_R-4-5-2_Release/jaspSem_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "2bfbd43d6b67e8e06255438fbdc4ea187e6a5020102d43cf5cba3660d208fedd"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspSummaryStatistics/releases/download/0.95.5_de257b55_R-4-5-2_Release/jaspSummaryStatistics_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "14def30a1887a8f108f28491679ec388c2e1a7cfd818d86068c2cee817c6dd75"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspSurvival/releases/download/0.95.5_69dc1db1_R-4-5-2_Release/jaspSurvival_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "613763e8837112db2db3066dc16202bcaddf59f260eb5cce968f4f8a4c86ccd4"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspTimeSeries/releases/download/0.95.0_e72386bc_R-4-5-2_Release/jaspTimeSeries_0.95.0_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "d3fdb83cd472350b3953f8b49aa632f375b1f50bb4e1ba4000ad366c0b961287"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspVisualModeling/releases/download/0.95.5_b2447e6e_R-4-5-2_Release/jaspVisualModeling_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "37722ab209cf95cc214529a52e8ec17edda4805a674e2ecf9382e16cb7695cf0"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspAnova/releases/download/0.95.5_3307653d_R-4-5-2_Release/jaspAnova_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "f822cdc409e96f6d12cf3efbe21d21ce10870ff4ad83ac14b63e6a0473cc5270"
+            "checksum": "79ce7f43e8dc136e89d5ac414aa2da516b813ac2549395975e43aefef9433ffe"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspDescriptives/releases/download/0.95.5_c7af6c89_R-4-5-2_Release/jaspDescriptives_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "b02ee417b30aa4e98f4d76e451710de002d9f85e93fe86c5b7ca2245a04a126f"
+            "checksum": "3685cdc1f0dc7a1cc2ef2bb96520d41498475bbf03b5b5de1ec6e11e1334e409"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspFactor/releases/download/0.95.5_ceea12ec_R-4-5-2_Release/jaspFactor_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "671eb9f4472efdd910579d9dba95d29cb9fd27d53dab3d4585c7cd046447c017"
+            "checksum": "19731a3c1d09c13c41ace90f98112b9cbb7f6f7e4086fc17199f51f19f5ca70a"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspFrequencies/releases/download/0.95.5_3ddf4493_R-4-5-2_Release/jaspFrequencies_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "0c3ca341e2c08aabd37b94b874d734636f07078967208ddf6eb62448bef91978"
+            "checksum": "d143d0547b87735dba44e8a971e990fef53850eb2c240b08ab1c05e3bf74bba4"
         },
         {
             "url": "https://github.com/jasp-stats-modules/jaspMixedModels/releases/download/0.95.5_06870062_R-4-5-2_Release/jaspMixedModels_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
-            "checksum": "8224f25d560c46086ec652c087ec9065b56cc6044fd6366bfcdfd35c5d7b3b0c"
+            "checksum": "b07fc6cd6bf77bd4aca9cd38bdc6a2b3b6943e7be19a349b77c0c56401da1118"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspRegression/releases/download/0.95.5_ead42d7c_R-4-5-2_Release/jaspRegression_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "2228236e5365b6508b87a0d1b21cf6e39a4bfcdf0111b263b10ed564e353c233"
+        },
+        {
+            "url": "https://github.com/jasp-stats-modules/jaspTTests/releases/download/0.95.5_6662bf37_R-4-5-2_Release/jaspTTests_0.95.5_MacOS_x86_64_R-4-5-2.JASPModule",
+            "checksum": "c1abf09a8ee28f65937a6f9984a3258d7af0c011c70f43e3a1640a3c783ccc6d"
         }
     ]
 }
