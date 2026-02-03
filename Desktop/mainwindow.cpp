@@ -256,6 +256,25 @@ QString MainWindow::windowTitle() const
 	return _package->windowTitle();
 }
 
+QString MainWindow::currentFileUserReadable() const
+{
+	QString name	= '"' + QFileInfo(_package->currentFile()).fileName() + '"',
+			folder	= _package->folder();
+	
+#ifdef _WIN32
+	if(folder.startsWith(AppDirs::examples().replace('/', '\\')))
+#else
+	if(folder.startsWith(AppDirs::examples()))
+#endif
+		folder = "";
+
+	
+	if(folder != "")
+		return tq("%1 in %2").arg(name).arg('"'+folder+'"');
+	else
+		return name;
+}
+
 const QStringList & MainWindow::commThankYou() const
 {
 	static QStringList thankYou = [](){
@@ -1281,10 +1300,7 @@ void MainWindow::dataSetIORequestHandler(FileEvent *event)
 
 		if (_package->isModified() && (dataAvailable() || analysesAvailable()))
 		{
-			QString title = windowTitle();
-			title.chop(1);
-
-			switch(MessageForwarder::showSaveDiscardCancel(tr("Would you like to save your changes to %1 file?").arg(title), tr("Your changes will be lost if you don't save them.")))
+			switch(MessageForwarder::showSaveDiscardCancel(tr("%1 has been modified").arg(currentFileUserReadable()), tr("Would you like to save your changes?")))
 			{
 			default:
 			case MessageForwarder::DialogResponse::Cancel:
@@ -1317,10 +1333,7 @@ bool MainWindow::checkPackageModifiedBeforeClosing()
 	if(!_package->isModified())
 		return true;
 
-	QString title = windowTitle();
-	title.chop(1);
-
-	switch(MessageForwarder::showSaveDiscardCancel(tr("Would you like to save your changes to %1 file?").arg(title), tr("Your changes will be lost if you don't save them.")))
+	switch(MessageForwarder::showSaveDiscardCancel(tr("%1 has been modified").arg(currentFileUserReadable()), tr("Would you like to save your changes?")))
 	{
 	case MessageForwarder::DialogResponse::Save:
 	{

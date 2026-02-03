@@ -114,6 +114,7 @@ public:
 	int					progressBarProgress()	const	{ return _progressBarProgress;	}
 	const QString &		progressBarStatus()		const	{ return _progressBarStatus;	}
 	QString				windowTitle()			const;
+	QString				currentFileUserReadable()			const;
 	int					screenPPI()				const	{ return _screenPPI;			}
 	bool				dataAvailable()			const	{ return _dataAvailable;		}
 	bool				analysesAvailable()		const	{ return _analysesAvailable;	}
