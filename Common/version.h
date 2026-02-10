@@ -98,7 +98,7 @@ private:
 	Type typefromString(const std::string& str) const;
 
 	Type _type = Type::Release;
-	uint32_t _buildnum = 0;
+	unsigned int _buildnum = 0;
 };
 
 #endif // VERSION_H
