@@ -163,7 +163,7 @@ BundleVersion::BundleVersion(const std::string &version)
 
 std::string BundleVersion::asString(size_t versionNumbersToInclude) const
 {
-	return Version::asString(versionNumbersToInclude) +  BundleVersion::typetoString(_type) + "." + std::to_string(_buildnum);
+	return Version::asString(versionNumbersToInclude) + "-" + BundleVersion::typetoString(_type) + "." + std::to_string(_buildnum);
 }
 
 bool BundleVersion::operator <(const BundleVersion &other) const
