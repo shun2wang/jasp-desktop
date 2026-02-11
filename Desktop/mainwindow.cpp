@@ -557,6 +557,9 @@ void MainWindow::makeConnections()
 	connect(_dynamicModules,		&DynamicModules::reloadQmlImportPaths,				this,					&MainWindow::setQmlImportPaths,								Qt::QueuedConnection); //If this is queued this should make the loadingprocess of qml a bit less weird I think.
 	connect(_dynamicModules,		&DynamicModules::dynamicModuleUnloadBegin,			_engineSync,			&EngineSync::killModuleEngine								);
 	connect(_dynamicModules,		&DynamicModules::isModuleInstallRequestActive,		_engineSync,			&EngineSync::isModuleInstallRequestActive					);
+	
+	connect(_dynamicModules,		&DynamicModules::storeAnalysesJson,					_analyses,				&Analyses::saveAnalysesJsonForReload						);
+	connect(_dynamicModules,		&DynamicModules::reloadAnalysesJson,				_analyses,				&Analyses::reloadSavedAnalysesJson,							Qt::QueuedConnection);
 
 	connect(_languageModel,			&LanguageModel::currentLanguageChanged,				_fileMenu,				&FileMenu::refresh											);
 	connect(_languageModel,			&LanguageModel::aboutToChangeLanguage,				_analyses,				&Analyses::prepareForLanguageChange							);

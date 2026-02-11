@@ -441,7 +441,7 @@ FocusScope
                         {
                             z:				1
 							id:				refreshButton
-                            visible:		!isBundled && !isSpecial
+                            visible:		isDevMod
                             iconSource:		jaspTheme.iconPath + "/redo.svg"
                             width:			visible ? height : 0
                             onClicked:		dynamicModules.refreshDeveloperModule();

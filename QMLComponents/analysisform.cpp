@@ -110,7 +110,7 @@ QVariant AnalysisForm::options() const
 
 void AnalysisForm::setOptions(const QVariantMap &options)
 {
-	_analysis->setOrgBoundValues(qvariantToJson(options));
+	_analysis->setBoundValues(qvariantToJson(options));
 	setAnalysisUp();
 }
 
@@ -156,7 +156,7 @@ void AnalysisForm::runScriptRequestDone(const QString& result, const QString& co
 			if (_rSyntax->parseRSyntaxOptions(options))
 			{
 				blockValueChangeSignal(true);
-				_analysis->clearOptions();
+				_analysis->clearBoundValues();
 				bindTo(Json::nullValue);
 				// Some controls generate extra controls (rowComponents): these extra controls must be first destroyed, because they may disturb the binding of other controls
 				// For this, bind all controls to null and wait for the controls to be completely destroyed.
@@ -672,9 +672,10 @@ void AnalysisForm::setAnalysisUp()
 
 	_setUpControls();
 
-	Json::Value defaultOptions = _analysis->orgBoundValues();
-	_analysis->clearOptions();
-	bindTo(defaultOptions);
+	// When reading from JASP file or when reloading the QML file, the boundValues are set to the analysis. But now each control must be set to its value.
+	Json::Value initialOptions	= _analysis->boundValues();
+	_analysis->clearBoundValues(); // The boundValues will be reset by the bindTo method. Clear the boundValues to prevent existing options from interferring when resetting values.
+	bindTo(initialOptions);
 	lockOptions();
 
 	blockValueChangeSignal(false, false);

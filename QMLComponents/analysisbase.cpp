@@ -44,6 +44,8 @@ void AnalysisBase::destroyForm()
 	}
 	else
 		Log::log(false) << " it has no AnalysisForm." << std::endl;
+	
+	_analysisForm = nullptr;
 }
 
 void AnalysisBase::createForm(QQuickItem* parentItem)

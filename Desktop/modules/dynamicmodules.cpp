@@ -73,36 +73,6 @@ DynamicModules::~DynamicModules()
 	_singleton = nullptr;
 }
 
-void DynamicModules::initializeInstalledModules()
-{
-	std::error_code error;
-	for (std::filesystem::directory_iterator itr(_modulesInstallDirectory, error); !error && itr != std::filesystem::directory_iterator(); itr++)
-	{
-		std::string path			= itr->path().generic_string(),
-					name			= itr->path().filename().generic_string(),
-					problem			= fq(tr("Initializing module during JASP startup failed, should the module be removed?"));
-		bool		askForCleanup	= false;
-
-		//Development Module should always be fresh!
-		if(name == defaultDevelopmentModuleName())	
-			std::filesystem::remove_all(itr->path());
-		
-		else if(name.size() > 0 && name[0] != '.' && QFileInfo(tq(path)).isDir())	
-			try
-			{
-				if(!initializeModuleFromDir(path, false, true))
-					askForCleanup = true;
-			}
-			catch(ModuleException & modException)
-			{
-				askForCleanup = true;
-				problem = fq(tr("Initializing module during JASP startup failed with the following message:\n%1\n\nShould the module be removed?").arg(tq(modException.problemDescription)));
-			}
-		
-		if(askForCleanup && MessageForwarder::showYesNo(tr("Initializing module %1 failed").arg(tq(name)), tq(problem)))
-			std::filesystem::remove_all(itr->path());
-	}
-}
 
 bool DynamicModules::initializeModuleFromDir(std::string moduleDir, bool bundled, bool isCommon)
 {
@@ -171,11 +141,13 @@ bool DynamicModules::initializeModule(DynamicModule * module)
 		}
 		else if(oldModule)
 		{
+			emit storeAnalysesJson();
 			unloadModule(moduleName);
 			emit dynamicModuleReplaced(oldModule, module);
 			delete oldModule;
 			emit dynamicModuleChanged(module);
 			emit loadModuleTranslationFile(module);
+			emit reloadAnalysesJson();
 		}		
 
 		emit reloadQmlImportPaths();
@@ -548,6 +520,8 @@ void DynamicModules::installJASPDeveloperModule()
 
 	try
 	{
+		emit storeAnalysesJson();
+		
 		DynamicModule * devMod = directLibpathEnabled ? new DynamicModule(this, modulePath) : new DynamicModule(this);
 
 		std::string origin	= devMod->modulePackage(),
@@ -565,11 +539,15 @@ void DynamicModules::installJASPDeveloperModule()
 		if(directLibpathEnabled) {
 			initializeModule(devMod);
 		}
+		
+		emit reloadAnalysesJson();
 	}
 	catch(ModuleException & e)
 	{
 		MessageForwarder::showWarning(tr("Problem initializing module"), tr("There was a problem loading the developer module:\n\n") + e.what());
 		setDevelopersModuleInstallButtonEnabled(true);
+		
+		emit reloadAnalysesJson();
 	}
 }
 

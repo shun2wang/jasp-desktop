@@ -78,6 +78,7 @@ public:
 	bool			allFinished()	const;
 	void			setAnalysesUserData(Json::Value userData);
 	void			loadAnalysesFromDatasetPackage(bool & errorFound, std::stringstream & errorMsg, RibbonModel * ribbonModel);
+	void			loadAnalysesFromJaspFileJson(const Json::Value & analysesDataList, const Json::Value & meta, bool & errorFound, std::stringstream & errorMsg, RibbonModel * ribbonModel);
 
 	///Applies function to some or all analyses, if applyThis returns false it stops processing.
 	void		applyToSome(std::function<bool(Analysis *analysis)> applyThis);
@@ -140,6 +141,8 @@ public slots:
 	void moveAnalysesResults(Analysis* fromAnalysis, int index);
 	void showRSyntaxInResults(bool show);
 	void dataModeChanged(bool dataMode);
+	void saveAnalysesJsonForReload();
+	void reloadSavedAnalysesJson();
 
 signals:
 	void analysesUnselected();
@@ -190,7 +193,8 @@ private:
 	static Analyses				*	_singleton;
 
 	Json::Value						_resultsMeta, //Stored Notes and custom title
-									_allUserData; //Notes and stuff?
+									_allUserData, //Notes and stuff?
+									_tempSave;    //For when modules need to be reloaded
 
 	std::map<size_t, Analysis*>		_analysisMap;
 	std::vector<size_t>				_orderedIds;
