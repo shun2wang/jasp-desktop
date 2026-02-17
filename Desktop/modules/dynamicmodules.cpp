@@ -542,7 +542,7 @@ void DynamicModules::installJASPDeveloperModule()
 		
 		emit reloadAnalysesJson();
 	}
-	catch(ModuleException & e)
+	catch(std::exception & e)
 	{
 		MessageForwarder::showWarning(tr("Problem initializing module"), tr("There was a problem loading the developer module:\n\n") + e.what());
 		setDevelopersModuleInstallButtonEnabled(true);
