@@ -670,10 +670,12 @@ void AnalysisForm::setAnalysisUp()
 
 	blockValueChangeSignal(true);
 
+	// When reading from JASP file or when reloading the QML file, the boundValues are set to the analysis.
+	// Keep these values before the controls are set up (they might set default values), and then bind each control to its initial value
+	Json::Value initialOptions	= _analysis->boundValues();
+
 	_setUpControls();
 
-	// When reading from JASP file or when reloading the QML file, the boundValues are set to the analysis. But now each control must be set to its value.
-	Json::Value initialOptions	= _analysis->boundValues();
 	_analysis->clearBoundValues(); // The boundValues will be reset by the bindTo method. Clear the boundValues to prevent existing options from interferring when resetting values.
 	bindTo(initialOptions);
 	lockOptions();
