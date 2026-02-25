@@ -55,7 +55,10 @@ std::vector<InstalledModules::ModuleInfo> InstalledModules::getAllAvailableModul
 			try {
 				parseModuleInfo(dir.filePath(manifest).toStdString(), info);
 			}
-			catch(...) { continue; }
+			catch(std::exception & e) { 
+				Log::log() << "Could not parse module manifest, error: " << e.what() << std::endl;
+				continue; 
+			}
 			info.libpath = QDir(path.c_str()).filePath(info.name.c_str()).toStdString();
 			info.bundled = bundled;
 			modules.push_back(info);
