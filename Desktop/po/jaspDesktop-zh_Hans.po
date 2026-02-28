@@ -1,15 +1,9 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-26 13:09+0000\n"
-"Last-Translator: Shun Wang <shuonwang@gmail.com>\n"
-"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
-"projects/jasp/jaspdesktop/zh_Hans/>\n"
-"Language: zh_Hans\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.1-dev\n"
 "X-Language: zh_Hans\n"
 "X-Qt-Contexts: true\n"
 
@@ -5864,14 +5858,6 @@ msgid "Install a local module"
 msgstr "从本地路径安装一个模块"
 
 msgctxt "ModulesMenu|"
-msgid "Downloading module..."
-msgstr "正在下载模块..."
-
-msgctxt "ModulesMenu|"
-msgid "Installing module..."
-msgstr "正在安装模块..."
-
-msgctxt "ModulesMenu|"
 msgid "Cancel"
 msgstr "取消"
 
@@ -5909,3 +5895,20 @@ msgstr "Minitab 文件无效。"
 msgctxt "Computer|"
 msgid "Minitab Workbook files %1"
 msgstr "Minitab 数据工作簿 %1"
+
+msgctxt "ModulesMenu|"
+msgid "module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Downloading"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Installing"
+msgstr ""
+
+#, qt-format
+msgctxt "ModulesMenu|"
+msgid " (%1/%2)"
+msgstr ""

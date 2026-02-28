@@ -6111,14 +6111,6 @@ msgid "Install a local module"
 msgstr "Instalar um módulo local"
 
 msgctxt "ModulesMenu|"
-msgid "Downloading module..."
-msgstr "Baixando módulo..."
-
-msgctxt "ModulesMenu|"
-msgid "Installing module..."
-msgstr "Instalando módulo..."
-
-msgctxt "ModulesMenu|"
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -6155,4 +6147,21 @@ msgstr ""
 #, qt-format
 msgctxt "Computer|"
 msgid "Minitab Workbook files %1"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Downloading"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Installing"
+msgstr ""
+
+#, qt-format
+msgctxt "ModulesMenu|"
+msgid " (%1/%2)"
 msgstr ""

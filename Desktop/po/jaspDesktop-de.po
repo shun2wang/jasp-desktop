@@ -6151,14 +6151,6 @@ msgid "Install a local module"
 msgstr "Ein lokales Modul installieren"
 
 msgctxt "ModulesMenu|"
-msgid "Downloading module..."
-msgstr "Modul wird herunterladen..."
-
-msgctxt "ModulesMenu|"
-msgid "Installing module..."
-msgstr "Modul wird installiert..."
-
-msgctxt "ModulesMenu|"
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -6197,3 +6189,20 @@ msgstr "Lade Minitab-Datei enthält keine gültigen Spalten."
 msgctxt "Computer|"
 msgid "Minitab Workbook files %1"
 msgstr "Minitab Arbeitsbuch-Dateien %1"
+
+msgctxt "ModulesMenu|"
+msgid "module"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Downloading"
+msgstr ""
+
+msgctxt "ModulesMenu|"
+msgid "Installing"
+msgstr ""
+
+#, qt-format
+msgctxt "ModulesMenu|"
+msgid " (%1/%2)"
+msgstr ""
