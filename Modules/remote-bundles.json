@@ -141,8 +141,8 @@
             "checksum": "66b5821b1f567c501680341ea0e6ad965e46e83a87de9cb91e9f47a7b21979db"
         },
         {
-            "url": "https://github.com/jasp-stats-modules/jaspTTests/releases/download/0.95.5-release.12_R-4-5-2_Release/jaspTTests_0.95.5-release.12_Windows_x86-64_R-4-5-2.JASPModule",
-            "checksum": "fd1c71b6311e17f4782bab03095beabfd9578fbff3ea4672e88e9540d2c4f9e1"
+            "url": "https://github.com/jasp-stats-modules/jaspTTests/releases/download/0.95.5-release.13_R-4-5-2_Release/jaspTTests_0.95.5-release.13_Windows_x86-64_R-4-5-2.JASPModule",
+            "checksum": "463efc112f77844b91f7dc7be3878f0e9a123768b7d077b4189c8d8477a2d554"
         }
     ],
     "MacOS-arm64": [
