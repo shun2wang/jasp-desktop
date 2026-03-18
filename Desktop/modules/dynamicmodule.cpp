@@ -917,6 +917,11 @@ stringset DynamicModule::requiredModules() const
 	return out;
 }
 
+bool DynamicModule::useSubMenus() const
+{
+	return _description->useSubMenus();
+}
+
 QString DynamicModule::patchLibPathHelperFunc(QString libpath) {
 #ifdef __APPLE__
 	
