@@ -3795,15 +3795,6 @@ msgctxt "FilterWindow|"
 msgid "Your changes will be lost if you don't save them."
 msgstr "Zmiany zostaną utracone, jeżeli ich nie zapiszesz."
 
-#, qt-format
-msgctxt "MainWindow|"
-msgid "Would you like to save your changes to %1 file?"
-msgstr "Czy chcesz zapisać zmiany w pliku %1?"
-
-msgctxt "MainWindow|"
-msgid "Your changes will be lost if you don't save them."
-msgstr "Zmiany zostaną utracone, jeżeli ich nie zapiszesz."
-
 msgctxt "PrefsUI|"
 msgid "Use Qt's text rendering"
 msgstr "Użyj renderowania tekstu Qt"
@@ -6163,4 +6154,13 @@ msgstr "Usuń"
 
 msgctxt "ResultMenuModel|"
 msgid "Switch Static/Interactive Image"
+msgstr ""
+
+#, qt-format
+msgctxt "MainWindow|"
+msgid "%1 has been modified"
+msgstr ""
+
+msgctxt "MainWindow|"
+msgid "Would you like to save your changes?"
 msgstr ""
