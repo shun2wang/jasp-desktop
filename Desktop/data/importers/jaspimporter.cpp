@@ -22,7 +22,7 @@
 #include <sys/stat.h>
 
 #include <fcntl.h>
-
+#include "utilities/qutils.h"
 //#include "libzip/config.h"
 #include <archive.h>
 #include <archive_entry.h>
@@ -33,6 +33,8 @@
 
 #include "resultstesting/compareresults.h"
 
+const Version JASPImporter::minJaspVersion = Version("0.18.0");
+
 void JASPImporter::loadDataSet(const std::string &path, std::function<void(int)> progressCallback)
 {	
 	JASPTIMER_RESUME(JASPImporter::loadDataSet INIT);
@@ -41,12 +43,19 @@ void JASPImporter::loadDataSet(const std::string &path, std::function<void(int)>
 
 	packageData->setIsJaspFile(true);
 
-	readManifest(path);
-
-	switch(isCompatible())
+	switch(isCompatible(path))
 	{
 	case Compatibility::NotCompatible:
-		throw std::runtime_error("The file version is too new.\nPlease update to the latest version of JASP to view this file.");
+	{
+		if (DataSetPackage::pkg()->jaspVersion() < JASPImporter::minJaspVersion)
+			throw std::runtime_error(
+					fq(tr("The JASP file is too old (%1) and is not supported anymore.\n"
+						"Load and save it first in an intermediate JASP version (between %2 and 0.96.1) to upgrade your JASP file to a compatible version")
+				.arg(DataSetPackage::pkg()->jaspVersion().isEmpty() ? "older than " + (JASPImporter::minJaspVersion.asString()) : DataSetPackage::pkg()->jaspVersion().asString())
+				.arg(JASPImporter::minJaspVersion.asString())));
+		else
+			throw std::runtime_error("The file version is too new.\nPlease update to the latest version of JASP to view this file.");
+	}
 
 	case Compatibility::Limited:
 			packageData->setWarningMessage("This file was created by a newer version of JASP and may not have complete functionality.");
@@ -231,7 +240,7 @@ bool JASPImporter::parseJsonEntry(Json::Value &root, const std::string &path,  c
 
 JASPImporter::Compatibility JASPImporter::isCompatible()
 {
-	if (DataSetPackage::pkg()->archiveVersion().major()		> JASPExporter::jaspArchiveVersion.major() )
+	if ((DataSetPackage::pkg()->jaspVersion() < JASPImporter::minJaspVersion) || (DataSetPackage::pkg()->archiveVersion().major() > JASPExporter::jaspArchiveVersion.major()) )
 		return Compatibility::NotCompatible;
 
 	if (DataSetPackage::pkg()->archiveVersion().minor()		> JASPExporter::jaspArchiveVersion.minor() )
