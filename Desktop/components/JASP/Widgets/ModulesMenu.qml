@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls as QTC
 import QtQuick.Layouts
 import JASP.Controls
-import QtWebEngine
+import QtWebView
 import QtWebChannel
 import "./FileMenu"
 
@@ -174,7 +174,7 @@ FocusScope
 				margins:			jaspTheme.contentMargin
 			}
 
-			WebEngineView
+			WebView
 			{
 				id:						moduleStore
 				visible:                preferencesModel.checkUpdates
