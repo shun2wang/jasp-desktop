@@ -20,7 +20,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
 import JASP.Controls				as JASPControl
-import Qt5Compat.GraphicalEffects
 
 FocusScope
 {
