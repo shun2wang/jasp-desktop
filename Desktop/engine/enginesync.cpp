@@ -130,12 +130,15 @@ EngineSync::~EngineSync()
 
 int EngineSync::rowCount(const QModelIndex &) const
 {
-	return _engines.size();
+	return _engines.size() + int(_rCmder != nullptr);
 }
 
 std::vector<EngineRepresentation*>  EngineSync::orderedEngines() const
 {
 	std::vector<EngineRepresentation*> ordered(_engines.begin(), _engines.end());
+	
+	if(_rCmder)
+		ordered.push_back(_rCmder);
 
 	std::sort(ordered.begin(), ordered.end(), [](EngineRepresentation * l, EngineRepresentation * r) { return l->channelNumber() < r->channelNumber(); });
 
@@ -430,8 +433,10 @@ void EngineSync::process()
         if(_rCmder->module() != "" && !_rCmder->moduleLoaded() && !_rCmder->moduleLoading())
             _rCmder->moduleLoad();
     }
-    else {
-        createRCmdEngine(); //just create this by default to run certain bits of utility like module install/remove
+    else 
+	{
+		if(_activateUtilEngine)
+			createRCmdEngine(); //Dont just create this by default because it causes crashes on waking from long sleeps...
     }
 	
 	restartKilledAndStoppedEngines();
@@ -1437,19 +1442,22 @@ void EngineSync::destroyEngine(EngineRepresentation * engine)
 		});
 	}
 
-	if(engine->module() != "")	_moduleEngines.erase(engine->module());
-	else
+	if(engine != _rCmder)
 	{
-		std::string modName = "";
-
-		for(const auto & nameEngine : _moduleEngines)
-			if(nameEngine.second == engine)
-				modName = nameEngine.first;
-
-		_moduleEngines.erase(modName);
+		if(engine->module() != "")	_moduleEngines.erase(engine->module());
+		else
+		{
+			std::string modName = "";
+	
+			for(const auto & nameEngine : _moduleEngines)
+				if(nameEngine.second == engine)
+					modName = nameEngine.first;
+	
+			_moduleEngines.erase(modName);
+		}
+	
+		_engines.erase(engine);
 	}
-
-	_engines.erase(engine);
 
 	delete engine;
 
@@ -1468,4 +1476,21 @@ void EngineSync::stopAndDestroyEngine(EngineRepresentation * engine)
 {
 	engine->shutEngineDown();
 	destroyEngine(engine);
+}
+
+bool EngineSync::activateUtilEngine() const
+{
+	return _activateUtilEngine;
+}
+
+void EngineSync::setActivateUtilEngine(bool newActivateUtilEngine)
+{
+	if (_activateUtilEngine == newActivateUtilEngine)
+		return;
+	
+	_activateUtilEngine = newActivateUtilEngine;
+	emit activateUtilEngineChanged();
+	
+	
+	
 }
