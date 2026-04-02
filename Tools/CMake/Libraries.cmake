@@ -68,7 +68,7 @@ if((NOT LibArchive_FOUND) AND (NOT WIN32))
 endif()
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.78 REQUIRED COMPONENTS system)
+find_package(Boost 1.78)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 
 get_target_property(QT_TARGET_TYPE Qt6::Core TYPE)
