@@ -3500,10 +3500,6 @@ msgid "Generate Wrapper"
 msgstr "Sarmalayıcı Oluştur"
 
 msgctxt "Computer|"
-msgid "Save"
-msgstr "Kaydet"
-
-msgctxt "Computer|"
 msgid "JASP Files"
 msgstr "JASP Dosyaları"
 
@@ -6153,3 +6149,65 @@ msgstr ""
 "<h3>%1</h3><i>Sürüm %2</i><br><p>%3</p><br><br><i>%4 tarafından oluşturuldu "
 "ve %5 tarafından sürdürülüyor.</i><br><i>Daha fazla ayrıntı için web "
 "sitesine bakın: <a href=\"http://%6\">%6</a></i><br>"
+
+msgctxt "EncryptionSettingsWindow|"
+msgid "Enter Encryption Settings"
+msgstr ""
+
+msgctxt "EncryptionSettingsWindow|"
+msgid "Password:"
+msgstr ""
+
+msgctxt "EncryptionSettingsWindow|"
+msgid "JASP Team Submission."
+msgstr ""
+
+msgctxt "EncryptionSettingsWindow|"
+msgid "Click here if you want the JASP Team be able to open the file"
+msgstr ""
+
+msgctxt "EncryptionSettingsWindow|"
+msgid "Advanced Settings"
+msgstr ""
+
+msgctxt "EncryptionSettingsWindow|"
+msgid "Private key (base64)"
+msgstr ""
+
+msgctxt "EncryptionSettingsWindow|"
+msgid "Receiver Public key (base64)"
+msgstr ""
+
+msgctxt "EncryptionSettingsWindow|"
+msgid "Submit"
+msgstr ""
+
+#, fuzzy
+msgctxt "EncryptionSettingsWindow|"
+msgid "Cancel"
+msgstr "İptal Et"
+
+msgctxt "VariablesWindow|"
+msgid "Use labels"
+msgstr ""
+
+msgctxt "DesktopCommunicator|"
+msgid "No password given!"
+msgstr ""
+
+#, qt-format
+msgctxt "QObject|"
+msgid "Change column '%1' having labels from '%2' to '%3'"
+msgstr ""
+
+msgctxt "AutoSaveFileSystem|"
+msgid "encrypted"
+msgstr ""
+
+msgctxt "Computer|"
+msgid "Save (encrypted) JASP file"
+msgstr ""
+
+msgctxt "Computer|"
+msgid "Encrypted JASP Files"
+msgstr ""
