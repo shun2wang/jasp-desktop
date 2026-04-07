@@ -106,6 +106,8 @@ TextInputBase
 	property bool	editable:			true
 	property var	undoModel
 
+	property alias showEyeInside: control.showEyeInside
+
 	property double controlXOffset:		0
 	property bool	alignInGroup:		true
 
@@ -210,6 +212,28 @@ TextInputBase
 			textFormat:				textField.textFormat
 		}
 	}
+	
+	Image 
+	{
+		id:						eyeInside
+		visible:				control.showEyeInside
+		z:						20
+		source:					control.echoMode === TextInput.Password ? jaspTheme.iconPath + "/eyeOpen.png" : jaspTheme.iconPath + "/eyeClosed.png"
+		anchors.right:			control.right
+		anchors.rightMargin:	4
+		anchors.verticalCenter:	control.verticalCenter
+		width:					control.height
+		height:					control.height
+		
+		MouseArea 
+		{
+			anchors.fill:		parent
+			hoverEnabled:		true
+			cursorShape:		Qt.PointingHandCursor
+			onClicked:			control.echoMode = (control.echoMode === TextInput.Password) ? TextInput.Normal : TextInput.Password
+		}
+	}
+	
 
 	QTC.TextField
 	{
@@ -230,9 +254,10 @@ TextInputBase
 		enabled:				textField.editable
 
 		property bool tooLongText: contentWidth > (width - leftPadding - rightPadding)
+		property bool showEyeInside: false
 
 		QTC.ToolTip.text		: control.text
-		QTC.ToolTip.visible		: tooLongText && (hovered || control.activeFocus)
+		QTC.ToolTip.visible		: tooLongText && (hovered || control.activeFocus) && control.echoMode != QTC.TextInput.Password
 
 		// The acceptableInput is checked even if the user is still typing in the TextField.
 		// In this case, the error should not appear immediately (only when the user is pressing the return key, or going out of focus),
@@ -264,6 +289,7 @@ TextInputBase
 			visible:			textField.useExternalBorder
 			radius:				jaspTheme.jaspControlHighlightWidth
 		}
+
 
 		onActiveFocusChanged:
 		{

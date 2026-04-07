@@ -5,7 +5,7 @@ Window
 {
     id:	encryptWindow
 
-    minimumWidth:           Math.max(passwordInput.minWidth, jaspSubmission.implicitWidth, showAdvancedCheckbox.implicitWidth) + windowPadding * 2
+    minimumWidth:           Math.max(passwordInput.minWidth, jaspSubmission.implicitWidth, showAdvancedCheckbox.implicitWidth) + windowPadding * 2 + 150 * jaspTheme.uiScale 
     minimumHeight:          contentColumn.implicitHeight + (advancedSettings.visible ? advancedSettings.implicitHeight + jaspTheme.groupContentPadding : 0) + buttons.height + windowPadding * 3
     visible:                encryptionModel.visible
     title:					qsTr("Enter Encryption Settings")
@@ -64,6 +64,7 @@ Window
 
                 property int minWidth: controlLabel.implicitWidth + 300 * jaspTheme.uiScale
 
+                showEyeInside: true
                 control.echoMode: TextInput.Password
                 control.Keys.onReturnPressed: (event)=> { submitButton.onClicked() }
             }
