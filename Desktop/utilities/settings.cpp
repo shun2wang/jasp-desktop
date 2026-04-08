@@ -117,7 +117,7 @@ const Settings::Setting Settings::Values[] = {
 	{"useConfigurationFile",		true	},
 	{"startMaximized",				false	},
 	{"storeStateEtc",				false	},
-	{"showInteractiveDefault",		true	},
+	{"showInteractiveDefault",		false	},
 	{"autoSaveOn",					true	},
 	{"autoSaveInterval",			5*60	},
 };	
