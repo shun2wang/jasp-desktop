@@ -83,7 +83,7 @@ void Column::dbLoad(int id, bool getValues)
 	db().transactionReadEnd();
 }
 
-void Column::dbLoadOldIndex(int index, bool do019Fix)
+void Column::dbLoadOldIndex(int index)
 {
 	JASPTIMER_SCOPE(Column::dbLoadOldIndex);
 	
@@ -91,14 +91,14 @@ void Column::dbLoadOldIndex(int index, bool do019Fix)
 
 	assert(_id != -1);
 
-	db().transactionReadBegin();
+	db().transactionWriteBegin();
 	
 	dbLoad(_id, false);
 	
 	db().columnGetValues(_id, _ints,		"INT");
 	db().columnGetValues(_id, _dbls, _strs, "DBL");
 	
-	if(std::none_of(_ints.begin(), _ints.end(), [&do019Fix](int i){ return i != Label::NO_LABEL && i != EmptyValues::missingValueInteger && (do019Fix && i != 0); }))
+	if(std::none_of(_ints.begin(), _ints.end(), [](int i){ return i != Label::NO_LABEL && i != EmptyValues::missingValueInteger; }))
 	{
 		_hasLabels = false;
 		_ints.clear();
@@ -107,7 +107,7 @@ void Column::dbLoadOldIndex(int index, bool do019Fix)
 		
 		for(int row=0; row<_strs.size() && row < _dbls.size(); row++)
 		{
-			//Log::log() << "_strs["<< row << "] == " << _strs[row] << " and  _dbls["<< row << "] == " << _dbls[row]  << std::endl;
+			Log::log() << "_strs["<< row << "] == " << _strs[row] << " and  _dbls["<< row << "] == " << _dbls[row]  << std::endl;
 			
 			double dbl;
 			
@@ -126,18 +126,18 @@ void Column::dbLoadOldIndex(int index, bool do019Fix)
 		_strs.clear();
 		_dbls.clear();
 		
-		//for(int row=0; row<_ints.size() && row < _dbls.size(); row++)
-		//{
-		//	//if(_ints[row] == 	
-		//	Label * l = labelByIntsId(_ints[row]);
-		//	//Log::log() << "_ints["<< row << "] == " << _ints[row] << " and  _dbls["<< row << "] == " << _dbls[row] << " label is: '" << ( !l ? "null" : l->labelDisplay()) << "'" << std::endl;
-		//}
+		for(int row=0; row<_ints.size() && row < _dbls.size(); row++)
+		{
+			//if(_ints[row] == 	
+			Label * l = labelByIntsId(_ints[row]);
+			Log::log() << "_ints["<< row << "] == " << _ints[row] << " and  _dbls["<< row << "] == " << _dbls[row] << " label is: '" << ( !l ? "null" : l->labelDisplay()) << "'" << std::endl;
+		}
 	}
 	
 	db().columnSetHasLabels(_id, _hasLabels);
 	incRevision();
 	
-	db().transactionReadEnd();
+	db().transactionWriteEnd();
 }
 
 void Column::dbLoadIndex(int index, bool getValues)
@@ -565,7 +565,7 @@ stringset Column::mergeOldMissingDataMap(const Json::Value &missingData)
 	return foundEmpty;
 }
 
-columnType Column::setValues(const stringvec & values, const stringvec & labels, int thresholdScale, bool * aChange, bool useLocale)
+columnType Column::setValues(const stringvec & values, const stringvec & labels, int thresholdScale, bool * aChange, bool useLocale, bool determineWhetherOneWantsLabels)
 {
 	assert(values.size() == labels.size() || labels.size() == 0);
 	
@@ -575,12 +575,18 @@ columnType Column::setValues(const stringvec & values, const stringvec & labels,
 				[&labels](size_t r){return r < labels.size() ? labels[r] : "";},
 				thresholdScale,
 				aChange,
-				useLocale
+				useLocale,
+				determineWhetherOneWantsLabels
 				);
+}
+				
+static bool IsIntegral(double d) {
+  double integral_part;
+  return modf(d, &integral_part) == 0.0;
 }
 
 				
-columnType Column::setValues(size_t rows, const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, int thresholdScale, bool * aChange, bool useLocale)
+columnType Column::setValues(size_t rows, const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, int thresholdScale, bool * aChange, bool useLocale, bool determineWhetherOneWantsLabels)
 {
 	JASPTIMER_SCOPE(Column::setValues);
 
@@ -601,11 +607,18 @@ columnType Column::setValues(size_t rows, const std::function<std::string(size_t
 	
 	bool allTheSame = true;
 	
-	if(prevSize == 0)
-		//Should we have labels?
-		for(int r=0; r<rows && allTheSame; r++)
-			if(valueLookup(r) != labelLookup(r) && labelLookup(r) != "")
-				allTheSame = false;
+	if(determineWhetherOneWantsLabels)
+	{
+		if(prevSize == 0)
+			//Should we have labels?
+			for(int r=0; r<rows && allTheSame; r++)
+				if(valueLookup(r) != labelLookup(r) && labelLookup(r) != "")
+					allTheSame = false;
+	}
+	else
+	{
+		allTheSame = !_hasLabels;	
+	}
 	
 	if(allTheSame)
 	{
@@ -622,7 +635,6 @@ columnType Column::setValues(size_t rows, const std::function<std::string(size_t
 			_dbls[resetRow]	= EmptyValues::missingValueDouble;
 			_strs[resetRow] = "";
 		}
-
 	
 		JASPTIMER_RESUME(Column::setValues call setValue and count integers);
 		
@@ -649,8 +661,7 @@ columnType Column::setValues(size_t rows, const std::function<std::string(size_t
 			}
 			else
 			{
-				//If the string made from a double is the same as the string made from a double made from an int made from a double, then it must be an integer?
-				if(doubleToDisplayString(valueDbl) ==  doubleToDisplayString(double(int(valueDbl))))
+				if(IsIntegral(valueDbl))
 					ints.insert(int(valueDbl));
 				else if(!isEmptyValue(valueDbl))
 					onlyInts = false;
@@ -1307,6 +1318,9 @@ std::string Column::getDisplay(size_t row, bool fancyEmptyValue, bool sepas) con
 
 std::string Column::getShadow(size_t row, bool fancyEmptyValue, bool sepas) const
 {
+	if(!_hasLabels)
+		return getValue(row, fancyEmptyValue, false, sepas);
+	
 	return _type != columnType::scale	
 		?	getValue(row, fancyEmptyValue, true, sepas)
 		:	getLabel(row, fancyEmptyValue, true, sepas);
@@ -1792,7 +1806,7 @@ void Column::labelValDisplayChanged(Label *label, const std::string &previousDis
 
 Label * Column::labelByRow(int row) const
 {
-	if (row < rowCount() && _type != columnType::scale && _ints[row] != EmptyValues::missingValueInteger)
+	if (row < rowCount() && _ints[row] != EmptyValues::missingValueInteger)
 		return labelByIntsId(_ints[row]);
 
 	return nullptr;
@@ -2757,8 +2771,7 @@ stringvec Column::previewTransform(columnType transformType)
 	return out;
 }
 
-bool Column::initFromLookups(const std::string & newName, size_t rows, const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, const std::string & title, columnType desiredType, const stringset & emptyValues, int threshold, bool orderLabelsByValue, bool leaveBatchedUnfinished)
-
+bool Column::initFromLookups(const std::string & newName, size_t rows, const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, const std::string & title, columnType desiredType, const stringset & emptyValues, int threshold, bool orderLabelsByValue)
 {
 									setHasCustomEmptyValues(emptyValues.size());
 									setCustomEmptyValues(emptyValues);
@@ -2768,10 +2781,17 @@ bool Column::initFromLookups(const std::string & newName, size_t rows, const std
 	
 	bool		anyChanges		=	title != Column::title() || newName != name();
 	columnType	prevType		=	type(),
-				suggestedType	=	setValues(rows, valueLookup, labelLookup,	threshold, &anyChanges);  //If less unique integers than the thresholdScale then we think it must be ordinal: https://github.com/jasp-stats/INTERNAL-jasp/issues/270
-									setType(type() != columnType::unknown ? type() : desiredType == columnType::unknown ? suggestedType : desiredType);			
-	if(orderLabelsByValue)			labelsOrderByValue();
-	if(!leaveBatchedUnfinished)		endBatchedLabelsDB();
+				suggestedType	=	setValues(rows, valueLookup, labelLookup,	threshold, &anyChanges, true, true);  //If less unique integers than the thresholdScale then we think it must be ordinal: https://github.com/jasp-stats/INTERNAL-jasp/issues/270
+									setType(type() != columnType::unknown ? type() : desiredType == columnType::unknown ? suggestedType : desiredType);
+
+	if((suggestedType == columnType::ordinal || suggestedType == columnType::nominal) && suggestedType == type() && !_hasLabels)
+		noLabelsToLabels();
+		
+									
+	if(orderLabelsByValue)			
+		labelsOrderByValue();
+	
+	endBatchedLabelsDB();
 
 	return anyChanges || type() != prevType;
 }

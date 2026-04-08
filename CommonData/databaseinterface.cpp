@@ -91,7 +91,10 @@ void DatabaseInterface::upgradeDBFromVersion(Version originalVersion)
 	if(originalVersion < "0.96.1")	
 	{
 		if(!tableHasColumn("Columns", "hasLabels"))
-			runStatements("ALTER TABLE Columns  ADD COLUMN hasLabels		INT DEFAULT 0;");
+			runStatements(
+				"ALTER TABLE Columns  ADD COLUMN hasLabels		INT DEFAULT 0;\n"
+				"UPDATE Columns SET hasLabels=1;" //Make sure old columns all "hasLabels" enabled
+			);
 	}
 
 	transactionWriteEnd();
@@ -1148,7 +1151,7 @@ void DatabaseInterface::columnGetValues(int columnId, doublevec &dbls, stringvec
 		double				dbl = _doubleTroubleReader(		stmt, 0);
 		const std::string & str = _wrap_sqlite3_column_text(stmt, 0);
 
-		strs[row] = str;
+		strs[row] = !std::isnan(dbl) ? "" : str;
 		dbls[row] = dbl;
 	};
 

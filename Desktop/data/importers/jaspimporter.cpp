@@ -48,25 +48,33 @@ void JASPImporter::loadDataSet(const std::string &path, std::function<void(int)>
 
 	packageData->setIsJaspFile(true);
 
-	//do some decrybting if necessary
-	bool encrypted = JASPEncrypt::detectEncryptedJASPFile(path);
-	std::filesystem::path tmpPath = path;
-	if(encrypted) {
-		try {
+	//do some decrypting if necessary
+	bool					encrypted	= JASPEncrypt::detectEncryptedJASPFile(path);
+	std::filesystem::path	tmpPath		= path;
+	
+	if(encrypted) 
+	{
+		try 
+		{
 			JaspEncryptionData::getInstance()->setEncryptionActive(true);
-			tmpPath = std::filesystem::temp_directory_path() / ("_tmp_unlock_" + std::filesystem::path(path).filename().generic_string());
-			Json::Value root;
+						
 			if (!DesktopCommunicator::singleton()->queryEncryptionSettings(true))
 				throw LoaderException("Query Encryption Settings cancelled", true);
-            auto privKey = JaspEncryptionData::getInstance()->getPrivatekey();
-            std::string responsePublicKey = "";
-            std::string responsePasswordSalt = "";
-            if(privKey.length()) //check if user want to use privkey or password to decrypt
-                JASPEncrypt::decrypt(tmpPath, path, privKey, root, responsePublicKey, responsePasswordSalt, true);
-            else
-                JASPEncrypt::decrypt(tmpPath, path, JaspEncryptionData::getInstance()->getPassword(), root, responsePublicKey, responsePasswordSalt, false);
+			
+						tmpPath					= std::filesystem::temp_directory_path() / ("_tmp_unlock_" + std::filesystem::path(path).filename().generic_string());
+			Json::Value root;
+            std::string	privKey					= JaspEncryptionData::getInstance()->getPrivatekey(),
+						responsePublicKey		= "",
+						responsePasswordSalt	= "";
+			bool		usePrivKey				= privKey.length();
+			
+			//check if user want to use privkey or password to decrypt
+			
+            JASPEncrypt::decrypt(tmpPath, path, usePrivKey ? privKey : JaspEncryptionData::getInstance()->getPassword(), root, responsePublicKey, responsePasswordSalt, usePrivKey);
+            
             JaspEncryptionData::getInstance()->setPublicKeyResponse(responsePublicKey);
             JaspEncryptionData::getInstance()->setPasswordSaltResponse(responsePasswordSalt);
+			
 		} catch (LoaderException& e) {
 			throw e;
 		} catch (std::exception& e) {

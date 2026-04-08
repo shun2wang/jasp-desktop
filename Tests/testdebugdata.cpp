@@ -294,11 +294,7 @@ void TestDebugData::testChangeLabel()
 	
 	Column * contBinom = _data->column("contBinom");
 	
-	QVERIFY2(!contBinom->hasLabels(),							"contBinom really should be initialized without labels");
-	
-	contBinom->noLabelsToLabels();
-	
-	QVERIFY2(contBinom->hasLabels(),							"contBinom should now have labels");
+	QVERIFY2(contBinom->hasLabels(),							"contBinom should have labels");
 	
 	DataSetPackage::pkg()->setData(DataSetPackage::pkg()->indexForSubNode(contBinom->labels()[0]), "A", int(DataSetPackage::specialRoles::label));
 	

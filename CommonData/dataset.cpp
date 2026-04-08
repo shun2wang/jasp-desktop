@@ -73,11 +73,11 @@ void DataSet::endBatchedToDB(std::function<void(float)> progressCallback, Column
 	if(_writeBatchedToDBDepth > 0)
 	{
 		//lets also write the labels now if they werent yet:
-		db().labelsWrite(columns, [&progressCallback](float f){ progressCallback(f * 0.75);});
-		
-		for(Column * col : columns)
-			if(col->batchedLabelDepth())
-				col->endBatchedLabelsDB(false);
+		//db().labelsWrite(columns, [&progressCallback](float f){ progressCallback(f * 0.75);});
+		//
+		//for(Column * col : columns)
+		//	if(col->batchedLabelDepth())
+		//		col->endBatchedLabelsDB(false);
 	
 		_writeBatchedToDBDepth--;
 	}
@@ -362,7 +362,7 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, Ver
 			if(_columns.size() == i)
 				_columns.push_back(new Column(this));
 	
-			_columns[i]->dbLoadOldIndex(i, do019Fix);
+			_columns[i]->dbLoadOldIndex(i);
 			
 			progressCallback(0.2 + (i * colProgressMult * 0.6));
 		}

@@ -53,7 +53,7 @@ public:
 
 			void					dbCreate(	int index);
 			void					dbLoad(		int id=-1, bool getValues = true);	///< Loads *and* reloads from DB!
-			void					dbLoadOldIndex(	int index, bool do019Fix);						///< Loads pre ~0.96.1 data (with both DBL and INT cols)
+			void					dbLoadOldIndex(	int index);						///< Loads pre ~0.96.1 data (with both DBL and INT cols)
 			void					dbLoadIndex(int index, bool getValues = true);
 			void					dbUpdateComputedColumnStuff();
 			void					dbUpdateValues();
@@ -83,7 +83,7 @@ public:
 			bool					setAsNominalOrOrdinal(	const intvec	& values,									bool	is_ordinal = false);
 			bool					setAsNominalOrOrdinal(	const intvec	& values, intstrmap uniqueValues,			bool	is_ordinal = false);
 
-			bool					initFromLookups(const std::string & newName, size_t rows, const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, const std::string & title, columnType desiredType, const stringset & emptyValues, int threshold, bool orderLabelsByValue, bool leaveBatchedUnfinished = false);
+			bool					initFromLookups(const std::string & newName, size_t rows, const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, const std::string & title, columnType desiredType, const stringset & emptyValues, int threshold, bool orderLabelsByValue);
 			bool					overwriteDataAndType(	stringvec		data, columnType colType, bool computed);
 			void					labelsToNoLabels();
 			void					noLabelsToLabels();
@@ -163,8 +163,8 @@ public:
 			bool					setValue(					size_t row,		  std::string   value, const std::string & label,	bool writeToDB = true, bool useLocale = true);
 			bool					setValue(					size_t row, int					value,								bool writeToDB = true);
 			bool					setValue(					size_t row, double valueDbl,  const std::string & valueStr,			bool writeToDB = true);
-			columnType				setValues(				const stringvec &	values, const stringvec &	labels, int thresholdScale, bool * changedSomething = nullptr, bool useLocale = true); ///< Returns what would be the most sensible columntype
-			columnType				setValues(size_t rows,	const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, int thresholdScale, bool * changedSomething = nullptr, bool useLocale = true); ///< Returns what would be the most sensible columntype
+			columnType				setValues(				const stringvec &	values, const stringvec &	labels, int thresholdScale, bool * changedSomething = nullptr, bool useLocale = true, bool determineWhetherOneWantsLabels = false); ///< Returns what would be the most sensible columntype
+			columnType				setValues(size_t rows,	const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, int thresholdScale, bool * changedSomething = nullptr, bool useLocale = true, bool determineWhetherOneWantsLabels = false); ///< Returns what would be the most sensible columntype
 			
 			bool					setDescriptions(	strstrmap labelToDescriptionMap); ///<Returns any changes
 			void					rowInsertEmptyVal(size_t row);

@@ -109,7 +109,7 @@ void TestAll::testDataImport()
 		std::cerr << "Json does not exist yet, creating it now!" << std::endl;
 		QFile jsonFile(jsonFilePath);
 		jsonFile.open(QFile::OpenModeFlag::WriteOnly);
-		jsonFile.write(stringUtils::replaceBy(compareMe.toStyledString(), "\n", " ").c_str());
+		jsonFile.write(compareMe.toStyledString().c_str());
 		jsonFile.close();
 	}
 
@@ -117,9 +117,6 @@ void TestAll::testDataImport()
 
 	QFile jsonFile(jsonFilePath);
 
-	
-	
-	
 	jsonFile.open(QFile::OpenModeFlag::ReadOnly);
 
 	std::string jsonTxt  = fq(jsonFile.readAll());
@@ -242,7 +239,7 @@ void TestAll::testJaspDataImport()
 		std::cerr << "Json does not exist yet, creating it now!" << std::endl;
 		QFile jsonFile(jsonFilePath);
 		jsonFile.open(QFile::OpenModeFlag::WriteOnly);
-		jsonFile.write(stringUtils::replaceBy(compareMe.toStyledString(), "\n", " ").c_str());
+		jsonFile.write(compareMe.toStyledString().c_str());
 		jsonFile.close();
 
 	}
