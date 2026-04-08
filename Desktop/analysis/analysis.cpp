@@ -444,7 +444,7 @@ Json::Value Analysis::loadPlotlyJsonInResults(Json::Value  results) const
 
 			return plotlyJson;
 		}
-		return Json::Value("\"Couldnt read file\"");
+		return Json::Value("");
 	};
 
 
