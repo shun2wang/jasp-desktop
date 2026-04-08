@@ -213,7 +213,8 @@ JASPWidgets.imagePrimitive = JASPWidgets.View.extend({
 
 	render: function () {//interactive = false) {
 
-		var hasInteractive = this.model.get("interactiveJsonData") !== null && this.model.get("interactiveJsonData") !== undefined;
+		var hasInteractiveError = this.model.get("interactiveConvertError") != ""
+		var hasInteractive		= !hasInteractiveError && this.model.get("interactiveJsonData") != "";
 		
 		if (hasInteractive && ((this.model.get("userInteractive") && this.model.get("interactive")) || (!this.model.get("userInteractive") && window.globSet.showInteractiveDefault))) {
 
@@ -225,7 +226,7 @@ JASPWidgets.imagePrimitive = JASPWidgets.View.extend({
 			if (!error) {
 				this.plotlyRetryCount = 0; // Reset retry counter
 				jQuery(document).ready(() => this.renderPlotlyIfDivExists());
-			}
+			}			
 
 		} else {
 			console.log("image.js: jaspHtml but not plotly or we just want to see the normal plot!")
