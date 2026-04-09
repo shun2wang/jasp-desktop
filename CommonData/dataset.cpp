@@ -367,10 +367,27 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, Ver
 			progressCallback(0.2 + (i * colProgressMult * 0.6));
 		}
 		
+		//Now we will recreate the dataset, but because Audit can make special Filters we need to handle that here now, otherwise they dissappear		
+		intset allFilters = db().dataSetGetFilters(id());
+		std::set<Filter*> notDefaultFilters;
+		
+		for(int id : allFilters)
+		{
+			const std::string & fName = db().filterGetName(id);
+			
+			if(fName != DEFAULT_FILTER_NAME)
+				notDefaultFilters.insert(new Filter(this, fName, false));
+		}
+		
 		db().dataSetCreateTable(this);
 		db().dataSetBatchedValuesUpdate(this, _columns, [&](float p){ progressCallback(0.8 + (p * 0.2)); });
+		
+		for(Filter * f : notDefaultFilters)
+		{
+			f->dbUpdate(true);
+			delete f;
+		}
 	}
-	
 }
 
 
@@ -662,9 +679,6 @@ stringset DataSet::findUsedColumnNames(std::string searchThis)
 	
 	return columnsFound;
 }
-
-
-
 
 Json::Value DataSet::jsonForCompare() const
 {

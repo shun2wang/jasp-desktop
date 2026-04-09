@@ -98,7 +98,7 @@ public:
 	std::string dataSetName(			int dataSetId) const;
 	int			dataSetIncRevision(		int dataSetId);
 	int			dataSetGetRevision(		int dataSetId);
-	int			dataSetGetFilter(		int dataSetId);
+	intset		dataSetGetFilters(		int dataSetId);
 	void		dataSetInsertEmptyRow(	int dataSetId, size_t row);
 	void		dataSetCreateTable(		DataSet * dataSet); ///< Assumes you are importing fresh data and havent created any DataSet_? table yet
 

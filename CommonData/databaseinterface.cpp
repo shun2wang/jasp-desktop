@@ -560,11 +560,17 @@ intvec DatabaseInterface::columnsInsert(int dataSetId, int count, int index, con
 
 void DatabaseInterface::dataSetCreateTable(DataSet * dataSet)
 {
-	runStatements("DROP TABLE " + dataSetName(dataSet->id()) + ";");
+	intset filters = dataSetGetFilters(dataSet->id());
+	assert(filters.size() > 0);
 	
+	runStatements("DROP TABLE " + dataSetName(dataSet->id()) + ";");
+		
 	std::stringstream statements;
-        statements	<<  "CREATE TABLE " + dataSetName(dataSet->id())
-					<<	" (rowNumber INTEGER PRIMARY KEY, "+ filterTableName(dataSet->filter()->id()) + " INT NOT NULL DEFAULT 1";
+	statements		<<  "CREATE TABLE " + dataSetName(dataSet->id())
+					<<	" (rowNumber INTEGER PRIMARY KEY";
+	
+	for(int id : filters)
+		statements	<<	", "+ filterTableName(id) + " INT NOT NULL DEFAULT 1";
 	
 	for(Column * column : dataSet->columns())
 		statements << ", " << columnBaseName(column->id()) << " NUM NULL";
@@ -630,7 +636,7 @@ void DatabaseInterface::dataSetBatchedValuesUpdate(DataSet * data, Columns colum
 
 	// But maybe we should update instead, maybe it speeds up the application?
 	//As this data isnt synced anyway this shouldnt be a problem because it'd be invalidated after a single edit anyway
-	runStatements("DELETE FROM " + dataSetName(data->id()) + " WHERE rowNumber > " + std::to_string(columns.front()->rowCount()));
+	runStatements("DELETE FROM " + dataSetName(data->id()) + " WHERE rowNumber > " + std::to_string(columns.size() == 0 ? 0 : columns.front()->rowCount()));
 
 	std::stringstream statement;
 	
@@ -1196,10 +1202,17 @@ int DatabaseInterface::dataSetGetRevision(int dataSetId)
 	return runStatementsId("SELECT revision FROM DataSets WHERE id=?;", [&](sqlite3_stmt *stmt) { sqlite3_bind_int(stmt, 1, dataSetId); });
 }
 
-int DatabaseInterface::dataSetGetFilter(int dataSetId)
+intset DatabaseInterface::dataSetGetFilters(int dataSetId)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::dataSetGetFilter);
-	return runStatementsId("SELECT id FROM Filters WHERE dataSet=? LIMIT 1;", [&](sqlite3_stmt *stmt) { sqlite3_bind_int(stmt, 1, dataSetId); });
+	intset ints;
+			
+	runStatements(
+				"SELECT id FROM Filters WHERE dataSet=?;", 
+				[&](sqlite3_stmt *stmt) { sqlite3_bind_int(stmt, 1, dataSetId); },
+				[&](size_t row, sqlite3_stmt * stmt){ ints.insert( sqlite3_column_int(stmt, 0)); });
+	
+	return ints;
 }
 
 std::string DatabaseInterface::filterTableName(int filterIndex) const
