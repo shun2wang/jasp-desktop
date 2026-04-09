@@ -2784,8 +2784,23 @@ bool Column::initFromLookups(const std::string & newName, size_t rows, const std
 				suggestedType	=	setValues(rows, valueLookup, labelLookup,	threshold, &anyChanges, true, true);  //If less unique integers than the thresholdScale then we think it must be ordinal: https://github.com/jasp-stats/INTERNAL-jasp/issues/270
 									setType(type() != columnType::unknown ? type() : desiredType == columnType::unknown ? suggestedType : desiredType);
 
+									
 	if((suggestedType == columnType::ordinal || suggestedType == columnType::nominal) && suggestedType == type() && !_hasLabels)
-		noLabelsToLabels();
+	{
+		//There is a scenario where there might be millions of rows of strings, maybe dont store those as labels!
+		stringset nonNumerics;
+		const int maxNonNumeric = threshold > 0 ? threshold : 10;
+		
+		for(const std::string & str : _strs)
+		{
+			nonNumerics.insert(str);
+			if(nonNumerics.size() > maxNonNumeric)
+				break;
+		}
+		
+		if(nonNumerics.size() < maxNonNumeric)
+			noLabelsToLabels();
+	}
 		
 									
 	if(orderLabelsByValue)			
