@@ -580,12 +580,6 @@ columnType Column::setValues(const stringvec & values, const stringvec & labels,
 				);
 }
 				
-static bool IsIntegral(double d) {
-  double integral_part;
-  return modf(d, &integral_part) == 0.0;
-}
-
-				
 columnType Column::setValues(size_t rows, const std::function<std::string(size_t)> valueLookup, const std::function<std::string(size_t)> labelLookup, int thresholdScale, bool * aChange, bool useLocale, bool determineWhetherOneWantsLabels)
 {
 	JASPTIMER_SCOPE(Column::setValues);
@@ -651,7 +645,7 @@ columnType Column::setValues(size_t rows, const std::function<std::string(size_t
 					
 			if(!isDouble)
 			{
-				if(ColumnUtils::getIntValue(valueStr, tmpInt))  // 🤷
+				if(ColumnUtils::getIntValue(valueStr, tmpInt) && tmpInt != EmptyValues::missingValueInteger)  // 🤷
 					ints.insert(tmpInt);
 				else if(!isEmptyValue(valueStr))
 					onlyInts = false;
@@ -661,7 +655,7 @@ columnType Column::setValues(size_t rows, const std::function<std::string(size_t
 			}
 			else
 			{
-				if(IsIntegral(valueDbl))
+				if(doubleToDisplayString(valueDbl) == doubleToDisplayString(double(int(valueDbl))) && int(valueDbl) != EmptyValues::missingValueInteger)
 					ints.insert(int(valueDbl));
 				else if(!isEmptyValue(valueDbl))
 					onlyInts = false;
