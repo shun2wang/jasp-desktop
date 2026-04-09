@@ -81,6 +81,18 @@ Analysis* Analyses::createFromJaspFileEntry(Json::Value analysisData, RibbonMode
 	
 	if(!TempFiles::stateFileExists(id))
 		analysis->_storedWithoutState = true; //This will trigger the "you need a refresh" on resize
+	
+	for(const Json::Value & columnName : analysisData.get("columns", Json::arrayValue))
+	{
+		Column * col = DataSetPackage::pkg()->dataSet()->column(columnName.asString());
+		
+		if(		col 
+			&&	
+			(	col->codeType() == computedColumnType::analysisNotComputed 
+			||	col->codeType() == computedColumnType::notComputed			)
+			&&	col->analysisId() == -1)
+			col->setAnalysisId(analysis->id());
+	}
 
 	return analysis;
 }

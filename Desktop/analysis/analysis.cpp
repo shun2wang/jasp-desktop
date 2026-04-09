@@ -488,6 +488,13 @@ Json::Value Analysis::asJSON(bool withRSource) const
 
 	if (withRSource)
 		analysisAsJson["rSources"]	= rSources();
+	
+	
+	analysisAsJson["columns"]		= Json::arrayValue;
+	
+	for(Column * column : DataSetPackage::pkg()->dataSet()->columns())
+		if(column->analysisId() == _id)
+			analysisAsJson["columns"].append(column->name());
 
 	Log::log() << "Analysis::asJSON():\n" << analysisAsJson.toStyledString() << std::endl;
 
