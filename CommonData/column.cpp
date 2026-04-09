@@ -645,19 +645,17 @@ columnType Column::setValues(size_t rows, const std::function<std::string(size_t
 					
 			if(!isDouble)
 			{
-				if(ColumnUtils::getIntValue(valueStr, tmpInt) && tmpInt != EmptyValues::missingValueInteger)  // 🤷
-					ints.insert(tmpInt);
-				else if(!isEmptyValue(valueStr))
-					onlyInts = false;
-				
 				if(!isEmptyValue(valueStr))
+				{
+					onlyInts	= false;
 					onlyDoubles = false;
+				}
 			}
-			else
+			else if(!isEmptyValue(valueDbl))
 			{
 				if(doubleToDisplayString(valueDbl) == doubleToDisplayString(double(int(valueDbl))) && int(valueDbl) != EmptyValues::missingValueInteger)
 					ints.insert(int(valueDbl));
-				else if(!isEmptyValue(valueDbl))
+				else
 					onlyInts = false;
 			}
 		}
