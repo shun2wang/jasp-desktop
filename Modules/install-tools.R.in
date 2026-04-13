@@ -37,6 +37,14 @@ if (.Platform$OS.type == "windows") {
 }
 
 cat("installing jaspModuleBundleManager\n")
+
+renv::restore(
+    lockfile = file.path("@PROJECT_SOURCE_DIR@", "Engine", "jaspModuleBundleManager", "renv.lock"),
+    library  = JASP_MODULE_BUNDLE_MANAGER_LIBRARY,
+    clean    = TRUE,
+    prompt   = FALSE
+)
+
 renv::install(
   file.path("@PROJECT_SOURCE_DIR@", "Engine", "jaspModuleBundleManager"),
 	library  = JASP_MODULE_BUNDLE_MANAGER_LIBRARY,
