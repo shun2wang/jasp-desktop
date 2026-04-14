@@ -172,6 +172,7 @@ public:
 	void		labelDelete(	int id);
 	void		labelLoad(		int id,	int & columnId,	int & value,	 std::string & label, bool & filterAllows,		std::string & description,				std::string & originalValueJson,	int & order, bool & userAdded);
 	void		labelSetOrder(	int id, int order);
+	bool		labelExists(	int	columnId, int intsId);
 	void		labelsLoad(			Column  * column);
 	void		labelsLoad(	const	Columns & columns);//, std::function<void(float)> progressCallback);
 	void		labelsWrite(const	Columns & columns, std::function<void(float)> progressCallback);

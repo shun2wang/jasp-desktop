@@ -1502,6 +1502,15 @@ void DatabaseInterface::labelsClear(int columnId)
 	});
 }
 
+bool DatabaseInterface::labelExists(int	columnId, int intsId)
+{
+	JASPTIMER_SCOPE(DatabaseInterface::labelExists);
+	return -1 != runStatementsId("SELECT id FROM Labels WHERE columnId = ? and value = ?;", [&](sqlite3_stmt *stmt)
+	{
+		sqlite3_bind_int(stmt,	1, columnId);
+		sqlite3_bind_int(stmt,  2, intsId);
+	});
+}
 
 int DatabaseInterface::labelAdd(int columnId, int value, const std::string & label, bool filterAllows, const	std::string & description, const std::string & originalValueJson)
 {

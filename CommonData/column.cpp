@@ -98,12 +98,13 @@ void Column::dbLoadOldIndex(int index)
 	db().columnGetValues(_id, _ints,		"INT");
 	db().columnGetValues(_id, _dbls, _strs, "DBL");
 	
-	if(true)//do019Fix) 
+	if(true)
 	{
 		bool					thisCantBeRight = false;
-		std::map<int, double>	lookForTrouble; //0.18 messed up some things, and maybe 0.19, make sure we only import logical labels:
+		std::map<int, double>	lookForTrouble; //0.18 messed up some things, and maybe 0.19, make sure we only import logical labels. These messed up things could also be in upgraded jaspfiles...
 		
 		for(size_t r=0; r<_ints.size() && !thisCantBeRight; r++)
+		{			
 			if(lookForTrouble.count(_ints[r]))
 			{
 				if(lookForTrouble.at(_ints[r]) != _dbls[r] && !(std::isnan(_dbls[r]) && std::isnan(lookForTrouble.at(_ints[r]))))
@@ -111,11 +112,18 @@ void Column::dbLoadOldIndex(int index)
 			}
 			else
 				lookForTrouble[_ints[r]] = _dbls[r];
-
-		//Turns out one label is used in conjunction with more than 1 value... That cant be right, so lets throw away these integers		
+		}
+		
+		//Turns out one label is used in conjunction with more than 1 value... That cant be right, so lets throw away all these integers		
 		if(thisCantBeRight)
 			for(size_t r=0; r<_ints.size(); r++)
 				_ints[r] = Label::NO_LABEL;
+		else // we should still check if these labels even exist and otherwise clean that up
+			for(auto intDbl : lookForTrouble)
+				if( !db().labelExists(_id, intDbl.first))
+					for(size_t r=0; r<_ints.size(); r++)
+						if(intDbl.first == _ints[r])
+							_ints[r] = Label::NO_LABEL;
 	}
 	
 	if(std::all_of(_ints.begin(), _ints.end(), [](int i){ return i == Label::NO_LABEL || i == EmptyValues::missingValueInteger; }))
