@@ -83,7 +83,7 @@ void Column::dbLoad(int id, bool getValues)
 	db().transactionReadEnd();
 }
 
-void Column::dbLoadOldIndex(int index, bool do019Fix)
+void Column::dbLoadOldIndex(int index)
 {
 	JASPTIMER_SCOPE(Column::dbLoadOldIndex);
 	
@@ -98,11 +98,25 @@ void Column::dbLoadOldIndex(int index, bool do019Fix)
 	db().columnGetValues(_id, _ints,		"INT");
 	db().columnGetValues(_id, _dbls, _strs, "DBL");
 	
-	if(do019Fix) //There might be some zeroes in here that we really don't need
-		if(std::all_of(_ints.begin(), _ints.end(), [](int i){ return i == 0 || i == Label::NO_LABEL || i == EmptyValues::missingValueInteger; }))
-		for(size_t r=0; r<_ints.size(); r++)
-			if(_ints[r] == 0)
+	if(true)//do019Fix) 
+	{
+		bool					thisCantBeRight = false;
+		std::map<int, double>	lookForTrouble; //0.18 messed up some things, and maybe 0.19, make sure we only import logical labels:
+		
+		for(size_t r=0; r<_ints.size() && !thisCantBeRight; r++)
+			if(lookForTrouble.count(_ints[r]))
+			{
+				if(lookForTrouble.at(_ints[r]) != _dbls[r] && !(std::isnan(_dbls[r]) && std::isnan(lookForTrouble.at(_ints[r]))))
+					thisCantBeRight = true;
+			}
+			else
+				lookForTrouble[_ints[r]] = _dbls[r];
+
+		//Turns out one label is used in conjunction with more than 1 value... That cant be right, so lets throw away these integers		
+		if(thisCantBeRight)
+			for(size_t r=0; r<_ints.size(); r++)
 				_ints[r] = Label::NO_LABEL;
+	}
 	
 	if(std::all_of(_ints.begin(), _ints.end(), [](int i){ return i == Label::NO_LABEL || i == EmptyValues::missingValueInteger; }))
 	{
