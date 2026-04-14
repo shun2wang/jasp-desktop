@@ -362,7 +362,7 @@ void DataSet::dbLoad(int index, std::function<void(float)> progressCallback, Ver
 			if(_columns.size() == i)
 				_columns.push_back(new Column(this));
 	
-			_columns[i]->dbLoadOldIndex(i);
+			_columns[i]->dbLoadOldIndex(i, do019Fix);
 			
 			progressCallback(0.2 + (i * colProgressMult * 0.6));
 		}
