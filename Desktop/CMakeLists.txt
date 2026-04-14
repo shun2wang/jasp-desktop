@@ -198,6 +198,11 @@ target_link_libraries(
 target_compile_definitions(JASPDesktopLib PUBLIC JASP_USES_QT_HERE)
 target_compile_definitions(JASP           PUBLIC JASP_USES_QT_HERE)
 
+if(INTERACTIVE_PLOTS)
+target_compile_definitions(JASPDesktopLib PUBLIC INTERACTIVE_PLOTS)
+target_compile_definitions(JASP           PUBLIC INTERACTIVE_PLOTS)
+endif()
+
 if(NOT WINDOWS)
   target_compile_options(JASPDesktopLib PUBLIC -Wno-deprecated-declarations)
   target_compile_options(JASP           PUBLIC -Wno-deprecated-declarations)

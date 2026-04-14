@@ -36,6 +36,10 @@ message(STATUS "appdirs.h is successfully generated...")
 
 target_compile_definitions(QMLComponents PUBLIC JASP_USES_QT_HERE)
 
+if(INTERACTIVE_PLOTS)
+target_compile_definitions(QMLComponents PUBLIC INTERACTIVE_PLOTS)
+endif()
+
 target_include_directories(
 	QMLComponents
 	PUBLIC # JASP

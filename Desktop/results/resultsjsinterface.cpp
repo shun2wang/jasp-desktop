@@ -83,6 +83,9 @@ void ResultsJsInterface::setResultsLoaded(bool resultsLoaded)
 		QString version = AboutModel::version();
 
 		runJavaScript("window.setAppVersion('" + version + "')");
+#ifdef INTERACTIVE_PLOTS
+		runJavaScript("window.setInteractivePlots(true)");
+#endif
 
 		setGlobalJsValues();
 		setFontFamily();

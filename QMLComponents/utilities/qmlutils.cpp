@@ -235,6 +235,12 @@ void QmlUtils::setGlobalPropertiesInQMLContext(QQmlContext * ctxt)
 	ctxt->setContextProperty("LINUX",					isLinux);
 	ctxt->setContextProperty("WINDOWS",					isWindows);
 	ctxt->setContextProperty("DEBUG_MODE",				debug);
+	ctxt->setContextProperty("INTERACTIVE_PLOTS",		
+#ifdef INTERACTIVE_PLOTS
+		true);
+#else
+		false);
+#endif
 	ctxt->setContextProperty("INTERACTION_SEPARATOR",	Term::separator);
 	
 	ctxt->setContextProperty("dataSetInfo",				VariableInfo::info());
