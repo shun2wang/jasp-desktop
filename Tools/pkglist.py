@@ -23,23 +23,23 @@ htmlPostfix = """</tbody>
 
 def extract_data(descriptionPath):
     description = descriptionPath.read_text(encoding = 'unicode-escape')
-    encodingMatch = re.search('(^Encoding:)\s*(.*$)', description, flags=re.MULTILINE)
+    encodingMatch = re.search('(^Encoding:)\\s*(.*$)', description, flags=re.MULTILINE)
     encoding = 'utf-8'
     if encodingMatch:
         encoding = encodingMatch.group(2)
 
     description = descriptionPath.read_text(encoding = encoding)
-    package = re.search('(^Package:)\s*(.*$)', description, flags=re.MULTILINE).group(2)
-    version = re.search('(^Version:)\s*(.*$)', description, flags=re.MULTILINE).group(2)
+    package = re.search('(^Package:)\\s*(.*$)', description, flags=re.MULTILINE).group(2)
+    version = re.search('(^Version:)\\s*(.*$)', description, flags=re.MULTILINE).group(2)
     
-    authorMatch = re.search('(^Author:)\s*(.*$)', description, flags=re.MULTILINE)
+    authorMatch = re.search('(^Author:)\\s*(.*$)', description, flags=re.MULTILINE)
     author = authorMatch.group(2)
     for line in description[authorMatch.end() + 1: -1].splitlines():
-        match = re.search('^\s+(.*$)', line, flags=re.MULTILINE)
+        match = re.search('^\\s+(.*$)', line, flags=re.MULTILINE)
         if match == None:
             break
         author += '\n' + match.group(1)
-    licenseMatch = re.search('(^License:)\s*(.*$)', description, flags=re.MULTILINE)
+    licenseMatch = re.search('(^License:)\\s*(.*$)', description, flags=re.MULTILINE)
     license = licenseMatch.group(2) if licenseMatch else ""
 
 
