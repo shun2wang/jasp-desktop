@@ -293,7 +293,7 @@ FocusScope
 
 						onItemAdded: (index, item)=>
 						{
-							column.computeColumnWidth()
+							column.columnWidth = Math.max(column.columnWidth, item.item?.implicitWidth ?? 0)
 						}
 
 						delegate: Loader
