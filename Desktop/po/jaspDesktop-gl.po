@@ -1,15 +1,9 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-29 19:46+0000\n"
-"Last-Translator: ecadrian <ecadrian@hotmail.com>\n"
-"Language-Team: Galician <https://hosted.weblate.org/projects/jasp/"
-"jaspdesktop/gl/>\n"
-"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Language: gl_ES\n"
 "X-Source-Language: C\n"
 "X-Qt-Contexts: true\n"
@@ -5982,26 +5976,6 @@ msgctxt "PlotEditor|"
 msgid "References"
 msgstr "Referencias"
 
-msgctxt "PlotEditor::References|"
-msgid "Type"
-msgstr "Tipo"
-
-msgctxt "PlotEditor::References|"
-msgid "Text"
-msgstr "Texto"
-
-msgctxt "PlotEditor::References|"
-msgid "Horizontal"
-msgstr "Horizontal"
-
-msgctxt "PlotEditor::References|"
-msgid "Vertical"
-msgstr "Vertical"
-
-msgctxt "PlotEditor::References|"
-msgid "Remove"
-msgstr "Quitar"
-
 msgctxt "ResultMenuModel|"
 msgid "Switch Static/Interactive Image"
 msgstr "Cambiar imaxe estática/interactiva"
@@ -6116,7 +6090,8 @@ msgstr "Crear un directorio de R que conteña o teu código de análise."
 
 msgctxt "DynamicModules|"
 msgid "Create a inst/qml directory containing your optionsforms."
-msgstr "Crear un directorio inst/qml que conteña os teus formularios de opción."
+msgstr ""
+"Crear un directorio inst/qml que conteña os teus formularios de opción."
 
 msgctxt "DynamicModules|"
 msgid ""
@@ -6278,3 +6253,125 @@ msgstr "Gardar (encriptado) o ficheiro de JASP"
 msgctxt "Computer|"
 msgid "Encrypted JASP Files"
 msgstr "Ficheiros encriptados de JASP"
+
+#, fuzzy
+msgctxt "PlotEditingReferenceLines|"
+msgid "Type"
+msgstr "Tipo"
+
+#, fuzzy
+msgctxt "PlotEditingReferenceLines|"
+msgid "Text"
+msgstr "Texto"
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Hor."
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Vert."
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Color"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Size"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Style"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Circle"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Square"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Triangle"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Diamond"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Cross"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Star"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Solid"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Dashed"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Dotted"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Dot-Dash"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Long Dash"
+msgstr ""
+
+msgctxt "PlotEditingReferenceLines|"
+msgid "Two Dash"
+msgstr ""
+
+msgctxt "WelcomePage|"
+msgid "Welcome to JASP Enterprise"
+msgstr ""
+
+msgctxt "WelcomePage|"
+msgid "Open-Source Support for Enterprise Success"
+msgstr ""
+
+msgctxt "WelcomePage|"
+msgid "Get started!"
+msgstr ""
+
+msgctxt "ColorPicker|"
+msgid "Click"
+msgstr ""
+
+msgctxt "ColorPicker|"
+msgid "Click to pick up a color"
+msgstr ""
+
+msgctxt "ColorPicker|"
+msgid "Select the color"
+msgstr ""
+
+#, qt-format
+msgctxt "MainWindow|"
+msgid ""
+"<h3>Contact</h3>\n"
+"The following links will bring you directly to your company's own issue "
+"tracker.\n"
+"<ul><li><a href=\"%1\">Feature requests</a>, when you would like something "
+"added to JASP.</li><li><a href=\"%2\">Bug reports</a>, when a feature in "
+"JASP doesn't work as it should.</li><li><a href=\"%3\">Crash reports</a>, "
+"for the unfortunate situation where JASP crashes.</li></ul>\n"
+"There you will be in direct contact with the JASP software developers.\n"
+"\n"
+"You can find out more about JASP Services BV at <a href=\"%3\">our website</"
+"a>."
+msgstr ""
+
+msgctxt "JASPControl|"
+msgid "Color Picker"
+msgstr ""
