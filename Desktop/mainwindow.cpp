@@ -46,6 +46,7 @@
 
 #include "modules/installedmodules.h"
 #include "modules/dynamicmodules.h"
+#include "utilities/reporter.h"
 #include "modules/menumodel.h"
 
 #include "qquick/datasetview.h"
@@ -131,6 +132,7 @@ MainWindow::MainWindow(Application * application) : QObject(application), _appli
 	_columnTypesModel		= new ColumnTypesModel(this);
 	_jaspConfiguration		= JASPConfiguration::getInstance(this);
 	_moduleLibrary			= new ModuleLibrary();
+	_csvPreviewModel		= new CsvPreviewModel(this);
 
 #ifdef WIN32
 	_windowsWorkaroundCPs	= new CodePagesWindows(this);
@@ -589,6 +591,7 @@ void MainWindow::makeConnections()
 	connect(dCSingleton,			&DesktopCommunicator::engineSandboxSignal,			_preferences,			&PreferencesModel::engineSandbox				);
 	connect(dCSingleton,			&DesktopCommunicator::queryEncryptionSettingsSignal, _encryptionModel,		&EncryptionSettingsModel::queryEncryptionSettings);
 	connect(_encryptionModel,		&EncryptionSettingsModel::queryComplete,			dCSingleton,			&DesktopCommunicator::encryptionSettingsQueryComplete);
+	connect(dCSingleton,			&DesktopCommunicator::askCsvDelimiterSignal,		_csvPreviewModel,		&CsvPreviewModel::preparePreview);
 
 
 	connect(_filterModel,			&FilterModel::refreshAllAnalyses,					_analyses,				&Analyses::refreshAllAnalyses,								Qt::QueuedConnection);
@@ -621,6 +624,7 @@ void MainWindow::makeConnections()
 	connect(_dynamicModules,		&DynamicModules::reloadAnalysesJson,				_analyses,				&Analyses::reloadSavedAnalysesJson,							Qt::QueuedConnection);
 
 	connect(_languageModel,			&LanguageModel::currentLanguageChanged,				_fileMenu,				&FileMenu::refresh											);
+	connect(_languageModel,			&LanguageModel::currentLanguageChanged,				_csvPreviewModel,		&CsvPreviewModel::updateLocale,							Qt::QueuedConnection);
 	connect(_languageModel,			&LanguageModel::aboutToChangeLanguage,				_analyses,				&Analyses::prepareForLanguageChange							);
 	connect(_languageModel,			&LanguageModel::aboutToChangeLanguage,				_package,				&DataSetPackage::prepareForLanguageChange					);
 	connect(_languageModel,			&LanguageModel::languageChangeDone,					_package,				&DataSetPackage::languageChangeDone							);
@@ -692,6 +696,7 @@ void MainWindow::loadQML()
 	_qml->rootContext()->setContextProperty("computedColumnTypeConstructorCode",		int(computedColumnType::constructorCode)		);
 	_qml->rootContext()->setContextProperty("computedColumnTypeAnalysisNotComputed",	int(computedColumnType::analysisNotComputed)	);
 	_qml->rootContext()->setContextProperty("moduleLibrary",							_moduleLibrary									);
+	_qml->rootContext()->setContextProperty("csvPreviewModel",							_csvPreviewModel								);
 
 	_qml->setOutputWarningsToStandardError(true);
 
@@ -741,6 +746,7 @@ void MainWindow::loadQML()
 	Log::log() << "Loading ContactWindow"				<< std::endl; _qml->load(QUrl("qrc:///components/JASP/Widgets/ContactWindow.qml"));
 	Log::log() << "Loading CommunityWindow"				<< std::endl; _qml->load(QUrl("qrc:///components/JASP/Widgets/CommunityWindow.qml"));
 	Log::log() << "Loading EncryptionSettingsWindow"	<< std::endl; _qml->load(QUrl("qrc:///components/JASP/Widgets/EncryptionSettingsWindow.qml"));
+	Log::log() << "Loading CSV Preview"				<< std::endl; _qml->load(QUrl("qrc:///components/JASP/Widgets/CsvPreview.qml"));
 	Log::log() << "Loading MainWindow"					<< std::endl; _qml->load(QUrl("qrc:///components/JASP/Widgets/MainWindow.qml"));
 
 	if(!DataSetView::mainDataViewer())

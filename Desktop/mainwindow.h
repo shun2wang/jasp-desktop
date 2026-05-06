@@ -52,6 +52,7 @@
 #include "utilities/helpmodel.h"
 #include "utilities/messageforwarder.h"
 #include "utilities/reporter.h"
+#include "utilities/csvpreviewmodel.h"
 #include "utilities/codepageswindows.h"
 #include "widgets/filemenu/filemenu.h"
 #include "data/workspacemodel.h"
@@ -344,6 +345,7 @@ private:
 	WorkspaceModel				*	_workspaceModel			= nullptr;
 	JASPConfiguration			*   _jaspConfiguration      = nullptr;
 	ModuleLibrary				*	_moduleLibrary			= nullptr;
+	CsvPreviewModel				*	_csvPreviewModel		= nullptr;
 
 	QSettings						_settings;
 

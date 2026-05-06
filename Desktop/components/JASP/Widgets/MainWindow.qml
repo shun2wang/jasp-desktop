@@ -292,8 +292,18 @@ Window
 
 	ProgressBarHolder
 	{
-		visible:			mainWindow.progressBarVisible
+		visible:			mainWindow.progressBarVisible && !csvPreviewModel.visible
 		z:					10
 		anchors.fill:		parent
 	}
+	
+	Rectangle
+	{
+		z:				11
+		visible:		csvPreviewModel.visible
+		color:			"#000000"
+		opacity:		0.25
+		anchors.fill:	parent
+	}
+
 }

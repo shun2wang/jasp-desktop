@@ -12,6 +12,7 @@
 #include "data/exporters/jaspexporter.h"
 #include "data/importers/excelimporter.h"
 #include "data/importers/rdataimporter.h"
+
 #include "data/importers/readstatimporter.h"
 
 void TestAll::initTestCase()
