@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
@@ -39,6 +39,7 @@
 #include "mainwindow.h"
 
 #include "gui/preferencesmodel.h"
+#include "data/exporters/jaspexporter.h"
 #include "utilities/application.h"
 #include "gui/jaspversionchecker.h"
 #include "ALTNavigation/altnavcontrol.h"
@@ -1318,8 +1319,9 @@ void MainWindow::dataSetIORequestHandler(FileEvent *event)
 		_resultsJsInterface->exportPreviewHTML();
 		_package->setAnalysesData(_analyses->asJson());
 
+		JASPExporter::createSnapshot(event->isTmp() ? "jasp_autosave_snapshot_" : "jasp_snapshot_");
+
 		_loader->io(event);
-		showProgress();
 	}
 	else if (event->operation() == FileEvent::FileExportResults)
 	{
@@ -2156,18 +2158,17 @@ void MainWindow::finishSavingComparedResults()
 void MainWindow::saveJaspFileHandler()
 {
 	FileEvent * saveEvent = new FileEvent(this, FileEvent::FileSave);
-
 	saveEvent->setPath(resultXmlCompare::compareResults::theOne()->filePath());
-
 	dataSetIORequestHandler(saveEvent);
 }
 
 void MainWindow::saveTmpFileHandler()
 {
+	if (JASPExporter::isSaveInProgress())
+		return;
+
 	FileEvent * saveEvent = new FileEvent(this, FileEvent::FileSave);
-
 	saveEvent->setTmp(true);
-
 	dataSetIORequestHandler(saveEvent);
 }
 

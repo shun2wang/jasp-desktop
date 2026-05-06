@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
@@ -16,6 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 //
 
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #ifndef ASYNCLOADER_H
 #define ASYNCLOADER_H
 
@@ -26,8 +27,10 @@
 #include "datasetloader.h"
 #include "datasetpackage.h"
 #include "data/fileevent.h"
+#include "data/exporters/exporter.h"
 
 #include "osf/onlinedatamanager.h"
+#include "timers.h"
 
 struct LoaderException : public std::runtime_error
 {
@@ -64,13 +67,11 @@ private slots:
 	void uploadFileFinished(QString id);
 	//void errorFlagged(QString msg, QString id);
 
-private:
-
-	QString fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
-
+protected:
 	void progressHandler(int progress);
 
-
+private:
+	QString fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
 
 	DataSetLoader			_loader;
 	FileEvent			*	_currentEvent	= nullptr;

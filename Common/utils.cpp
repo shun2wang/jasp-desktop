@@ -1,21 +1,20 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
 //
-
-
 #include "utils.h"
 
 #ifdef _WIN32
@@ -139,6 +138,11 @@ int64_t Utils::getFileModificationTime(const std::string &filename)
 #endif
 }
 
+int64_t Utils::getFileModificationTime(const std::filesystem::path &filename)
+{
+	return getFileModificationTime(filename.generic_string());
+}
+
 int64_t Utils::getFileSize(const string &filename)
 {
 	std::error_code ec;
@@ -233,8 +237,8 @@ void Utils::touch(const string &filename)
 
 bool Utils::renameOverwrite(const string &oldName, const string &newName)
 {
-	std::filesystem::path o = osPath(oldName);
-	std::filesystem::path n = osPath(newName);
+	std::filesystem::path o = oldName;
+	std::filesystem::path n = newName;
 	std::error_code ec;
 
 #ifdef _WIN32
@@ -256,22 +260,12 @@ bool Utils::renameOverwrite(const string &oldName, const string &newName)
 
 bool Utils::removeFile(const string &path)
 {
-	std::filesystem::path p = osPath(path);
+	std::filesystem::path p = path;
 	std::error_code ec;
 
 	std::filesystem::remove(p, ec);
 
 	return !ec;
-}
-
-std::filesystem::path Utils::osPath(const string &path)
-{
-	return std::filesystem::path(path);
-}
-
-string Utils::osPath(const std::filesystem::path &path)
-{
-	return path.generic_string();
 }
 
 void Utils::remove(vector<string> &target, const vector<string> &toRemove)
@@ -306,39 +300,6 @@ bool Utils::isEqual(const float a, const float b)
 }
 
 #ifdef _WIN32
-std::wstring Utils::getShortPathWin(const std::wstring & longPath) 
-{
-	//See: https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getshortpathnamew
-	long     length = 0;
-	WCHAR*   buffer = NULL;
-
-// First obtain the size needed by passing NULL and 0.
-
-	length = GetShortPathNameW(longPath.c_str(), NULL, 0);
-	if (length == 0) 
-		return longPath;
-
-// Dynamically allocate the correct size 
-// (terminating null char was included in length)
-
-	buffer = new WCHAR[length];
-
-// Now simply call again using same long path.
-
-	length = GetShortPathNameW(longPath.c_str(), buffer, length);
-	if (length == 0)
-	{
-		delete[] buffer;
-		return longPath;
-	}
-
-	std::wstring shortPath(buffer, length);
-	
-	delete [] buffer;
-	
-	return shortPath;
-}
-
 string Utils::wstringToString(const std::wstring & wstr)
 {
 	std::string str;

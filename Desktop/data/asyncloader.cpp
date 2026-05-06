@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
@@ -22,6 +22,7 @@
 #include <fstream>
 #include <QTimer>
 #include <QFileInfo>
+#include <QThread>
 
 #include <boost/bind.hpp>
 
@@ -29,7 +30,14 @@
 #include "utils.h"
 #include "osf/onlinedatamanager.h"
 #include "log.h"
-#include "exporters/exporter.h"
+#include "utilenums.h"
+#include "appinfo.h"
+#include "gui/preferencesmodel.h"
+#include "data/datasetpackage.h"
+#include "databaseinterface.h"
+#include "data/exporters/exporter.h"
+#include "data/exporters/jaspexporter.h"
+#include "utilities/desktopcommunicator.h"
 
 using namespace std;
 
@@ -46,7 +54,6 @@ AsyncLoader::AsyncLoader(QObject *parent) :
 
 void AsyncLoader::io(FileEvent *event)
 {
-
 	switch (event->operation())
 	{
 	case FileEvent::FileNew:

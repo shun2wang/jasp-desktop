@@ -1,20 +1,20 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
 //
-
 #include "tempfiles.h"
 
 #include <iostream>
@@ -49,11 +49,11 @@ void TempFiles::init(long sessionId)
 
 void TempFiles::createSessionDir()
 {
-	std::cout << "TempFiles::createSessionDir(): ";
+	Log::log() << "DEBUG createSessionDir: Creating session dir at " << _sessionDirName << std::endl;
 	
 	std::error_code error;
 
-	std::filesystem::path sessionPath = Utils::osPath(_sessionDirName);
+	std::filesystem::path sessionPath = _sessionDirName;
 	
 	std::cout<< "'" << sessionPath.string() << "' about to be (removed and re)created." << std::endl;
 
@@ -64,14 +64,14 @@ void TempFiles::createSessionDir()
 	f.open(_statusFileName.c_str(), ios_base::out);
 	f.close();
 
-	//std::filesystem::path clipboardPath = Utils::osPath(clipboard);
+	//std::filesystem::path clipboardPath = clipboard;
 	//if ( ! std::filesystem::exists(clipboardPath, error))
 	//	std::filesystem::create_directories(clipboardPath, error);
 }
 
 void TempFiles::clearSessionDir()
 {
-	std::filesystem::path sessionPath = Utils::osPath(_sessionDirName);
+	std::filesystem::path sessionPath = _sessionDirName;
 	std::error_code error;
 	
 	if(!std::filesystem::exists(sessionPath, error) || error)
@@ -110,7 +110,7 @@ void TempFiles::attach(long sessionId)
 void TempFiles::deleteAll(int id)
 {
 	std::error_code error;
-	std::filesystem::path dir = id >= 0 ? std::filesystem::path(_sessionDirName + "/resources/" + std::to_string(id)) : Utils::osPath(_sessionDirName);
+	std::filesystem::path dir = id >= 0 ? std::filesystem::path(_sessionDirName) / "resources" / std::to_string(id) : std::filesystem::path(_sessionDirName);
 	std::filesystem::remove_all(dir, error);
 }
 
@@ -123,8 +123,8 @@ void TempFiles::deleteOrphans()
 
 	try
 	{
-		std::filesystem::path tempPath		= Utils::osPath(Dirs::tempDir());
-		std::filesystem::path sessionPath	= Utils::osPath(_sessionDirName); 
+		std::filesystem::path tempPath		= Dirs::tempDir();
+		std::filesystem::path sessionPath	= _sessionDirName; 
 		stringvec aliveIDs;
 
 		std::filesystem::directory_iterator itr(tempPath, error);
@@ -145,7 +145,7 @@ void TempFiles::deleteOrphans()
 			if (p.compare(sessionPath) == 0)
 				continue;
 
-			string fileName		= Utils::osPath(p.filename());
+			string fileName		= p.filename().generic_string();
 			bool is_directory	= std::filesystem::is_directory(p, error);
 
 			if (error)
@@ -156,11 +156,11 @@ void TempFiles::deleteOrphans()
 				if (std::atoi(fileName.c_str()) == 0)
 					continue;
 
-				std::filesystem::path statusFile = Utils::osPath(Utils::osPath(p) + "/status");
+				std::filesystem::path statusFile = p / "status";
 
 				if (std::filesystem::exists(statusFile, error))
 				{
-					int64_t modTime	= Utils::getFileModificationTime(Utils::osPath(statusFile)),
+					int64_t modTime	= Utils::getFileModificationTime(statusFile),
 							now		= Utils::currentSeconds();
 
 					if (now - modTime > outOfDateDelta)
@@ -205,7 +205,7 @@ void TempFiles::heartbeat()
 void TempFiles::purgeClipboard()
 {
 	std::error_code error;
-	std::filesystem::remove_all(Utils::osPath(_clipboard), error);
+	std::filesystem::remove_all(_clipboard, error);
 }
 
 string TempFiles::createSpecific_clipboard(const string &filename)
@@ -213,7 +213,7 @@ string TempFiles::createSpecific_clipboard(const string &filename)
 	std::error_code error;
 
 	string fullPath				= _clipboard + "/" + filename;
-	std::filesystem::path	path	= Utils::osPath(fullPath),
+	std::filesystem::path	path	= fullPath,
 						dirPath	= path.parent_path();
 
 	if (!std::filesystem::exists(dirPath, error) || error)
@@ -226,7 +226,7 @@ string TempFiles::createSpecific(const string &dir, const string &filename)
 {
 	std::error_code error;
 	string fullPath			= _sessionDirName + "/" + dir;
-	std::filesystem::path path	= Utils::osPath(fullPath);
+	std::filesystem::path path	= fullPath;
 
 	if (!std::filesystem::exists(path, error) || error)
 		 std::filesystem::create_directories(path, error);
@@ -238,7 +238,7 @@ void TempFiles::createSpecific(const string &name, int id, string &root, string 
 {
 	root					= _sessionDirName;
 	relativePath			= "resources" + (id >= 0 ? "/" + std::to_string(id) : "");
-	std::filesystem::path path	= Utils::osPath(root + "/" + relativePath);
+	std::filesystem::path path = std::filesystem::path(root) / relativePath;
 
 	std::error_code error;
 	if (!std::filesystem::exists(path, error) || error)
@@ -249,7 +249,7 @@ void TempFiles::createSpecific(const string &name, int id, string &root, string 
 
 bool TempFiles::stateFileExists(int id)
 {
-	std::filesystem::path stateFilePath = Utils::osPath(_sessionDirName + "/resources" + (id >= 0 ? "/" + std::to_string(id) : "") + "/state");
+	std::filesystem::path stateFilePath = (id >= 0) ? (std::filesystem::path(_sessionDirName) / "resources" / std::to_string(id) / "state") : (std::filesystem::path(_sessionDirName) / "resources" / "state");
 	
 	std::error_code error;
 	return std::filesystem::exists(stateFilePath, error) && !error;
@@ -262,7 +262,7 @@ void TempFiles::create(const string &extension, int id, string &root, string &re
 	root					= _sessionDirName;
 	string resources		= root +  "/resources" + (id >= 0 ? "/" + std::to_string(id) : "");
 
-	std::filesystem::path path	= Utils::osPath(resources);
+	std::filesystem::path path	= resources;
 
 	if (!std::filesystem::exists(resources, error) || error)
 		 std::filesystem::create_directories(resources, error);
@@ -272,7 +272,7 @@ void TempFiles::create(const string &extension, int id, string &root, string &re
 	do
 	{
 		relativePath	= "resources/" + (id >= 0 ? std::to_string(id) + "/" : "") + "_" + std::to_string(_nextFileId++) + "_t" + std::to_string(Utils::currentMillis()) + suffix;
-		path			= Utils::osPath(root + "/" + relativePath);
+		path = std::filesystem::path(root) / relativePath;
 	}
 	while (std::filesystem::exists(path));
 }
@@ -284,7 +284,7 @@ std::string TempFiles::createTmpFolder()
 	while(true)
 	{
 		std::string tmpFolder	= _sessionDirName + "/tmp" + std::to_string(_nextTmpFolderId++) + "/";
-		std::filesystem::path path	= Utils::osPath(tmpFolder);
+		std::filesystem::path path	= tmpFolder;
 
 		if (!std::filesystem::exists(path, error) || error)
 		{
@@ -294,41 +294,41 @@ std::string TempFiles::createTmpFolder()
 	}
 }
 
-vector<string> TempFiles::retrieveList(int id)
+vector<string> TempFiles::retrieveList(int id, const std::string &dir)
 {
 	vector<string> files;
 
 	std::error_code error;
 
-	string dir = _sessionDirName;
+	std::string baseDir = dir.empty() ? _sessionDirName : dir;
 
 	if (id >= 0)
-		dir += "/resources/" + std::to_string(id);
+		baseDir += "/resources/" + std::to_string(id);
 
-	std::filesystem::path path = Utils::osPath(dir);
+	std::filesystem::path path = baseDir;
 
 	std::filesystem::directory_iterator itr(path, error);
 
 	if (error)
 		return files;
 
-    std::string sessionPath = std::filesystem::path(_sessionDirName).generic_string();
+	std::string sessionPath = std::filesystem::path(dir.empty() ? _sessionDirName : dir).generic_string();
 
-    Log::log() << "TempFiles::retrieveList uses sessionpath " << sessionPath << " and finds: ";
+	Log::log() << "TempFiles::retrieveList uses sessionpath " << sessionPath << " and finds: ";
 
 	for (; itr != std::filesystem::directory_iterator(); itr++)
 		if (std::filesystem::is_regular_file(itr->status()))
 		{
 			std::filesystem::path pad = itr->path();
 			string absPath = pad.generic_string();
-            string relPath = absPath.substr(sessionPath.size()+1);
+			string relPath = absPath.substr(sessionPath.size()+1);
 
-            Log::log(false) << relPath << " from " << absPath << " || ";
+			Log::log(false) << relPath << " from " << absPath << " || ";
 
 			files.push_back(relPath);
 		}
 
-    Log::log(false) << std::endl;
+	Log::log(false) << std::endl;
 
 	return files;
 }
@@ -340,7 +340,7 @@ void TempFiles::deleteList(const vector<string> &files)
 	for(const string &file : files)
 	{
 		string absPath		= _sessionDirName + "/" + file;
-		std::filesystem::path p	= Utils::osPath(absPath);
+		std::filesystem::path p	= absPath;
 
 		std::filesystem::remove(p, error);
 	}
@@ -348,7 +348,7 @@ void TempFiles::deleteList(const vector<string> &files)
 
 void TempFiles::deleteStrayRootFiles(const stringvec& validIDs, long outOfDateDelta)
 {
-	std::filesystem::path tempPath = Utils::osPath(Dirs::tempDir());
+	std::filesystem::path tempPath = Dirs::tempDir();
 	std::error_code error;
 	std::filesystem::directory_iterator itr(tempPath, error);
 
@@ -364,7 +364,7 @@ void TempFiles::deleteStrayRootFiles(const stringvec& validIDs, long outOfDateDe
 
 		Log::log() << "looking at file " << p.string() << std::endl;
 
-		string fileName		= Utils::osPath(p.filename());
+		string fileName		= p.filename().generic_string();
 		bool is_directory	= std::filesystem::is_directory(p, error);
 
 		if (error)
@@ -372,7 +372,7 @@ void TempFiles::deleteStrayRootFiles(const stringvec& validIDs, long outOfDateDe
 
 		if (!is_directory)
 		{					
-			int64_t	modTime	= Utils::getFileModificationTime(Utils::osPath(p)),
+			int64_t	modTime	= Utils::getFileModificationTime(p),
 					now		= Utils::currentSeconds();
 
 			if (now - modTime <= outOfDateDelta || fileName.substr(0, 5).compare("JASP-") != 0)
