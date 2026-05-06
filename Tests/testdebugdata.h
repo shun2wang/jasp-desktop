@@ -19,8 +19,8 @@ private slots:
 	void	testChangeLabel();
 	void    testReverseLabels();
     void    testReverseNumericals();
+	void	testShadowDisplay();
 	
-
 private:
 	DataSetPackage		*	_pkg		= nullptr;
 	DataSet				*	_data		= nullptr;

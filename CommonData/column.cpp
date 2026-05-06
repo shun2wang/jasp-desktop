@@ -1338,8 +1338,12 @@ std::string Column::getDisplay(size_t row, bool fancyEmptyValue, bool sepas) con
 
 std::string Column::getShadow(size_t row, bool fancyEmptyValue, bool sepas) const
 {
-	if(!_hasLabels)
-		return getValue(row, fancyEmptyValue, false, sepas);
+	if(!_hasLabels && _type == columnType::scale)
+	{
+		std::string valueNotSoFancy = getValue(row, false, false, sepas);
+		
+		return valueNotSoFancy == "" ? getLabel(row, fancyEmptyValue, true, sepas) : "";
+	}
 	
 	return _type != columnType::scale	
 		?	getValue(row, fancyEmptyValue, true, sepas)

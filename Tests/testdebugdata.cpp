@@ -308,5 +308,80 @@ void TestDebugData::testChangeLabel()
 	
 }
 
+void TestDebugData::testShadowDisplay()
+{
+	QVERIFY2(_data,		"No dataset!");
+	
+	Column * contNormal = _data->column("contNormal");
+	
+	QVERIFY2(contNormal->type() == columnType::scale,			"contNormal should be scale type");
+	
+	contNormal->labelsToNoLabels();
+	
+	QVERIFY2(!contNormal->hasLabels(),							"contNormal should not have labels");
+	
+	for (size_t row = 0; row < 10; row++)
+	{
+		std::string value = contNormal->getValue(row, false, true);
+		std::string display = contNormal->getDisplay(row, false, false);
+		std::string shadow = contNormal->getShadow(row, false, false);
+		
+	QString shadMsg = QString("Row %1: Shadow should not be empty when display would be empty! (value='%2', display='%3', shadow='%4')")
+				.arg(row).arg(QString::fromStdString(value)).arg(QString::fromStdString(display)).arg(QString::fromStdString(shadow));
+		std::string shadMsgStr = shadMsg.toStdString();
+		QVERIFY2(!shadow.empty() || value.empty(), shadMsgStr.c_str());
+	}
+	
+	Column * contWide = _data->column("contWide");
+	
+	QVERIFY2(contWide->type() == columnType::scale,			"contWide should be scale type");
+	
+	contWide->labelsToNoLabels();
+	
+	QVERIFY2(!contWide->hasLabels(),							"contWide should not have labels");
+	
+	std::string val5 = contWide->getValue(5, false, true);
+	std::string disp5 = contWide->getDisplay(5, false, false);
+	std::string shad5 = contWide->getShadow(5, false, false);
+	
+	QString shad5Msg = QString("contWide row 5 shadow should not be empty (val='%1', disp='%2', shad='%3')")
+				.arg(val5.c_str()).arg(disp5.c_str()).arg(shad5.c_str());
+		std::string shad5MsgStr = shad5Msg.toStdString();
+		QVERIFY2(!shad5.empty(), shad5MsgStr.c_str());
+	
+	Column * contBinom = _data->column("contBinom");
+	
+	if(!contBinom->hasLabels())
+		contBinom->noLabelsToLabels();
+	
+	QVERIFY2(contBinom->hasLabels(),							"contBinom should have labels now");
+	
+	std::string valBinom0 = contBinom->getValue(0, false, true);
+	std::string dispBinom0 = contBinom->getDisplay(0, false, false);
+	std::string shadBinom0 = contBinom->getShadow(0, false, false);
+	
+	QString shadBinom0Msg = QString("contBinom row 0 shadow should not be empty (val='%1', disp='%2', shad='%3')")
+				.arg(valBinom0.c_str()).arg(dispBinom0.c_str()).arg(shadBinom0.c_str());
+		std::string shadBinom0MsgStr = shadBinom0Msg.toStdString();
+		QVERIFY2(!shadBinom0.empty(), shadBinom0MsgStr.c_str());
+	
+	Column * contGamma = _data->column("contGamma");
+	
+	QVERIFY2(contGamma->type() == columnType::scale,			"contGamma should be scale type");
+	
+	contGamma->labelsToNoLabels();
+	
+	QVERIFY2(!contGamma->hasLabels(),							"contGamma should not have labels");
+	
+	std::string valContGamma = contGamma->getValue(0, false, true);
+	std::string dispContGamma = contGamma->getDisplay(0, false, false);
+	std::string shadContGamma = contGamma->getShadow(0, false, false);
+	
+QString shadContGammaMsg = QString("contGamma row 0 shadow should not be empty (val='%1', disp='%2', shad='%3')")
+				.arg(valContGamma.c_str()).arg(dispContGamma.c_str()).arg(shadContGamma.c_str());
+		std::string shadContGammaMsgStr = shadContGammaMsg.toStdString();
+		QVERIFY2(!shadContGamma.empty(), shadContGammaMsgStr.c_str());
+	}
+
 
 QTEST_MAIN(TestDebugData)
