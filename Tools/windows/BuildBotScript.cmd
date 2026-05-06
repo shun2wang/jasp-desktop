@@ -36,8 +36,10 @@ cmake --build build --target install
 
 cmake --build build --target collect-junctions
 
-cmake --build build --target wix
-
 cmake --build build --target zip
+
+cmake --install build --component MSIX
+
+cmake --build build --target msix
 
 cmake --build build --target upload

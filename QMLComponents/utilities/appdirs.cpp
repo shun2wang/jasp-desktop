@@ -83,7 +83,7 @@ QString AppDirs::bundledModulesDir()
 {
 	static QString folder;
 #ifdef _WIN32
-	bool useAppdata =  DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() != RuntimeEnvironment::MSIX;
+    bool useAppdata =  DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() != RuntimeEnvironment::MSIX && DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() != RuntimeEnvironment::MSI;
 	folder = useAppdata ? programDir().absoluteFilePath("Modules") + '/' : appData(false) + "/BundledJASPModules_" + QString(AppInfo::version.asString(4).c_str()) + "_" + QString(AppInfo::gitCommit.substr(0, 7).c_str()) + "_" + QString(AppInfo::builddate.c_str()).replace(":", "-").replace(" ", "") + "/";
 #elif __APPLE__
 	 folder = programDir().absoluteFilePath("../Modules/");
@@ -115,7 +115,7 @@ QString AppDirs::documents()
 QString AppDirs::sandboxedDocuments()
 {
 	const QString name = "JASP_Sandbox";
-	QDir res(AppDirs::documents());
+    QDir res(AppDirs::documents());
 	res.mkdir(name);
 	res.cd(name);
 	return res.absolutePath();
@@ -123,7 +123,7 @@ QString AppDirs::sandboxedDocuments()
 
 QString AppDirs::logDir()	
 {
-	QString path = appData();
+    QString path = sandboxedDocuments();
 	path += "/Logs/";
 
 	QDir log(path);

@@ -127,24 +127,58 @@ const Settings::Setting Settings::Values[] = {
 	{"showInteractiveDefault",		true	},
 	{"autoSaveOn",					true	},
 	{"autoSaveInterval",			5*60	},
-};	
+};
 
-QVariant Settings::value(Settings::Type key)
-{
-	
+QVariant Settings::value(Settings::Type key) {
+
 	if(_thisIsATest && key == Settings::EMPTY_VALUES_LIST)
 	{
 		return QString(Settings::defaultEmptyValues) + "|Missing";
 	}
 	
 	if(resultXmlCompare::compareResults::theOne()->testMode() || _thisIsATest)
-		switch(key)
+  	switch(key)
 		{
-		default:						return defaultValue(key);
-		case Type::STORE_STATE_ETC:		return false; //Dont store state in the data library
+				default:                        return defaultValue(key);
+				case Type::STORE_STATE_ETC:     return false; //Dont store state in the data library
 		}
 	
-	return getSettings()->value(Settings::Values[key].type, defaultValue(key));
+  QString settingStringName = Settings::Values[key].type;
+
+#ifdef WIN32
+    // 1. Enterprise Machine Policy (Strict GPO from IT Admins)
+    QSettings gpoMachine("HKEY_LOCAL_MACHINE\\Software\\Policies\\JASP", QSettings::NativeFormat);
+    if (gpoMachine.contains(settingStringName)) {
+        return gpoMachine.value(settingStringName);
+    }
+
+    // 2. Enterprise User Policy (Strict GPO from IT Admins)
+    QSettings gpoUser("HKEY_CURRENT_USER\\Software\\Policies\\JASP", QSettings::NativeFormat);
+    if (gpoUser.contains(settingStringName)) {
+        return gpoUser.value(settingStringName);
+    }
+#endif
+
+    // 3. Current User Settings (Active INI)
+    QSettings* settings = getSettings();
+    if (settings->contains(settingStringName)) {
+        return settings->value(settingStringName);
+    }
+
+#ifdef WIN32
+    // 4. Legacy Migration (Old MSI User Preferences in HKCU)
+    QSettings oldRegistry(QSettings::NativeFormat, QSettings::UserScope, "JASP", "JASP");
+    if (oldRegistry.contains(settingStringName)) {
+        QVariant oldVal = oldRegistry.value(settingStringName);
+        
+        // Migrate it to the new INI format
+        settings->setValue(settingStringName, oldVal); 
+        return oldVal;
+    }
+#endif
+
+    // 5. Fallback to hardcoded application defaults
+    return defaultValue(key);
 }
 
 QVariant Settings::defaultValue(Settings::Type key)

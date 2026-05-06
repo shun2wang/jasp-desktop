@@ -7,9 +7,9 @@
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities">
 
-<Identity Name="JASP.SIDELOAD"
+<Identity Name="JASP.STANDALONE"
         Version="@JASP_VERSION_MAJOR@.@JASP_VERSION_MINOR@.@JASP_VERSION_PATCH@@JASP_VERSION_MSIX_PATCH_POSTFIX@.@JASP_VERSION_TWEAK@"
-        Publisher="@MSIX_SIDELOAD_PUBLISHER@"
+        Publisher="@MSIX_STANDALONE_PUBLISHER@"
     ProcessorArchitecture="x64"/>
 
 <Properties>

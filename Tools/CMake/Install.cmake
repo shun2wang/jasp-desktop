@@ -311,7 +311,7 @@ if(WIN32)
   # include(InstallRequiredSystemLibraries)
   # install(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION .)
 
-  install(TARGETS JASP JASPEngine ContainerFilePermissionChecker RUNTIME DESTINATION .)
+  install(TARGETS JASP JASPEngine ContainerFilePermissionChecker JunctionTool RUNTIME DESTINATION .)
 
   set(JASP_QML_FILES "${CMAKE_SOURCE_DIR}/Desktop")
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -361,42 +361,21 @@ if(WIN32)
     NORMALIZE
     R_BIN_PATH_NATIVE)
 
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msi/JASP.wxi.in
-                 ${CMAKE_BINARY_DIR}/JASP.wxi @ONLY)
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msi/JASP.wxs
-                 ${CMAKE_BINARY_DIR}/JASP.wxs @ONLY)
-
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msi/WIX.cmd.in
-                 ${CMAKE_BINARY_DIR}/WIX.cmd @ONLY)
-
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/zip/ZIP.cmd.in
                  ${CMAKE_BINARY_DIR}/ZIP.cmd @ONLY)
-
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/CollectJunctions.cmd.in
-                 ${CMAKE_BINARY_DIR}/CollectJunctions.cmd @ONLY)
-
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/RecreateJunctions.cmd.in
-                 ${CMAKE_BINARY_DIR}/RecreateJunctions.cmd @ONLY)
-
   #msix stuff
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-store.xml.in
                 ${CMAKE_BINARY_DIR}/AppxManifest-store.xml @ONLY)
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-store-beta.xml.in
                 ${CMAKE_BINARY_DIR}/AppxManifest-store-beta.xml @ONLY)
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-sideload.xml.in
-                ${CMAKE_BINARY_DIR}/AppxManifest-sideload.xml @ONLY)
+  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-standalone.xml.in
+                ${CMAKE_BINARY_DIR}/AppxManifest-standalone.xml @ONLY)
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-nightly.xml.in
                 ${CMAKE_BINARY_DIR}/AppxManifest-nightly.xml @ONLY)
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/msix.cmd.in
                 ${CMAKE_BINARY_DIR}/msix.cmd @ONLY)
   install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT MSIX EXCLUDE_FROM_ALL)
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/Tools/windows/msix/Assets DESTINATION . COMPONENT MSIX EXCLUDE_FROM_ALL)
-
-
-  execute_process(
-    WORKING_DIRECTORY ${JASP_INSTALL_PREFIX}
-    COMMAND ${CMAKE_COMMAND} -E remove -f
-            "${CMAKE_INSTALL_PREFIX}/junctions-recreated-successfully.log")
 
   install(SCRIPT ${CMAKE_BINARY_DIR}/Deploy.win.cmake)
 
@@ -412,11 +391,6 @@ if(WIN32)
   else()
     install(FILES ${CMAKE_SOURCE_DIR}/Desktop/icon.ico DESTINATION .)
   endif()
-
-  install(
-    FILES ${CMAKE_SOURCE_DIR}/R-Interface/R/workarounds.R
-          ${CMAKE_SOURCE_DIR}/R-Interface/R/symlinkTools.R
-    DESTINATION Modules/Tools/)
 
   install(
     FILES ${RTOOLS_LIBGCC_S_SEH_DLL}
