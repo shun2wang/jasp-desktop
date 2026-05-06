@@ -85,7 +85,7 @@ void JASPExporter::createSnapshot(const std::string &snapshotPrefix)
 		}
 
 		Log::log() << "JASP Export: Created snapshot at " << fullSnapshotPath << std::endl;
-		printSnapshotContents(fullSnapshotPath);
+		printSnapshotContents(fullSnapshotPath.string());
 	}
 	else
 	{
