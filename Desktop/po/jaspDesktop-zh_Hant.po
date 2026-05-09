@@ -2586,10 +2586,6 @@ msgid "Dark theme"
 msgstr "深色主題"
 
 msgctxt "PrefsUI|"
-msgid "Preferred language"
-msgstr "語言偏好"
-
-msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
 msgstr "安全圖片模式"
 
@@ -2852,10 +2848,6 @@ msgstr "開啟檔案"
 msgctxt "AboutWindow|"
 msgid "Open Source Components"
 msgstr "檢視源始碼資訊"
-
-msgctxt "PrefsUI|"
-msgid "Help us translate or improve JASP in your language"
-msgstr "幫助我們用您的語言翻譯或改進 JASP"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Show R syntax"
@@ -5014,26 +5006,6 @@ msgctxt "TabView|"
 msgid "Double click to edit this name"
 msgstr "快按兩下可編輯此名稱"
 
-msgctxt "PrefsUI|"
-msgid "Choose language"
-msgstr "選擇介面語言"
-
-msgctxt "PrefsUI|"
-msgid "Use an alternative language and territory dependent display for numbers"
-msgstr "以其他語言或區域的格式顯示數字"
-
-msgctxt "PrefsUI|"
-msgid "Use the locale specified below for display of numbers and currency."
-msgstr "使用下面指定的區域設置來顯示數字格式和貨幣。"
-
-msgctxt "PrefsUI|"
-msgid "Alt. language"
-msgstr "替代語言"
-
-msgctxt "PrefsUI|"
-msgid "Alt. territory"
-msgstr "替代區域"
-
 msgctxt "JASPColumn|"
 msgid "Column description: "
 msgstr "欄說明： "
@@ -5138,14 +5110,6 @@ msgstr "啟用沙盒式引擎"
 msgctxt "PrefsAdvanced|"
 msgid "Strengthen security on Windows by isolating Engines running R-code"
 msgstr "這將透過隔離執行 R 程式碼的引擎，在 Windows 上強化安全性"
-
-msgctxt "PrefsUI|"
-msgid "Use thousands separators"
-msgstr "使用千位分隔符號"
-
-msgctxt "PrefsUI|"
-msgid "Disable to remove thousands separators from all numbers."
-msgstr "停用以移除所有數字之千分位分隔符號。"
 
 msgctxt "PreferencesModel|"
 msgid "Select a file..."
@@ -6099,3 +6063,77 @@ msgstr ""
 msgctxt "JASPControl|"
 msgid "Color Picker"
 msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Data Preview"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Select Delimiter:"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Space"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Tab"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Advanced"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Load"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Cancel"
+msgstr "取消"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Preferred language"
+msgstr "語言偏好"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Choose language"
+msgstr "選擇介面語言"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use thousands separators"
+msgstr "使用千位分隔符號"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Disable to remove thousands separators from all numbers."
+msgstr "停用以移除所有數字之千分位分隔符號。"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use an alternative language and territory dependent display for numbers"
+msgstr "以其他語言或區域的格式顯示數字"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use the locale specified below for display of numbers and currency."
+msgstr "使用下面指定的區域設置來顯示數字格式和貨幣。"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Alt. language"
+msgstr "替代語言"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Alt. territory"
+msgstr "替代區域"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Help us translate or improve JASP in your language"
+msgstr "幫助我們用您的語言翻譯或改進 JASP"

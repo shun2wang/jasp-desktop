@@ -1,15 +1,9 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-05-03 08:09+0000\n"
-"Last-Translator: ecadrian <ecadrian@hotmail.com>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/jasp/jaspdesktop/"
-"es/>\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Language: es\n"
 "X-Source-Language: American English\n"
 "X-Qt-Contexts: true\n"
@@ -2712,10 +2706,6 @@ msgid "Dark theme"
 msgstr "Tema oscuro"
 
 msgctxt "PrefsUI|"
-msgid "Preferred language"
-msgstr "Idioma preferido"
-
-msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
 msgstr "Modo gráfico seguro"
 
@@ -3003,10 +2993,6 @@ msgstr "Abrir la Documentación"
 msgctxt "AboutWindow|"
 msgid "Open Source Components"
 msgstr "Componentes de Código Abierto"
-
-msgctxt "PrefsUI|"
-msgid "Help us translate or improve JASP in your language"
-msgstr "Ayúdanos a traducir o mejorar JASP en tu idioma"
 
 msgctxt "ErrorMessage|"
 msgid "Don't show again"
@@ -5254,28 +5240,6 @@ msgctxt "TabView|"
 msgid "Double click to edit this name"
 msgstr "Haga doble clic para editar este nombre"
 
-msgctxt "PrefsUI|"
-msgid "Choose language"
-msgstr "Escoger idioma"
-
-msgctxt "PrefsUI|"
-msgid "Use an alternative language and territory dependent display for numbers"
-msgstr ""
-"Usar idioma alternativo y presentación según el territorio para los números"
-
-msgctxt "PrefsUI|"
-msgid "Use the locale specified below for display of numbers and currency."
-msgstr ""
-"Usar el localismo indicado abajo para presentar los números y la moneda."
-
-msgctxt "PrefsUI|"
-msgid "Alt. language"
-msgstr "Idioma alternativo"
-
-msgctxt "PrefsUI|"
-msgid "Alt. territory"
-msgstr "Territorio alternativo"
-
 msgctxt "JASPColumn|"
 msgid "Column description: "
 msgstr "Descripción de columna: "
@@ -5394,15 +5358,6 @@ msgctxt "PrefsAdvanced|"
 msgid "Strengthen security on Windows by isolating Engines running R-code"
 msgstr ""
 "Reforzar la seguridad en Windows aislando los Motores que ejecutan código R"
-
-msgctxt "PrefsUI|"
-msgid "Use thousands separators"
-msgstr "Usar separadores de millares"
-
-msgctxt "PrefsUI|"
-msgid "Disable to remove thousands separators from all numbers."
-msgstr ""
-"Deshabilitar eliminar los separadores de millares para todos los números."
 
 msgctxt "PreferencesModel|"
 msgid "Select a file..."
@@ -6419,3 +6374,81 @@ msgstr ""
 msgctxt "JASPControl|"
 msgid "Color Picker"
 msgstr "Selector de color"
+
+msgctxt "CsvPreview|"
+msgid "Data Preview"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Select Delimiter:"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Space"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Tab"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Advanced"
+msgstr "Avanzado"
+
+msgctxt "CsvPreview|"
+msgid "Load"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Cancel"
+msgstr "Cancelar"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Preferred language"
+msgstr "Idioma preferido"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Choose language"
+msgstr "Escoger idioma"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use thousands separators"
+msgstr "Usar separadores de millares"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Disable to remove thousands separators from all numbers."
+msgstr ""
+"Deshabilitar eliminar los separadores de millares para todos los números."
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use an alternative language and territory dependent display for numbers"
+msgstr ""
+"Usar idioma alternativo y presentación según el territorio para los números"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use the locale specified below for display of numbers and currency."
+msgstr ""
+"Usar el localismo indicado abajo para presentar los números y la moneda."
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Alt. language"
+msgstr "Idioma alternativo"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Alt. territory"
+msgstr "Territorio alternativo"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Help us translate or improve JASP in your language"
+msgstr "Ayúdanos a traducir o mejorar JASP en tu idioma"

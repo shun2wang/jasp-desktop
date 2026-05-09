@@ -2668,10 +2668,6 @@ msgid "Dark theme"
 msgstr "Koyu tema"
 
 msgctxt "PrefsUI|"
-msgid "Preferred language"
-msgstr "Tercih edilen dil"
-
-msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
 msgstr "Güvenli grafik modu"
 
@@ -2957,10 +2953,6 @@ msgstr "Açık Belgeler"
 msgctxt "AboutWindow|"
 msgid "Open Source Components"
 msgstr "Açık Kaynak Bileşenleri"
-
-msgctxt "PrefsUI|"
-msgid "Help us translate or improve JASP in your language"
-msgstr "JASP'yi kendi dilinize çevirmemize veya geliştirmemize yardımcı olun"
 
 msgctxt "ErrorMessage|"
 msgid "Don't show again"
@@ -5184,28 +5176,6 @@ msgctxt "TabView|"
 msgid "Double click to edit this name"
 msgstr "Bu adı düzenlemek için çift tıklayın"
 
-msgctxt "PrefsUI|"
-msgid "Choose language"
-msgstr "Dili seçin"
-
-msgctxt "PrefsUI|"
-msgid "Use an alternative language and territory dependent display for numbers"
-msgstr "Sayılar için alternatif bir dil ve bölgeye bağlı görüntüleme kullanın"
-
-msgctxt "PrefsUI|"
-msgid "Use the locale specified below for display of numbers and currency."
-msgstr ""
-"Sayıların ve para birimlerinin görüntülenmesi için aşağıda belirtilen yerel "
-"ayarı kullanın."
-
-msgctxt "PrefsUI|"
-msgid "Alt. language"
-msgstr "Alternatif dil"
-
-msgctxt "PrefsUI|"
-msgid "Alt. territory"
-msgstr "Alt. bölge"
-
 msgctxt "JASPColumn|"
 msgid "Column description: "
 msgstr "Sütun açıklaması: "
@@ -5320,14 +5290,6 @@ msgctxt "PrefsAdvanced|"
 msgid "Strengthen security on Windows by isolating Engines running R-code"
 msgstr ""
 "R kodunu çalıştıran Motorları izole ederek Windows'ta güvenliği güçlendirin"
-
-msgctxt "PrefsUI|"
-msgid "Use thousands separators"
-msgstr "Binler ayracı kullanın"
-
-msgctxt "PrefsUI|"
-msgid "Disable to remove thousands separators from all numbers."
-msgstr "Tüm sayılardan binlik ayraçları kaldırmak için devre dışı bırakın."
 
 msgctxt "PreferencesModel|"
 msgid "Select a file..."
@@ -6311,3 +6273,80 @@ msgstr ""
 msgctxt "JASPControl|"
 msgid "Color Picker"
 msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Data Preview"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Select Delimiter:"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Space"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Tab"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Advanced"
+msgstr "Gelişmiş"
+
+msgctxt "CsvPreview|"
+msgid "Load"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Cancel"
+msgstr "İptal Et"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Preferred language"
+msgstr "Tercih edilen dil"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Choose language"
+msgstr "Dili seçin"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use thousands separators"
+msgstr "Binler ayracı kullanın"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Disable to remove thousands separators from all numbers."
+msgstr "Tüm sayılardan binlik ayraçları kaldırmak için devre dışı bırakın."
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use an alternative language and territory dependent display for numbers"
+msgstr "Sayılar için alternatif bir dil ve bölgeye bağlı görüntüleme kullanın"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use the locale specified below for display of numbers and currency."
+msgstr ""
+"Sayıların ve para birimlerinin görüntülenmesi için aşağıda belirtilen yerel "
+"ayarı kullanın."
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Alt. language"
+msgstr "Alternatif dil"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Alt. territory"
+msgstr "Alt. bölge"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Help us translate or improve JASP in your language"
+msgstr "JASP'yi kendi dilinize çevirmemize veya geliştirmemize yardımcı olun"

@@ -2683,10 +2683,6 @@ msgid "Dark theme"
 msgstr "Ciemny"
 
 msgctxt "PrefsUI|"
-msgid "Preferred language"
-msgstr "Język"
-
-msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
 msgstr "Bezpieczny tryb graficzny"
 
@@ -2959,10 +2955,6 @@ msgstr "Otwórz dokumentację"
 msgctxt "AboutWindow|"
 msgid "Open Source Components"
 msgstr "Komponenty open-source'owe zawarte w JASP"
-
-msgctxt "PrefsUI|"
-msgid "Help us translate or improve JASP in your language"
-msgstr "Pomóż nam przetłumaczyć lub ulepszyć JASP w Twoim języku"
 
 msgctxt "ErrorMessage|"
 msgid "Don't show again"
@@ -5205,27 +5197,6 @@ msgctxt "TabView|"
 msgid "Double click to edit this name"
 msgstr "Kliknij dwukrotnie, aby edytować tę nazwę"
 
-msgctxt "PrefsUI|"
-msgid "Choose language"
-msgstr "Wybierz język"
-
-msgctxt "PrefsUI|"
-msgid "Use an alternative language and territory dependent display for numbers"
-msgstr ""
-"Użyj alternatywnego formatowania liczb w zależności od języka i regionu"
-
-msgctxt "PrefsUI|"
-msgid "Use the locale specified below for display of numbers and currency."
-msgstr "Użyj ustawień regionalnych do formatowania liczb i walut."
-
-msgctxt "PrefsUI|"
-msgid "Alt. language"
-msgstr "Alternatywny język"
-
-msgctxt "PrefsUI|"
-msgid "Alt. territory"
-msgstr "Alternatywny region"
-
 msgctxt "JASPColumn|"
 msgid "Column description: "
 msgstr "Opis kolumny: "
@@ -5339,15 +5310,6 @@ msgid "Strengthen security on Windows by isolating Engines running R-code"
 msgstr ""
 "Wzmocnij bezpieczeństwo w systemie Windows poprzez izolację silników "
 "wykonujących kod R"
-
-msgctxt "PrefsUI|"
-msgid "Use thousands separators"
-msgstr "Użyj separatorów tysięcy"
-
-msgctxt "PrefsUI|"
-msgid "Disable to remove thousands separators from all numbers."
-msgstr ""
-"Wyłączenie spowoduje usunięcie separatorów tysięcy ze wszystkich liczb."
 
 msgctxt "PreferencesModel|"
 msgid "Select a file..."
@@ -6315,3 +6277,80 @@ msgstr ""
 msgctxt "JASPControl|"
 msgid "Color Picker"
 msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Data Preview"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Select Delimiter:"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Space"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Tab"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Advanced"
+msgstr "Zaawansowane"
+
+msgctxt "CsvPreview|"
+msgid "Load"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Cancel"
+msgstr "Anuluj"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Preferred language"
+msgstr "Język"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Choose language"
+msgstr "Wybierz język"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use thousands separators"
+msgstr "Użyj separatorów tysięcy"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Disable to remove thousands separators from all numbers."
+msgstr ""
+"Wyłączenie spowoduje usunięcie separatorów tysięcy ze wszystkich liczb."
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use an alternative language and territory dependent display for numbers"
+msgstr ""
+"Użyj alternatywnego formatowania liczb w zależności od języka i regionu"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Use the locale specified below for display of numbers and currency."
+msgstr "Użyj ustawień regionalnych do formatowania liczb i walut."
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Alt. language"
+msgstr "Alternatywny język"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Alt. territory"
+msgstr "Alternatywny region"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Help us translate or improve JASP in your language"
+msgstr "Pomóż nam przetłumaczyć lub ulepszyć JASP w Twoim języku"

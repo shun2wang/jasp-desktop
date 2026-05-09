@@ -2685,10 +2685,6 @@ msgid "Dark theme"
 msgstr "Темная тема"
 
 msgctxt "PrefsUI|"
-msgid "Preferred language"
-msgstr "Язык"
-
-msgctxt "PrefsUI|"
 msgid "Safe graphics mode"
 msgstr "Безопасный графический режим"
 
@@ -2962,10 +2958,6 @@ msgstr "Открыть документацию"
 msgctxt "AboutWindow|"
 msgid "Open Source Components"
 msgstr "Компоненты с открытым исходным кодом"
-
-msgctxt "PrefsUI|"
-msgid "Help us translate or improve JASP in your language"
-msgstr "Помогите нам перевести или улучшить JASP на вашем языке"
 
 msgctxt "AnalysisFormExpander|"
 msgid "Show R syntax"
@@ -5127,26 +5119,6 @@ msgctxt "TabView|"
 msgid "Double click to edit this name"
 msgstr ""
 
-msgctxt "PrefsUI|"
-msgid "Choose language"
-msgstr ""
-
-msgctxt "PrefsUI|"
-msgid "Use an alternative language and territory dependent display for numbers"
-msgstr ""
-
-msgctxt "PrefsUI|"
-msgid "Use the locale specified below for display of numbers and currency."
-msgstr ""
-
-msgctxt "PrefsUI|"
-msgid "Alt. language"
-msgstr ""
-
-msgctxt "PrefsUI|"
-msgid "Alt. territory"
-msgstr ""
-
 msgctxt "JASPColumn|"
 msgid "Column description: "
 msgstr ""
@@ -5249,14 +5221,6 @@ msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Strengthen security on Windows by isolating Engines running R-code"
-msgstr ""
-
-msgctxt "PrefsUI|"
-msgid "Use thousands separators"
-msgstr ""
-
-msgctxt "PrefsUI|"
-msgid "Disable to remove thousands separators from all numbers."
 msgstr ""
 
 msgctxt "PreferencesModel|"
@@ -6195,3 +6159,71 @@ msgstr ""
 msgctxt "JASPControl|"
 msgid "Color Picker"
 msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Data Preview"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Select Delimiter:"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Space"
+msgstr ""
+
+msgctxt "CsvPreview|"
+msgid "Tab"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Advanced"
+msgstr "Расширенный"
+
+msgctxt "CsvPreview|"
+msgid "Load"
+msgstr ""
+
+#, fuzzy
+msgctxt "CsvPreview|"
+msgid "Cancel"
+msgstr "Отмена"
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Preferred language"
+msgstr "Язык"
+
+msgctxt "PrefsLanguage|"
+msgid "Choose language"
+msgstr ""
+
+msgctxt "PrefsLanguage|"
+msgid "Use thousands separators"
+msgstr ""
+
+msgctxt "PrefsLanguage|"
+msgid "Disable to remove thousands separators from all numbers."
+msgstr ""
+
+msgctxt "PrefsLanguage|"
+msgid "Use an alternative language and territory dependent display for numbers"
+msgstr ""
+
+msgctxt "PrefsLanguage|"
+msgid "Use the locale specified below for display of numbers and currency."
+msgstr ""
+
+msgctxt "PrefsLanguage|"
+msgid "Alt. language"
+msgstr ""
+
+msgctxt "PrefsLanguage|"
+msgid "Alt. territory"
+msgstr ""
+
+#, fuzzy
+msgctxt "PrefsLanguage|"
+msgid "Help us translate or improve JASP in your language"
+msgstr "Помогите нам перевести или улучшить JASP на вашем языке"
