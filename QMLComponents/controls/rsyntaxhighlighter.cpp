@@ -52,18 +52,29 @@ RSyntaxHighlighter::RSyntaxHighlighter(QTextDocument *parent, VariableInfo * var
 	_highlightingRules.append(rule);
 
 	// keyword
-	_keywordFormat.setForeground(QColor(0, 150, 200));
-	QStringList keywordList;
-	keywordList << "NA" << "NA_character_" << "NA_complex_" << "NA_integer_" << "NA_real_" << "NULL" << "break" 
-						<< "else" << "for" << "function" << "if" << "in" << "next" << "repeat" << "while";
+	// keyword: reserved words (if, for, etc.) from function names (abs, lm, etc.).
+	QStringList reservedWords;
+	reservedWords << "NA" << "NA_character_" << "NA_complex_" << "NA_integer_" << "NA_real_" << "NULL" 
+								<< "break" << "else" << "for" << "function" << "if" << "in" << "next" << "repeat" << "while";
 	
+	// process reserved words (normal matching)
+	_keywordFormat.setForeground(QColor(0, 150, 200));
+	rule.pattern = QRegularExpression(R"(\b(?:)" + reservedWords.join('|') + R"()\b)");
+	rule.format = _keywordFormat;
+	_highlightingRules.append(rule);
+	
+	// keyword: whitelist function
+	QStringList functionList;
 	std::set<std::string> whitelist = R_FunctionWhiteList::getWhiteList();
 	for (const auto& func : whitelist) {
-			keywordList << QString::fromStdString(func);
+			functionList << QString::fromStdString(func);
 	}
-	QString keywordPattern = R"(\b(?:)" + keywordList.join('|') + R"()\b)";
 	
-	rule.pattern = QRegularExpression(keywordPattern);
+	// use Lookahead: Optional spaces and left parentheses are required.
+	QString functionPattern = R"(\b(?:)" + functionList.join('|') + R"()(?=\s*\())";
+	
+	// _keywordFormat.setForeground(QColor(0, 150, 200));
+	rule.pattern = QRegularExpression(functionPattern);
 	rule.format = _keywordFormat;
 	_highlightingRules.append(rule);
 
