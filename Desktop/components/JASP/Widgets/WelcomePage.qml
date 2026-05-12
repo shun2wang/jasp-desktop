@@ -223,7 +223,7 @@ FocusScope
 								:
 								[ 
 										"Our source code will always be open and available", 
-										"Uses sandboxing to keep supply-chain attacks contained",
+										"Sandboxing keeps supply-chain attacks contained",
 										"Used world-wide for quality control and statistics" 
 								];
 					delegate:	explanationElement
