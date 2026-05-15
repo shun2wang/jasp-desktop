@@ -2479,7 +2479,7 @@ void DatabaseInterface::close()
 
 	_dbCheckMutex.unlock();
 	
-	while(sqlite3_close(_dbCreated) != SQLITE_OK)
+	while(_dbCreated && sqlite3_close(_dbCreated) != SQLITE_OK)
 	{
 		std::this_thread::sleep_for(std::chrono::nanoseconds(10000000));
 	}

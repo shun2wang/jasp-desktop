@@ -20,12 +20,19 @@
 #include "utilities/qutils.h"
 #include "columnencoder.h"
 
+#include <memory>
+
 DataSetProvider		*	DataSetProvider::_singleton		= nullptr;
 
 DataSetProvider* DataSetProvider::getProvider(bool inMemory, bool reset, QObject* parent)
 {
 	if (!_singleton)
 		_singleton = new DataSetProvider(inMemory, parent);
+	else if (_singleton->_inMemory != inMemory)
+	{
+		delete _singleton;
+		_singleton = new DataSetProvider(inMemory, parent);
+	}
 	else if (reset)
 		_singleton->resetDataSet();
 
@@ -41,7 +48,7 @@ DataSetProvider::~DataSetProvider()
 	_singleton = nullptr;
 }
 
-DataSetProvider::DataSetProvider(bool inMemory, QObject *parent) : QAbstractTableModel(parent)
+DataSetProvider::DataSetProvider(bool inMemory, QObject *parent) : QAbstractTableModel(parent), _inMemory(inMemory)
 {
 	_db	= new DatabaseInterface(true, inMemory);
 	_dataSet = new DataSet();
@@ -52,6 +59,7 @@ DataSetProvider::DataSetProvider(bool inMemory, QObject *parent) : QAbstractTabl
 
 void DataSetProvider::resetDataSet()
 {
+	beginResetModel();
 	if (_dataSet)
 	{
 		_dataSet->dbDelete();
@@ -59,6 +67,7 @@ void DataSetProvider::resetDataSet()
 	}
 
 	_dataSet = new DataSet();
+	endResetModel();
 }
 
 int	DataSetProvider::rowCount(const QModelIndex &) const
@@ -113,18 +122,36 @@ void DataSetProvider::loadDataSet(const std::map<std::string, stringvec > & data
 
 }
 
+void DataSetProvider::closeDatabase()
+{
+	_db->close();
+}
+
 void DataSetProvider::loadDatabase(const Version & jaspVersion)
 {
+	beginResetModel();
 	delete _dataSet;
+	_dataSet = nullptr;
 
-	_db->close();
-	_db->load();
-	_db->upgradeDBFromVersion(jaspVersion);
+	try
+	{
+		_db->close();
+		_db->load();
+		_db->upgradeDBFromVersion(jaspVersion);
 
-	_dataSet = new DataSet(0); // Setting 0 for "do nothing" because otherwise we can't pass on jaspVersion
-	_dataSet->dbLoad(1, [](float p) {}, jaspVersion);
+		std::unique_ptr<DataSet> loadedDataSet(new DataSet(0)); // Setting 0 for "do nothing" because otherwise we can't pass on jaspVersion
+		loadedDataSet->dbLoad(1, [](float p) {}, jaspVersion);
 
-	ColumnEncoder::columnEncoder()->setCurrentNames(_dataSet->getColumnTypesMap());
+		_dataSet = loadedDataSet.release();
+		ColumnEncoder::columnEncoder()->setCurrentNames(_dataSet->getColumnTypesMap());
+		endResetModel();
+	}
+	catch (...)
+	{
+		_dataSet = new DataSet();
+		endResetModel();
+		throw;
+	}
 }
 
 QVariantList DataSetProvider::_getDoubleList(Column * column) const

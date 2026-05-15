@@ -64,6 +64,13 @@ size_t _logWriteFunction(const void * buf, size_t len)
 void rbridge_setDataBridge(DataBridge * dataBridge)
 {
 	data_bridge = dataBridge;
+	rbridge_dataSet = nullptr;
+}
+
+void rbridge_clearDataBridge()
+{
+	data_bridge = nullptr;
+	rbridge_dataSet = nullptr;
 }
 
 const std::string jaspBaseDistributionSamplersR =
@@ -149,6 +156,9 @@ void rbridge_init(DataBridge * dataBridge, sendFuncDef sendToDesktopFunction, po
 			jaspBaseTransformJohnsonR				+ "\n" + 
 			jaspBaseTransformYeoJohnsonR			+ "\n" + 
 			jaspBaseTransformPowerR;
+	// SyntaxInterface uses insideJasp=false for parse/dataset replay and only
+	// needs the native callbacks; the Engine still receives the full R helpers.
+	const char * initRCodeForMode = insideJasp ? initRCode.c_str() : "";
 
 	Log::log() << "Entering jaspRCPP_init." << std::endl;
 	jaspRCPP_init(	AppInfo::getBuildYear()		.c_str(),
@@ -162,7 +172,7 @@ void rbridge_init(DataBridge * dataBridge, sendFuncDef sendToDesktopFunction, po
 					rbridge_moduleLibraryFixer,
 					resultFont,
 					tempDirStatic.c_str(),
-					initRCode.c_str(),
+					initRCodeForMode,
 					insideJasp
 	);
 	JASPTIMER_STOP(jaspRCPP_init);
