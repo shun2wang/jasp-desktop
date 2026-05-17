@@ -268,6 +268,7 @@ if(WIN32)
   include(FindRToolsDLLPath)
   
   find_package(freexl 2.0.99 REQUIRED)
+  find_package(librdata 0.0.0 REQUIRED)
   find_package(libsodium 1.0.20 REQUIRED)
 
 
