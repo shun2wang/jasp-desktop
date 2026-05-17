@@ -32,6 +32,7 @@ if(USE_CONAN)
 
   # We use our own recipe with some patches to cook up a functional version of freexl, so get the recipe:
   if(NOT JASP_SYNTAX_INTERFACE_ONLY)
+  
     message(STATUS "Cloning freexl dependency")
     set(FREEXL_VERSION "2.0.99.cci.20260225")
     FetchContent_Declare(
@@ -40,6 +41,16 @@ if(USE_CONAN)
       GIT_TAG          620019a56c6ba94936c9844ab5c79e8db9baa06b
     )
     FetchContent_MakeAvailable(freexl)
+
+    message(STATUS "Cloning librdata dependency")
+    set(LIBRDATA_VERSION "0.0.0.cci.20231003")
+    FetchContent_Declare(
+      librdata
+      GIT_REPOSITORY   https://github.com/shun2wang/librdata-conan-recipe.git
+      GIT_TAG          809abb80dfe7271d2521d0e9f01fdd2c2594c58c
+    )
+    FetchContent_MakeAvailable(librdata)
+
   endif()
 
   # Configure Conan for windows
@@ -64,6 +75,23 @@ if(USE_CONAN)
       else()
         message(CHECK_FAIL "build freexl failed")
       endif()
+
+      if(librdata_POPULATED)
+      message(STATUS "Compiling librdata dependency ${librdata_SOURCE_DIR}")
+      execute_process(
+          COMMAND_ECHO STDOUT
+          WORKING_DIRECTORY ${librdata_SOURCE_DIR}/librdata
+          COMMAND
+          conan create ${librdata_SOURCE_DIR}/librdata --version=${LIBRDATA_VERSION}
+          -s build_type=${CMAKE_BUILD_TYPE}
+          -c tools.cmake.cmaketoolchain:generator=${CMAKE_GENERATOR}
+          -s compiler.runtime=${CONAN_COMPILER_RUNTIME} --build=missing
+          --test-missing
+      )
+      else()
+        message(CHECK_FAIL "build librdata failed")
+      endif()
+
     endif()
 
     execute_process(
