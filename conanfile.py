@@ -36,7 +36,7 @@ class JaspConanConfig(ConanFile):
             self.requires("mpfr/4.2.1")
             self.requires("freexl/2.0.99.cci.20260225")
             self.requires("libsodium/1.0.20")
-            self.requires("librdata/0.0.0.cci.20231003")
+            self.requires("librdata/0.0.0.cci.20260518")
 
     def build_requirements(self):
         self.tool_requires("cmake/3.30.0")

@@ -43,11 +43,11 @@ if(USE_CONAN)
     FetchContent_MakeAvailable(freexl)
 
     message(STATUS "Cloning librdata dependency")
-    set(LIBRDATA_VERSION "0.0.0.cci.20231003")
+    set(LIBRDATA_VERSION "0.0.0.cci.20260518")
     FetchContent_Declare(
       librdata
       GIT_REPOSITORY   https://github.com/shun2wang/librdata-conan-recipe.git
-      GIT_TAG          809abb80dfe7271d2521d0e9f01fdd2c2594c58c
+      GIT_TAG          58edaa556ed3589b8d170e09d30afe20613f4201
     )
     FetchContent_MakeAvailable(librdata)
 
