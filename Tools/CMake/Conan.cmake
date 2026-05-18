@@ -63,7 +63,6 @@ if(USE_CONAN)
       if(freexl_POPULATED)
         message(STATUS "Compiling freexl dependency ${freexl_SOURCE_DIR}")
         execute_process(
-            ECHO_OUTPUT_VARIABLE
             COMMAND_ECHO STDOUT
             WORKING_DIRECTORY ${freexl_SOURCE_DIR}/freexl
             COMMAND
@@ -80,11 +79,10 @@ if(USE_CONAN)
       if(librdata_POPULATED)
       message(STATUS "Compiling librdata dependency ${librdata_SOURCE_DIR}")
       execute_process(
-          ECHO_OUTPUT_VARIABLE
           COMMAND_ECHO STDOUT
-          WORKING_DIRECTORY ${librdata_SOURCE_DIR}/librdata
+          WORKING_DIRECTORY ${librdata_SOURCE_DIR}
           COMMAND
-          conan create ${librdata_SOURCE_DIR}/librdata --version=${LIBRDATA_VERSION}
+          conan create ${librdata_SOURCE_DIR} --version=${LIBRDATA_VERSION}
           -s build_type=${CMAKE_BUILD_TYPE}
           -c tools.cmake.cmaketoolchain:generator=${CMAKE_GENERATOR}
           -s compiler.runtime=${CONAN_COMPILER_RUNTIME} --build=missing
