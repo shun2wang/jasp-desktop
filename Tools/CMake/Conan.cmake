@@ -63,6 +63,7 @@ if(USE_CONAN)
       if(freexl_POPULATED)
         message(STATUS "Compiling freexl dependency ${freexl_SOURCE_DIR}")
         execute_process(
+            ECHO_OUTPUT_VARIABLE
             COMMAND_ECHO STDOUT
             WORKING_DIRECTORY ${freexl_SOURCE_DIR}/freexl
             COMMAND
@@ -79,6 +80,7 @@ if(USE_CONAN)
       if(librdata_POPULATED)
       message(STATUS "Compiling librdata dependency ${librdata_SOURCE_DIR}")
       execute_process(
+          ECHO_OUTPUT_VARIABLE
           COMMAND_ECHO STDOUT
           WORKING_DIRECTORY ${librdata_SOURCE_DIR}/librdata
           COMMAND
