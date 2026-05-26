@@ -470,7 +470,7 @@ std::string ColumnEncoder::encodeRScript(std::string text, const std::map<std::s
 		for(size_t bracePos = pos; bracePos < text.size() && endIsFree && keepGoing; bracePos++)
 			if(text[bracePos] == '(')
 				endIsFree = false;
-			else if(text[bracePos] != '\t' && text[bracePos] != ' ')
+			else if(text[bracePos] != '\t' && text[bracePos] != ' ' && text[bracePos] != '\n')
 				keepGoing = false; //Aka something else than whitespace or a brace and that means that we can replace it!
 		return endIsFree;
 	};
@@ -810,6 +810,18 @@ void ColumnEncoder::_addTypeToColumnNamesInOptionsRecursively(Json::Value & opti
 	{
 		for (Json::Value& oneOption : options)
 			_addTypeToColumnNamesInOptionsRecursively(oneOption, preloadingData, colTypes);
+	}
+	else if (options.isString())
+	{
+		const std::string possibleCol = options.asString();
+		
+		if(_columnEncoder->_dataSetTypes.count(possibleCol))
+		{
+			columnType possType = _columnEncoder->_dataSetTypes.at(possibleCol);
+			if(possType != columnType::unknown)
+				colTypes.insert(std::make_pair(possibleCol + "." + columnTypeToString(possType) , possType));
+		}
+		
 	}
 }
 
