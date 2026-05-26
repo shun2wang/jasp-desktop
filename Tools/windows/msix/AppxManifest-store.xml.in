@@ -16,6 +16,13 @@
   <DisplayName>JASP</DisplayName>
   <PublisherDisplayName>JASP</PublisherDisplayName>
   <Logo>Assets\StoreLogo.png</Logo>
+ <!--file system write virtualization exclusion ensures that configuration and logs are written directly to the system's actual AppData directory, preventing issues during upgrades and url access. -->
+  <virtualization:FileSystemWriteVirtualization>
+    <virtualization:ExcludedDirectories>
+      <virtualization:ExcludedDirectory>$(KnownFolder:RoamingAppData)\JASP</virtualization:ExcludedDirectory>
+      <virtualization:ExcludedDirectory>$(KnownFolder:LocalAppData)\JASP</virtualization:ExcludedDirectory>
+    </virtualization:ExcludedDirectories>
+  </virtualization:FileSystemWriteVirtualization>
 </Properties>
 
 <Resources>
@@ -28,6 +35,7 @@
 
 <Capabilities>
   <rescap:Capability Name="runFullTrust"/>
+  <rescap:Capability Name="unvirtualizedResources" />
 </Capabilities>
 
 <Applications>
