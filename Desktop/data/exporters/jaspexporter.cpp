@@ -42,7 +42,7 @@
 
 
 time_t JASPExporter::_now;
-const Version JASPExporter::jaspArchiveVersion = Version("5.0.0");
+const Version JASPExporter::jaspArchiveVersion = Version("6.0.0");
 std::queue<std::string> JASPExporter::_snapshotQueue;
 std::mutex JASPExporter::_snapshotMutex;
 
