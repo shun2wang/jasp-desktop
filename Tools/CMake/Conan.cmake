@@ -24,6 +24,33 @@ if(USE_CONAN)
   message(STATUS "  ${CMAKE_BUILD_TYPE}")
   set(CONAN_COMPILER_RUNTIME "dynamic")
 
+  # When using RelWithDebInfo or MinSizeRel, generate a Conan profile that
+  # sets the consumer build type while forcing all dependencies to Release.
+  # This avoids slow/broken dependency builds and reuses cached Release binaries.
+  if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+    set(CONAN_PROFILE_PATH "${CMAKE_BINARY_DIR}/_conan_build/relwithdebinfo_override.profile")
+    file(WRITE "${CONAN_PROFILE_PATH}"
+"include(default)
+
+[settings]
+build_type=${CMAKE_BUILD_TYPE}
+*:build_type=Release
+")
+    # For conan install: use profile so JASP builds as RelWithDebInfo, deps as Release
+    set(CONAN_INSTALL_BUILD_TYPE_ARGS "--profile=${CONAN_PROFILE_PATH}")
+    # For conan create (freexl): always build the dependency in Release
+    set(CONAN_FREEXL_BUILD_TYPE_ARGS "-s build_type=Release")
+  else()
+    set(CONAN_INSTALL_BUILD_TYPE_ARGS "-s build_type=${CMAKE_BUILD_TYPE}")
+    set(CONAN_FREEXL_BUILD_TYPE_ARGS "-s build_type=${CMAKE_BUILD_TYPE}")
+  endif()
+
+  # Parse the args strings into CMake lists so each flag becomes a separate
+  # argument in execute_process(COMMAND ...). Without this, "-s build_type=X"
+  # is passed as a single combined argument and Conan rejects it.
+  separate_arguments(CONAN_INSTALL_BUILD_TYPE_ARGS NATIVE_COMMAND "${CONAN_INSTALL_BUILD_TYPE_ARGS}")
+  separate_arguments(CONAN_FREEXL_BUILD_TYPE_ARGS NATIVE_COMMAND "${CONAN_FREEXL_BUILD_TYPE_ARGS}")
+
   if(JASP_SYNTAX_INTERFACE_ONLY)
     set(CONAN_SYNTAX_OPTION "-o syntax_interface_only=True")
   else()
@@ -56,7 +83,7 @@ if(USE_CONAN)
             WORKING_DIRECTORY ${freexl_SOURCE_DIR}/freexl
             COMMAND
             conan create ${freexl_SOURCE_DIR}/freexl --version=${FREEXL_VERSION}
-            -s build_type=${CMAKE_BUILD_TYPE}
+            ${CONAN_FREEXL_BUILD_TYPE_ARGS}
             -c tools.cmake.cmaketoolchain:generator=${CMAKE_GENERATOR}
             -s compiler.runtime=${CONAN_COMPILER_RUNTIME} --build=missing
             --test-missing
@@ -66,12 +93,19 @@ if(USE_CONAN)
       endif()
     endif()
 
+    # Clean stale Conan-generated CMake files so CMakeDeps creates fresh find
+    # modules with correct paths for the resolved build types.
+    file(GLOB _CONAN_CMAKE_FILES "${CMAKE_BINARY_DIR}/_conan_build/*.cmake" "${CMAKE_BINARY_DIR}/_conan_build/conanbuild*")
+    if(_CONAN_CMAKE_FILES)
+      file(REMOVE ${_CONAN_CMAKE_FILES})
+    endif()
+
     execute_process(
       COMMAND_ECHO STDOUT
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
       COMMAND
       conan install ${CONAN_FILE_PATH} --output-folder=${CMAKE_BINARY_DIR}/_conan_build
-      -s build_type=${CMAKE_BUILD_TYPE}
+      ${CONAN_INSTALL_BUILD_TYPE_ARGS}
       -c tools.cmake.cmaketoolchain:generator=${CMAKE_GENERATOR}
       -s compiler.runtime=${CONAN_COMPILER_RUNTIME} --build=missing
       ${CONAN_SYNTAX_OPTION})
@@ -111,7 +145,7 @@ if(USE_CONAN)
   endif()
 
   include(${CMAKE_BINARY_DIR}/_conan_build/conan_toolchain.cmake)
-  
+
   set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_CLEAN_FILES _deps)
 endif()
 

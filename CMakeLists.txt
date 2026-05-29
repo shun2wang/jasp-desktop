@@ -42,8 +42,8 @@ if(APPLE)
 	set(CMAKE_OSX_DEPLOYMENT_TARGET 12.0 CACHE STRING "Minimum macOS version the build will be able to run on" FORCE)
     set(CONAN_ARCH "x86_64")
   endif()
-  
-  
+
+
   if("${CMAKE_OSX_SYSROOT}" STREQUAL "macosx" OR "${CMAKE_OSX_SYSROOT}" STREQUAL "")
 	  execute_process(COMMAND xcrun --sdk macosx --show-sdk-path
 		OUTPUT_VARIABLE SDKROOT
@@ -53,7 +53,7 @@ if(APPLE)
   else()
 	message(STATUS "CMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}")
   endif()
- 
+
 
 endif()
 
@@ -111,8 +111,12 @@ include(Config)
 include(Conan)
 # Conan set the CMAKE_MSVC_RUNTIME_LIBRARY to MultiThreadedDLL (this adds the /MD flag, cf conan_toolchain.cmake)
 # But on debug mode it does not set it to the MultiThreadedDebugDLL (/MDd): this can lead to a crash if a library uses a Qt function in a static method, as in DynamicRuntimeInfo)
-if(WIN32 AND (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "$<$<CONFIG:Debug>:MultiThreadedDLL>"))
-	set(CMAKE_MSVC_RUNTIME_LIBRARY "$<$<CONFIG:Debug>:MultiThreadedDebugDLL>")
+# We unconditionally force MultiThreaded$<$<CONFIG:Debug>:Debug>DLL so that:
+#   - Debug gets /MDd (MultiThreadedDebugDLL)
+#   - All other configs (Release, RelWithDebInfo, MinSizeRel) get /MD (MultiThreadedDLL)
+# This must be set after include(Conan) to override any Conan toolchain settings.
+if(WIN32)
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 	message(STATUS "CMAKE_MSVC_RUNTIME_LIBRARY is set to ${CMAKE_MSVC_RUNTIME_LIBRARY}")
 endif()
 
@@ -123,6 +127,13 @@ endif()
 include(Programs)
 
 # Looking for libraries, e.g., Boost, Qt
+# When dependencies are built in Release but the consumer is RelWithDebInfo,
+# CMake needs to know to fall back to Release properties on imported targets.
+if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release "")
+elseif(CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+  set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release "")
+endif()
 include(Libraries)
 
 # Preparing irregular dependencies, e.g., ReadStat
