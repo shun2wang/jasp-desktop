@@ -6441,3 +6441,13 @@ msgid ""
 "and filtered as '%2'.\n"
 "You can also paste syntax-mode JASP analyses here."
 msgstr ""
+
+#, qt-format
+msgctxt "DynamicModules|"
+msgid ""
+"Module is not available, to load this JASP file properly you will need to "
+"install it first and then retry.\n"
+"If you do not have this module you can try our built-in module library, the "
+"module's website: \"%1\" or, if that doesn't help, you could try our github "
+"issuetracker: https://github.com/jasp-stats/jasp-issues/issues."
+msgstr ""
