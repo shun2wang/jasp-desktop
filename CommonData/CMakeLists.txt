@@ -53,17 +53,15 @@ target_link_libraries(
     CommonData
     PUBLIC
     LibArchive::LibArchive
-#    Common
     SQLite::SQLite3
+	PRIVATE
 	$<$<PLATFORM_ID:Windows>:${_LIB_R_INTERFACE_STATIC_DLL_A}>
 	$<$<NOT:$<PLATFORM_ID:Windows>>:R-Interface>
 
 )
-
 if(MSVC)
   target_compile_options(CommonData PRIVATE /EHsc)
 endif()
-
 target_compile_definitions(
   CommonData
   PUBLIC $<$<BOOL:${JASP_PRINT_ENGINE_MESSAGES}>:PRINT_ENGINE_MESSAGES>
