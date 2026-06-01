@@ -341,6 +341,43 @@ Item
 			z:					 backgroundImage.z + 1
 		}
 
+		Rectangle
+		{
+			id:					updateBadge
+			z:					backgroundImage.z + 2
+			width:				16 * preferencesModel.uiScale
+			height:				width
+			radius:				width / 2
+			color:				"transparent"
+			visible:			moduleLibrary.updatableModuleNames.indexOf(ribbonButton.moduleName) >= 0
+			anchors
+			{
+				top:			backgroundImage.top
+				left:			backgroundImage.left
+				topMargin:		-4
+				leftMargin:		-4
+			}
+
+			Image
+			{
+				anchors.fill:		parent
+				source:				jaspTheme.iconPath + "updateIcon.svg"
+				smooth:				true
+			}
+
+			ToolTip.text:		qsTr("Update available")
+			ToolTip.visible:	mouseBadge.containsMouse
+
+			MouseArea
+			{
+				id:				mouseBadge
+				anchors.fill:	parent
+				hoverEnabled:	true
+				cursorShape:	Qt.PointingHandCursor
+				onClicked:		modulesMenu.opened = true
+			}
+		}
+
 		Image
 		{
 			id:					menuIndicator
