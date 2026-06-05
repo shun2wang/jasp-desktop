@@ -67,6 +67,7 @@ public:
 			bool				shouldEncode(const std::string & in);
 			bool				shouldDecode(const std::string & in);
 			void				setCurrentNames(const colTypeMap & names);
+			const colTypeMap&	currentNames() const { return _dataSetTypes; }
 			void				updateColumnTypesOnly(const colTypeMap & names);
 			void				setCurrentNames(const std::vector<std::string> & names, bool generateTypesEncoding=true);	///< Do not use! Deprecated
 			void				setCurrentColumnTypePerName(const colTypeMap & theMap);									///< Do not use! Deprecated
@@ -87,7 +88,7 @@ public:
 	static	std::string			encodeAll(const std::string & text) { return replaceAll(text, encodingMap(), originalNames()); }
 
 			///Replace all occurences of encoded columnNames in a string by their decoded versions, regardless of word boundaries or parentheses.
-	static	std::string			decodeAll(const std::string & text) { return replaceAll(text, decodingMap(), encodedNames());  }
+	static	std::string			decodeAll(const std::string & text) { columnEncoder(); return replaceAll(text, decodingMap(), encodedNames());  }
 
 			///Replace all occurences of columnNames in a string by their encoded versions in all json-names and string-values, regardless of word boundaries or parentheses.
 	static	void				encodeJson(Json::Value & json, bool replaceNames = false, bool replaceStrict = false);

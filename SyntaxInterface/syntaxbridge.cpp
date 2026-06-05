@@ -43,7 +43,11 @@
 #include "modules/dynamicmodule.h"
 #include "archivereader.h"
 #include "databaseinterface.h"
+#include "columnencoder.h"
+#include "columnencodercontext.h"
 
+#include "boost/iostreams/stream.hpp"
+#include <boost/iostreams/device/null.hpp>
 #include <string>
 #include <vector>
 
@@ -63,7 +67,6 @@ static bool									gl_jaspBaseInitialized			= false;
 static QGuiApplication			*			gl_application					= nullptr;
 static QQmlEngine				*			gl_qmlEngine					= nullptr;
 static DataBridge				*			gl_dataBridge					= nullptr;
-static ColumnEncoder			*			gl_extraEncodings				= nullptr;
 static QMap<QString, std::pair<QDateTime, AnalysisForm* > >	gl_qmlFormMap;
 static int									gl_applicationArgc				= 0;
 static std::vector<std::string>				gl_applicationArgvStorage;
@@ -84,6 +87,24 @@ static std::string							gl_param_resultFont				=
 #else
 	"freesans,sans-serif";
 #endif
+
+namespace
+{
+	boost::iostreams::stream<boost::iostreams::null_sink>	gl_nullLogStream((boost::iostreams::null_sink()));
+	bool													gl_loggingInitialized = false;
+}
+
+static void configureBridgeLogging(bool verbose)
+{
+	if(!gl_loggingInitialized)
+	{
+		Log::init(&gl_nullLogStream);
+		gl_loggingInitialized = true;
+	}
+
+	Log::setDefaultDestination(verbose ? logType::cout : logType::null);
+	Log::setWhere(verbose ? logType::cout : logType::null);
+}
 
 static bool readJaspJsonEntry(Json::Value & root, const char * filePath, const char * entry, std::string * error = nullptr)
 {
@@ -148,8 +169,37 @@ static const char* statusError(Json::Value status, const std::string & error)
 {
 	status["ok"] = false;
 	status["error"] = error;
-	Log::log() << error << std::endl;
 	return statusResult(status);
+}
+
+static ColumnEncoder * extraColumnEncoder()
+{
+	return gl_dataBridge ? gl_dataBridge->extraEncodings() : nullptr;
+}
+
+static ColumnEncoder & requireExtraColumnEncoder()
+{
+	ColumnEncoder * encoder = extraColumnEncoder();
+	if(!encoder)
+		throw std::runtime_error("Cannot access extra option encodings without an initialized DataBridge.");
+
+	return *encoder;
+}
+
+static ColumnEncoder::colTypeMap currentDatasetColumnTypes()
+{
+	DataSet * dataSet = gl_dataBridge ? gl_dataBridge->provideAndUpdateDataSet() : nullptr;
+	return dataSet ? dataSet->getColumnTypesMap() : ColumnEncoder::colTypeMap();
+}
+
+static Json::Value columnEncoderContextJson()
+{
+	ColumnEncoder * extraEncoder = extraColumnEncoder();
+
+	return ColumnEncoderContext(
+		currentDatasetColumnTypes(),
+		extraEncoder ? extraEncoder->currentNames() : ColumnEncoder::colTypeMap()
+	).toJson();
 }
 
 static Json::Value analysisOptionsStatus(const char * filePath, int analysisNr)
@@ -202,8 +252,8 @@ static void clearRequestedDataState()
 	ColumnEncoder::colTypeMap noColumns;
 	ColumnEncoder::columnEncoder()->setCurrentNames(noColumns);
 
-	if (gl_extraEncodings)
-		gl_extraEncodings->setCurrentNames(noColumns);
+	if (ColumnEncoder * encoder = extraColumnEncoder())
+		encoder->setCurrentNames(noColumns);
 }
 
 static void clearDataBridgeState()
@@ -314,12 +364,6 @@ void STDCALL syntaxBridgeShutdown()
 {
 	syntaxBridgeClearQmlState();
 	clearDataBridgeState();
-
-	if (gl_extraEncodings)
-	{
-		delete gl_extraEncodings;
-		gl_extraEncodings = nullptr;
-	}
 
 	if (gl_initialized)
 	{
@@ -459,11 +503,22 @@ const char* STDCALL syntaxBridgeLoadDataSetFromJaspFileStatus(const char * fileP
 
 const char* STDCALL syntaxBridgeLoadQmlAndParseOptions(const char* moduleName, const char* analysisName, const char* qmlFile, const char* options, const char* version, bool preloadData)
 {
-	if (!init())
-	{
-		Log::log() << "Error during initialization" << std::endl;
+	Json::Value status;
+	Json::Reader reader;
+	if (!reader.parse(syntaxBridgeLoadQmlAndParseOptionsStatus(moduleName, analysisName, qmlFile, options, version, preloadData), status))
 		return "";
-	}
+	if (!status["ok"].asBool())
+		return "";
+
+	static std::string result;
+	result = status["options"].toStyledString();
+	return result.c_str();
+}
+
+const char* STDCALL syntaxBridgeLoadQmlAndParseOptionsStatus(const char* moduleName, const char* analysisName, const char* qmlFile, const char* options, const char* version, bool preloadData)
+{
+	if (!init())
+		return statusError(statusBase("syntaxBridgeLoadQmlAndParseOptions"), "Error during initialization.");
 
 	std::string qmlFileStr		= qmlFile,
 				versionStr		= version,
@@ -475,8 +530,7 @@ const char* STDCALL syntaxBridgeLoadQmlAndParseOptions(const char* moduleName, c
 
 	if (!form)
 	{
-		Log::log() << "Cannot create QML Form " << qmlFileStr << std::endl;
-		return "";
+		return statusError(statusBase("syntaxBridgeLoadQmlAndParseOptions"), "Cannot create QML Form " + qmlFileStr);
 	}
 
 	Json::Value parsedOptions;
@@ -484,20 +538,19 @@ const char* STDCALL syntaxBridgeLoadQmlAndParseOptions(const char* moduleName, c
 
 	if (!form->parseOptions(options, parsedOptions, errorMsg))
 	{
-		Log::log() << "Error when parsing options: " << errorMsg << std::endl;
-		return "";
+		return statusError(statusBase("syntaxBridgeLoadQmlAndParseOptions"), "Error when parsing options: " + errorMsg);
 	}
 
-	gl_extraEncodings->setCurrentNamesFromOptionsMeta(parsedOptions);
+	gl_dataBridge->extraEncodings()->setCurrentNamesFromOptionsMeta(parsedOptions);
 	gl_dataBridge->updateOptionsAccordingToMeta(parsedOptions);
 	ColumnEncoder::colsPlusTypes analysisColsTypes = ColumnEncoder::encodeColumnNamesinOptions(parsedOptions, preloadData);
 
 	rbridge_setWantedCols(analysisColsTypes);
 
-	static std::string result;
-	result = parsedOptions.toStyledString();
-
-	return result.c_str();
+	Json::Value status = statusBase("syntaxBridgeLoadQmlAndParseOptions");
+	status["ok"] = true;
+	status["options"] = parsedOptions;
+	return statusResult(status);
 }
 
 const char* STDCALL syntaxBridgeAnalysisOptionsFromJaspFile(const char * filePath, int analysisNr)
@@ -507,11 +560,7 @@ const char* STDCALL syntaxBridgeAnalysisOptionsFromJaspFile(const char * filePat
 
 	Json::Value status = analysisOptionsStatus(filePath, analysisNr);
 	if (!status["ok"].asBool())
-	{
-		if (status.isMember("error"))
-			Log::log() << status["error"].asString() << std::endl;
 		return result.c_str();
-	}
 
 	result = status["options"].toStyledString();
 	return result.c_str();
@@ -520,8 +569,6 @@ const char* STDCALL syntaxBridgeAnalysisOptionsFromJaspFile(const char * filePat
 const char* STDCALL syntaxBridgeAnalysisOptionsFromJaspFileStatus(const char * filePath, int analysisNr)
 {
 	Json::Value status = analysisOptionsStatus(filePath, analysisNr);
-	if (!status["ok"].asBool() && status.isMember("error"))
-		Log::log() << status["error"].asString() << std::endl;
 	return statusResult(status);
 }
 
@@ -655,6 +702,40 @@ const char* STDCALL syntaxBridgeGetVariableNames()
 	return result.c_str();
 }
 
+void STDCALL syntaxBridgeSetVerbose(bool verbose)
+{
+	gl_verbose = verbose;
+	if (gl_loggingInitialized)
+		configureBridgeLogging(verbose);
+}
+
+const char* STDCALL syntaxBridgeColumnEncoderContext()
+{
+	static std::string result;
+
+	result = columnEncoderContextJson().toStyledString();
+	return result.c_str();
+}
+
+const char* STDCALL syntaxBridgeDecodeColumnText(const char* valuesJson, const char* encoderContextJson)
+{
+	static std::string result;
+
+	try
+	{
+		result = decodeColumnJson(valuesJson, encoderContextJson, requireExtraColumnEncoder()).toStyledString();
+		return result.c_str();
+	}
+	catch(const std::exception & exception)
+	{
+		return statusError(statusBase("syntaxBridgeDecodeColumnText"), exception.what());
+	}
+	catch(...)
+	{
+		return statusError(statusBase("syntaxBridgeDecodeColumnText"), "Unknown error while decoding column text.");
+	}
+}
+
 } // extern "C"
 
 
@@ -681,6 +762,8 @@ void sendMessage(const char * msg)
 
 bool init(bool dbInMemory)
 {
+	configureBridgeLogging(gl_verbose);
+
 	if (gl_initialized) return true;
 	gl_initialized = true;
 	gl_initializedDbInMemory = dbInMemory;
@@ -721,9 +804,8 @@ bool init(bool dbInMemory)
 	QmlUtils::registerQmlModuleTypes();
 
 	createDataBridge(dbInMemory);
-	gl_extraEncodings = new ColumnEncoder("JaspExtraOptions_");
 
-	rbridge_init(gl_dataBridge, sendMessage, [](){ return false; }, gl_extraEncodings, gl_param_resultFont.c_str(), false);
+	rbridge_init(gl_dataBridge, sendMessage, [](){ return false; }, gl_param_resultFont.c_str(), false);
 	gl_rBridgeInitialized = true;
 
 	return true;
@@ -734,7 +816,7 @@ void ensureRBridgeInitialized()
 	if (gl_rBridgeInitialized)
 		return;
 
-	rbridge_init(gl_dataBridge, sendMessage, [](){ return false; }, gl_extraEncodings, gl_param_resultFont.c_str(), false);
+	rbridge_init(gl_dataBridge, sendMessage, [](){ return false; }, gl_param_resultFont.c_str(), false);
 	gl_rBridgeInitialized = true;
 }
 

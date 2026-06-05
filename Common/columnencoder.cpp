@@ -827,6 +827,7 @@ void ColumnEncoder::_addTypeToColumnNamesInOptionsRecursively(Json::Value & opti
 
 ColumnEncoder::colsPlusTypes ColumnEncoder::encodeColumnNamesinOptions(Json::Value & options, bool preloadingData)
 {
+	columnEncoder();
 	colsPlusTypes getTheseCols;
 
 	_addTypeToColumnNamesInOptionsRecursively(options, preloadingData, getTheseCols);
