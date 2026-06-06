@@ -3422,16 +3422,6 @@ msgctxt "CurrentDataFile|"
 msgid "Click on the file below to synchronize or use "
 msgstr "下のファイルをクリックして同期または使用 "
 
-#, qt-format
-msgctxt "ListModelAssignedInterface|"
-msgid "This variable has been removed, because it is not allowed: %1"
-msgstr "この変数は許可されていないため削除されました。%1"
-
-#, qt-format
-msgctxt "ListModelAssignedInterface|"
-msgid "These variables have been removed, because they are not allowed: %1"
-msgstr "これらの変数は、許可されていないため削除されました: %1"
-
 msgctxt "PrefsData|"
 msgid "Assume CSV is the selected codepage, when no BOM is specified."
 msgstr "CSV は、BOM が指定されていない場合、選択されたコードページです."
@@ -6260,4 +6250,8 @@ msgid ""
 "If you do not have this module you can try our built-in module library, the "
 "module's website: \"%1\" or, if that doesn't help, you could try our github "
 "issuetracker: https://github.com/jasp-stats/jasp-issues/issues."
+msgstr ""
+
+msgctxt "RibbonButton|"
+msgid "Update available"
 msgstr ""
