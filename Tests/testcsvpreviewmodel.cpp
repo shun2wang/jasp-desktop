@@ -75,5 +75,59 @@ void TestCsvPreviewModel::testDifferentDelimiters()
     QCOMPARE(model.data(model.index(0, 2), Qt::DisplayRole).toString(), QString("Col3"));
 }
 
+void TestCsvPreviewModel::testComplexCsvParsing()
+{
+    CsvPreviewModel model;
+    
+    QString rawData = 
+        "ID,Names,Gender,Age,Add.,Tel.,Text\n"
+        "1,One,M,32,ABBA,1234567891,\"test\"\"Quote\"\"\"\n"
+        "2,Two,M,21,,1234567890,\"test：\nnewlines\"\n"
+        "3,Three,F,18,,,\"this,is,text\"";
+
+    model.preparePreview(rawData.toStdString().c_str(), ',');
+
+    QCOMPARE(model.rowCount(), 4);    // header + 3 data rows
+    QCOMPARE(model.columnCount(), 7);
+
+    // Header row
+    QCOMPARE(model.data(model.index(0, 0), Qt::DisplayRole).toString(), QString("ID"));
+    QCOMPARE(model.data(model.index(0, 1), Qt::DisplayRole).toString(), QString("Names"));
+    QCOMPARE(model.data(model.index(0, 2), Qt::DisplayRole).toString(), QString("Gender"));
+    QCOMPARE(model.data(model.index(0, 3), Qt::DisplayRole).toString(), QString("Age"));
+    QCOMPARE(model.data(model.index(0, 4), Qt::DisplayRole).toString(), QString("Add."));
+    QCOMPARE(model.data(model.index(0, 5), Qt::DisplayRole).toString(), QString("Tel."));
+    QCOMPARE(model.data(model.index(0, 6), Qt::DisplayRole).toString(), QString("Text"));
+
+    QCOMPARE(model.data(model.index(1, 0), Qt::DisplayRole).toString(), QString("1"));
+    QCOMPARE(model.data(model.index(1, 1), Qt::DisplayRole).toString(), QString("\"One\""));
+    QCOMPARE(model.data(model.index(1, 2), Qt::DisplayRole).toString(), QString("\"M\""));
+    QCOMPARE(model.data(model.index(1, 3), Qt::DisplayRole).toString(), QString("32"));
+    QCOMPARE(model.data(model.index(1, 4), Qt::DisplayRole).toString(), QString("\"ABBA\""));
+    QCOMPARE(model.data(model.index(1, 5), Qt::DisplayRole).toString(), QString("1234567891"));
+    // Expected: test"Quote" (inner double quote from escaped "")
+    // The preview adds outer quotes for non-numeric strings, so final display: "test"Quote""
+    // In QString literal: "\"test\"Quote\"\""
+    QCOMPARE(model.data(model.index(1, 6), Qt::DisplayRole).toString(), QString("\"test\"Quote\"\""));
+
+    QCOMPARE(model.data(model.index(2, 0), Qt::DisplayRole).toString(), QString("2"));
+    QCOMPARE(model.data(model.index(2, 1), Qt::DisplayRole).toString(), QString("\"Two\""));
+    QCOMPARE(model.data(model.index(2, 2), Qt::DisplayRole).toString(), QString("\"M\""));
+    QCOMPARE(model.data(model.index(2, 3), Qt::DisplayRole).toString(), QString("21"));
+    QCOMPARE(model.data(model.index(2, 4), Qt::DisplayRole).toString(), QString(""));   // empty field
+    QCOMPARE(model.data(model.index(2, 5), Qt::DisplayRole).toString(), QString("1234567890"));
+    // Newline replaced with space: "test： newlines", plus outer quotes: "\"test： newlines\""
+    QCOMPARE(model.data(model.index(2, 6), Qt::DisplayRole).toString(), QString("\"test： newlines\""));
+
+    QCOMPARE(model.data(model.index(3, 0), Qt::DisplayRole).toString(), QString("3"));
+    QCOMPARE(model.data(model.index(3, 1), Qt::DisplayRole).toString(), QString("\"Three\""));
+    QCOMPARE(model.data(model.index(3, 2), Qt::DisplayRole).toString(), QString("\"F\""));
+    QCOMPARE(model.data(model.index(3, 3), Qt::DisplayRole).toString(), QString("18"));
+    QCOMPARE(model.data(model.index(3, 4), Qt::DisplayRole).toString(), QString(""));
+    QCOMPARE(model.data(model.index(3, 5), Qt::DisplayRole).toString(), QString(""));
+    // Field contains commas but is quoted as a whole, preview adds outer quotes
+    QCOMPARE(model.data(model.index(3, 6), Qt::DisplayRole).toString(), QString("\"this,is,text\""));
+}
+
 
 QTEST_MAIN(TestCsvPreviewModel)

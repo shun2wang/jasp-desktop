@@ -440,105 +440,117 @@ bool CSV::readLine(vector<string> &items)
 
 	if (_utf8BufferEndPos == _utf8BufferStartPos)
 	{
-		bool success = readUtf8();
-		if ( ! success)
+		if (!readUtf8())
 			return false;
 	}
 
-	bool inQuote = false;
+	enum State { Normal, Quoted, QuotedQuote };
+	State state = Normal;
+	string currentField;
+	bool rowFinished = false;
 
 	int i = _utf8BufferStartPos;
 
-	while (true)
+	while (!rowFinished)
 	{
-		char ch = _utf8Buffer[i];
-
-		if ((unsigned char)ch >= 0xF8)  // illegal utf-8
-		{
-			ch = '.';
-			_utf8Buffer[i] = '.';
-		}
-
-		if (ch == '"')
-		{
-			if (inQuote && i + 1 < _utf8BufferEndPos && _utf8Buffer[i + 1] == '"')
-				i++;
-			else
-				inQuote = !inQuote;
-		}
-
-		if (inQuote)
-		{
-			// do nothing
-		}
-		else if (ch == _delim)
-		{
-			string token(&_utf8Buffer[_utf8BufferStartPos], i - _utf8BufferStartPos);
-			trim(token);
-
-			items.push_back(token);
-			_utf8BufferStartPos = i + 1;
-		}
-		else if (ch == '\r')
-		{
-			if (items.size() > 0 || i > _utf8BufferStartPos) {
-				string token(&_utf8Buffer[_utf8BufferStartPos], i - _utf8BufferStartPos);
-				trim(token);
-				items.push_back(token);
-			}
-
-			if (i + 1 < _utf8BufferEndPos && _utf8Buffer[i + 1] == '\n')
-				_utf8BufferStartPos = i + 2;
-			else
-				_utf8BufferStartPos = i + 1;
-
-			if (items.size() > 0)
-				break;
-		}
-		else if (ch == '\n')
-		{
-			if (items.size() > 0 || i > _utf8BufferStartPos) {
-				string token(&_utf8Buffer[_utf8BufferStartPos], i - _utf8BufferStartPos);
-				trim(token);
-				items.push_back(token);
-			}
-
-			_utf8BufferStartPos = i + 1;
-
-			if (items.size() > 0)
-				break;
-		}
-
-		if (i >= _utf8BufferEndPos - 1)
+		// If we reached the end of current buffer, load more data
+		if (i >= _utf8BufferEndPos)
 		{
 			bool success = readUtf8();
-			if (success)
+			if (!success)
 			{
-				i = -1;
-				inQuote = false;
-			}
-			else // eof
-			{
-				if (items.size() > 0 || _utf8BufferEndPos > _utf8BufferStartPos) {
-					string token(&_utf8Buffer[_utf8BufferStartPos], _utf8BufferEndPos - _utf8BufferStartPos);
-					trim(token);
-					items.push_back(token);
+				// EOF: if there is pending data, treat as last row
+				if (!currentField.empty() || !items.empty() || state != Normal)
+				{
+						boost::algorithm::replace_all(currentField, "\n", " ");
+						items.push_back(currentField);
 				}
 				_eof = true;
-				break;
+				return !items.empty();
 			}
+			i = 0; // reset index because readUtf8() resets buffer positions
+			continue;
 		}
 
+		char ch = _utf8Buffer[i];
+
+		// Replace illegal UTF-8 bytes with '.' (same as original logic)
+		if ((unsigned char)ch >= 0xF8)
+			ch = '.';
+
+		switch (state)
+		{
+		case Normal:
+			if (ch == '"')
+			{
+				// Start of a quoted field
+				state = Quoted;
+			}
+			else if (ch == _delim)
+			{
+				// End of current field
+				boost::algorithm::replace_all(currentField, "\n", " ");
+				items.push_back(currentField);
+				currentField.clear();
+				_utf8BufferStartPos = i + 1;
+			}
+			else if (ch == '\r' || ch == '\n')
+			{
+				// End of current row
+				boost::algorithm::replace_all(currentField, "\n", " ");
+				if (!currentField.empty() || !items.empty() || i > _utf8BufferStartPos)
+					items.push_back(currentField);
+				currentField.clear();
+				rowFinished = true;
+
+				// Handle line endings: consume \r\n or single \r or \n
+				if (ch == '\r' && i + 1 < _utf8BufferEndPos && _utf8Buffer[i + 1] == '\n')
+					_utf8BufferStartPos = i + 2;
+				else
+					_utf8BufferStartPos = i + 1;
+			}
+			else
+			{
+				currentField.push_back(ch);
+			}
+			break;
+
+		case Quoted:
+			if (ch == '"')
+			{
+				// Possible end of quoted field or escaped quote
+				state = QuotedQuote;
+			}
+			else
+			{
+				currentField.push_back(ch);
+			}
+			break;
+
+		case QuotedQuote:
+			if (ch == '"')
+			{
+				// Escaped double quote: add one double quote character
+				currentField.push_back('"');
+				state = Quoted;
+			}
+			else
+			{
+				// End of quoted field, fall back to Normal state and re-process current character
+				state = Normal;
+				continue;   // re-evaluate the same character
+			}
+			break;
+		}
 		i++;
 	}
 
-	for (size_t index = 0; index < items.size(); index++)
+	// Post-processing: replace newlines with spaces (same as original behavior)
+	// Note: outer quotes are already removed by the state machine – they never entered the field.
+	for (size_t index = 0; index < items.size(); ++index)
 	{
-		string item = items.at(index);
-		boost::algorithm::replace_all(item, "\n", " "); // so we should not allow newlines in values right?
-		if (item.size() >= 2 && item[0] == '"' && item[item.size()-1] == '"')
-			item = item.substr(1, item.size()-2);
-		items[index] = item;
+		string &item = items[index];
+		boost::algorithm::replace_all(item, "\n", " ");
 	}
 
 	return true;

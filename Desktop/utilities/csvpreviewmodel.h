@@ -60,7 +60,8 @@ signals:
 	
 private:
 	void					updateInternalStructure();
-
+	void					parseCsvString(const QString &rawData, QChar delimiter, QList<QList<QString>> &outGrid) const;
+	
 	QString					_rawData;
 	QChar					_delimiter = ','; // Default comma
 	QList<QList<QString>>	_grid; // The parsed data

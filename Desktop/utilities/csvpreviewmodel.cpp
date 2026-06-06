@@ -58,27 +58,100 @@ void CsvPreviewModel::updateLocale()
 
 void CsvPreviewModel::updateInternalStructure()
 {
-	// Prepare the model for a complete reset
 	beginResetModel();
-
 	_grid.clear();
-	if (_rawData.isEmpty()) {
-		endResetModel();
-		return;
+
+	if (_rawData.isEmpty()) 
+	{
+			endResetModel();
+			return;
 	}
 
-	// Split data into rows (assuming newlines separate rows)
-	QStringList rows = _rawData.split('\n', Qt::SkipEmptyParts);
-	
-	for (const QString &rowString : rows) {
-		// Split each row by the chosen delimiter
-		QStringList columns = rowString.split(_delimiter);
-		_grid.append(columns);
-	}
+	parseCsvString(_rawData, _delimiter, _grid);
 
 	endResetModel();
-	
-	clearTableForResize();
+	emit clearTableForResize();
+}
+
+void CsvPreviewModel::parseCsvString(const QString &rawData, QChar delimiter, QList<QList<QString>> &outGrid) const
+{
+	enum State { Normal, Quoted, QuotedQuote };
+	State state = Normal;
+	QString currentField;
+	QList<QString> currentRow;
+
+	auto finishField = [&]() 
+	{
+		currentField.replace('\n', ' '); // we not allowed newlines in finished data.
+		currentRow.append(currentField);
+		currentField.clear();
+	};
+
+	auto finishRow = [&]() 
+	{
+		if (!currentField.isEmpty() || !currentRow.isEmpty() || state != Normal)
+			finishField();
+
+		if (!currentRow.isEmpty()) 
+		{
+			outGrid.append(currentRow);
+			currentRow.clear();
+		}
+	};
+
+	int i = 0;
+	const int len = rawData.length();
+	while (i < len) {
+		QChar ch = rawData.at(i);
+
+		switch (state) 
+		{
+		case Normal:
+				if (ch == '"') {
+					state = Quoted;
+				} 
+				else if (ch == delimiter) 
+				{
+					finishField();
+				} 
+				else if (ch == '\n' || ch == '\r')
+				{
+					finishRow();
+					if (ch == '\r' && i + 1 < len && rawData.at(i + 1) == '\n')
+						i++;
+				}
+				else 
+				{
+					currentField.append(ch);
+				}
+				break;
+
+		case Quoted:
+				if (ch == '"') 
+				{
+					state = QuotedQuote;
+				} 
+				else 
+				{
+					currentField.append(ch);
+				}
+				break;
+
+		case QuotedQuote:
+				if (ch == '"') 
+				{
+					currentField.append('"');   // escaped quote -> add one double quote
+					state = Quoted;
+				} else 
+				{
+					state = Normal;
+					continue;
+				}
+				break;
+		}
+		i++;
+	}
+	finishRow();
 }
 
 int CsvPreviewModel::rowCount(const QModelIndex &) const
