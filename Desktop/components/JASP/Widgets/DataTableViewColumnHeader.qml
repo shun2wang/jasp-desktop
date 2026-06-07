@@ -241,30 +241,64 @@ Rectangle
 		cursorShape:		Qt.PointingHandCursor
 	}
 	
-	MouseArea {
+	MouseArea
+	{
 		id:					resizeHandle
-		width:				10 * jaspTheme.uiScale
+		width:				5 * jaspTheme.uiScale
 		height:				parent.height
 		anchors.right:		parent.right
 		cursorShape:		Qt.SplitHCursor
 	
-		property real startX: 0
-		property real startWidth: 0
-	
 		preventStealing:	true
 	
-		onPressed: (mouse) => {
+		property real startX: 0
+		property real startWidth: 0
+		property real pendingWidth: 0
+		property bool dragging: false
+	
+		Timer 
+		{
+			id: throttleTimer
+			interval: 16
+			repeat: false
+			onTriggered: {
+				if (dragging) {
+					var curWidth = dataTableView.view.getColumnWidth(columnIndex);
+					if (Math.abs(pendingWidth - curWidth) > 0.5) {
+						dataTableView.view.setColumnWidth(columnIndex, pendingWidth);
+					}
+					if (dragging) throttleTimer.start();
+				}
+			}
+		}
+	
+		onPressed: (mouse) => 
+		{
 			startX = mouse.x;
 			startWidth = dataTableView.view.getColumnWidth(columnIndex);
+			pendingWidth = startWidth;
+			dragging = true;
 			mouse.accepted = true;
 		}
 	
-		onPositionChanged: (mouse) => {
-			if (pressed) {
+		onPositionChanged: (mouse) => 
+		{
+			if (dragging) {
 				var delta = mouse.x - startX;
-				var newWidth = Math.max(30, startWidth + delta);
-				dataTableView.view.setColumnWidth(columnIndex, newWidth);
+				pendingWidth = Math.max(30, startWidth + delta);
+				if (!throttleTimer.running) {
+					throttleTimer.start();
+				}
 			}
+		}
+	
+		onReleased:
+		{
+			dragging = false;
+			throttleTimer.stop();
+			var delta = mouse.x - startX;
+			var finalWidth = Math.max(30, startWidth + delta);
+			dataTableView.view.setColumnWidth(columnIndex, finalWidth);
 		}
 	}
 }

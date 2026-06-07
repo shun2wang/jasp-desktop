@@ -1869,8 +1869,32 @@ void DataSetViewBase::setColumnWidth(int col, double newWidth)
 	if (_maxColWidth > 0)
 		newWidth = std::min(newWidth, double(_maxColWidth));
 
-	_dataColsMaxWidth[col] = newWidth;
-	_customColumnWidths[col] = newWidth;
+	QPoint selMin = selectionMin();
+	QPoint selMax = selectionMax();
+	bool applyToAll = false;
+	std::set<int> affectedCols;
+
+	// Multiple column selection and adjusted column width
+	if (selMin.x() >= 0 && selMax.x() >= 0) {
+		bool fullColumnsSelected = (selMin.y() == 0 && selMax.y() == rowCount() - 1);
+		if (fullColumnsSelected && selMin.x() <= col && col <= selMax.x()) {
+			for (int c = selMin.x(); c <= selMax.x(); ++c) {
+				if (_selectionModel->isColumnSelected(c, QModelIndex()))
+					affectedCols.insert(c);
+			}
+			applyToAll = (affectedCols.size() > 1);
+		}
+	}
+
+	if (applyToAll) {
+		for (int c : affectedCols) {
+			_dataColsMaxWidth[c] = newWidth;
+			_customColumnWidths[c] = newWidth;
+		}
+	} else {
+		_dataColsMaxWidth[col] = newWidth;
+		_customColumnWidths[col] = newWidth;
+	}
 
 	float x = _rowNumberMaxWidth;
 	for (int c = 0; c < int(_dataColsMaxWidth.size()); ++c) {
