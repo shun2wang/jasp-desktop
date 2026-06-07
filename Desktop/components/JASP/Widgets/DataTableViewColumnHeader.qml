@@ -240,4 +240,31 @@ Rectangle
 								  )
 		cursorShape:		Qt.PointingHandCursor
 	}
+	
+	MouseArea {
+		id:					resizeHandle
+		width:				10 * jaspTheme.uiScale
+		height:				parent.height
+		anchors.right:		parent.right
+		cursorShape:		Qt.SplitHCursor
+	
+		property real startX: 0
+		property real startWidth: 0
+	
+		preventStealing:	true
+	
+		onPressed: (mouse) => {
+			startX = mouse.x;
+			startWidth = dataTableView.view.getColumnWidth(columnIndex);
+			mouse.accepted = true;
+		}
+	
+		onPositionChanged: (mouse) => {
+			if (pressed) {
+				var delta = mouse.x - startX;
+				var newWidth = Math.max(30, startWidth + delta);
+				dataTableView.view.setColumnWidth(columnIndex, newWidth);
+			}
+		}
+	}
 }
