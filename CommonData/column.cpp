@@ -1156,7 +1156,7 @@ void Column::labelsRemoveByIntsId(std::set<int> valuesToRemove, bool updateOrder
 				{
 					_labelByIntsIdMap.erase(label->intsId());
 					
-					auto valDis = std::make_pair(label->originalValueAsString(), label->label());
+					auto valDis = label->origValDisplay();
 					if(_labelByValDis.count(valDis) && _labelByValDis.at(valDis) == label)
 						_labelByValDis.erase(valDis);
 						
@@ -1762,6 +1762,8 @@ void Column::_labelMapUpdates(Label * label, const std::string & previousDisplay
 				break;
 			}
 	}
+	label->rememberCurrentOrigValDisplay();
+
 }
 
 void Column::labelsHandleAutoSort(bool doDbUpdateEtc)
@@ -1774,7 +1776,8 @@ void Column::labelsHandleAutoSort(bool doDbUpdateEtc)
 
 void Column::labelDisplayChanged(Label *label, const std::string & previousDisplay)
 {
-	auto oldValDis = std::make_pair(label->originalValueAsString(), previousDisplay);
+	auto origValStr = label->originalValueAsString();
+	auto oldValDis  = std::make_pair(origValStr, Label::processLabel(previousDisplay, origValStr));
 	bool merged		= _labelByValDis.count(label->origValDisplay()) != 0;
 	
 	if(merged)
@@ -1797,7 +1800,7 @@ void Column::labelDisplayChanged(Label *label, const std::string & previousDispl
 void Column::labelValDisplayChanged(Label *label, const std::string &previousDisplay, const Json::Value &previousOriginal)
 {
 	auto	oldOrigValS	= Label::originalValueAsString(this, previousOriginal);
-	auto	oldValDis	= std::make_pair(oldOrigValS, previousDisplay),
+	auto	oldValDis	= std::make_pair(oldOrigValS, Label::processLabel(previousDisplay, oldOrigValS)),
 			newValDis	= std::make_pair(label->originalValueAsString(), label->label());
 	bool	merged		= _labelByValDis.count(label->origValDisplay()) != 0;
 	
@@ -1817,7 +1820,7 @@ void Column::labelValDisplayChanged(Label *label, const std::string &previousDis
 		if(_ints[r] == label->intsId())
 			_dbls[r] = newOrigValDbl;
 	
-	_labelMapUpdates(label, previousDisplay, label->originalValueAsString());
+	_labelMapUpdates(label, previousDisplay, oldOrigValS);
 
 	if(merged)
 		_dbUpdateLabelOrder();
