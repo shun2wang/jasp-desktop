@@ -1,824 +1,775 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-06-21 10:22+0000\n"
-"Last-Translator: Zahid Rizky Fakhri <zahidrizkyfakhri@gmail.com>\n"
-"Language-Team: Indonesian <https://hosted.weblate.org/projects/jasp/"
-"jaspdesktop/id/>\n"
-"Language: id\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.7.dev0\n"
-"X-Language: id\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Qt-Contexts: true\n"
 
 msgctxt "ComponentsList|"
 msgid "Add a row"
-msgstr "Tambah satu baris"
+msgstr ""
 
 msgctxt "ComponentsList|"
 msgid "Remove a row"
-msgstr "Hapus satu baris"
+msgstr ""
 
 msgctxt "FileSelector|"
 msgid "Save file to:"
-msgstr "Simpan berkas ke:"
+msgstr ""
 
 msgctxt "FileSelector|"
 msgid "Load file from:"
-msgstr "Muat berkas dari:"
+msgstr ""
 
 msgctxt "FileSelector|"
 msgid "Select file to save"
-msgstr "Pilih berkas untuk disimpan"
+msgstr ""
 
 msgctxt "FileSelector|"
 msgid "Select file to load"
-msgstr "Pilih berkas untuk dimuat"
+msgstr ""
 
 msgctxt "FileSelector|"
 msgid "Browse"
-msgstr "Telusuri"
+msgstr ""
 
 msgctxt "Form|"
 msgid ""
 "This analysis was created with an older version of JASP (or a dynamic module)"
 msgstr ""
-"Analisis ini dibuat pada versi JASP yang lama (atau sebuah modul dinamis)"
 
 msgctxt "Form|"
 msgid ", refreshing could give a slightly different result."
-msgstr ", memuat ulang dapat menyebabkan hasil yang sedikit berbeda."
+msgstr ""
 
 msgctxt "Form|"
 msgid ""
 ", to keep your notes where they are it is highly recommended to first "
 "refresh your analyses!"
 msgstr ""
-", untuk menyimpan catatan Anda di tempatnya, sangat disarankan untuk memuat "
-"ulang analisis Anda terlebih dahulu!"
 
 msgctxt "InputListView|"
 msgid "New Value"
-msgstr "Nilai Baru"
+msgstr ""
 
 msgctxt "TableView|"
 msgid "Row #"
-msgstr "Baris #"
+msgstr ""
 
 msgctxt "TabView|"
 msgid "Add a tab"
-msgstr "Tambahkan satu tab"
+msgstr ""
 
 msgctxt "TabView|"
 msgid "Remove this tab"
-msgstr "Hapus tab ini"
+msgstr ""
 
 msgctxt "TabView|"
 msgid "New tab"
-msgstr "Tab baru"
+msgstr ""
 
 msgctxt "TextArea|"
 msgid "⌘ + Enter to apply"
-msgstr "⌘ + Enter untuk menerapkan"
+msgstr ""
 
 msgctxt "TextArea|"
 msgid "Ctrl + Enter to apply"
-msgstr "Ctrl + Enter untuk menerapkan"
+msgstr ""
 
 #, qt-format
 msgctxt "TextField|"
 msgid "Restoring last correct value: %1"
-msgstr "Memulihkan nilai terakhir yang benar: %1"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "About JASP"
-msgstr "Tentang JASP"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Version:"
-msgstr "Versi:"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Built on:"
-msgstr "Dibangun pada:"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Source:"
-msgstr "Sumber:"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Access the sources here"
-msgstr "Akses sumbernya di sini"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Download:"
-msgstr "Unduh:"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Citation:"
-msgstr "Sitasi:"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Select All"
-msgstr "Pilih Semua"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Copy Selection"
-msgstr "Salin Pilihan"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "BibTeX"
-msgstr "BibTeX"
+msgstr ""
 
 msgctxt "AnalysisFormExpander|"
 msgid "Drag to reorder the analyses"
-msgstr "Drag untuk menyusun ulang analisis"
+msgstr ""
 
 msgctxt "AnalysisFormExpander|"
 msgid "Edit the title of this analysis"
-msgstr "Sunting judul analisis"
+msgstr ""
 
 msgctxt "AnalysisFormExpander|"
 msgid "Duplicate this analysis"
-msgstr "Duplikat analisis ini"
+msgstr ""
 
 msgctxt "AnalysisFormExpander|"
 msgid "Show info for this analysis"
-msgstr "Tampilkan info untuk analisis ini"
+msgstr ""
 
 msgctxt "AnalysisFormExpander|"
 msgid "Remove this analysis"
-msgstr "Hapus analisis ini"
+msgstr ""
 
 msgctxt "BasicThreeButtonTableView|"
 msgid "Add"
-msgstr "Tambahkan"
+msgstr ""
 
 msgctxt "BasicThreeButtonTableView|"
 msgid "Delete"
-msgstr "Hapus"
+msgstr ""
 
 msgctxt "BasicThreeButtonTableView|"
 msgid "Reset"
-msgstr "Atur ulang"
+msgstr ""
 
 msgctxt "BayesFactorType|"
 msgid "Bayes Factor"
-msgstr "Faktor Bayes"
+msgstr ""
 
 msgctxt "BayesFactorType|"
 msgid ""
 "Bayes factor to quantify evidence for the alternative hypothesis relative to "
 "the null hypothesis."
 msgstr ""
-"Faktor Bayes untuk mengukur bukti untuk hipotesis alternatif relatif "
-"terhadap hipotesis null."
 
 msgctxt "BayesFactorType|"
 msgid ""
 "Bayes factor to quantify evidence for the null hypothesis relative to the "
 "alternative hypothesis."
 msgstr ""
-"Faktor Bayes untuk mengukur bukti untuk hipotesis null relatif terhadap "
-"hipotesis alternatif."
 
 msgctxt "BayesFactorType|"
 msgid "Natural logarithm of BF10."
-msgstr "Logaritma alami dari BF10."
+msgstr ""
 
 msgctxt "Chi2TestTableView|"
 msgid "Add Column"
-msgstr "Tambah Kolom"
+msgstr ""
 
 msgctxt "Chi2TestTableView|"
 msgid "Delete Column"
-msgstr "Hapus Kolom"
+msgstr ""
 
 msgctxt "Chi2TestTableView|"
 msgid "Reset"
-msgstr "Atur ulang"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "absolute value"
-msgstr "nilai absolut"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "standard deviation"
-msgstr "simpangan baku"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "variance"
-msgstr "varians"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "summation"
-msgstr "penjumlahan"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "product of values"
-msgstr "produk nilai"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns minimum of values"
-msgstr "menghasilkan minimum nilai"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns maximum of values"
-msgstr "menghasilkan maksimum nilai"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "mean"
-msgstr "rerata"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "rounds y to n decimals"
-msgstr "bulatkan y ke n desimal"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns number of elements in y"
-msgstr "menghasilkan jumlah elemen dalam y"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "median"
-msgstr "median"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "natural logarithm"
-msgstr "logaritma alami"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "base 2 logarithm"
-msgstr "logaritma dasar 2"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "base 10 logarithm"
-msgstr "logaritma dasar 10"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "logarithm of y in 'base'"
-msgstr "logaritma y dalam 'dasar'"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "exponential"
-msgstr "eksponensial"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "Fisher's Z-transform (i.e., the inverse hyperbolic tangent) to transform "
 "correlations, numbers between -1 and 1 to the real line"
 msgstr ""
-"Transformasi-Z Fisher (yaitu, tangen hiperbolik inversi) untuk "
-"mentransformasi korelasi, angka antara -1 dan 1 ke garis riil"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "Inverse Fisher's Z-transform (i.e., the hyperbolic tangent) to transform "
 "real numbers to numbers between -1 and 1"
 msgstr ""
-"Transformasi-Z Fisher inversi (yaitu, tangen hiperbolik) untuk mengubah "
-"bilangan riil menjadi bilangan antara -1 dan 1"
 
 msgctxt "ComputeColumnWindow|"
 msgid "break your data up in numBreaks levels"
-msgstr "bagikan data Anda di tingkat numBreaks"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "replace any missing values (NA) in column by the value in replaceWith"
-msgstr "ganti setiap data hilang (NA) pada kolom dengan nilai pada replaceWith"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "if-else statement"
-msgstr "pernyataan if-else"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a Gaussian distribution with specified mean and standard "
 "deviation sd"
 msgstr ""
-"menghasilkan data dari distribusi Gaussian dengan rerata dan simpangan baku "
-"yang ditentukan sd"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from t distribution with degrees of freedom df and non-"
 "centrality parameter ncp"
 msgstr ""
-"menghasilkan data dari distribusi t dengan derajat kebebasan df dan "
-"parameter non-pusat ncp"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a chi-squared distribution with degrees of freedom df "
 "and non-centrality parameter ncp"
 msgstr ""
-"menghasilkan data dari distribusi chi-kuadrat dengan derajat kebebasan df "
-"dan parameter non-pusat ncp"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from an F distribution with specified degrees of freedoms "
 "df1, df2 and non-centrality parameter ncp"
 msgstr ""
-"menghasilkan data dari distribusi F dengan derajat kebebasan tertentu df1, "
-"df2 dan parameter non-pusat ncp"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a binomial distribution with specified trials and "
 "probability prob"
 msgstr ""
-"menghasilkan data dari distribusi binomial dengan percobaan dan probabilitas "
-"prob yang ditentukan"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a negative binomial distribution with specified trials "
 "and probability prob"
 msgstr ""
-"menghasilkan data dari distribusi binomial negatif dengan percobaan dan "
-"probabilitas prob yang ditentukan"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a geometric distribution with specified probability prob"
 msgstr ""
-"menghasilkan data dari distribusi geometrik dengan probabilitas prob tertentu"
 
 msgctxt "ComputeColumnWindow|"
 msgid "generates data from a Poisson distribution with specified rate lambda"
 msgstr ""
-"menghasilkan data dari distribusi Poisson dengan nilai lambda yang ditentukan"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a beta distribution with specified shapes alpha and beta"
 msgstr ""
-"menghasilkan data dari distribusi beta dengan bentuk alfa dan beta tertentu"
 
 msgctxt "ComputeColumnWindow|"
 msgid "generates data from a uniform distribution between min and max"
-msgstr "menghasilkan data dari distribusi seragam antara min dan maks"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "generates data from a gamma distribution with specified shape and scale"
 msgstr ""
-"menghasilkan data dari distribusi gamma dengan bentuk dan skala tertentu"
 
 msgctxt "ComputeColumnWindow|"
 msgid "generates data from an exponential distribution with specified rate"
-msgstr "menghasilkan data dari distribusi eksponensial dengan tingkat tertentu"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a log-normal distribution with specified logarithmic "
 "mean meanLog and standard deviation sdLog"
 msgstr ""
-"menghasilkan data dari distribusi log-normal dengan rata-rata logaritmik "
-"meanLog dan standar deviasi sdLog yang ditentukan"
 
 msgctxt "ComputeColumnWindow|"
 msgid ""
 "generates data from a Weibull distribution with specified shape and scale"
 msgstr ""
-"menghasilkan data dari distribusi Weibull dengan bentuk dan skala tertentu"
 
 msgctxt "ComputeColumnWindow|"
 msgid "Show generated R code"
-msgstr "Tampilkan kode R yang dihasilkan"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "Compute column"
-msgstr "Hitung kolom"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "Click to compute column"
-msgstr "Klik untuk menghitung kolom"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "Open Documentation"
-msgstr "Buka Dokumentasi"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "none"
-msgstr "tidak ada"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "deviation"
-msgstr "simpangan"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "simple"
-msgstr "sederhana"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "difference"
-msgstr "perbedaan"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "Helmert"
-msgstr "Helmert"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "repeated"
-msgstr "berulang"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "polynomial"
-msgstr "polinomial"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "custom"
-msgstr "kustom"
+msgstr ""
 
 msgctxt "ContrastsList|"
 msgid "Factors"
-msgstr "Faktor"
+msgstr ""
 
 #, qt-format
 msgctxt "ContrastsList|"
 msgid "Custom for %1"
-msgstr "Kustom untuk %1"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Create Computed Column"
-msgstr "Buat Kolom Hasil Penghitungan"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Name:"
-msgstr "Nama:"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Column name is already used, please choose a different one."
-msgstr "Nama kolom sudah digunakan, mohon pilih nama yang berbeda."
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Define column through R code"
-msgstr "Jelaskan kolom dengan kode R"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Define column through drag and drop formulas"
-msgstr "Jelaskan kolom dengan rumus drag dan drop"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Scale"
-msgstr "Skala"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Ordinal"
-msgstr "Ordinal"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Nominal"
-msgstr "Nominal"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Text"
-msgstr "Teks"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Open Documentation"
-msgstr "Buka Dokumentasi"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Create Column"
-msgstr "Buat Kolom"
+msgstr ""
 
 #, qt-format
 msgctxt "CreateComputeColumnDialog|"
 msgid "Click here to create your new computed column '%1'"
-msgstr "Klik di sini untuk membuat kolom hasil penghitungan Anda '%1'"
+msgstr ""
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Enter a valid (unused) name for computed column"
 msgstr ""
-"Masukkkan nama yang valid (yang belum digunakan) untuk kolom hasil "
-"penghitungan"
 
 msgctxt "CreateComputeColumnDialog|"
 msgid "Close without creating a computed column"
-msgstr "Tutup tanpa membuat kolom hasil penghitungan"
+msgstr ""
 
 msgctxt "CustomContrastsTableView|"
 msgid "Add Contrast"
-msgstr "Tambahkan Kontras"
+msgstr ""
 
 msgctxt "CustomContrastsTableView|"
 msgid "Delete Contrast"
-msgstr "Hapus Kontras"
+msgstr ""
 
 msgctxt "CustomContrastsTableView|"
 msgid "Reset"
-msgstr "Atur ulang"
+msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Hide filter"
-msgstr "Sembunyikan saringan"
+msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Show filter"
-msgstr "Tampilkan saringan"
+msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Add computed column"
-msgstr "Tambah kolom hasil penghitungan"
+msgstr ""
 
 #, qt-format
 msgctxt "BreadCrumbs|"
 msgid "Back to %1"
-msgstr "Kembali ke %1"
+msgstr ""
 
 msgctxt "BreadCrumbs|"
 msgid "You are here"
-msgstr "Anda berada di sini"
+msgstr ""
 
 msgctxt "Computer|"
 msgid "Recent Folders"
-msgstr "Folder Terbaru"
+msgstr ""
 
 msgctxt "Computer|"
 msgid "Browse"
-msgstr "Telusuri"
+msgstr ""
 
 msgctxt "CurrentFile|"
 msgid "Current data file for synchronization"
-msgstr "Berkas data saat ini untuk sinkronisasi"
+msgstr ""
 
 msgctxt "DataLibrary|"
 msgid "Data Library"
-msgstr "Perpustakaan Data"
+msgstr ""
 
 msgctxt "ListItem|"
 msgid "Synchronize with this Data File"
-msgstr "Sinkronisasikan dengan Berkas Data ini"
+msgstr ""
 
 msgctxt "ListItem|"
 msgid "Navigate to folder"
-msgstr "Arahkan ke folder"
+msgstr ""
 
 msgctxt "ListItem|"
 msgid "Open JASP file"
-msgstr "Buka berkas JASP"
+msgstr ""
 
 msgctxt "ListItem|"
 msgid "Open data file"
-msgstr "Buka berkas data"
+msgstr ""
 
 msgctxt "MenuHeader|"
 msgid "Show info about these preferences"
-msgstr "Tampilkan info tentang preferensi ini"
+msgstr ""
 
 msgctxt "OSF|"
 msgid "Open Science Framework"
-msgstr "Open Science Framework"
+msgstr ""
 
 msgctxt "OSF|"
 msgid "Logout"
-msgstr "Keluar"
+msgstr ""
 
 msgctxt "OSF|"
 msgid "Create Folder"
-msgstr "Buat Folder"
+msgstr ""
 
 msgctxt "OSF|"
 msgid "Foldername"
-msgstr "Nama folder"
+msgstr ""
 
 msgctxt "OSF|"
 msgid "Filename"
-msgstr "Nama berkas"
+msgstr ""
 
 msgctxt "OSF|"
 msgid "Save"
-msgstr "Simpan"
+msgstr ""
 
 msgctxt "OSFLogin|"
 msgid "OSF"
-msgstr "OSF"
+msgstr ""
 
 msgctxt "OSFLogin|"
 msgid "Sign in with your OSF account to continue"
-msgstr "Sign in dengan akun OSF Anda untuk melanjutkan"
+msgstr ""
 
 msgctxt "OSFLogin|"
 msgid "Sign in"
-msgstr "Sign in"
+msgstr ""
 
 msgctxt "OSFLogin|"
 msgid "Remember me"
-msgstr "Ingat saya"
+msgstr ""
 
 msgctxt "OSFLogin|"
 msgid "About the OSF"
-msgstr "Tentang OSF"
+msgstr ""
 
 msgctxt "OSFLogin|"
 msgid "Register"
-msgstr "Daftar"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Advanced Preferences"
-msgstr "Preferensi Lanjutan"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Modules options"
-msgstr "Opsi modul"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid ""
 "Continue where you left of the next time JASP starts.\n"
 "Enabling this option makes JASP remember which Modules you've enabled."
 msgstr ""
-"Lanjutkan dari tempat Anda berhenti saat JASP dimulai lagi.\n"
-"Mengaktifkan opsi ini membuat JASP mengingat mana Modul yang telah "
-"diaktifkan."
 
 msgctxt "PrefsAdvanced|"
 msgid "To use JASP Modules enable this option."
-msgstr "Untuk menggunakan Modul JASP, aktifkan opsi ini."
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Browse to your JASP Module folder."
-msgstr "Jelajahi folder Modul JASP Anda."
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Change the CRAN repository: "
-msgstr "Ubah repositori CRAN: "
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Generate markdown files for help"
-msgstr "Buat berkas markdown untuk bantuan"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid ""
 "Enabling this will generate markdown helpfile from the info at qml options."
 msgstr ""
-"Mengaktifkan ini akan membuat helpfile markdown dari info pada opsi qml."
 
 msgctxt "PrefsAdvanced|"
 msgid "Logging options"
-msgstr "Opsi logging"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Log to file"
-msgstr "Log ke berkas"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "To store debug-logs of JASP in a file, check this box."
 msgstr ""
-"Untuk menyimpan debug-logs dari JASP ke dalam berkas, centang kotak ini."
 
 msgctxt "PrefsAdvanced|"
 msgid "Max logfiles to keep: "
-msgstr "logfiles maksimum yang disimpan: "
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Show logs"
-msgstr "Tampilkan logs"
+msgstr ""
 
 msgctxt "PrefsAdvanced|"
 msgid "Engine options"
-msgstr "Opsi engine"
+msgstr ""
 
 msgctxt "PrefsData|"
 msgid "Data Preferences"
-msgstr "Preferensi Data"
+msgstr ""
 
 msgctxt "PrefsData|"
 msgid "Use default spreadsheet editor"
-msgstr "Gunakan penyunting spreadsheet default"
+msgstr ""
 
 msgctxt "PrefsData|"
 msgid "Select custom editor"
-msgstr "Pilih penyunting kustom"
+msgstr ""
 
 msgctxt "PrefsMissingValues|"
 msgid "Missing Value List"
-msgstr "Daftar Missing Value"
+msgstr ""
 
 msgctxt "PrefsMissingValues|"
 msgid "Remove missing value"
-msgstr "Hapus missing value"
+msgstr ""
 
 msgctxt "PrefsMissingValues|"
 msgid "Reset"
-msgstr "Atur ulang"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Results Preferences"
-msgstr "Preferensi Hasil"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Table options"
-msgstr "Opsi tabel"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Display exact p-values"
-msgstr "Tampilkan nilai-p eksak"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Fix the number of decimals"
-msgstr "Perbaiki jumlah desimal"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Plot options"
-msgstr "Opsi plot"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Use PPI of screen in plots: "
-msgstr "Gunakan PPI dari layar pada plot: "
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Use the Pixels Per Inch of your screen to render your plots."
-msgstr "Gunakan Pixel Per Inchi dari layar Anda untuk merender plot Anda."
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Custom PPI: "
-msgstr "PPI kustom: "
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Image background color"
-msgstr "Warna latar gambar"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "White"
-msgstr "Putih"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid ""
 "This makes the background of all plots white, quite useful if you want to "
 "use it in LaTeX or submit it to a journal."
 msgstr ""
-"Ini membuat latar belakang semua plot menjadi putih, cukup berguna jika Anda "
-"ingin menggunakannya di LaTeX atau mengirimkannya ke jurnal."
 
 msgctxt "PrefsResults|"
 msgid "Transparent"
-msgstr "Transparan"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid ""
 "This makes the background of all plots transparent, quite useful if you want "
 "to use it seamlessly on any background that isn't white."
 msgstr ""
-"Ini membuat latar belakang semua plot menjadi transparan, cukup berguna jika "
-"Anda ingin menggunakannya dengan mulus di latar belakang apa pun yang tidak "
-"berwarna putih."
 
 msgctxt "PrefsUI|"
 msgid "Fonts"
-msgstr "Font"
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid "Interface:"
-msgstr "Antarmuka:"
+msgstr ""
 
 #, qt-format
 msgctxt "PrefsUI|"
 msgid "default: %1"
-msgstr "default: %1"
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid "Themes"
-msgstr "Tema"
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid ""
 "Switches to a light theme, this is the default and original flavour of JASP."
-msgstr "Beralih ke tema terang, ini adalah selera bawaan dan asli dari JASP."
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid ""
 "Switches to a dark theme, makes JASP a lot easier on the eyes for those "
 "night owls out there."
 msgstr ""
-"Beralih ke tema gelap, membuat JASP jauh lebih ramah di mata untuk para "
-"burung hantu di luar sana."
 
 msgctxt "PrefsUI|"
 msgid "Miscellaneous options"
-msgstr "Opsi lain-lain"
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid "Zoom (%): "
-msgstr "Perbesar (%): "
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid ""
 "Increase or decrease the size of the interface elements (text, buttons, etc)."
-msgstr "Menambah atau mengurangi ukuran elemen antarmuka (teks, tombol, dll)."
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid "Scroll speed (pix/s): "
-msgstr "Kecepatan gulir (piks/s): "
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid ""
 "Set the speed with which you can scroll in the options, dataviewer and other "
 "places."
 msgstr ""
-"Atur kecepatan untuk menggulir di opsi, penampil data, dan tempat lainnya."
 
 msgctxt "PrefsUI|"
 msgid ""
@@ -827,23 +778,15 @@ msgid ""
 "glitches, cannot see results or anything even) might fix them.\n"
 "Analyses will still be just as fast though."
 msgstr ""
-"Beralih ke mode \"lebih aman\" untuk grafik alias perenderan perangkat "
-"lunak.\n"
-"Ini akan membuat antarmuka Anda lebih lambat tetapi jika Anda memiliki "
-"beberapa masalah (gangguan aneh, tidak dapat melihat hasil atau apa pun) "
-"mungkin memperbaikinya.\n"
-"Analisis masih akan sama cepatnya."
 
 msgctxt "PrefsUI|"
 msgid ""
 "Turns off all animations, this is implied when \"Safe Graphics Mode\" is on."
 msgstr ""
-"Matikan semua animasi, ini akan diterapkan ketika \"Mode Grafik Hemat\" "
-"diaktifkan."
 
 msgctxt "PrefsUI|"
 msgid "Already disabled animations because \"Safe Graphics Mode\" is on"
-msgstr "Animasi sudah dinonaktifkan karena \"Mode Hemat Grafik\" aktif"
+msgstr ""
 
 msgctxt "PrefsUI|"
 msgid ""
@@ -851,543 +794,536 @@ msgid ""
 "made by Qt. This might solve some problems on Windows where JASP crashes on "
 "pressing \"Browse\"."
 msgstr ""
-"Jika dinonaktifkan itu tidak akan menggunakan dialog berkas sistem operasi "
-"Anda tetapi itu dibuat oleh Qt. Ini mungkin mengatasi beberapa masalah di "
-"Windows di mana JASP mengalami kerusakan saat \"Telusuri\" ditekan."
 
 msgctxt "RecentFiles|"
 msgid "Recent Files"
-msgstr "Berkas Terbaru"
+msgstr ""
 
 msgctxt "ComputedColumnsConstructor|"
 msgid "Computed columns code clear(ed)"
-msgstr "Kode kolom terhitung dihapus"
+msgstr ""
 
 msgctxt "ComputedColumnsConstructor|"
 msgid "Computed columns code applied"
-msgstr "Kode kolom terhitung diterapkan"
+msgstr ""
 
 msgctxt "ComputedColumnsConstructor|"
 msgid "Please enter all arguments - see fields marked in red."
-msgstr "Silakan masukkan semua argumen - lihat kolom ditandai dengan merah."
+msgstr ""
 
 msgctxt "ComputedColumnsConstructor|"
 msgid "Only one formula per computed column allowed."
-msgstr "Hanya satu rumus per kolom terhitung diizinkan."
+msgstr ""
 
 msgctxt "ComputedColumnsConstructor|"
 msgid "Welcome to the drag and drop computed column constructor!"
-msgstr "Selamat datang di konstruktor kolom terhitung seret dan lepas!"
+msgstr ""
 
 msgctxt "DropTrash|"
 msgid "Dump unwanted snippets here; double-click to erase the entire slate"
 msgstr ""
-"Tempatkan cuplikan yang tidak diinginkan di sini; klik dua kali untuk "
-"menghapus seluruh papan"
 
 msgctxt "OperatorSelector|"
 msgid "Addition"
-msgstr "Penjumlahan"
+msgstr ""
 
 msgctxt "OperatorSelector|"
 msgid "Subtraction"
-msgstr "Pengurangan"
+msgstr ""
 
 msgctxt "OperatorSelector|"
 msgid "Multiplication"
-msgstr "Perkalian"
+msgstr ""
 
 msgctxt "OperatorSelector|"
 msgid "Division"
-msgstr "Pembagian"
+msgstr ""
 
 msgctxt "OperatorSelector|"
 msgid "Power (2^3 returns 8)"
-msgstr "Pangkat (2^3 menghasilkan 8)"
+msgstr ""
 
 msgctxt "OperatorSelector|"
 msgid "Square root"
-msgstr "Akar kuadrat"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "Modulo: returns the remainder of a division. 3%2 returns 1"
-msgstr "Modulo: menghasilkan sisa pembagian. 3%2 menghasilkan 1"
+msgstr ""
 
 msgctxt "OperatorSelector|"
 msgid "returns logicals and can be the root of a filter formula"
-msgstr "menghasilkan logika dan dapat berupa akar dari rumus filter"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "Equality: %1"
-msgstr "Persamaan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "Inequality: %1"
-msgstr "Pertidaksamaan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "Less than: %1"
-msgstr "Kurang dari: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "Less than or equal to: %1"
-msgstr "Kurang dari atau sama dengan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "Greater than: %1"
-msgstr "Lebih dari: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "Greater than or equal to: %1"
-msgstr "Lebih dari atau sama dengan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "And: %1"
-msgstr "Dan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "Or: %1"
-msgstr "Atau: %1"
+msgstr ""
 
 msgctxt "OperatorSelector|"
 msgid "Split: applies filter separately to each subgroup"
-msgstr "Pisah: menerapkan filter secara terpisah ke setiap subgrup"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelector|"
 msgid "not: %1"
-msgstr "bukan: %1"
+msgstr ""
 
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Addition"
-msgstr "Penjumlahan"
+msgstr ""
 
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Subtraction"
-msgstr "Pengurangan"
+msgstr ""
 
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Multiplication"
-msgstr "Perkalian"
+msgstr ""
 
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Division"
-msgstr "Pembagian"
+msgstr ""
 
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Power (2^3 returns 8)"
-msgstr "Pangkat (2^3 menghasilkan 8)"
+msgstr ""
 
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Square root"
-msgstr "Akar kuadrat"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Modulo: returns the remainder of a division. 3%2 returns 1"
-msgstr "Modulo: menghasilkan sisa pembagian. 3%2 menghasilkan 1"
+msgstr ""
 
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "returns logicals"
-msgstr "menghasilkan logika"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Equality: %1"
-msgstr "Persamaan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Inequality: %1"
-msgstr "Pertidaksamaan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Less than: %1"
-msgstr "Kurang dari: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Less than or equal to: %1"
-msgstr "Kurang dari atau sama dengan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Greater than: %1"
-msgstr "Lebih dari: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Greater than or equal to: %1"
-msgstr "Lebih dari atau sama dengan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "And: %1"
-msgstr "Dan: %1"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Or: %1"
-msgstr "Atau: %1"
+msgstr ""
 
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Split: applies filter separately to each subgroup"
-msgstr "Pisah: menerapkan filter secara terpisah ke setiap subgrup"
+msgstr ""
 
 #, qt-format
 msgctxt "OperatorSelectorComputedColumns|"
 msgid "Not: %1"
-msgstr "Bukan: %1"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "absolute value"
-msgstr "Nilai absolut"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "standard deviation"
-msgstr "deviasi standar"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "variance"
-msgstr "varians"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "summation"
-msgstr "penjumlahan"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "product of values"
-msgstr "produk nilai"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "returns minimum of values"
-msgstr "menghasilkan minimum nilai"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "returns maximum of values"
-msgstr "menghasilkan maksimum nilai"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "mean"
-msgstr "rerata"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "rounds y to n decimals"
-msgstr "membulatkan y ke desimal n"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "returns number of elements in y"
-msgstr "menghasilkan jumlah elemen dalam y"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "median"
-msgstr "median"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "if-else statement"
-msgstr "pernyataan if-else"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Filter Changed"
-msgstr "Filter Diubah"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "There are unapplied changes to your filter; what would you like to do?"
 msgstr ""
-"Ada perubahan yang tidak diterapkan ke filter Anda; apa yang Anda ingin "
-"lakukan?"
 
 msgctxt "FilterWindow|"
 msgid "Switch to the R filter"
-msgstr "Alihkan ke filter R"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Hide rows that were filtered out."
-msgstr "Sembunyikan baris yang telah difilter."
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Show rows that were filtered out."
-msgstr "Tampilkan baris yang telah difilter."
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Apply pass-through filter"
-msgstr "Terapkan filter penembusan"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Filter applied"
-msgstr "Filter diterapkan"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Click to apply filter"
-msgstr "Klik untuk menerapkan filter"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Filter is already applied"
-msgstr "Filter sudah diterapkan"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Open Documentation"
-msgstr "Buka Dokumentasi"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Hide filter"
-msgstr "Sembunyikan saringan"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Reset all checkmarks on all labels"
-msgstr "Atur ulang semua tanda centang pada semua label"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Switch to the drag and drop filter"
-msgstr "Alihkan ke filter seret dan lepas"
+msgstr ""
 
 msgctxt "FilterWindow|"
 msgid "Reset to default filter"
-msgstr "Atur ulang ke filter bawaan"
+msgstr ""
 
 msgctxt "HelpWindow|"
 msgid "JASP Help"
-msgstr "Bantuan JASP"
+msgstr ""
 
 msgctxt "HelpWindow|"
 msgid "Search for:"
-msgstr "Cari untuk:"
+msgstr ""
 
 msgctxt "JagsTableView|"
 msgid "Add Data"
-msgstr "Tambahkan Data"
+msgstr ""
 
 msgctxt "JagsTableView|"
 msgid "Delete Data"
-msgstr "Hapus Data"
+msgstr ""
 
 msgctxt "JagsTableView|"
 msgid "Reset"
-msgstr "Atur ulang"
+msgstr ""
 
 msgctxt "MainPage|"
 msgid "Hide data"
-msgstr "Sembunyikan data"
+msgstr ""
 
 msgctxt "MainPage|"
 msgid "Show data"
-msgstr "Tampilkan data"
+msgstr ""
 
 msgctxt "MainPage|"
 msgid "Resize data/results"
-msgstr "Ubah ukuran data/hasil"
+msgstr ""
 
 msgctxt "MainPage|"
 msgid "Drag to show data"
-msgstr "Seret untuk menampilkan data"
+msgstr ""
 
 msgctxt "MainPage|"
 msgid "Results"
-msgstr "Hasil"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Install Developer Module"
-msgstr "Pasang Modul Pengembang"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Installing Developer Module"
-msgstr "Memasang Modul Pengembang"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Select a Developer Module"
-msgstr "Pilih Modul Pengembang"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Install selected developer module"
-msgstr "Pasang modul pengembang terpilih"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Installing developer module now"
-msgstr "Memasang modul pengembang sekarang"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Ready"
-msgstr "Siap"
+msgstr ""
 
 #, qt-format
 msgctxt "ModulesMenu|"
 msgid "Installing: %1\n"
-msgstr "Memasang: %1\n"
+msgstr ""
 
 #, qt-format
 msgctxt "ModulesMenu|"
 msgid "Loading: %1\n"
-msgstr "Memuat: %1\n"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Loaded and ready for use!"
-msgstr "Dimuat dan siap untuk digunakan!"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Error occurred!"
-msgstr "Terjadi galat!"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Not ready for use?"
-msgstr "Tidak siap untuk digunakan?"
+msgstr ""
 
 msgctxt "ModulesMenu|"
 msgid "Uninstall module "
-msgstr "Copot pasang modul "
+msgstr ""
 
 msgctxt "RCommanderWindow|"
 msgid "R in JASP"
-msgstr "R dalam JASP"
+msgstr ""
 
 msgctxt "RCommanderWindow|"
 msgid "Welcome to R in JASP!"
-msgstr "Selamat datang di R dalam JASP!"
+msgstr ""
 
 msgctxt "RCommanderWindow|"
 msgid "Run code"
-msgstr "Jalankan kode"
+msgstr ""
 
 msgctxt "RCommanderWindow|"
 msgid "Pressing Ctrl+Enter or F5 will also run the code"
-msgstr "Menekan Ctrl+Enter atau F5 juga akan menjalankan kode"
+msgstr ""
 
 msgctxt "RCommanderWindow|"
 msgid "Clear output"
-msgstr "Bersihkan luaran"
+msgstr ""
 
 msgctxt "RCommanderWindow|"
 msgid "Cleared..."
-msgstr "Dibersihkan..."
+msgstr ""
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "Changes were made"
-msgstr "Perubahan telah dibuat"
+msgstr ""
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "There are unapplied changes; what would you like to do?"
-msgstr "Ada perubahan yang tidak diterapkan; apa yang Anda ingin lakukan?"
+msgstr ""
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "Apply"
-msgstr "Terapkan"
+msgstr ""
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "Discard"
-msgstr "Buang"
+msgstr ""
 
 msgctxt "SaveDiscardCancelDialog|"
 msgid "Cancel"
-msgstr "Batalkan"
+msgstr ""
 
 msgctxt "SetSeed|"
 msgid "Repeatability"
-msgstr "Perulangan"
+msgstr ""
 
 msgctxt "SetSeed|"
 msgid "Set seed:"
-msgstr "Atur benih:"
+msgstr ""
 
 msgctxt "SimpleTableView|"
 msgid "Add Column"
-msgstr "Tambahkan Kolom"
+msgstr ""
 
 msgctxt "SimpleTableView|"
 msgid "Delete Column"
-msgstr "Hapus Kolom"
+msgstr ""
 
 msgctxt "SimpleTableView|"
 msgid "Reset"
-msgstr "Atur ulang"
+msgstr ""
 
 msgctxt "SortMenuButton|"
 msgid "Sort the items"
-msgstr "Sortir item"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Prior"
-msgstr "Priori"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Standardized effect size"
-msgstr "Ukuran efek terstandardisasi"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Default"
-msgstr "Bawaan"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Cauchy"
-msgstr "Cauchy"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "scale"
-msgstr "skala"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Informed"
-msgstr "Berinform"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "location:"
-msgstr "lokasi:"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "scale:"
-msgstr "skala:"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Normal"
-msgstr "Normal"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "mean:"
-msgstr "rerata:"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "std:"
-msgstr "std:"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "t"
-msgstr "t"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "df:"
-msgstr "df:"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Raw effect size (Dienes)"
-msgstr "Ukuran efek mentah (Dienes)"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Uniform"
-msgstr "Keseragaman"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "lower bound:"
-msgstr "batas bawah:"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "upper bound:"
-msgstr "batas atas:"
+msgstr ""
 
 msgctxt "SubjectivePriors|"
 msgid "Half-normal"
-msgstr "Setengah-normal"
+msgstr ""
 
 msgctxt "WelcomePage|"
 msgid "Welcome to JASP"
-msgstr "Selamat datang di JASP"
+msgstr ""
 
 msgctxt "WelcomePage|"
 msgid "A Fresh Way to Do Statistics: Free, Friendly, and Flexible"
@@ -1714,7 +1650,7 @@ msgstr ""
 
 msgctxt "MessageForwarder|"
 msgid "Save"
-msgstr "Simpan"
+msgstr ""
 
 msgctxt "MessageForwarder|"
 msgid "Don't Save"
@@ -2061,7 +1997,7 @@ msgstr ""
 
 msgctxt "ActionButtons|"
 msgid "Save"
-msgstr "Simpan"
+msgstr ""
 
 msgctxt "ActionButtons|"
 msgid "Save As"
@@ -2081,7 +2017,7 @@ msgstr ""
 
 msgctxt "ActionButtons|"
 msgid "Close"
-msgstr "Tutup"
+msgstr ""
 
 msgctxt "ActionButtons|"
 msgid "Preferences"
@@ -2218,7 +2154,7 @@ msgstr ""
 
 msgctxt "ResourceButtons|"
 msgid "Recent Files"
-msgstr "Berkas Terbaru"
+msgstr ""
 
 msgctxt "ResourceButtons|"
 msgid "Current File"
@@ -2230,11 +2166,11 @@ msgstr ""
 
 msgctxt "ResourceButtons|"
 msgid "OSF"
-msgstr "OSF"
+msgstr ""
 
 msgctxt "ResourceButtons|"
 msgid "Data Library"
-msgstr "Pustaka Data"
+msgstr ""
 
 msgctxt "ResourceButtons|"
 msgid "Data"
@@ -2672,7 +2608,7 @@ msgstr ""
 
 msgctxt "TableView|"
 msgid "Delete"
-msgstr "Hapus"
+msgstr ""
 
 msgctxt "ComputeColumnWindow|"
 msgid "returns the sign of values"
@@ -2806,7 +2742,7 @@ msgstr ""
 
 msgctxt "PlotEditor|"
 msgid "Open Documentation"
-msgstr "Buka Dokumentasi"
+msgstr ""
 
 msgctxt "AboutWindow|"
 msgid "Open Source Components"
@@ -2853,7 +2789,7 @@ msgstr ""
 
 msgctxt "Database|"
 msgid "Browse"
-msgstr "Telusuri"
+msgstr ""
 
 msgctxt "Database|"
 msgid "Username"
@@ -2865,7 +2801,7 @@ msgstr ""
 
 msgctxt "Database|"
 msgid "Remember me"
-msgstr "Ingat saya"
+msgstr ""
 
 msgctxt "Database|"
 msgid "Connect to database"
@@ -3075,11 +3011,11 @@ msgstr ""
 
 msgctxt "MainPage|"
 msgid "Hide input options"
-msgstr "Sembunyikan opsi masukan"
+msgstr ""
 
 msgctxt "MainPage|"
 msgid "Show input options"
-msgstr "Tampilkan opsi masukan"
+msgstr ""
 
 msgctxt "RCommanderWindow|"
 msgid ""
@@ -3308,7 +3244,7 @@ msgstr ""
 
 msgctxt "Computer|"
 msgid "Data Files"
-msgstr "File Data"
+msgstr ""
 
 msgctxt "JASPListControl|"
 msgid "<no choice>"
@@ -3316,7 +3252,7 @@ msgstr ""
 
 msgctxt "ListModelInputValue|"
 msgid "New Value"
-msgstr "Nilai Baru"
+msgstr ""
 
 #, qt-format
 msgctxt "ListModelTableViewBase|"
@@ -3325,7 +3261,7 @@ msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Miscellaneous options"
-msgstr "Opsi lainnya"
+msgstr ""
 
 msgctxt "PrefsResults|"
 msgid "Show R syntax"
@@ -3481,7 +3417,7 @@ msgstr ""
 
 msgctxt "DataTableView|"
 msgid "Select All"
-msgstr "Pilih Semua"
+msgstr ""
 
 #, qt-format
 msgctxt "DataTableView|"
@@ -3881,13 +3817,17 @@ msgctxt "Supporters|"
 msgid "JASP is supported by the following institutions:"
 msgstr ""
 
+msgctxt "Supporters|"
+msgid "Suggest your institution join the JASP Community"
+msgstr ""
+
 msgctxt "WavyWindow|"
 msgid "About JASP"
-msgstr "Tentang JASP"
+msgstr ""
 
 msgctxt "WavyWindow|"
 msgid "Close"
-msgstr "Tutup"
+msgstr ""
 
 #, qt-format
 msgctxt "QObject|"
@@ -4020,15 +3960,15 @@ msgstr ""
 
 msgctxt "QObject|"
 msgid "Scale"
-msgstr "Skala"
+msgstr ""
 
 msgctxt "QObject|"
 msgid "Ordinal"
-msgstr "Ordinal"
+msgstr ""
 
 msgctxt "QObject|"
 msgid "Nominal"
-msgstr "Nominal"
+msgstr ""
 
 msgctxt "ColumnModel|"
 msgid "Computed column definition"
@@ -4036,6 +3976,10 @@ msgstr ""
 
 msgctxt "ColumnModel|"
 msgid "Label editor"
+msgstr ""
+
+msgctxt "ColumnModel|"
+msgid "Missing values"
 msgstr ""
 
 #, qt-format
@@ -4109,10 +4053,6 @@ msgstr ""
 
 msgctxt "CommunityWindow|"
 msgid "JASP Community"
-msgstr ""
-
-msgctxt "Supporters|"
-msgid "Suggest your institution join the JASP Community"
 msgstr ""
 
 #, qt-format
@@ -4282,7 +4222,7 @@ msgstr ""
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Click here to change column type"
-msgstr "Klik di sini untuk mengubah jenis kolom"
+msgstr ""
 
 msgctxt "DataTableViewColumnHeader|"
 msgid "Add column"
@@ -4455,10 +4395,6 @@ msgctxt "ExpandDataProxyModel|"
 msgid "Remove %1 columns"
 msgstr ""
 
-msgctxt "ColumnModel|"
-msgid "Missing values"
-msgstr ""
-
 #, qt-format
 msgctxt "CommunityWindow|"
 msgid ""
@@ -4612,15 +4548,15 @@ msgstr ""
 
 msgctxt "VariableInfo|"
 msgid "Scale"
-msgstr "Skala"
+msgstr ""
 
 msgctxt "VariableInfo|"
 msgid "Ordinal"
-msgstr "Ordinal"
+msgstr ""
 
 msgctxt "VariableInfo|"
 msgid "Nominal"
-msgstr "Nominal"
+msgstr ""
 
 msgctxt "VariableInfo|"
 msgid "Unknown"
@@ -4738,6 +4674,17 @@ msgctxt "JASPColumn|"
 msgid "Click icon to change column type"
 msgstr ""
 
+msgctxt "FilterModel|"
+msgid ""
+"Above you see the code that JASP generates for both value filtering and the "
+"drag&drop filter.\n"
+"This default result is stored in 'generatedFilter' and can be replaced or "
+"combined with a custom filter.\n"
+"To combine you can append clauses using '&': 'generatedFilter & customFilter "
+"& perhapsAnotherFilter'\n"
+"Click the (i) icon in the lower right corner for further help.\n"
+msgstr ""
+
 msgctxt "TextInputBase|"
 msgid "Column-name-is-free field"
 msgstr ""
@@ -4754,17 +4701,6 @@ msgstr ""
 
 msgctxt "LabelEditorWindow|"
 msgid "Automatically order labels by their value"
-msgstr ""
-
-msgctxt "FilterModel|"
-msgid ""
-"Above you see the code that JASP generates for both value filtering and the "
-"drag&drop filter.\n"
-"This default result is stored in 'generatedFilter' and can be replaced or "
-"combined with a custom filter.\n"
-"To combine you can append clauses using '&': 'generatedFilter & customFilter "
-"& perhapsAnotherFilter'\n"
-"Click the (i) icon in the lower right corner for further help.\n"
 msgstr ""
 
 #, qt-format
@@ -5195,6 +5131,14 @@ msgctxt "Computer|"
 msgid "R Data files %1"
 msgstr ""
 
+msgctxt "ModelTermsList|"
+msgid "Model Terms"
+msgstr ""
+
+msgctxt "ModelTermsList|"
+msgid "Add to null model"
+msgstr ""
+
 msgctxt "MainWindow|"
 msgid "Open file"
 msgstr ""
@@ -5212,14 +5156,6 @@ msgstr ""
 #, qt-format
 msgctxt "MainWindow|"
 msgid "JASP does not support this file type %1."
-msgstr ""
-
-msgctxt "ModelTermsList|"
-msgid "Model Terms"
-msgstr ""
-
-msgctxt "ModelTermsList|"
-msgid "Add to null model"
 msgstr ""
 
 msgctxt "PrefsResults|"
@@ -5734,7 +5670,7 @@ msgstr ""
 
 msgctxt "PlotEditingReferenceLines|"
 msgid "Text"
-msgstr "Teks"
+msgstr ""
 
 msgctxt "PlotEditingReferenceLines|"
 msgid "Hor."
