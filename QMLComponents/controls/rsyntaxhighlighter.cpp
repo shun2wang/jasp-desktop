@@ -31,13 +31,10 @@ RSyntaxHighlighter::RSyntaxHighlighter(QTextDocument *parent, VariableInfo * var
 	setVarInfo(varInfo);
 
 	HighlightingRule rule;
+	
 	// most of these R regExp are copied from: https://github.com/PrismJS/prism/blob/master/components/prism-r.js
+	// the order of rules is most important here and should adjust to fix some parser bugs.
 
-	// operators
-	_operatorFormat.setForeground(QColor(200, 50, 50));
-	rule.pattern = QRegularExpression(R"(->?>?|<(?:=|<?-)?|[>=!]=?|::?|&&?|\|\|?|[+*\/^$@~]|%[^%\s]*%)");
-	rule.format = _operatorFormat;
-	_highlightingRules.append(rule);
 
 	// variables
 	_variableFormat.setToolTip("variable");
@@ -95,6 +92,22 @@ RSyntaxHighlighter::RSyntaxHighlighter(QTextDocument *parent, VariableInfo * var
 	rule.pattern = QRegularExpression(R"([(){}\[\],;])");
 	rule.format = _punctuationFormat;
 	_highlightingRules.append(rule);
+	
+	// operators
+	_operatorFormat.setForeground(QColor(200, 50, 50));
+	rule.pattern = QRegularExpression(
+			R"(->?>?)"					// -> ->>
+			R"(|<(?:=|<?-)?)"		// < <= <- <<=
+			R"(|[>=!]=?)"				// > >= = == ! !=
+			R"(|::?)"						// : ::
+			R"(|&&?)"						// & &&
+			R"(|\|(?:\||>)?)"		// | || |>
+			R"(|[+*\/^$@~])"		// Arithmetic and others
+			R"(|%[^%\s]*%)"			// %in% %% %/% %>% %<>%
+			R"(|\\)"						// R4.1+ lambda
+	);
+	rule.format = _operatorFormat;
+	_highlightingRules.append(rule);
 
 	// comments
 	_commentFormat.setForeground(Qt::darkGray);
@@ -112,19 +125,25 @@ RSyntaxHighlighter::RSyntaxHighlighter(QTextDocument *parent, VariableInfo * var
 
 void RSyntaxHighlighter::highlightBlock(const QString &text)
 {
+	// Should apply all standard syntax rules first!
+	for (const HighlightingRule & rule : _highlightingRules)
+		applyRule(text, rule);
+
+	// Then handle column names rules
+	QStringList names = requestInfo(VariableInfo::InfoType::VariableNames).toStringList();
+	for (const QString & name : std::as_const(names))
+	{
+		// escape() prevents regular expression corruption caused by column names containing metacharacters such as . * (.).
+		QString escaped = QRegularExpression::escape(name);
+		applyRule(text, 
+				QRegularExpression(QString(R"(\b%1(\.(scale|ordinal|nominal))?\b)").arg(escaped)),
+				_columnFormat);
+	}
+
 	setStringsFormat(text, '"');
 	setStringsFormat(text, '\'');
 	setStringsFormat(text, '`');
-	
-	for (const HighlightingRule & rule : _highlightingRules)
-		applyRule(text, rule);
-	
-	//Do columns
-	QStringList			names = requestInfo(varInfoType::VariableNames).toStringList();
-	
-	for(const QString & name : names)
-		applyRule(text, QRegularExpression(QString(R"(%1(\.(scale|ordinal|nominal))?)").arg(name)), _columnFormat);
-	
+
 	applyRule(text, _commentRule);
 }
 
