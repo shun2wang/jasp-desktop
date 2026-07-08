@@ -82,7 +82,8 @@ void CsvPreviewModel::parseCsvString(const QString &rawData, QChar delimiter, QL
 
 	auto finishField = [&]() 
 	{
-		currentField.replace('\n', ' '); // we not allowed newlines in finished data.
+		currentField.replace('\r', ' '); // No carriage returns
+		currentField.replace('\n', ' '); // No newlines
 		currentRow.append(currentField);
 		currentField.clear();
 	};
