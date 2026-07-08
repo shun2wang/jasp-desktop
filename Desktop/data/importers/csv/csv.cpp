@@ -489,7 +489,9 @@ bool CSV::readLine(vector<string> &items)
 			else if (ch == _delim)
 			{
 				// End of current field
-				boost::algorithm::replace_all(currentField, "\n", " ");
+				boost::algorithm::replace_all(currentField, "\r\n", " ");
+				boost::algorithm::replace_all(currentField, "\n",   " ");
+				boost::algorithm::replace_all(currentField, "\r",   " ");
 				items.push_back(currentField);
 				currentField.clear();
 				_utf8BufferStartPos = i + 1;
@@ -497,7 +499,9 @@ bool CSV::readLine(vector<string> &items)
 			else if (ch == '\r' || ch == '\n')
 			{
 				// End of current row
-				boost::algorithm::replace_all(currentField, "\n", " ");
+				boost::algorithm::replace_all(currentField, "\r\n", " ");
+				boost::algorithm::replace_all(currentField, "\n",   " ");
+				boost::algorithm::replace_all(currentField, "\r",   " ");
 				if (!currentField.empty() || !items.empty() || i > _utf8BufferStartPos)
 					items.push_back(currentField);
 				currentField.clear();
@@ -550,7 +554,9 @@ bool CSV::readLine(vector<string> &items)
 	for (size_t index = 0; index < items.size(); ++index)
 	{
 		string &item = items[index];
-		boost::algorithm::replace_all(item, "\n", " ");
+				boost::algorithm::replace_all(currentField, "\r\n", " ");
+				boost::algorithm::replace_all(currentField, "\n",   " ");
+				boost::algorithm::replace_all(currentField, "\r",   " ");
 	}
 
 	return true;
