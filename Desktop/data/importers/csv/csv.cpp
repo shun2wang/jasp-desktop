@@ -554,9 +554,9 @@ bool CSV::readLine(vector<string> &items)
 	for (size_t index = 0; index < items.size(); ++index)
 	{
 		string &item = items[index];
-				boost::algorithm::replace_all(currentField, "\r\n", " ");
-				boost::algorithm::replace_all(currentField, "\n",   " ");
-				boost::algorithm::replace_all(currentField, "\r",   " ");
+		boost::algorithm::replace_all(item, "\r\n", " ");
+		boost::algorithm::replace_all(item, "\n",   " ");
+		boost::algorithm::replace_all(item, "\r",   " ");
 	}
 
 	return true;
