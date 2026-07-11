@@ -7789,3 +7789,15 @@ msgid ""
 "it automatically. Adding the level manually ensures that plots and summary "
 "tables show the complete intended response scale.\n"
 msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Factors"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "RM Factor"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Cells"
+msgstr ""

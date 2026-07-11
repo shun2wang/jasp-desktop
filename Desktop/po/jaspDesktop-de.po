@@ -10065,3 +10065,15 @@ msgstr ""
 "vorkommt, zeigt JASP sie nicht automatisch an. Das manuelle Hinzufügen der "
 "Stufe stellt sicher, dass Plots und Übersichtstabellen die vollständige "
 "beabsichtigte Antwortskala anzeigen.\n"
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Factors"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "RM Factor"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Cells"
+msgstr ""

@@ -10200,3 +10200,15 @@ msgstr ""
 "n'apparaît pas dans les données, JASP ne l'affichera pas automatiquement. "
 "Ajouter le niveau manuellement garantit que les graphiques et les tableaux "
 "récapitulatifs affichent l'échelle de réponse complète prévue.\n"
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Factors"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "RM Factor"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Cells"
+msgstr ""

@@ -8281,3 +8281,15 @@ msgstr ""
 msgctxt "AnalysisForm|"
 msgid "Set to a proportion between %1 and %2"
 msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Factors"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "RM Factor"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Cells"
+msgstr ""

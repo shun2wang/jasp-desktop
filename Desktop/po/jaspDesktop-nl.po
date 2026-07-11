@@ -10000,3 +10000,15 @@ msgstr ""
 "toont JASP het niet automatisch. Het handmatig toevoegen van het niveau "
 "zorgt ervoor dat grafieken en overzichtstabellen de volledige beoogde "
 "antwoordschaal tonen.\n"
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Factors"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "RM Factor"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Cells"
+msgstr ""

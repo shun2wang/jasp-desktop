@@ -9605,3 +9605,15 @@ msgstr ""
 "しているが、現在のサンプルでは誰も5を選択しなかったとします。その水準はデータ"
 "に存在しないため、JASPは自動的に表示しません。手動で水準を追加することで、プ"
 "ロットや要約テーブルに完全な意図された回答尺度が表示されるようになります。\n"
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Factors"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "RM Factor"
+msgstr ""
+
+msgctxt "tst_repeatedMeasures|"
+msgid "Repeated Measures Cells"
+msgstr ""
