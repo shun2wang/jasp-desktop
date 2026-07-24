@@ -33,7 +33,7 @@ JASPWidgets.md_textView = JASPWidgets.objectView.extend({
       "padding:4px 8px; background:#f5f6f6; border-bottom:1px solid #ccc; " +
       "font-size:11px; color:#888; font-family:sans-serif;";
     toolbar.textContent =
-      "Markdown \u2022 click away or Ctrl+Enter to save \u2022 Esc to cancel";
+      i18n("Markdown \u2022 click away or Ctrl+Enter to save \u2022 Esc to cancel");
 
     var textarea = document.createElement("textarea");
     textarea.className = "jasp-md-text-editor";
