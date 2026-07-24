@@ -83,6 +83,17 @@ JASPWidgets.md_textView = JASPWidgets.objectView.extend({
       enhanceMarkdownTables(this.$el[0]);
     }
 
+    // fix:https://github.com/jasp-stats/INTERNAL-jasp/issues/3294
+    if (typeof MathJax !== "undefined" && MathJax.typesetPromise) {
+      var el = this.el;
+      MathJax.typesetClear([el]);
+      setTimeout(function () {
+          MathJax.typesetPromise([el]).catch(function (err) {
+              console.warn("MathJax typeset notice:", err);
+          });
+      }, 0);
+    }
+
     return this;
   },
 
