@@ -64,6 +64,7 @@ SetSeed 1.0 SetSeed.qml
 SubjectivePriors 1.0 SubjectivePriors.qml
 TabView 1.0 TabView.qml
 JAGSTextArea 1.0 JAGSTextArea.qml
+NodeFlow 1.0 NodeFlow.qml
 
 # Internal / Helper Controls
 AssignButton 1.0 AssignButton.qml

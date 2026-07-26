@@ -20,6 +20,7 @@ import QtQuick
 import QtQuick.Window
 import JASP
 import QtQuick.Controls
+import JASP.Controls as JC
 
 Window
 {
@@ -212,6 +213,362 @@ Window
 			}
 		}
 
+
+		// ============================================================
+		// NodeFlow 调试面板 - 在 MainPage 后插入
+		// ============================================================
+		Item {
+			id: nodeFlowDebugPanel
+			z: 1000  // 确保在其他组件之上
+			visible: true  // 默认隐藏，通过按钮显示
+			anchors.fill: parent
+
+			// 背景遮罩
+			Rectangle {
+				anchors.fill: parent
+				color: jaspTheme.white
+				opacity: 0.95
+			}
+
+			// 主布局：左侧控制面板，右侧 NodeFlow 视图
+			Row {
+				anchors.fill: parent
+				spacing: 10
+
+				// 左侧控制面板
+				Rectangle {
+					width: 280
+					height: parent.height
+					color: jaspTheme.uiBackground
+					border.color: jaspTheme.borderColor
+					border.width: 1
+
+					Column {
+						anchors.fill: parent
+						anchors.margins: 10
+						spacing: 8
+
+						Text {
+							text: qsTr("NodeFlow 调试面板")
+							font.bold: true
+							font.pixelSize: 16
+							color: jaspTheme.textEnabled
+						}
+
+						Text {
+							text: qsTr("节点操作")
+							font.bold: true
+							color: jaspTheme.textEnabled
+						}
+
+						// 添加节点
+						Button {
+							text: qsTr("添加节点")
+							width: parent.width - 20
+							onClicked: {
+								var id = nodeFlow.addNode("新节点", "副标题", "#2E7DD1", Qt.point(100, 100))
+								console.log("添加节点成功，ID:", id)
+							}
+						}
+
+						// 删除选中节点
+						Button {
+							text: qsTr("删除选中节点")
+							width: parent.width - 20
+							onClicked: {
+								if (nodeFlow.selectedNodeId >= 0) {
+									nodeFlow.removeSelectedNode()
+									console.log("节点已删除")
+								} else {
+									console.log("请先选中节点")
+								}
+							}
+						}
+
+						// 清空图
+						Button {
+							text: qsTr("清空图")
+							width: parent.width - 20
+							onClicked: {
+								nodeFlow.clearGraph()
+								console.log("图已清空")
+							}
+						}
+
+						Text {
+							text: qsTr("连线操作")
+							font.bold: true
+							color: jaspTheme.textEnabled
+						}
+
+						// 添加连线
+						Button {
+							text: qsTr("添加连线 (1→2)")
+							width: parent.width - 20
+							onClicked: {
+								// 先确保有至少两个节点
+								if (nodeFlow.nodeCount < 2) {
+									nodeFlow.addNode("节点1", "", "#2E7DD1", Qt.point(50, 50))
+									nodeFlow.addNode("节点2", "", "#1F9D63", Qt.point(200, 50))
+								}
+								nodeFlow.addEdge(1, 2, "next")
+								console.log("连线已添加")
+							}
+						}
+
+						// 删除选中连线
+						Button {
+							text: qsTr("删除选中连线")
+							width: parent.width - 20
+							onClicked: {
+								if (nodeFlow.selectedEdgeIndex >= 0) {
+									nodeFlow.removeSelectedEdge()
+									console.log("连线已删除")
+								} else {
+									console.log("请先选中连线")
+								}
+							}
+						}
+
+						Text {
+							text: qsTr("视图操作")
+							font.bold: true
+							color: jaspTheme.textEnabled
+						}
+
+						Row {
+							spacing: 5
+							Button {
+								text: qsTr("放大")
+								onClicked: nodeFlow.zoomIn()
+							}
+							Button {
+								text: qsTr("缩小")
+								onClicked: nodeFlow.zoomOut()
+							}
+							Button {
+								text: qsTr("重置")
+								onClicked: nodeFlow.resetView()
+							}
+						}
+
+						Button {
+							text: qsTr("适应视图")
+							width: parent.width - 20
+							onClicked: nodeFlow.fitToView()
+						}
+
+						Text {
+							text: qsTr("数据操作")
+							font.bold: true
+							color: jaspTheme.textEnabled
+						}
+
+						Row {
+							spacing: 5
+							Button {
+								text: qsTr("导出 JSON")
+								onClicked: {
+									var success = nodeFlow.exportJson("/tmp/nodeflow_export.json")
+									console.log("导出结果:", success)
+								}
+							}
+							Button {
+								text: qsTr("导入 JSON")
+								onClicked: {
+									var success = nodeFlow.importJson("/tmp/nodeflow_export.json")
+									console.log("导入结果:", success)
+								}
+							}
+						}
+
+						Text {
+							text: qsTr("状态控制")
+							font.bold: true
+							color: jaspTheme.textEnabled
+						}
+
+						Row {
+							spacing: 5
+							CheckBox {
+								text: qsTr("显示网格")
+								checked: nodeFlow.gridVisible
+								onCheckedChanged: nodeFlow.gridVisible = checked
+							}
+							CheckBox {
+								text: qsTr("运行动画")
+								checked: nodeFlow.running
+								onCheckedChanged: nodeFlow.running = checked
+							}
+						}
+
+						CheckBox {
+							text: qsTr("连接模式")
+							checked: nodeFlow.connectionMode
+							onCheckedChanged: nodeFlow.connectionMode = checked
+						}
+
+						// 状态显示
+						Rectangle {
+							width: parent.width - 20
+							height: 100
+							color: jaspTheme.white
+							border.color: jaspTheme.borderColor
+							border.width: 1
+
+							ScrollView {
+								anchors.fill: parent
+								TextArea {
+									id: statusArea
+									readOnly: true
+									text: "节点数: " + nodeFlow.nodeCount +
+										  "\n连线数: " + nodeFlow.edgeCount +
+										  "\n缩放: " + nodeFlow.zoom.toFixed(2) +
+										  "\n选中节点ID: " + nodeFlow.selectedNodeId +
+										  "\n选中连线索引: " + nodeFlow.selectedEdgeIndex
+									color: jaspTheme.textEnabled
+								}
+							}
+						}
+
+						// 关闭按钮
+						Button {
+							text: qsTr("关闭调试面板")
+							width: parent.width - 20
+							onClicked: nodeFlowDebugPanel.visible = false
+						}
+					}
+				}
+
+				// 右侧 NodeFlow 视图
+				Rectangle {
+					width: parent.width - 290
+					height: parent.height
+					color: jaspTheme.white
+					border.color: jaspTheme.borderColor
+					border.width: 1
+
+					JC.NodeFlow {
+						id: nodeFlow
+						anchors.fill: parent
+						focus: true  // 确保能接收键盘事件
+
+						// 连接信号以便调试
+						Connections {
+							target: nodeFlow
+
+							function onGraphChanged(nodeCount, edgeCount) {
+								console.log("图已改变 - 节点:", nodeCount, "连线:", edgeCount)
+								statusArea.text = "节点数: " + nodeCount +
+												  "\n连线数: " + edgeCount +
+												  "\n缩放: " + nodeFlow.zoom.toFixed(2) +
+												  "\n选中节点ID: " + nodeFlow.selectedNodeId +
+												  "\n选中连线索引: " + nodeFlow.selectedEdgeIndex
+							}
+
+							function onNodeSelected(id, title) {
+								console.log("节点选中 - ID:", id, "标题:", title)
+							}
+
+							function onEdgeSelected(from, to, label) {
+								console.log("连线选中 - 从:", from, "到:", to, "标签:", label)
+							}
+
+							function onZoomChanged(zoom) {
+								console.log("缩放改变:", zoom)
+							}
+
+							function onContextMenuRequested(itemX, itemY, nodeId, edgeIndex, sceneX, sceneY) {
+								console.log("右键菜单请求 - 本地坐标:", itemX, itemY,
+											"场景坐标:", sceneX, sceneY,
+											"节点ID:", nodeId, "连线索引:", edgeIndex)
+
+								// 这里可以弹出自定义菜单
+								// 示例：使用 Qt Quick Controls 的 Menu
+								var menu = Qt.createQmlObject('
+									import QtQuick.Controls
+									Menu {
+										MenuItem {
+											text: "添加节点"
+											onTriggered: nodeFlow.addNode("新节点", "", "#2E7DD1", Qt.point(' + sceneX + ', ' + sceneY + '))
+										}
+										MenuItem {
+											text: "删除"
+											enabled: ' + (nodeId >= 0 || edgeIndex >= 0) + '
+											onTriggered: nodeFlow.removeSelectedItem()
+										}
+									}', nodeFlow)
+								menu.popup(itemX, itemY)
+							}
+
+							function onNodeTitleEditRequested(id, currentTitle) {
+								console.log("请求编辑节点标题 - ID:", id, "当前标题:", currentTitle)
+								// 这里可以弹出输入对话框
+								// 示例：使用 Qt Quick Dialogs
+								var dialog = Qt.createQmlObject('
+									import QtQuick.Controls
+									Dialog {
+										title: "编辑节点标题"
+										standardButtons: Dialog.Ok | Dialog.Cancel
+										TextField {
+											id: titleField
+											text: "' + currentTitle + '"
+											width: parent.width
+										}
+										onAccepted: nodeFlow.setNodeTitle(' + id + ', titleField.text)
+									}', nodeFlow)
+								dialog.open()
+							}
+
+							function onEdgeLabelEditRequested(index, currentLabel) {
+								console.log("请求编辑连线标签 - 索引:", index, "当前标签:", currentLabel)
+								// 类似于节点标题编辑
+							}
+						}
+
+						// 初始化一些测试数据
+						Component.onCompleted: {
+							// 添加几个测试节点
+							addNode("开始", "流程起点", "#2E7DD1", Qt.point(50, 50))
+							addNode("处理", "数据处理", "#1F9D63", Qt.point(200, 50))
+							addNode("输出", "结果输出", "#D87516", Qt.point(350, 50))
+
+							// 添加测试连线
+							addEdge(1, 2, "next")
+							addEdge(2, 3, "next")
+
+							// 适应视图
+							fitToView()
+
+							console.log("NodeFlow 初始化完成")
+						}
+					}
+				}
+			}
+		}
+
+		// ============================================================
+		// 在 RibbonBar 中添加切换按钮（示例）
+		// ============================================================
+		// 在您的 RibbonBar 组件中添加一个按钮来切换 NodeFlow 调试面板的显示
+		// 例如，在 RibbonBar 的某个工具栏中添加：
+
+		Button {
+			id: nodeFlowDebugToggle
+			text: qsTr("NodeFlow 调试")
+			checkable: true
+			checked: nodeFlowDebugPanel.visible
+			onCheckedChanged: nodeFlowDebugPanel.visible = checked
+			z: 200   // 必须高于 ribbon 的 z:6，否则还是会被压住
+
+			anchors
+			{
+				top:		parent.top
+				right:		parent.right
+				topMargin:	4
+				rightMargin: 4
+			}
+		}
 
 
 		MouseArea
