@@ -15,7 +15,7 @@
 #include <QSizeF>
 #include <QTimer>
 #include <QWheelEvent>
-#include <QSGSimpleTextureNode> // Qt6 Scene Graph 支持
+#include <QSGSimpleTextureNode>
 #include <QSGImageNode>
 #include <QtMath>
 
@@ -25,21 +25,21 @@
 
 namespace
 {
-constexpr double MinZoom = 0.25;
-constexpr double MaxZoom = 3.5;
-constexpr double NodeWidth = 168.0;
-constexpr double NodeHeight = 78.0;
+    constexpr double MinZoom = 0.25;
+    constexpr double MaxZoom = 3.5;
+    constexpr double NodeWidth = 168.0;
+    constexpr double NodeHeight = 78.0;
 
-QColor statusColor(int index)
-{
-    switch (index % 5) {
-    case 1: return QColor("#1F9D63");
-    case 2: return QColor("#D87516");
-    case 3: return QColor("#7A5CFA");
-    case 4: return QColor("#E9573F");
-    default: return QColor("#2E7DD1");
+    QColor statusColor(int index)
+    {
+        switch (index % 5) {
+        case 1: return QColor(0xFF1F9D63);
+        case 2: return QColor(0xFFD87516);
+        case 3: return QColor(0xFF7A5CFA);
+        case 4: return QColor(0xFFE9573F);
+        default: return QColor(0xFF2E7DD1);
+        }
     }
-}
 }
 
 NodeFlowBase::NodeFlowBase(QQuickItem *parent)
@@ -81,70 +81,6 @@ void NodeFlowBase::markStateDirty() {
         update();
     }
 }
-// NodeFlowBase::NodeFlowBase(QQuickItem *parent)
-//     : JASPControl(parent) // 构造函数初始化基类
-// {
-//     setFlag(ItemHasContents, true);  // 关键：启用 Scene Graph 自定义绘制
-//     // JASPControl 默认可能不接收交互，这里需要手动开启
-//     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton);
-//     setAcceptHoverEvents(true);
-//     setFlag(ItemAcceptsDrops, false); // 根据需求调整
-//     setImplicitWidth(660);
-//     setImplicitHeight(460);
-
-//     // 原有的动画定时器逻辑保持不变
-//     auto *timer = new QTimer(this);
-//     timer->setInterval(850);
-//     connect(timer, &QTimer::timeout, this, [this]() {
-//         if (!m_running || m_nodes.isEmpty()) return;
-//         const int count = std::max(1, static_cast<int>(m_nodes.size()));
-//         m_activeStep = (m_activeStep + 1) % count;
-//         update(); // 触发 updatePaintNode
-//     });
-//     timer->start();
-// }
-
-// QSGNode *NodeFlowBase::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
-// {
-//     QSGImageNode *node = static_cast<QSGImageNode *>(oldNode);
-
-//     if (width() <= 0 || height() <= 0) {
-//         if (node) node->setTexture(nullptr);
-//         return node;
-//     }
-
-//     if (!node) {
-//         node = window()->createImageNode();
-//         node->setFiltering(QSGTexture::Linear);
-//     }
-
-//     // ⭐ 取得屏幕的物理像素比
-//     const qreal dpr = window()->effectiveDevicePixelRatio();
-
-//     // 逻辑大小仍是 width() x height()
-//     QImage image(QSize(width(), height()), QImage::Format_ARGB32_Premultiplied);
-//     image.fill(Qt::transparent);
-
-//     // ⭐ 设置图像物理像素密度，这样 QPainter 会自动绘制到高分辨率缓冲区
-//     image.setDevicePixelRatio(dpr);
-
-//     {
-//         QPainter painter(&image);
-//         painter.setRenderHint(QPainter::Antialiasing, true);
-//         drawContent(&painter);
-//     }
-
-//     QSGTexture *texture = window()->createTextureFromImage(image, QQuickWindow::TextureHasAlphaChannel);
-//     if (texture) {
-//         node->setTexture(texture);
-//         node->setRect(boundingRect());   // 将高分辨率纹理缩小到 Item 显示范围
-//     } else {
-//         node->setTexture(nullptr);
-//     }
-
-//     return node;
-// }
-
 
 QSGNode *NodeFlowBase::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 {
@@ -287,138 +223,16 @@ void NodeFlowBase::rebuildNodeGraphics()
     }
 }
 
-// ============================================================================
-// 绘制逻辑主体
-// ============================================================================
-// void NodeFlowBase::drawContent(QPainter *painter)
-// {
-//     // 复用原 paint 的所有逻辑，painter 已由 updatePaintNode 准备好
-//     painter->fillRect(boundingRect(), QColor("#F5F7FA"));
+void NodeFlowBase::setGridVisible(bool gridVisible)
+{
+    if (gridVisible == m_gridVisible)
+        return;
 
-//     if (m_gridVisible) {
-//         drawGrid(painter);
-//     }
+    m_gridVisible = gridVisible;
+    markStateDirty();
 
-//     if (m_needInitialFit && !m_nodes.isEmpty()) {
-//         // 注意：fitToView 内部调用了 update()，这在 updatePaintNode 中是安全的
-//         // 但为避免递归，建议逻辑上小心。这里保持原样。
-//         fitToView();
-//     }
-
-//     for (int i = 0; i < static_cast<int>(m_edges.size()); ++i) {
-//         drawEdge(painter,
-//                  m_edges.at(i),
-//                  m_running && i == m_activeStep % std::max(1, edgeCount()),
-//                  i == m_selectedEdgeIndex);
-//     }
-//     drawConnectionDraft(painter);
-
-//     for (int i = 0; i < static_cast<int>(m_nodes.size()); ++i) {
-//         const Node &node = m_nodes.at(i);
-//         drawNode(painter,
-//                  node,
-//                  node.id == m_selectedNodeId,
-//                  m_running && i == m_activeStep % std::max(1, nodeCount()));
-//     }
-// }
-
-//===========================================================================
-
-// QSGNode* NodeFlowBase::createGridGraphics()
-// {
-//     auto *group = new QSGNode;
-//     const double step = 32.0 * m_zoom;
-//     if (step < 8.0) return group;
-
-//     QSGGeometry *geometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), 0);
-//     geometry->setDrawingMode(GL_LINES);
-//     // 计算线的数量并分配顶点（略，实际需动态计算）
-//     // 这里仅示意，完整实现需计算水平和垂直线段的起点终点
-//     // 为简化，仍可使用一个 QSGImageNode 绘制网格（网格不常变，纹理方式也接受）
-//     // 但为了完整性，下面给出纹理方式：
-//     QImage gridImage(QSize(width(), height()), QImage::Format_ARGB32_Premultiplied);
-//     gridImage.fill(Qt::transparent);
-//     gridImage.setDevicePixelRatio(m_dpr);
-//     QPainter p(&gridImage);
-//     p.setPen(QPen(QColor("#E5EBF0"), 1));
-//     double startX = std::fmod(m_panOffset.x(), step);
-//     double startY = std::fmod(m_panOffset.y(), step);
-//     for (double x = startX; x < width(); x += step)
-//         p.drawLine(QPointF(x, 0), QPointF(x, height()));
-//     for (double y = startY; y < height(); y += step)
-//         p.drawLine(QPointF(0, y), QPointF(width(), y));
-//     p.end();
-
-//     auto *tex = window()->createTextureFromImage(gridImage, QQuickWindow::TextureHasAlphaChannel);
-//     auto *node = window()->createImageNode();
-//     node->setTexture(tex);
-//     node->setRect(boundingRect());
-//     node->setFiltering(QSGTexture::Linear);
-//     group->appendChildNode(node);
-//     return group;
-// }
-
-// QSGNode* NodeFlowBase::createNodeGraphics(const Node &node, bool selected, bool active)
-// {
-//     auto *group = new QSGNode;
-//     QRectF rect = nodeRect(node);  // 场景坐标矩形
-
-//     // 节点背景（圆角矩形）：使用一个 QSGImageNode 绘制固定大小的位图，然后通过变换放置
-//     // 或者直接用 QSGGeometryNode 绘制圆角矩形（更复杂，这里用纹理方式快速过渡）
-//     QImage img(NodeWidth * m_dpr, NodeHeight * m_dpr, QImage::Format_ARGB32_Premultiplied);
-//     img.setDevicePixelRatio(m_dpr);
-//     img.fill(Qt::transparent);
-//     QPainter p(&img);
-//     p.setRenderHint(QPainter::Antialiasing);
-//     QColor border = selected ? QColor("#111827") : node.color.darker(115);
-//     if (active) border = QColor("#E9573F");
-//     p.setPen(QPen(border, selected || active ? 3 : 2));
-//     p.setBrush(Qt::white);
-//     p.drawRoundedRect(QRectF(0,0,NodeWidth,NodeHeight), 8, 8);
-//     // 左侧色条
-//     p.setPen(Qt::NoPen);
-//     p.setBrush(node.color);
-//     p.drawRoundedRect(QRectF(0,0,9,NodeHeight), 4, 4);
-//     p.end();
-
-//     auto *bgNode = window()->createImageNode();
-//     bgNode->setTexture(window()->createTextureFromImage(img, QQuickWindow::TextureHasAlphaChannel));
-//     bgNode->setRect(rect);   // 直接放在场景坐标处（根变换会处理）
-//     bgNode->setFiltering(QSGTexture::Linear);
-//     group->appendChildNode(bgNode);
-
-//     // 文字标题纹理（独立分辨率管理）
-//     auto *textNode = window()->createImageNode();
-//     updateNodeTextTexture(node.id, textNode);   // 根据 zoom 生成清晰文字
-//     // 文字定位（相对于节点背景）
-//     QPointF textPos = rect.topLeft() + QPointF(20, 13);
-//     textNode->setRect(QRectF(textPos, QSizeF(rect.width()-54, 24)));
-//     group->appendChildNode(textNode);
-//     m_nodeTextNodes[node.id] = textNode; // 保存引用
-
-//     // 副标题同理，可再加一个 textNode2
-//     // ...
-
-//     // 状态圆点
-//     QRectF dotRect(rect.right() - 26, rect.top() + 14, 12, 12);
-//     auto *dotNode = window()->createImageNode();
-//     QImage dotImg(12 * m_dpr, 12 * m_dpr, QImage::Format_ARGB32_Premultiplied);
-//     dotImg.setDevicePixelRatio(m_dpr);
-//     dotImg.fill(Qt::transparent);
-//     QPainter dp(&dotImg);
-//     dp.setRenderHint(QPainter::Antialiasing);
-//     dp.setBrush(active ? QColor("#E9573F") : node.color.lighter(120));
-//     dp.setPen(Qt::NoPen);
-//     dp.drawEllipse(0,0,12,12);
-//     dp.end();
-//     dotNode->setTexture(window()->createTextureFromImage(dotImg, QQuickWindow::TextureHasAlphaChannel));
-//     dotNode->setRect(dotRect);
-//     group->appendChildNode(dotNode);
-
-//     // 端口点（输入/输出）
-//     // 同样使用小纹理或圆点几何
-//     return group;
-// }
+    emit gridVisibleChanged(gridVisible);
+}
 
 QSGNode* NodeFlowBase::createNodeGraphics(const Node &node, bool selected, bool active)
 {
@@ -437,8 +251,8 @@ QSGNode* NodeFlowBase::createNodeGraphics(const Node &node, bool selected, bool 
     {
         QPainter p(&bgImg);
         p.setRenderHint(QPainter::Antialiasing);
-        QColor border = selected ? QColor("#111827") : node.color.darker(115);
-        if (active) border = QColor("#E9573F");
+        QColor border = selected ? QColor("0xFF111827") : node.color.darker(115);
+        if (active) border = QColor("0xFFE9573F");
         p.setPen(QPen(border, selected || active ? 3 : 2));
         p.setBrush(Qt::white);
         p.drawRoundedRect(QRectF(0, 0, NodeWidth, NodeHeight), 8, 8);
@@ -478,7 +292,7 @@ QSGNode* NodeFlowBase::createNodeGraphics(const Node &node, bool selected, bool 
     {
         QPainter p(&dotImg);
         p.setRenderHint(QPainter::Antialiasing);
-        p.setBrush(active ? QColor("#E9573F") : node.color.lighter(120));
+        p.setBrush(active ? QColor("0xFFE9573F") : node.color.lighter(120));
         p.setPen(Qt::NoPen);
         p.drawEllipse(QRectF(0, 0, 12, 12));
     }
@@ -496,7 +310,7 @@ QSGNode* NodeFlowBase::createNodeGraphics(const Node &node, bool selected, bool 
         {
             QPainter p(&portImg);
             p.setRenderHint(QPainter::Antialiasing);
-            p.setBrush(QColor("#CDD7DF"));
+            p.setBrush(QColor(0xFFCDD7DF));
             p.setPen(QPen(Qt::white, 1));
             p.drawEllipse(QRectF(0, 0, 8, 8));
         }
@@ -548,45 +362,6 @@ QSGImageNode* NodeFlowBase::createTextNode(const QString &text, const QFont &fon
     node->setRect(rect);
     return node;
 }
-
-// void NodeFlowBase::updateNodeTextTexture(int nodeId, QSGImageNode* textNode, bool isTitle)
-// {
-//     Node *n = findNode(nodeId);
-//     if (!n) return;
-
-//     const QString &text = isTitle ? n->title : n->subtitle;
-//     const double baseFontSizePt = isTitle ? 11.0 : 9.0;
-
-//     // 计算纹理分辨率放大因子：当 m_zoom < 1 时，需要更高的纹理像素密度
-//     double scaleFactor = std::max(1.0, 1.0 / m_zoom);
-//     // 纹理的物理像素尺寸
-//     int texWidth = 200 * scaleFactor * m_dpr;
-//     int texHeight = 30 * scaleFactor * m_dpr;
-
-//     QImage textImg(texWidth, texHeight, QImage::Format_ARGB32_Premultiplied);
-//     // 关键：设置 devicePixelRatio 为 m_dpr * scaleFactor
-//     textImg.setDevicePixelRatio(m_dpr * scaleFactor);
-//     textImg.fill(Qt::transparent);
-
-//     {
-//         QPainter p(&textImg);
-//         p.setRenderHint(QPainter::TextAntialiasing);
-//         QFont font;
-//         font.setPointSizeF(baseFontSizePt * scaleFactor);  // 在纹理坐标系中放大字体
-//         font.setBold(isTitle);
-//         p.setFont(font);
-//         p.setPen(QColor("#1F2933")); // 标题颜色
-//         QRectF textRect(0, 0, texWidth / (m_dpr * scaleFactor), texHeight / (m_dpr * scaleFactor));
-//         p.drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text);
-//     }
-
-//     QSGTexture *tex = window()->createTextureFromImage(textImg, QQuickWindow::TextureHasAlphaChannel);
-//     textNode->setTexture(tex);
-//     textNode->setFiltering(QSGTexture::Linear);
-//     // 设置纹理的显示矩形为逻辑大小（与 drawText 的矩形一致）
-//     QSizeF logicalSize(texWidth / (m_dpr * scaleFactor), texHeight / (m_dpr * scaleFactor));
-//     textNode->setRect(QRectF(QPointF(0,0), logicalSize));
-// }
 
 QSGNode* NodeFlowBase::createEdgeGraphics(const Edge &edge, bool selected, bool active)
 {
@@ -1085,7 +860,7 @@ void NodeFlowBase::beginConnectionFrom(int nodeId)
     m_connectionFromId = nodeId;
     m_connectionEnd = nodeAnchor(*n, true);
     setSelectedNode(nodeId);
-    update();
+    markStateDirty();
 }
 
 QPointF NodeFlowBase::sceneToItem(const QPointF &scenePoint) const
@@ -1097,15 +872,6 @@ QPointF NodeFlowBase::itemToScene(const QPointF &itemPoint) const
 {
     return widgetToScene(itemPoint);
 }
-
-bool NodeFlowBase::gridVisible() const { return m_gridVisible; }
-bool NodeFlowBase::isRunning() const { return m_running; }
-bool NodeFlowBase::connectionMode() const { return m_connectionMode; }
-double NodeFlowBase::zoom() const { return m_zoom; }
-int NodeFlowBase::selectedNodeId() const { return m_selectedNodeId; }
-int NodeFlowBase::selectedEdgeIndex() const { return m_selectedEdgeIndex; }
-int NodeFlowBase::nodeCount() const { return static_cast<int>(m_nodes.size()); }
-int NodeFlowBase::edgeCount() const { return static_cast<int>(m_edges.size()); }
 
 void NodeFlowBase::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
@@ -1236,14 +1002,14 @@ void NodeFlowBase::updatePointerScenePosition(const QPointF &itemPos)
         m_panOffset += itemPos - m_lastWidgetPos;
         m_lastWidgetPos = itemPos;
         m_transformOnly = true; // 只有变换变化
-        update();
+        markStateDirty();
         return;
     }
 
     if (m_connecting) {
         m_connectionEnd = scenePos;
         m_transformOnly = true; // 草稿线位置变化，但结构没变
-        update();
+        markStateDirty();
         return;
     }
 
@@ -1424,7 +1190,7 @@ void NodeFlowBase::setSelectedNode(int id)
     } else {
         emit nodeSelected(-1, QString());
     }
-    update();
+    markStateDirty();
 }
 
 void NodeFlowBase::setSelectedEdge(int index)
@@ -1440,7 +1206,7 @@ void NodeFlowBase::setSelectedEdge(int index)
         emit edgeSelected(-1, -1, QString());
     }
     emit edgeIndexSelected(m_selectedEdgeIndex);
-    update();
+    markStateDirty();
 }
 
 void NodeFlowBase::emitGraphChanged()
@@ -1458,147 +1224,3 @@ void NodeFlowBase::applyZoom(double newZoom)
         m_zoom = clamped;
     }
 }
-
-// void NodeFlowBase::drawGrid(QPainter *painter) const
-// {
-//     painter->save();
-//     painter->setPen(QPen(QColor("#E5EBF0"), 1));
-//     const double step = 32.0 * m_zoom;
-//     if (step < 8.0) {
-//         painter->restore();
-//         return;
-//     }
-
-//     const double startX = std::fmod(m_panOffset.x(), step);
-//     const double startY = std::fmod(m_panOffset.y(), step);
-//     for (double x = startX; x < width(); x += step) {
-//         painter->drawLine(QPointF(x, 0), QPointF(x, height()));
-//     }
-//     for (double y = startY; y < height(); y += step) {
-//         painter->drawLine(QPointF(0, y), QPointF(width(), y));
-//     }
-//     painter->restore();
-// }
-
-// void NodeFlowBase::drawEdge(QPainter *painter, const Edge &edge, bool active, bool selected) const
-// {
-//     const Node *from = findNode(edge.from);
-//     const Node *to = findNode(edge.to);
-//     if (!from || !to) {
-//         return;
-//     }
-
-//     QPainterPath path;
-//     const QPainterPath scenePath = edgePath(edge);
-//     for (int i = 0; i < scenePath.elementCount(); ++i) {
-//         const QPainterPath::Element element = scenePath.elementAt(i);
-//         if (element.isMoveTo()) {
-//             path.moveTo(sceneToWidget(QPointF(element.x, element.y)));
-//         } else if (element.isCurveTo()) {
-//             const QPainterPath::Element c1 = scenePath.elementAt(i);
-//             const QPainterPath::Element c2 = scenePath.elementAt(i + 1);
-//             const QPainterPath::Element endElement = scenePath.elementAt(i + 2);
-//             path.cubicTo(sceneToWidget(QPointF(c1.x, c1.y)),
-//                          sceneToWidget(QPointF(c2.x, c2.y)),
-//                          sceneToWidget(QPointF(endElement.x, endElement.y)));
-//             i += 2;
-//         }
-//     }
-//     const QPointF end = sceneToWidget(nodeAnchor(*to, false));
-
-//     painter->save();
-//     if (selected) {
-//         painter->setPen(QPen(QColor("#111827"), 6));
-//         painter->drawPath(path);
-//     }
-
-//     painter->setPen(QPen(active ? QColor("#E9573F") : QColor("#8EA0AD"), active || selected ? 4 : 2));
-//     painter->setBrush(Qt::NoBrush);
-//     painter->drawPath(path);
-
-//     const QLineF tail(QPointF(end.x() - 16, end.y() - 7), end);
-//     const QLineF head(QPointF(end.x() - 16, end.y() + 7), end);
-//     painter->drawLine(tail);
-//     painter->drawLine(head);
-
-//     if (!edge.label.isEmpty()) {
-//         const QPointF center = path.pointAtPercent(0.5);
-//         const QRectF labelRect(center.x() - 36, center.y() - 12, 72, 24);
-//         painter->setPen(Qt::NoPen);
-//         painter->setBrush(active ? QColor("#FFE8E3") : QColor("#FFFFFF"));
-//         painter->drawRoundedRect(labelRect, 4, 4);
-//         painter->setPen(active ? QColor("#C7442F") : QColor("#66727C"));
-//         painter->drawText(labelRect, Qt::AlignCenter, edge.label);
-//     }
-//     painter->restore();
-// }
-
-// void NodeFlowBase::drawNode(QPainter *painter, const Node &node, bool selected, bool active) const
-// {
-//     const QRectF rect = sceneToWidget(nodeRect(node));
-//     painter->save();
-
-//     QColor border = selected ? QColor("#111827") : node.color.darker(115);
-//     if (active) {
-//         border = QColor("#E9573F");
-//     }
-
-//     painter->setPen(QPen(border, selected || active ? 3 : 2));
-//     painter->setBrush(QColor("#FFFFFF"));
-//     painter->drawRoundedRect(rect, 8, 8);
-
-//     const QRectF stripe(rect.left(), rect.top(), 9, rect.height());
-//     painter->setPen(Qt::NoPen);
-//     painter->setBrush(node.color);
-//     painter->drawRoundedRect(stripe, 4, 4);
-
-//     const QRectF dot(rect.right() - 26, rect.top() + 14, 12, 12);
-//     painter->setBrush(active ? QColor("#E9573F") : node.color.lighter(120));
-//     painter->drawEllipse(dot);
-
-//     painter->setPen(QColor("#1F2933"));
-//     QFont titleFont = painter->font();
-//     titleFont.setPointSizeF(std::max(8.0, 11.0 * m_zoom));
-//     titleFont.setBold(true);
-//     painter->setFont(titleFont);
-//     painter->drawText(rect.adjusted(20, 13, -34, -40), Qt::AlignLeft | Qt::AlignVCenter, node.title);
-
-//     painter->setPen(QColor("#66727C"));
-//     QFont subtitleFont = painter->font();
-//     subtitleFont.setPointSizeF(std::max(7.0, 9.0 * m_zoom));
-//     subtitleFont.setBold(false);
-//     painter->setFont(subtitleFont);
-//     painter->drawText(rect.adjusted(20, 38, -12, -10), Qt::AlignLeft | Qt::AlignVCenter, node.subtitle);
-
-//     painter->setPen(QPen(QColor("#CDD7DF"), 1));
-//     painter->setBrush(QColor("#FFFFFF"));
-//     painter->drawEllipse(sceneToWidget(nodeAnchor(node, false)), 4, 4);
-//     painter->drawEllipse(sceneToWidget(nodeAnchor(node, true)), 4, 4);
-//     painter->restore();
-// }
-
-// void NodeFlowBase::drawConnectionDraft(QPainter *painter) const
-// {
-//     if (!m_connecting) {
-//         return;
-//     }
-
-//     const Node *from = findNode(m_connectionFromId);
-//     if (!from) {
-//         return;
-//     }
-
-//     const QPointF start = sceneToWidget(nodeAnchor(*from, true));
-//     const QPointF end = sceneToWidget(m_connectionEnd);
-//     QPainterPath path(start);
-//     const double handle = std::max(80.0, std::abs(end.x() - start.x()) * 0.45);
-//     path.cubicTo(QPointF(start.x() + handle, start.y()),
-//                  QPointF(end.x() - handle, end.y()),
-//                  end);
-
-//     painter->save();
-//     painter->setPen(QPen(QColor("#2E7DD1"), 2, Qt::DashLine));
-//     painter->setBrush(Qt::NoBrush);
-//     painter->drawPath(path);
-//     painter->restore();
-// }

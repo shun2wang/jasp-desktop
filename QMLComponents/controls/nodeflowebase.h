@@ -27,9 +27,9 @@ class NodeFlowBase : public JASPControl
     Q_OBJECT
     QML_ELEMENT
 
-    // Q_PROPERTY(bool gridVisible READ gridVisible WRITE setGridVisible NOTIFY gridVisibleChanged)
-    // Q_PROPERTY(bool running READ isRunning WRITE setRunning NOTIFY runningChanged)
-    // Q_PROPERTY(bool connectionMode READ connectionMode WRITE setConnectionMode NOTIFY connectionModeChanged)
+    Q_PROPERTY(bool gridVisible READ gridVisible WRITE setGridVisible NOTIFY gridVisibleChanged)
+    Q_PROPERTY(bool running READ isRunning WRITE setRunning NOTIFY runningChanged)
+    Q_PROPERTY(bool connectionMode READ connectionMode WRITE setConnectionMode NOTIFY connectionModeChanged)
     Q_PROPERTY(double zoom READ zoom NOTIFY zoomChanged)
     Q_PROPERTY(int selectedNodeId READ selectedNodeId NOTIFY nodeSelected)
     Q_PROPERTY(int selectedEdgeIndex READ selectedEdgeIndex NOTIFY edgeIndexSelected)
@@ -89,15 +89,15 @@ public:
     Q_INVOKABLE QPointF sceneToItem(const QPointF &scenePoint) const;
     Q_INVOKABLE QPointF itemToScene(const QPointF &itemPoint) const;
 
-    // Getters
-    bool gridVisible() const;
-    bool isRunning() const;
-    bool connectionMode() const;
-    double zoom() const;
-    int selectedNodeId() const;
-    int selectedEdgeIndex() const;
-    int nodeCount() const;
-    int edgeCount() const;
+    bool gridVisible() const { return m_gridVisible; }
+    bool isRunning() const { return m_running; }
+    bool connectionMode() const { return m_connectionMode; }
+    double zoom() const { return m_zoom; }
+    void    setGridVisible(bool gridVisible);
+    int selectedNodeId() const { return m_selectedNodeId; }
+    int selectedEdgeIndex() const { return m_selectedEdgeIndex; }
+    int nodeCount() const { return static_cast<int>(m_nodes.size()); }
+    int edgeCount() const { return static_cast<int>(m_edges.size()); }
 
 signals:
     void graphChanged(int nodeCount, int edgeCount);
@@ -131,6 +131,7 @@ private:
     void rebuildNodeGraphics();
     void rebuildDraftEdgeGraphics();
 
+    QRectF nodeScreenRect(const Node &node) const;
     QSGNode* createNodeGraphics(const Node &node, bool selected, bool active);
     QSGNode* createEdgeGraphics(const Edge &edge, bool selected, bool active);
     QSGNode* createDraftEdgeGraphics();
