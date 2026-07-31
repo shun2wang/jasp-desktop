@@ -11,6 +11,8 @@
 #include <QVariantMap>
 #include <QVector>
 #include <QHash>
+#include <QUndoStack>
+#include <QUndoCommand>
 
 class QHoverEvent;
 class QKeyEvent;
@@ -35,6 +37,10 @@ class NodeFlowBase : public JASPControl
     Q_PROPERTY(int selectedEdgeIndex READ selectedEdgeIndex NOTIFY edgeIndexSelected)
     Q_PROPERTY(int nodeCount READ nodeCount NOTIFY graphChanged)
     Q_PROPERTY(int edgeCount READ edgeCount NOTIFY graphChanged)
+
+    // Undo/Redo support
+    Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
+    Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
 
 public:
     struct Node {
@@ -85,6 +91,12 @@ public:
     Q_INVOKABLE void setNodeTitle(int id, const QString &title);
     Q_INVOKABLE void setEdgeLabel(int index, const QString &label);
 
+    // Undo / Redo
+    Q_INVOKABLE void undo();
+    Q_INVOKABLE void redo();
+    bool canUndo() const { return m_undoStack.canUndo(); }
+    bool canRedo() const { return m_undoStack.canRedo(); }
+
     // Coordinate conversion
     Q_INVOKABLE QPointF sceneToItem(const QPointF &scenePoint) const;
     Q_INVOKABLE QPointF itemToScene(const QPointF &itemPoint) const;
@@ -94,10 +106,22 @@ public:
     bool connectionMode() const { return m_connectionMode; }
     double zoom() const { return m_zoom; }
     void    setGridVisible(bool gridVisible);
+    void    setRunning(bool running) { if (m_running != running) { m_running = running; emit runningChanged(m_running); } }
+    void    setConnectionMode(bool mode) { if (m_connectionMode != mode) { m_connectionMode = mode; emit connectionModeChanged(mode); } }
+
     int selectedNodeId() const { return m_selectedNodeId; }
     int selectedEdgeIndex() const { return m_selectedEdgeIndex; }
     int nodeCount() const { return static_cast<int>(m_nodes.size()); }
     int edgeCount() const { return static_cast<int>(m_edges.size()); }
+
+    // Internal operations exposed for Undo Commands
+    int addNodeInternal(const QString &title, const QString &subtitle, const QColor &color, const QPointF &position);
+    void removeNodeInternal(int id);
+    void restoreNodeInternal(const Node &node, const QList<Edge> &edges);
+    int addEdgeInternal(int from, int to, const QString &label);
+    void setNodePositionInternal(int id, const QPointF &pos);
+    void removeEdgeInternal(int index);
+    void restoreEdgeInternal(const Edge &edge, int index);
 
 signals:
     void graphChanged(int nodeCount, int edgeCount);
@@ -111,6 +135,9 @@ signals:
     void contextMenuRequested(qreal itemX, qreal itemY, int nodeId, int edgeIndex, qreal sceneX, qreal sceneY);
     void nodeTitleEditRequested(int id, const QString &currentTitle);
     void edgeLabelEditRequested(int index, const QString &currentLabel);
+    void canUndoChanged();
+    void canRedoChanged();
+
 
 protected:
     QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *) override;
@@ -123,6 +150,13 @@ protected:
     void hoverMoveEvent(QHoverEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+
+    void setSelectedNode(int id);
+    void setSelectedEdge(int index);
+    void emitGraphChanged();
+    void markGraphDirty();
+    void markStateDirty();
+    void markGridDirty();
 
 private:
     // Scene Graph builders
@@ -141,8 +175,6 @@ private:
 
     // Helpers
     void cleanupSceneGraphPointers();
-    void markGraphDirty();
-    void markStateDirty();
 
     QRectF nodeRect(const Node &node) const;
     QPointF sceneToWidget(const QPointF &point) const;
@@ -155,9 +187,6 @@ private:
     QRectF graphBounds() const;
     QPointF nodeAnchor(const Node &node, bool output) const;
     QPainterPath edgePath(const Edge &edge) const;
-    void setSelectedNode(int id);
-    void setSelectedEdge(int index);
-    void emitGraphChanged();
     void applyZoom(double newZoom);
     void updatePointerScenePosition(const QPointF &itemPos);
 
@@ -179,11 +208,11 @@ private:
     qreal m_dpr = 1.0;
 
     // Dirty flags
-    bool m_graphDirty = true;      // Structure changed (nodes/edges added/removed)
-    bool m_stateDirty = false;     // Selection/active state changed
-    bool m_transformOnly = false;  // Only pan/zoom changed
+    bool m_gridDirty = true;        // Grid needs rebuild (pan/zoom/resize)
+    bool m_contentDirty = true;     // Nodes/Edges need rebuild
 
     // Data
+    QUndoStack m_undoStack;
     QVector<Node> m_nodes;
     QVector<Edge> m_edges;
     double m_zoom = 1.0;
@@ -197,6 +226,7 @@ private:
     bool m_needInitialFit = true;
     QPointF m_lastWidgetPos;
     QPointF m_lastScenePos;
+    QPointF m_dragStartPos;
     QPointF m_connectionEnd;
     int m_selectedNodeId = -1;
     int m_selectedEdgeIndex = -1;
