@@ -94,25 +94,25 @@ public:
     // Undo / Redo
     Q_INVOKABLE void undo();
     Q_INVOKABLE void redo();
-    bool canUndo() const { return m_undoStack.canUndo(); }
-    bool canRedo() const { return m_undoStack.canRedo(); }
+    bool canUndo() const { return _undoStack.canUndo(); }
+    bool canRedo() const { return _undoStack.canRedo(); }
 
     // Coordinate conversion
     Q_INVOKABLE QPointF sceneToItem(const QPointF &scenePoint) const;
     Q_INVOKABLE QPointF itemToScene(const QPointF &itemPoint) const;
 
-    bool gridVisible() const { return m_gridVisible; }
-    bool isRunning() const { return m_running; }
-    bool connectionMode() const { return m_connectionMode; }
-    double zoom() const { return m_zoom; }
+    bool gridVisible() const { return _gridVisible; }
+    bool isRunning() const { return _running; }
+    bool connectionMode() const { return _connectionMode; }
+    double zoom() const { return _zoom; }
     void    setGridVisible(bool gridVisible);
-    void    setRunning(bool running) { if (m_running != running) { m_running = running; emit runningChanged(m_running); } }
-    void    setConnectionMode(bool mode) { if (m_connectionMode != mode) { m_connectionMode = mode; emit connectionModeChanged(mode); } }
+    void    setRunning(bool running) { if (_running != running) { _running = running; emit runningChanged(_running); } }
+    void    setConnectionMode(bool mode) { if (_connectionMode != mode) { _connectionMode = mode; emit connectionModeChanged(mode); } }
 
-    int selectedNodeId() const { return m_selectedNodeId; }
-    int selectedEdgeIndex() const { return m_selectedEdgeIndex; }
-    int nodeCount() const { return static_cast<int>(m_nodes.size()); }
-    int edgeCount() const { return static_cast<int>(m_edges.size()); }
+    int selectedNodeId() const { return _selectedNodeId; }
+    int selectedEdgeIndex() const { return _selectedEdgeIndex; }
+    int nodeCount() const { return static_cast<int>(_nodes.size()); }
+    int edgeCount() const { return static_cast<int>(_edges.size()); }
 
     // Internal operations exposed for Undo Commands
     int addNodeInternal(const QString &title, const QString &subtitle, const QColor &color, const QPointF &position);
@@ -197,42 +197,42 @@ private:
     Edge edgeFromVariant(const QVariantMap &map) const;
 
     // Scene Graph layer nodes
-    QSGTransformNode* m_rootTransform = nullptr;
-    QSGNode* m_gridNode = nullptr;
-    QSGNode* m_edgeNode = nullptr;
-    QSGNode* m_nodeParent = nullptr;
-    QSGNode* m_draftEdgeNode = nullptr;
+    QSGTransformNode* _rootTransform = nullptr;
+    QSGNode* _gridNode = nullptr;
+    QSGNode* _edgeNode = nullptr;
+    QSGNode* _nodeParent = nullptr;
+    QSGNode* _draftEdgeNode = nullptr;
 
     // Cached window/dpr
-    QQuickWindow* m_window = nullptr;
-    qreal m_dpr = 1.0;
+    QQuickWindow* _window = nullptr;
+    qreal _dpr = 1.0;
 
     // Dirty flags
-    bool m_gridDirty = true;        // Grid needs rebuild (pan/zoom/resize)
-    bool m_contentDirty = true;     // Nodes/Edges need rebuild
+    bool _gridDirty = true;        // Grid needs rebuild (pan/zoom/resize)
+    bool _contentDirty = true;     // Nodes/Edges need rebuild
 
     // Data
-    QUndoStack m_undoStack;
-    QVector<Node> m_nodes;
-    QVector<Edge> m_edges;
-    double m_zoom = 1.0;
-    QPointF m_panOffset{40.0, 40.0};
-    bool m_gridVisible = true;
-    bool m_draggingNode = false;
-    bool m_panning = false;
-    bool m_connecting = false;
-    bool m_connectionMode = false;
-    bool m_running = false;
-    bool m_needInitialFit = true;
-    QPointF m_lastWidgetPos;
-    QPointF m_lastScenePos;
-    QPointF m_dragStartPos;
-    QPointF m_connectionEnd;
-    int m_selectedNodeId = -1;
-    int m_selectedEdgeIndex = -1;
-    int m_connectionFromId = -1;
-    int m_nextNodeId = 1;
-    int m_activeStep = 0;
+    QUndoStack _undoStack;
+    QVector<Node> _nodes;
+    QVector<Edge> _edges;
+    double _zoom = 1.0;
+    QPointF _panOffset{40.0, 40.0};
+    bool _gridVisible = true;
+    bool _draggingNode = false;
+    bool _panning = false;
+    bool _connecting = false;
+    bool _connectionMode = false;
+    bool _running = false;
+    bool _needInitialFit = true;
+    QPointF _lastWidgetPos;
+    QPointF _lastScenePos;
+    QPointF _dragStartPos;
+    QPointF _connectionEnd;
+    int _selectedNodeId = -1;
+    int _selectedEdgeIndex = -1;
+    int _connectionFromId = -1;
+    int _nextNodeId = 1;
+    int _activeStep = 0;
 };
 
 #endif // NODEFLOWBASE_H

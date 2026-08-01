@@ -29,6 +29,7 @@ constexpr double MinZoom = 0.25;
 constexpr double MaxZoom = 3.5;
 constexpr double NodeWidth = 168.0;
 constexpr double NodeHeight = 78.0;
+constexpr double MinNodeSpacing = 40.0; // 节点之间的最小间距
 
 QColor statusColor(int index)
 {
@@ -47,75 +48,75 @@ QColor statusColor(int index)
 class AddNodeCommand : public QUndoCommand {
 public:
     AddNodeCommand(NodeFlowBase* flow, const QString& title, const QString& subtitle, const QColor& color, const QPointF& pos)
-        : m_flow(flow), m_title(title), m_subtitle(subtitle), m_color(color), m_pos(pos) {
+        : _flow(flow), _title(title), _subtitle(subtitle), _color(color), _pos(pos) {
         setText(QObject::tr("Add Node"));
     }
-    void undo() override { m_flow->removeNodeInternal(m_id); }
-    void redo() override { m_id = m_flow->addNodeInternal(m_title, m_subtitle, m_color, m_pos); }
-    int nodeId() const { return m_id; }
+    void undo() override { _flow->removeNodeInternal(_id); }
+    void redo() override { _id = _flow->addNodeInternal(_title, _subtitle, _color, _pos); }
+    int nodeId() const { return _id; }
 private:
-    NodeFlowBase* m_flow;
-    QString m_title, m_subtitle;
-    QColor m_color;
-    QPointF m_pos;
-    int m_id = -1;
+    NodeFlowBase* _flow;
+    QString _title, _subtitle;
+    QColor _color;
+    QPointF _pos;
+    int _id = -1;
 };
 
 class RemoveNodeCommand : public QUndoCommand {
 public:
     RemoveNodeCommand(NodeFlowBase* flow, const NodeFlowBase::Node& node, const QList<NodeFlowBase::Edge>& edges)
-        : m_flow(flow), m_node(node), m_edges(edges) {
+        : _flow(flow), _node(node), _edges(edges) {
         setText(QObject::tr("Remove Node"));
     }
-    void undo() override { m_flow->restoreNodeInternal(m_node, m_edges); }
-    void redo() override { m_flow->removeNodeInternal(m_node.id); }
+    void undo() override { _flow->restoreNodeInternal(_node, _edges); }
+    void redo() override { _flow->removeNodeInternal(_node.id); }
 private:
-    NodeFlowBase* m_flow;
-    NodeFlowBase::Node m_node;
-    QList<NodeFlowBase::Edge> m_edges;
+    NodeFlowBase* _flow;
+    NodeFlowBase::Node _node;
+    QList<NodeFlowBase::Edge> _edges;
 };
 
 class AddEdgeCommand : public QUndoCommand {
 public:
     AddEdgeCommand(NodeFlowBase* flow, int from, int to, const QString& label)
-        : m_flow(flow), m_from(from), m_to(to), m_label(label) {
+        : _flow(flow), _from(from), _to(to), _label(label) {
         setText(QObject::tr("Add Edge"));
     }
-    void undo() override { m_flow->removeEdgeInternal(m_index); }
-    void redo() override { m_index = m_flow->addEdgeInternal(m_from, m_to, m_label); }
+    void undo() override { _flow->removeEdgeInternal(_index); }
+    void redo() override { _index = _flow->addEdgeInternal(_from, _to, _label); }
 private:
-    NodeFlowBase* m_flow;
-    int m_from, m_to;
-    QString m_label;
-    int m_index = -1;
+    NodeFlowBase* _flow;
+    int _from, _to;
+    QString _label;
+    int _index = -1;
 };
 
 class RemoveEdgeCommand : public QUndoCommand {
 public:
     RemoveEdgeCommand(NodeFlowBase* flow, const NodeFlowBase::Edge& edge, int index)
-        : m_flow(flow), m_edge(edge), m_index(index) {
+        : _flow(flow), _edge(edge), _index(index) {
         setText(QObject::tr("Remove Edge"));
     }
-    void undo() override { m_flow->restoreEdgeInternal(m_edge, m_index); }
-    void redo() override { m_flow->removeEdgeInternal(m_index); }
+    void undo() override { _flow->restoreEdgeInternal(_edge, _index); }
+    void redo() override { _flow->removeEdgeInternal(_index); }
 private:
-    NodeFlowBase* m_flow;
-    NodeFlowBase::Edge m_edge;
-    int m_index;
+    NodeFlowBase* _flow;
+    NodeFlowBase::Edge _edge;
+    int _index;
 };
 
 class MoveNodeCommand : public QUndoCommand {
 public:
     MoveNodeCommand(NodeFlowBase* flow, int id, const QPointF& oldPos, const QPointF& newPos)
-        : m_flow(flow), m_id(id), m_oldPos(oldPos), m_newPos(newPos) {
+        : _flow(flow), _id(id), _oldPos(oldPos), _newPos(newPos) {
         setText(QObject::tr("Move Node"));
     }
-    void undo() override { m_flow->setNodePositionInternal(m_id, m_oldPos); }
-    void redo() override { m_flow->setNodePositionInternal(m_id, m_newPos); }
+    void undo() override { _flow->setNodePositionInternal(_id, _oldPos); }
+    void redo() override { _flow->setNodePositionInternal(_id, _newPos); }
 private:
-    NodeFlowBase* m_flow;
-    int m_id;
-    QPointF m_oldPos, m_newPos;
+    NodeFlowBase* _flow;
+    int _id;
+    QPointF _oldPos, _newPos;
 };
 }
 
@@ -131,37 +132,37 @@ NodeFlowBase::NodeFlowBase(QQuickItem *parent)
     auto *timer = new QTimer(this);
     timer->setInterval(850);
     connect(timer, &QTimer::timeout, this, [this]() {
-        if (!m_running || m_nodes.isEmpty()) return;
-        const int count = std::max(1, static_cast<int>(m_nodes.size()));
-        m_activeStep = (m_activeStep + 1) % count;
+        if (!_running || _nodes.isEmpty()) return;
+        const int count = std::max(1, static_cast<int>(_nodes.size()));
+        _activeStep = (_activeStep + 1) % count;
         markStateDirty();
     });
     timer->start();
 
     connect(this, &QQuickItem::windowChanged, this, [this](QQuickWindow *win) {
         if (win) {
-            m_dpr = win->effectiveDevicePixelRatio();
+            _dpr = win->effectiveDevicePixelRatio();
             markGraphDirty();
         }
     });
 
-    connect(&m_undoStack, &QUndoStack::canUndoChanged, this, &NodeFlowBase::canUndoChanged);
-    connect(&m_undoStack, &QUndoStack::canRedoChanged, this, &NodeFlowBase::canRedoChanged);
+    connect(&_undoStack, &QUndoStack::canUndoChanged, this, &NodeFlowBase::canUndoChanged);
+    connect(&_undoStack, &QUndoStack::canRedoChanged, this, &NodeFlowBase::canRedoChanged);
 }
 
 void NodeFlowBase::markGraphDirty() {
-    m_gridDirty = true;
-    m_contentDirty = true;
+    _gridDirty = true;
+    _contentDirty = true;
     update();
 }
 
 void NodeFlowBase::markStateDirty() {
-    m_contentDirty = true;
+    _contentDirty = true;
     update();
 }
 
 void NodeFlowBase::markGridDirty() {
-    m_gridDirty = true;
+    _gridDirty = true;
     update();
 }
 
@@ -173,50 +174,50 @@ QSGNode *NodeFlowBase::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
         return nullptr;
     }
 
-    if (window() && m_window != window()) {
-        m_window = window();
-        m_dpr = m_window->effectiveDevicePixelRatio();
-        m_gridDirty = true;
-        m_contentDirty = true;
+    if (window() && _window != window()) {
+        _window = window();
+        _dpr = _window->effectiveDevicePixelRatio();
+        _gridDirty = true;
+        _contentDirty = true;
     }
 
     QSGTransformNode *root = static_cast<QSGTransformNode*>(oldNode);
     if (!root) {
         root = new QSGTransformNode();
-        m_rootTransform = root;
+        _rootTransform = root;
 
-        m_gridNode = new QSGNode();
-        root->appendChildNode(m_gridNode);
+        _gridNode = new QSGNode();
+        root->appendChildNode(_gridNode);
 
-        m_edgeNode = new QSGNode();
-        root->appendChildNode(m_edgeNode);
+        _edgeNode = new QSGNode();
+        root->appendChildNode(_edgeNode);
 
-        m_nodeParent = new QSGNode();
-        root->appendChildNode(m_nodeParent);
+        _nodeParent = new QSGNode();
+        root->appendChildNode(_nodeParent);
 
-        m_draftEdgeNode = new QSGNode();
-        root->appendChildNode(m_draftEdgeNode);
+        _draftEdgeNode = new QSGNode();
+        root->appendChildNode(_draftEdgeNode);
 
-        m_gridDirty = true;
-        m_contentDirty = true;
+        _gridDirty = true;
+        _contentDirty = true;
     }
 
     // Update transform (Always cheap to update)
     QMatrix4x4 matrix;
-    matrix.translate(m_panOffset.x(), m_panOffset.y());
-    matrix.scale(m_zoom);
+    matrix.translate(_panOffset.x(), _panOffset.y());
+    matrix.scale(_zoom);
     root->setMatrix(matrix);
 
-    if (m_gridDirty) {
+    if (_gridDirty) {
         rebuildGridGraphics();
-        m_gridDirty = false;
+        _gridDirty = false;
     }
 
-    if (m_contentDirty) {
+    if (_contentDirty) {
         rebuildEdgeGraphics();
         rebuildNodeGraphics();
         rebuildDraftEdgeGraphics();
-        m_contentDirty = false;
+        _contentDirty = false;
     }
 
     return root;
@@ -224,23 +225,23 @@ QSGNode *NodeFlowBase::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 
 void NodeFlowBase::cleanupSceneGraphPointers()
 {
-    m_rootTransform = nullptr;
-    m_gridNode = nullptr;
-    m_edgeNode = nullptr;
-    m_nodeParent = nullptr;
-    m_draftEdgeNode = nullptr;
+    _rootTransform = nullptr;
+    _gridNode = nullptr;
+    _edgeNode = nullptr;
+    _nodeParent = nullptr;
+    _draftEdgeNode = nullptr;
 }
 
 void NodeFlowBase::rebuildGridGraphics()
 {
-    if (!m_gridNode || !window()) return;
+    if (!_gridNode || !window()) return;
 
-    while (auto *child = m_gridNode->firstChild()) {
-        m_gridNode->removeChildNode(child);
+    while (auto *child = _gridNode->firstChild()) {
+        _gridNode->removeChildNode(child);
         delete child;
     }
 
-    if (!m_gridVisible) return;
+    if (!_gridVisible) return;
 
     // Calculate scene bounds visible in the viewport
     QPointF topLeft = widgetToScene(QPointF(0, 0));
@@ -252,7 +253,7 @@ void NodeFlowBase::rebuildGridGraphics()
     double startX = std::floor(sceneBounds.left() / step) * step;
     double startY = std::floor(sceneBounds.top() / step) * step;
 
-    qreal scaleFactor = m_dpr * m_zoom;
+    qreal scaleFactor = _dpr * _zoom;
     int imgW = static_cast<int>(std::ceil(sceneBounds.width() * scaleFactor));
     int imgH = static_cast<int>(std::ceil(sceneBounds.height() * scaleFactor));
     if (imgW <= 0 || imgH <= 0) return;
@@ -280,31 +281,31 @@ void NodeFlowBase::rebuildGridGraphics()
     node->setTexture(tex);
     node->setRect(sceneBounds);
     node->setFiltering(QSGTexture::Linear);
-    m_gridNode->appendChildNode(node);
+    _gridNode->appendChildNode(node);
 }
 
 void NodeFlowBase::rebuildNodeGraphics()
 {
-    if (!m_nodeParent) return;
+    if (!_nodeParent) return;
 
-    while (auto *child = m_nodeParent->firstChild()) {
-        m_nodeParent->removeChildNode(child);
+    while (auto *child = _nodeParent->firstChild()) {
+        _nodeParent->removeChildNode(child);
         delete child;
     }
 
-    for (int i = 0; i < m_nodes.size(); ++i) {
-        const Node &node = m_nodes[i];
-        bool selected = (node.id == m_selectedNodeId);
-        bool active = m_running && (i == m_activeStep % std::max(1, nodeCount()));
+    for (int i = 0; i < _nodes.size(); ++i) {
+        const Node &node = _nodes[i];
+        bool selected = (node.id == _selectedNodeId);
+        bool active = _running && (i == _activeStep % std::max(1, nodeCount()));
         QSGNode *graphic = createNodeGraphics(node, selected, active);
-        if (graphic) m_nodeParent->appendChildNode(graphic);
+        if (graphic) _nodeParent->appendChildNode(graphic);
     }
 }
 
 void NodeFlowBase::setGridVisible(bool gridVisible)
 {
-    if (gridVisible == m_gridVisible) return;
-    m_gridVisible = gridVisible;
+    if (gridVisible == _gridVisible) return;
+    _gridVisible = gridVisible;
     markGridDirty();
     emit gridVisibleChanged(gridVisible);
 }
@@ -317,7 +318,7 @@ QSGNode* NodeFlowBase::createNodeGraphics(const Node &node, bool selected, bool 
     QRectF rect = nodeRect(node);
 
     // Render at physical resolution to avoid blurring on zoom
-    qreal scaleFactor = m_dpr * m_zoom;
+    qreal scaleFactor = _dpr * _zoom;
     int bgW = static_cast<int>(std::ceil(NodeWidth * scaleFactor));
     int bgH = static_cast<int>(std::ceil(NodeHeight * scaleFactor));
 
@@ -405,7 +406,7 @@ QSGImageNode* NodeFlowBase::createTextNode(const QString &text, const QFont &fon
     if (text.isEmpty() || !window() || rect.width() <= 0 || rect.height() <= 0)
         return nullptr;
 
-    qreal scaleFactor = m_dpr * m_zoom;
+    qreal scaleFactor = _dpr * _zoom;
     int texW = static_cast<int>(std::ceil(rect.width() * scaleFactor));
     int texH = static_cast<int>(std::ceil(rect.height() * scaleFactor));
     if (texW <= 0 || texH <= 0) return nullptr;
@@ -445,7 +446,7 @@ QSGNode* NodeFlowBase::createEdgeGraphics(const Edge &edge, bool selected, bool 
     QRectF bounds = path.boundingRect().adjusted(-8, -8, 8, 8);
     if (bounds.width() <= 0 || bounds.height() <= 0) return group;
 
-    qreal scaleFactor = m_dpr * m_zoom;
+    qreal scaleFactor = _dpr * _zoom;
     int imgW = static_cast<int>(std::ceil(bounds.width() * scaleFactor));
     int imgH = static_cast<int>(std::ceil(bounds.height() * scaleFactor));
 
@@ -515,13 +516,13 @@ QSGNode* NodeFlowBase::createEdgeGraphics(const Edge &edge, bool selected, bool 
 
 QSGNode* NodeFlowBase::createDraftEdgeGraphics()
 {
-    if (m_connectionFromId < 0 || !window()) return new QSGNode();
+    if (_connectionFromId < 0 || !window()) return new QSGNode();
 
-    const Node *from = findNode(m_connectionFromId);
+    const Node *from = findNode(_connectionFromId);
     if (!from) return new QSGNode();
 
     QPointF start = nodeAnchor(*from, true);
-    QPointF end = m_connectionEnd;
+    QPointF end = _connectionEnd;
     QPainterPath path;
     path.moveTo(start);
     double handle = std::max(80.0, std::abs(end.x() - start.x()) * 0.45);
@@ -532,7 +533,7 @@ QSGNode* NodeFlowBase::createDraftEdgeGraphics()
     QRectF bounds = path.boundingRect().adjusted(-4, -4, 4, 4);
     if (bounds.width() <= 0 || bounds.height() <= 0) return new QSGNode();
 
-    qreal scaleFactor = m_dpr * m_zoom;
+    qreal scaleFactor = _dpr * _zoom;
     int imgW = static_cast<int>(std::ceil(bounds.width() * scaleFactor));
     int imgH = static_cast<int>(std::ceil(bounds.height() * scaleFactor));
 
@@ -556,29 +557,29 @@ QSGNode* NodeFlowBase::createDraftEdgeGraphics()
 
 void NodeFlowBase::rebuildDraftEdgeGraphics()
 {
-    if (!m_draftEdgeNode) return;
-    while (auto *child = m_draftEdgeNode->firstChild()) {
-        m_draftEdgeNode->removeChildNode(child);
+    if (!_draftEdgeNode) return;
+    while (auto *child = _draftEdgeNode->firstChild()) {
+        _draftEdgeNode->removeChildNode(child);
         delete child;
     }
-    if (m_connecting) {
+    if (_connecting) {
         auto *draft = createDraftEdgeGraphics();
-        if (draft) m_draftEdgeNode->appendChildNode(draft);
+        if (draft) _draftEdgeNode->appendChildNode(draft);
     }
 }
 
 void NodeFlowBase::rebuildEdgeGraphics()
 {
-    if (!m_edgeNode) return;
-    while (auto *child = m_edgeNode->firstChild()) {
-        m_edgeNode->removeChildNode(child);
+    if (!_edgeNode) return;
+    while (auto *child = _edgeNode->firstChild()) {
+        _edgeNode->removeChildNode(child);
         delete child;
     }
-    for (int i = 0; i < m_edges.size(); ++i) {
-        bool selected = (i == m_selectedEdgeIndex);
-        bool active = m_running && (i == m_activeStep % std::max(1, edgeCount()));
-        QSGNode *edgeGraphic = createEdgeGraphics(m_edges[i], selected, active);
-        if (edgeGraphic) m_edgeNode->appendChildNode(edgeGraphic);
+    for (int i = 0; i < _edges.size(); ++i) {
+        bool selected = (i == _selectedEdgeIndex);
+        bool active = _running && (i == _activeStep % std::max(1, edgeCount()));
+        QSGNode *edgeGraphic = createEdgeGraphics(_edges[i], selected, active);
+        if (edgeGraphic) _edgeNode->appendChildNode(edgeGraphic);
     }
 }
 
@@ -640,32 +641,32 @@ NodeFlowBase::Edge NodeFlowBase::edgeFromVariant(const QVariantMap &map) const
 
 void NodeFlowBase::setNodes(const QVariantList &nodes)
 {
-    m_nodes.clear();
-    m_nodes.reserve(nodes.size());
+    _nodes.clear();
+    _nodes.reserve(nodes.size());
     for (const QVariant &v : nodes) {
-        m_nodes.push_back(nodeFromVariant(v.toMap()));
+        _nodes.push_back(nodeFromVariant(v.toMap()));
     }
-    m_selectedNodeId = -1;
-    m_selectedEdgeIndex = -1;
-    m_nextNodeId = 1;
-    for (const Node &node : m_nodes) {
-        m_nextNodeId = std::max(m_nextNodeId, node.id + 1);
+    _selectedNodeId = -1;
+    _selectedEdgeIndex = -1;
+    _nextNodeId = 1;
+    for (const Node &node : _nodes) {
+        _nextNodeId = std::max(_nextNodeId, node.id + 1);
     }
-    m_needInitialFit = true;
-    m_undoStack.clear();
+    _needInitialFit = true;
+    _undoStack.clear();
     emitGraphChanged();
     markGraphDirty();
 }
 
 void NodeFlowBase::setEdges(const QVariantList &edges)
 {
-    m_edges.clear();
-    m_edges.reserve(edges.size());
+    _edges.clear();
+    _edges.reserve(edges.size());
     for (const QVariant &v : edges) {
-        m_edges.push_back(edgeFromVariant(v.toMap()));
+        _edges.push_back(edgeFromVariant(v.toMap()));
     }
-    m_selectedEdgeIndex = -1;
-    m_undoStack.clear();
+    _selectedEdgeIndex = -1;
+    _undoStack.clear();
     emitGraphChanged();
     markGraphDirty();
 }
@@ -673,12 +674,32 @@ void NodeFlowBase::setEdges(const QVariantList &edges)
 int NodeFlowBase::addNodeInternal(const QString &title, const QString &subtitle, const QColor &color, const QPointF &position)
 {
     Node node;
-    node.id = m_nextNodeId++;
+    node.id = _nextNodeId++;
     node.title = title;
     node.subtitle = subtitle;
     node.color = color.isValid() ? color : statusColor(node.id);
     node.rect = QRectF(position, QSizeF(NodeWidth, NodeHeight));
-    m_nodes.push_back(node);
+
+    // 寻找不小于 MinNodeSpacing 的空位
+    QRectF proposedRect(position, QSizeF(NodeWidth, NodeHeight));
+    bool conflict = true;
+    while (conflict) {
+        conflict = false;
+        for (const auto& other : _nodes) {
+            // 将已有节点的外接矩形扩大 MinNodeSpacing，如果新节点与之相交，则认为冲突
+            QRectF inflated = other.rect.adjusted(-MinNodeSpacing, -MinNodeSpacing, MinNodeSpacing, MinNodeSpacing);
+            if (inflated.intersects(proposedRect)) {
+                conflict = true;
+                // 发生冲突，向右偏移一个节点宽度+间距
+                proposedRect.translate(NodeWidth + MinNodeSpacing, 0);
+                break;
+            }
+        }
+    }
+
+    node.rect = proposedRect;
+
+    _nodes.push_back(node);
     setSelectedNode(node.id);
     emitGraphChanged();
     markGraphDirty();
@@ -687,20 +708,20 @@ int NodeFlowBase::addNodeInternal(const QString &title, const QString &subtitle,
 
 void NodeFlowBase::removeNodeInternal(int id)
 {
-    m_nodes.erase(std::remove_if(m_nodes.begin(), m_nodes.end(), [id](const Node &n) { return n.id == id; }), m_nodes.end());
-    m_edges.erase(std::remove_if(m_edges.begin(), m_edges.end(), [id](const Edge &e) { return e.from == id || e.to == id; }), m_edges.end());
-    if (m_selectedNodeId == id) setSelectedNode(-1);
+    _nodes.erase(std::remove_if(_nodes.begin(), _nodes.end(), [id](const Node &n) { return n.id == id; }), _nodes.end());
+    _edges.erase(std::remove_if(_edges.begin(), _edges.end(), [id](const Edge &e) { return e.from == id || e.to == id; }), _edges.end());
+    if (_selectedNodeId == id) setSelectedNode(-1);
     emitGraphChanged();
     markGraphDirty();
 }
 
 void NodeFlowBase::restoreNodeInternal(const Node &node, const QList<Edge> &edges)
 {
-    m_nodes.push_back(node);
+    _nodes.push_back(node);
     for (const auto &e : edges) {
-        m_edges.push_back(e);
+        _edges.push_back(e);
     }
-    m_nextNodeId = std::max(m_nextNodeId, node.id + 1);
+    _nextNodeId = std::max(_nextNodeId, node.id + 1);
     setSelectedNode(node.id);
     emitGraphChanged();
     markGraphDirty();
@@ -708,8 +729,8 @@ void NodeFlowBase::restoreNodeInternal(const Node &node, const QList<Edge> &edge
 
 int NodeFlowBase::addEdgeInternal(int from, int to, const QString &label)
 {
-    m_edges.push_back({from, to, label});
-    int index = static_cast<int>(m_edges.size()) - 1;
+    _edges.push_back({from, to, label});
+    int index = static_cast<int>(_edges.size()) - 1;
     setSelectedEdge(index);
     emitGraphChanged();
     markGraphDirty();
@@ -718,19 +739,19 @@ int NodeFlowBase::addEdgeInternal(int from, int to, const QString &label)
 
 void NodeFlowBase::removeEdgeInternal(int index)
 {
-    if (index < 0 || index >= m_edges.size()) return;
-    m_edges.removeAt(index);
-    if (m_selectedEdgeIndex == index) setSelectedEdge(-1);
+    if (index < 0 || index >= _edges.size()) return;
+    _edges.removeAt(index);
+    if (_selectedEdgeIndex == index) setSelectedEdge(-1);
     emitGraphChanged();
     markGraphDirty();
 }
 
 void NodeFlowBase::restoreEdgeInternal(const Edge &edge, int index)
 {
-    if (index >= 0 && index <= m_edges.size())
-        m_edges.insert(index, edge);
+    if (index >= 0 && index <= _edges.size())
+        _edges.insert(index, edge);
     else
-        m_edges.push_back(edge);
+        _edges.push_back(edge);
     setSelectedEdge(index);
     emitGraphChanged();
     markStateDirty();
@@ -748,49 +769,49 @@ void NodeFlowBase::setNodePositionInternal(int id, const QPointF &pos)
 int NodeFlowBase::addNode(const QString &title, const QString &subtitle, const QColor &color, const QPointF &position)
 {
     auto *cmd = new AddNodeCommand(this, title, subtitle, color, position);
-    m_undoStack.push(cmd);
+    _undoStack.push(cmd);
     return static_cast<AddNodeCommand*>(cmd)->nodeId();
 }
 
 void NodeFlowBase::addEdge(int from, int to, const QString &label)
 {
     if (from == to || !findNode(from) || !findNode(to)) return;
-    for (const Edge &edge : m_edges) {
+    for (const Edge &edge : _edges) {
         if (edge.from == from && edge.to == to) return;
     }
-    m_undoStack.push(new AddEdgeCommand(this, from, to, label));
+    _undoStack.push(new AddEdgeCommand(this, from, to, label));
 }
 
 void NodeFlowBase::removeSelectedNode()
 {
-    if (m_selectedNodeId < 0) return;
-    const Node* n = findNode(m_selectedNodeId);
+    if (_selectedNodeId < 0) return;
+    const Node* n = findNode(_selectedNodeId);
     if (!n) return;
 
     QList<Edge> removedEdges;
-    for (const Edge& e : m_edges) {
-        if (e.from == m_selectedNodeId || e.to == m_selectedNodeId) {
+    for (const Edge& e : _edges) {
+        if (e.from == _selectedNodeId || e.to == _selectedNodeId) {
             removedEdges.push_back(e);
         }
     }
-    m_undoStack.push(new RemoveNodeCommand(this, *n, removedEdges));
+    _undoStack.push(new RemoveNodeCommand(this, *n, removedEdges));
 }
 
 void NodeFlowBase::removeSelectedEdge()
 {
-    if (m_selectedEdgeIndex < 0 || m_selectedEdgeIndex >= m_edges.size()) return;
-    Edge e = m_edges.at(m_selectedEdgeIndex);
-    m_undoStack.push(new RemoveEdgeCommand(this, e, m_selectedEdgeIndex));
+    if (_selectedEdgeIndex < 0 || _selectedEdgeIndex >= _edges.size()) return;
+    Edge e = _edges.at(_selectedEdgeIndex);
+    _undoStack.push(new RemoveEdgeCommand(this, e, _selectedEdgeIndex));
 }
 
 void NodeFlowBase::removeEdgesOfSelectedNode()
 {
-    if (m_selectedNodeId < 0) return;
-    const int id = m_selectedNodeId;
+    if (_selectedNodeId < 0) return;
+    const int id = _selectedNodeId;
     bool changed = false;
-    for (int i = m_edges.size() - 1; i >= 0; --i) {
-        if (m_edges[i].from == id || m_edges[i].to == id) {
-            m_undoStack.push(new RemoveEdgeCommand(this, m_edges[i], i));
+    for (int i = _edges.size() - 1; i >= 0; --i) {
+        if (_edges[i].from == id || _edges[i].to == id) {
+            _undoStack.push(new RemoveEdgeCommand(this, _edges[i], i));
             changed = true;
         }
     }
@@ -799,13 +820,13 @@ void NodeFlowBase::removeEdgesOfSelectedNode()
 
 void NodeFlowBase::clearGraph()
 {
-    m_nodes.clear();
-    m_edges.clear();
-    m_selectedNodeId = -1;
-    m_selectedEdgeIndex = -1;
-    m_nextNodeId = 1;
-    m_activeStep = 0;
-    m_undoStack.clear();
+    _nodes.clear();
+    _edges.clear();
+    _selectedNodeId = -1;
+    _selectedEdgeIndex = -1;
+    _nextNodeId = 1;
+    _activeStep = 0;
+    _undoStack.clear();
     emitGraphChanged();
     emit nodeSelected(-1, QString());
     emit edgeSelected(-1, -1, QString());
@@ -824,25 +845,25 @@ void NodeFlowBase::setNodeTitle(int id, const QString &title)
 
 void NodeFlowBase::setEdgeLabel(int index, const QString &label)
 {
-    if (index < 0 || index >= m_edges.size()) return;
-    m_edges[index].label = label.trimmed();
-    emit edgeSelected(m_edges[index].from, m_edges[index].to, m_edges[index].label);
+    if (index < 0 || index >= _edges.size()) return;
+    _edges[index].label = label.trimmed();
+    emit edgeSelected(_edges[index].from, _edges[index].to, _edges[index].label);
     markStateDirty();
 }
 
 QVariantList NodeFlowBase::nodes() const
 {
     QVariantList list;
-    list.reserve(m_nodes.size());
-    for (const Node &node : m_nodes) list.push_back(nodeToVariant(node));
+    list.reserve(_nodes.size());
+    for (const Node &node : _nodes) list.push_back(nodeToVariant(node));
     return list;
 }
 
 QVariantList NodeFlowBase::edges() const
 {
     QVariantList list;
-    list.reserve(m_edges.size());
-    for (const Edge &edge : m_edges) list.push_back(edgeToVariant(edge));
+    list.reserve(_edges.size());
+    for (const Edge &edge : _edges) list.push_back(edgeToVariant(edge));
     return list;
 }
 
@@ -854,8 +875,8 @@ QVariantMap NodeFlowBase::node(int id) const
 
 QVariantMap NodeFlowBase::edge(int index) const
 {
-    if (index < 0 || index >= static_cast<int>(m_edges.size())) return QVariantMap();
-    return edgeToVariant(m_edges.at(index));
+    if (index < 0 || index >= static_cast<int>(_edges.size())) return QVariantMap();
+    return edgeToVariant(_edges.at(index));
 }
 
 QString NodeFlowBase::nodeTitle(int id) const
@@ -866,21 +887,21 @@ QString NodeFlowBase::nodeTitle(int id) const
 
 QString NodeFlowBase::edgeLabel(int index) const
 {
-    if (index < 0 || index >= static_cast<int>(m_edges.size())) return QString();
-    return m_edges.at(index).label;
+    if (index < 0 || index >= static_cast<int>(_edges.size())) return QString();
+    return _edges.at(index).label;
 }
 
 void NodeFlowBase::removeSelectedItem()
 {
-    if (m_selectedEdgeIndex >= 0) {
+    if (_selectedEdgeIndex >= 0) {
         removeSelectedEdge();
         return;
     }
     removeSelectedNode();
 }
 
-void NodeFlowBase::undo() { m_undoStack.undo(); }
-void NodeFlowBase::redo() { m_undoStack.redo(); }
+void NodeFlowBase::undo() { _undoStack.undo(); }
+void NodeFlowBase::redo() { _undoStack.redo(); }
 
 void NodeFlowBase::fitToView()
 {
@@ -892,25 +913,25 @@ void NodeFlowBase::fitToView()
     applyZoom(std::min(xScale, yScale));
     const QPointF graphCenter = bounds.center();
     const QPointF widgetCenter(width() / 2.0, height() / 2.0);
-    m_panOffset = widgetCenter - graphCenter * m_zoom;
-    m_needInitialFit = false;
+    _panOffset = widgetCenter - graphCenter * _zoom;
+    _needInitialFit = false;
     markGraphDirty();
 }
 
-void NodeFlowBase::zoomIn() { applyZoom(m_zoom * 1.18); }
-void NodeFlowBase::zoomOut() { applyZoom(m_zoom / 1.18); }
+void NodeFlowBase::zoomIn() { applyZoom(_zoom * 1.18); }
+void NodeFlowBase::zoomOut() { applyZoom(_zoom / 1.18); }
 
 void NodeFlowBase::resetView()
 {
     applyZoom(1.0);
-    m_panOffset = QPointF(40.0, 40.0);
+    _panOffset = QPointF(40.0, 40.0);
     markGraphDirty();
 }
 
 bool NodeFlowBase::exportJson(const QString &fileName) const
 {
     QJsonArray nodes;
-    for (const Node &node : m_nodes) {
+    for (const Node &node : _nodes) {
         QJsonObject item;
         item.insert(QStringLiteral("id"), node.id);
         item.insert(QStringLiteral("title"), node.title);
@@ -924,7 +945,7 @@ bool NodeFlowBase::exportJson(const QString &fileName) const
     }
 
     QJsonArray edges;
-    for (const Edge &edge : m_edges) {
+    for (const Edge &edge : _edges) {
         QJsonObject item;
         item.insert(QStringLiteral("from"), edge.from);
         item.insert(QStringLiteral("to"), edge.to);
@@ -969,9 +990,9 @@ bool NodeFlowBase::importJson(const QString &fileName)
 void NodeFlowBase::beginConnectionFrom(int nodeId)
 {
     if (const Node *n = findNode(nodeId)) {
-        m_connecting = true;
-        m_connectionFromId = nodeId;
-        m_connectionEnd = nodeAnchor(*n, true);
+        _connecting = true;
+        _connectionFromId = nodeId;
+        _connectionEnd = nodeAnchor(*n, true);
         setSelectedNode(nodeId);
     }
 }
@@ -982,7 +1003,7 @@ QPointF NodeFlowBase::itemToScene(const QPointF &itemPoint) const { return widge
 void NodeFlowBase::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
     JASPControl::geometryChange(newGeometry, oldGeometry);
-    if (m_needInitialFit && !m_nodes.isEmpty() && width() > 0 && height() > 0) {
+    if (_needInitialFit && !_nodes.isEmpty() && width() > 0 && height() > 0) {
         QTimer::singleShot(0, this, &NodeFlowBase::fitToView);
     }
     markGridDirty();
@@ -1005,7 +1026,7 @@ void NodeFlowBase::mouseDoubleClickEvent(QMouseEvent *event)
     const int edgeIndex = hitEdge(scenePoint);
     if (edgeIndex >= 0) {
         setSelectedEdge(edgeIndex);
-        emit edgeLabelEditRequested(edgeIndex, m_edges.at(edgeIndex).label);
+        emit edgeLabelEditRequested(edgeIndex, _edges.at(edgeIndex).label);
         return;
     }
     JASPControl::mouseDoubleClickEvent(event);
@@ -1014,68 +1035,68 @@ void NodeFlowBase::mouseDoubleClickEvent(QMouseEvent *event)
 void NodeFlowBase::mousePressEvent(QMouseEvent *event)
 {
     forceActiveFocus();
-    m_lastWidgetPos = event->position();
-    m_lastScenePos = widgetToScene(event->position());
+    _lastWidgetPos = event->position();
+    _lastScenePos = widgetToScene(event->position());
 
     if (event->button() == Qt::RightButton) {
-        const int nodeId = hitNode(m_lastScenePos);
-        const int edgeIndex = nodeId < 0 ? hitEdge(m_lastScenePos) : -1;
+        const int nodeId = hitNode(_lastScenePos);
+        const int edgeIndex = nodeId < 0 ? hitEdge(_lastScenePos) : -1;
         if (nodeId >= 0) setSelectedNode(nodeId);
         else if (edgeIndex >= 0) setSelectedEdge(edgeIndex);
         emit contextMenuRequested(event->position().x(), event->position().y(),
-                                  nodeId, edgeIndex, m_lastScenePos.x(), m_lastScenePos.y());
+                                  nodeId, edgeIndex, _lastScenePos.x(), _lastScenePos.y());
         return;
     }
 
     if (event->button() == Qt::MiddleButton || event->modifiers().testFlag(Qt::AltModifier)) {
-        m_panning = true;
+        _panning = true;
         setCursor(Qt::ClosedHandCursor);
         return;
     }
 
     if (event->button() == Qt::LeftButton) {
-        const int id = hitNode(m_lastScenePos);
+        const int id = hitNode(_lastScenePos);
 
-        if (m_connectionMode) {
+        if (_connectionMode) {
             if (id < 0) {
-                m_connecting = false;
-                m_connectionFromId = -1;
+                _connecting = false;
+                _connectionFromId = -1;
                 markStateDirty();
                 return;
             }
-            if (!m_connecting) {
+            if (!_connecting) {
                 setSelectedNode(id);
-                m_connecting = true;
-                m_connectionFromId = id;
-                m_connectionEnd = m_lastScenePos;
+                _connecting = true;
+                _connectionFromId = id;
+                _connectionEnd = _lastScenePos;
                 markStateDirty();
                 return;
             }
-            if (id != m_connectionFromId) {
-                addEdge(m_connectionFromId, id, QStringLiteral("next"));
+            if (id != _connectionFromId) {
+                addEdge(_connectionFromId, id, QStringLiteral("next"));
                 setSelectedNode(id);
             }
-            m_connecting = false;
-            m_connectionFromId = -1;
+            _connecting = false;
+            _connectionFromId = -1;
             markStateDirty();
             return;
         }
 
         if (id >= 0) {
             setSelectedNode(id);
-            m_draggingNode = true;
-            if (Node* n = findNode(id)) m_dragStartPos = n->rect.topLeft();
+            _draggingNode = true;
+            if (Node* n = findNode(id)) _dragStartPos = n->rect.topLeft();
         } else {
-            const int edgeIndex = hitEdge(m_lastScenePos);
+            const int edgeIndex = hitEdge(_lastScenePos);
             setSelectedEdge(edgeIndex);
-            m_draggingNode = false;
+            _draggingNode = false;
         }
 
         if (event->modifiers().testFlag(Qt::ShiftModifier) && id >= 0) {
-            m_connecting = true;
-            m_connectionFromId = id;
-            m_connectionEnd = m_lastScenePos;
-            m_draggingNode = false;
+            _connecting = true;
+            _connectionFromId = id;
+            _connectionEnd = _lastScenePos;
+            _draggingNode = false;
         }
     }
 }
@@ -1087,7 +1108,7 @@ void NodeFlowBase::mouseMoveEvent(QMouseEvent *event)
 
 void NodeFlowBase::hoverMoveEvent(QHoverEvent *event)
 {
-    if (m_connecting) updatePointerScenePosition(event->position());
+    if (_connecting) updatePointerScenePosition(event->position());
     JASPControl::hoverMoveEvent(event);
 }
 
@@ -1095,64 +1116,64 @@ void NodeFlowBase::updatePointerScenePosition(const QPointF &itemPos)
 {
     const QPointF scenePos = widgetToScene(itemPos);
 
-    if (m_panning) {
-        m_panOffset += itemPos - m_lastWidgetPos;
-        m_lastWidgetPos = itemPos;
+    if (_panning) {
+        _panOffset += itemPos - _lastWidgetPos;
+        _lastWidgetPos = itemPos;
         markGridDirty(); // Only grid needs updating when panning!
         return;
     }
 
-    if (m_connecting) {
-        m_connectionEnd = scenePos;
+    if (_connecting) {
+        _connectionEnd = scenePos;
         markStateDirty();
         return;
     }
 
-    if (m_draggingNode && m_selectedNodeId >= 0) {
-        const QPointF delta = scenePos - m_lastScenePos;
-        if (Node *n = findNode(m_selectedNodeId)) {
+    if (_draggingNode && _selectedNodeId >= 0) {
+        const QPointF delta = scenePos - _lastScenePos;
+        if (Node *n = findNode(_selectedNodeId)) {
             n->rect.translate(delta);
             emit nodeSelected(n->id, n->title);
         }
-        m_lastScenePos = scenePos;
+        _lastScenePos = scenePos;
         markStateDirty();
     }
 }
 
 void NodeFlowBase::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::MiddleButton || m_panning) {
-        m_panning = false;
+    if (event->button() == Qt::MiddleButton || _panning) {
+        _panning = false;
         unsetCursor();
     }
 
-    if (event->button() == Qt::LeftButton && m_draggingNode && m_selectedNodeId >= 0) {
-        if (Node *n = findNode(m_selectedNodeId)) {
-            if (n->rect.topLeft() != m_dragStartPos) {
-                m_undoStack.push(new MoveNodeCommand(this, m_selectedNodeId, m_dragStartPos, n->rect.topLeft()));
+    if (event->button() == Qt::LeftButton && _draggingNode && _selectedNodeId >= 0) {
+        if (Node *n = findNode(_selectedNodeId)) {
+            if (n->rect.topLeft() != _dragStartPos) {
+                _undoStack.push(new MoveNodeCommand(this, _selectedNodeId, _dragStartPos, n->rect.topLeft()));
             }
         }
     }
 
-    if (event->button() == Qt::LeftButton && m_connecting && !m_connectionMode) {
+    if (event->button() == Qt::LeftButton && _connecting && !_connectionMode) {
         const int target = hitNode(widgetToScene(event->position()));
-        if (target >= 0 && target != m_connectionFromId) {
-            addEdge(m_connectionFromId, target, QStringLiteral("next"));
+        if (target >= 0 && target != _connectionFromId) {
+            addEdge(_connectionFromId, target, QStringLiteral("next"));
         }
-        m_connecting = false;
-        m_connectionFromId = -1;
+        _connecting = false;
+        _connectionFromId = -1;
         markStateDirty();
     }
 
-    m_draggingNode = false;
+    _draggingNode = false;
 }
 
 void NodeFlowBase::wheelEvent(QWheelEvent *event)
 {
     const QPointF scenePoint = widgetToScene(event->position());
     const double factor = event->angleDelta().y() > 0 ? 1.15 : 1.0 / 1.15;
-    applyZoom(m_zoom * factor);
-    m_panOffset = event->position() - scenePoint * m_zoom;
+    applyZoom(_zoom * factor);
+    _panOffset = event->position() - scenePoint * _zoom;
     markGraphDirty();
 }
 
@@ -1163,8 +1184,8 @@ void NodeFlowBase::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (event->key() == Qt::Key_Escape) {
-        m_connecting = false;
-        m_connectionFromId = -1;
+        _connecting = false;
+        _connectionFromId = -1;
         markStateDirty();
         return;
     }
@@ -1185,14 +1206,14 @@ void NodeFlowBase::keyPressEvent(QKeyEvent *event)
 
 QRectF NodeFlowBase::nodeRect(const Node &node) const { return node.rect.normalized(); }
 
-QPointF NodeFlowBase::sceneToWidget(const QPointF &point) const { return point * m_zoom + m_panOffset; }
-QPointF NodeFlowBase::widgetToScene(const QPointF &point) const { return (point - m_panOffset) / std::max(0.001, m_zoom); }
+QPointF NodeFlowBase::sceneToWidget(const QPointF &point) const { return point * _zoom + _panOffset; }
+QPointF NodeFlowBase::widgetToScene(const QPointF &point) const { return (point - _panOffset) / std::max(0.001, _zoom); }
 QRectF NodeFlowBase::sceneToWidget(const QRectF &rect) const { return QRectF(sceneToWidget(rect.topLeft()), sceneToWidget(rect.bottomRight())).normalized(); }
 
 int NodeFlowBase::hitNode(const QPointF &scenePoint) const
 {
-    for (int i = static_cast<int>(m_nodes.size()) - 1; i >= 0; --i) {
-        if (nodeRect(m_nodes.at(i)).contains(scenePoint)) return m_nodes.at(i).id;
+    for (int i = static_cast<int>(_nodes.size()) - 1; i >= 0; --i) {
+        if (nodeRect(_nodes.at(i)).contains(scenePoint)) return _nodes.at(i).id;
     }
     return -1;
 }
@@ -1200,12 +1221,12 @@ int NodeFlowBase::hitNode(const QPointF &scenePoint) const
 int NodeFlowBase::hitEdge(const QPointF &scenePoint) const
 {
     QPainterPathStroker stroker;
-    stroker.setWidth(std::max(8.0, 12.0 / std::max(0.25, m_zoom)));
+    stroker.setWidth(std::max(8.0, 12.0 / std::max(0.25, _zoom)));
     stroker.setCapStyle(Qt::RoundCap);
     stroker.setJoinStyle(Qt::RoundJoin);
 
-    for (int i = static_cast<int>(m_edges.size()) - 1; i >= 0; --i) {
-        const QPainterPath stroke = stroker.createStroke(edgePath(m_edges.at(i)));
+    for (int i = static_cast<int>(_edges.size()) - 1; i >= 0; --i) {
+        const QPainterPath stroke = stroker.createStroke(edgePath(_edges.at(i)));
         if (stroke.contains(scenePoint)) return i;
     }
     return -1;
@@ -1213,22 +1234,22 @@ int NodeFlowBase::hitEdge(const QPointF &scenePoint) const
 
 NodeFlowBase::Node *NodeFlowBase::findNode(int id)
 {
-    for (Node &node : m_nodes) if (node.id == id) return &node;
+    for (Node &node : _nodes) if (node.id == id) return &node;
     return nullptr;
 }
 
 const NodeFlowBase::Node *NodeFlowBase::findNode(int id) const
 {
-    for (const Node &node : m_nodes) if (node.id == id) return &node;
+    for (const Node &node : _nodes) if (node.id == id) return &node;
     return nullptr;
 }
 
 QRectF NodeFlowBase::graphBounds() const
 {
-    if (m_nodes.isEmpty()) return QRectF();
+    if (_nodes.isEmpty()) return QRectF();
     QRectF bounds;
     bool initialized = false;
-    for (const Node &node : m_nodes) {
+    for (const Node &node : _nodes) {
         bounds = initialized ? bounds.united(nodeRect(node)) : nodeRect(node);
         initialized = true;
     }
@@ -1260,8 +1281,8 @@ QPainterPath NodeFlowBase::edgePath(const Edge &edge) const
 
 void NodeFlowBase::setSelectedNode(int id)
 {
-    m_selectedNodeId = id;
-    m_selectedEdgeIndex = -1;
+    _selectedNodeId = id;
+    _selectedEdgeIndex = -1;
     emit edgeSelected(-1, -1, QString());
     emit edgeIndexSelected(-1);
     if (const Node *n = findNode(id)) emit nodeSelected(n->id, n->title);
@@ -1271,17 +1292,17 @@ void NodeFlowBase::setSelectedNode(int id)
 
 void NodeFlowBase::setSelectedEdge(int index)
 {
-    m_selectedEdgeIndex = index;
-    m_selectedNodeId = -1;
+    _selectedEdgeIndex = index;
+    _selectedNodeId = -1;
     emit nodeSelected(-1, QString());
 
-    if (index >= 0 && index < static_cast<int>(m_edges.size())) {
-        const Edge &edge = m_edges.at(index);
+    if (index >= 0 && index < static_cast<int>(_edges.size())) {
+        const Edge &edge = _edges.at(index);
         emit edgeSelected(edge.from, edge.to, edge.label);
     } else {
         emit edgeSelected(-1, -1, QString());
     }
-    emit edgeIndexSelected(m_selectedEdgeIndex);
+    emit edgeIndexSelected(_selectedEdgeIndex);
     markStateDirty();
 }
 
@@ -1290,10 +1311,10 @@ void NodeFlowBase::emitGraphChanged() { emit graphChanged(nodeCount(), edgeCount
 void NodeFlowBase::applyZoom(double newZoom)
 {
     const double clamped = std::clamp(newZoom, MinZoom, MaxZoom);
-    if (!qFuzzyCompare(clamped + 1.0, m_zoom + 1.0)) {
-        m_zoom = clamped;
-        emit zoomChanged(m_zoom);
+    if (!qFuzzyCompare(clamped + 1.0, _zoom + 1.0)) {
+        _zoom = clamped;
+        emit zoomChanged(_zoom);
     } else {
-        m_zoom = clamped;
+        _zoom = clamped;
     }
 }
