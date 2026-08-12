@@ -6364,7 +6364,7 @@ msgstr "設為啟用"
 
 msgctxt "PrefsAI|"
 msgid "Duplicate"
-msgstr "複製副本"
+msgstr "複製報表模組"
 
 msgctxt "PrefsAI|"
 msgid "Delete Persona"
