@@ -2807,6 +2807,13 @@ void MainWindow::loadModulesFromUserConfiguration(configState state)
 		auto button = _ribbonModel->ribbonButtonModel(moduleName.toStdString());
 		_ribbonModel->setModuleEnabled(_ribbonModel->ribbonButtonModelIndex(button), true);
 	}
+
+	// Apply OverrideCommon to refresh Common/Extra
+	const QStringList* overrideCommon = _jaspConfiguration->getOverrideCommon();
+	if(overrideCommon && !overrideCommon->isEmpty())
+	{
+		DynamicModules::dynMods()->refreshCommonModules(*overrideCommon);
+	}
 }
 
 
