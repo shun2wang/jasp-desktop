@@ -6529,10 +6529,6 @@ msgstr ""
 "\"role\"、\"content\"、\"text\" のフィールドは保護されており、無視されます。"
 
 msgctxt "PrefsAI|"
-msgid "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-msgstr "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-
-msgctxt "PrefsAI|"
 msgid "Reset Model"
 msgstr "モデルをリセット"
 

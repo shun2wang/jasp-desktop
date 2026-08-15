@@ -9109,10 +9109,6 @@ msgstr ""
 "\"role\"、\"content\" 和 \"text\" 字段为保留字段，将被忽略。"
 
 msgctxt "PrefsAI|"
-msgid "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-msgstr "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-
-msgctxt "PrefsAI|"
 msgid "Reset Model"
 msgstr "重置模型"
 

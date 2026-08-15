@@ -6309,10 +6309,6 @@ msgstr ""
 "欄位「role」、「content」與「text」為受保護欄位，將被忽略。"
 
 msgctxt "PrefsAI|"
-msgid "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-msgstr "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-
-msgctxt "PrefsAI|"
 msgid "Reset Model"
 msgstr "重設模型"
 

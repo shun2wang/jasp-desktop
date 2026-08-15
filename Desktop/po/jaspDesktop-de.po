@@ -6665,10 +6665,6 @@ msgstr ""
 "ignoriert."
 
 msgctxt "PrefsAI|"
-msgid "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-msgstr "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-
-msgctxt "PrefsAI|"
 msgid "Reset Model"
 msgstr "Modell zurücksetzen"
 

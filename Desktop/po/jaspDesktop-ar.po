@@ -5817,10 +5817,6 @@ msgstr ""
 "الحقول \"role\" و\"content\" و\"text\" محمية وسيتم تجاهلها."
 
 msgctxt "PrefsAI|"
-msgid "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-msgstr "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-
-msgctxt "PrefsAI|"
 msgid "Reset Model"
 msgstr "إعادة تعيين النموذج"
 

@@ -6782,10 +6782,6 @@ msgstr ""
 "Les champs \"role\", \"content\" et \"text\" sont protégés et seront ignorés."
 
 msgctxt "PrefsAI|"
-msgid "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-msgstr "{ \"cache_control\": { \"type\": \"éphémère\" } }"
-
-msgctxt "PrefsAI|"
 msgid "Reset Model"
 msgstr "Réinitialiser le modèle"
 

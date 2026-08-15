@@ -6504,10 +6504,6 @@ msgid ""
 msgstr ""
 
 msgctxt "PrefsAI|"
-msgid "{ \"cache_control\": { \"type\": \"ephemeral\" } }"
-msgstr ""
-
-msgctxt "PrefsAI|"
 msgid "Reset Model"
 msgstr ""
 
