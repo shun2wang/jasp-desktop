@@ -20,8 +20,7 @@
 
 #include "log.h"
 #include "dynamicmodules.h"
-#include "dynamicmodules.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include <QRegularExpression>
 #include <QUrl>
 #include <QUrlQuery>

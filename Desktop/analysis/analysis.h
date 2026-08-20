@@ -24,12 +24,14 @@
 
 #include <set>
 #include "analysisbase.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include "modules/dynamicmodules.h"
 #include <QFileSystemWatcher>
 #include <QQuickItem>
 
+class Filter;
 class Column;
+class DataSet;
 class AnalysisForm;
 
 
@@ -50,6 +52,7 @@ class Analysis : public AnalysisBase
 public:
 
 	enum Status { Empty, Running, RunningImg, Complete, Aborting, Aborted, ValidationError, SaveImg, EditImg, RewriteImgs, FatalError, KeepStatus };
+	
 
 	void				setStatus(Status status);
 	static std::string	statusToString(Status status);
@@ -81,6 +84,7 @@ public:
 	void				imagesRewritten(	const Json::Value & results);
 	void				rewriteImages();
 	bool				isColumnFreeOrMine(const QString & columnName)				const override;
+	DataSet		*		dataSet()													const override;
 
 	void				setRFile(const std::string &file)							{ _rfile = file;								}
 	void				setRSources(const Json::Value& rSources);
@@ -161,11 +165,12 @@ public:
 	const stringvec &		upgradeMsgsForOption(const std::string & name)		const	override;
 	const Version	&		moduleVersion()										const	override	{ return _dynamicModule ? _dynamicModule->version() : AppInfo::version; }
 
-	const Json::Value			&	getRSource(const std::string & name)		const	override	{ return _rSources.count(name) > 0 ? _rSources.at(name) : Json::Value::null; }
-	Json::Value						rSources()									const;
-	bool							isOwnComputedColumn(const std::string& col)	const	override;
-	void							preprocessMarkdownHelp(QString & md)		const				{ if (_dynamicModule) _dynamicModule->preprocessMarkdownHelp(md);}
+	const Json::Value	&	getRSource(const std::string & name)		const	override	{ return _rSources.count(name) > 0 ? _rSources.at(name) : Json::Value::null; }
+	Json::Value				rSources()									const;
+	bool					isOwnComputedColumn(const std::string& col)	const	override;
+	void					preprocessMarkdownHelp(QString & md)		const				{ if (_dynamicModule) _dynamicModule->preprocessMarkdownHelp(md);}
 
+	
 signals:
 	void					titleChanged();
 	void					needsRefreshChanged();
@@ -191,6 +196,8 @@ signals:
 	void					analysisInitialized();
 	void					userModifiedSomething();
 
+	
+	
 public slots:
 	void					setDynamicModule(	Modules::DynamicModule * module);
 	void					emitDuplicationSignals();
@@ -201,8 +208,9 @@ public slots:
 	void					requestComputedColumnDestructionHandler(const std::string & columnName)						override;
 	void					analysisQMLFileChanged();
 	void					setRSyntaxTextInResult(bool show);
-	void					filterByNameDone(const QString &name, const QString &error);
+	void					filterByNameDone(int dataSetId, const QString &name, const QString &error);
 	void					onUsedVariablesChanged()																	override;
+	void					filterRemoved(Filter * f);
 
 protected:
 	void					abort();
@@ -259,15 +267,11 @@ private:
 								_isReport				= false;
 	Json::Value					_lastSentMeta				= Json::nullValue;
 	int							_revision						= 0;
-
 	Modules::AnalysisEntry	*	_moduleData						= nullptr;
 	Modules::DynamicModule	*	_dynamicModule					= nullptr;
 	QFileSystemWatcher			_QMLFileWatcher;
-
 	QString						_helpFile;
-
 	Modules::UpgradeMsgs		_msgs;
-
 	std::map<std::string,
 	Json::Value>				_rSources;
 

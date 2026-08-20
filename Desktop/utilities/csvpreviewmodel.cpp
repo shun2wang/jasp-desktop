@@ -17,7 +17,7 @@
 //
 #include "csvpreviewmodel.h"
 #include "utilities/desktopcommunicator.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 
 CsvPreviewModel::CsvPreviewModel(QObject *parent) : QAbstractTableModel(parent)
 {

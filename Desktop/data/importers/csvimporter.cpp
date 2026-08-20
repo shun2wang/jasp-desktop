@@ -58,7 +58,36 @@ ImportDataSet* CSVImporter::loadFile(const string &locator, std::function<void(i
 	{
 		char knownDelimiter = DesktopCommunicator::singleton()->knownCsvDelimiter();
 		if (knownDelimiter != '\0')
-			delimiter = knownDelimiter;
+		{
+			if (knownDelimiter != detectedDelimiter && _askForDelimeter && !_synching)
+			{
+				try {
+					delimiter = DesktopCommunicator::singleton()->askCsvDelimiter(detectedDelimiter, QString::fromStdString(csv.firstRowsPlease()));
+				} catch (...) {
+					delimiter = detectedDelimiter;
+				}
+
+				if (!delimiter)
+					return nullptr;
+
+				DesktopCommunicator::singleton()->setKnownCsvDelimiter(delimiter);
+			}
+			else
+				delimiter = knownDelimiter;
+		}
+		else if (_askForDelimeter && !_synching)
+		{
+			try {
+				delimiter = DesktopCommunicator::singleton()->askCsvDelimiter(delimiter, QString::fromStdString(csv.firstRowsPlease()));
+			} catch (...) {
+				delimiter = detectedDelimiter;
+			}
+
+			if (!delimiter)
+				return nullptr;
+
+			DesktopCommunicator::singleton()->setKnownCsvDelimiter(delimiter);
+		}
 	}
 
 

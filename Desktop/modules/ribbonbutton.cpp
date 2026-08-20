@@ -19,7 +19,7 @@
 #include "ribbonbutton.h"
 #include "modules/dynamicmodule.h"
 #include "modules/analysisentry.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include "log.h"
 
 using namespace Modules;

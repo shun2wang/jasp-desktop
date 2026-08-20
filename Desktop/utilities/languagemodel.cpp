@@ -1,5 +1,5 @@
 #include "languagemodel.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include "utilities/settings.h"
 #include "resultstesting/compareresults.h"
 #include "results/resultsjsinterface.h"

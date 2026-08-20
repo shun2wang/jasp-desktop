@@ -9,7 +9,7 @@
 #include "log.h"
 #include "resultstesting/compareresults.h"
 #include "jsonutilities.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 
 const std::string InstalledModules::settingsPath = "modules-settings.json";
 

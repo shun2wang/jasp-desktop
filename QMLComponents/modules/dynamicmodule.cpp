@@ -19,19 +19,18 @@
 
 #include "log.h"
 #include <QThread>
+#include "qutils.h"
 #include <iostream>
 #include <QQmlContext>
 #include <QQmlIncubator>
 #include "dynamicmodule.h"
 #include <QRegularExpression>
-#include "utilities/qutils.h"
 #include "utilities/extractarchive.h"
-#include "upgrader/upgrades.h"
-#include "utilities/appdirs.h"
 #include "utilities/messageforwarder.h"
 #include "description/description.h"
+#include "upgrader/upgrades.h"
+#include "utilities/appdirs.h"
 #include "utilities/qmlutils.h"
-#include "utilities/qutils.h"
 #include "preferencesmodelbase.h"
 
 #ifdef __APPLE__
@@ -396,8 +395,8 @@ void DynamicModule::loadInfoFromDescriptionItem(Description * description)
 
 	_description = description;
 
-	if(_name != fq(description->name()))
-		Log::log() << "Description has different name (" << description->name() << ") from DynMod (" << _name << ")" << std::endl;
+	//if(_name != fq(description->name()))
+		//Log::log() << "Description has different name (" << description->name() << ") from DynMod (" << _name << ")" << std::endl;
 
 	const std::string oldTitle		= _title;
 

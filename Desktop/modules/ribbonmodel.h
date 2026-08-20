@@ -122,6 +122,7 @@ signals:
 				void dataInsertRowAfter(int);
 				void dataRemoveColumn();
 				void dataRemoveRow();
+				void addNewDataSet();
 				void showNewData();
 				void cellsClear();
 				void dataUndo();
@@ -156,6 +157,7 @@ private: // fields
 	RibbonButton						*	_analysesButton			= nullptr,
 										*	_dataSwitchButton		= nullptr,
 										*	_dataNewButton			= nullptr,
+										*	_dataInsertButton		= nullptr,
 										*	_dataResizeButton		= nullptr,
 										*	_insertButton			= nullptr,
 										*	_removeButton			= nullptr,

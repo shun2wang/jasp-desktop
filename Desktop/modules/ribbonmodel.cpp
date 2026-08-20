@@ -39,8 +39,9 @@ RibbonModel::RibbonModel() : QAbstractListModel(DynamicModules::dynMods())
 	connect(DynamicModules::dynMods(), &DynamicModules::dynamicModuleUninstalled,	this, &RibbonModel::removeDynamicRibbonButtonModel			);
 	connect(DynamicModules::dynMods(), &DynamicModules::dynamicModuleReplaced,		this, &RibbonModel::dynamicModuleReplaced					);
 	connect(DynamicModules::dynMods(), &DynamicModules::dynamicModuleChanged,		this, &RibbonModel::dynamicModuleChanged					);
-	connect(PreferencesModel::prefs(), &PreferencesModel::languageCodeChanged,		this, &RibbonModel::refresh							);
-	connect(DataSetPackage::pkg(),	   &DataSetPackage::setDataMode,				this, &RibbonModel::setDataMode								);
+	connect(PreferencesModel::prefs(), &PreferencesModel::languageCodeChanged,		this, &RibbonModel::refresh									);
+	connect(DataSetPackage::pkg(),	   &DataSetPackage::dataModeChanged,			this, &RibbonModel::setDataMode								);
+
 }
 
 void RibbonModel::loadModules(std::vector<InstalledModules::ModuleInfo> modulesToLoad)
@@ -126,6 +127,7 @@ void RibbonModel::addSpecialRibbonButtonsEarly()
 	_analysesButton			= new RibbonButton(this, "Analyses",				[&](){ return fq(tr("Analyses"));},					"JASP_logo_green.svg",		false, [&](){ emit finishCurrentEdit(); emit showStatistics(); },	[&](){return tr("Switch JASP to analyses mode");},								true);
 	_dataSwitchButton		= new RibbonButton(this, "Data",					[&](){ return fq(tr("Edit Data"));},				"data-button.svg",			false, [&](){ emit showData(); },									[&](){return tr("Switch JASP to data editing mode");},							false, false, false);
 	_dataNewButton			= new RibbonButton(this, "Data-New",				[&](){ return fq(tr("New Data"));},					"data-button-new.svg",		false, [&](){ emit showNewData();	 },								[&](){return tr("Open a workspace without data");},								true, false, false);
+	_dataInsertButton		= new RibbonButton(this, "Data-New-Insert",			[&](){ return fq(tr("New Data"));},					"data-button-new.svg",		false,  [&](){ emit addNewDataSet();	 },								[&](){return tr("Open a workspace without data");},								true, false, false);
 	_dataResizeButton		= new RibbonButton(this, "Data-Resize",				[&](){ return fq(tr("Resize Data"));},				"data-button-resize.svg",	false, [&](){ emit resizeData(); },									[&](){return tr("Resize your dataset");},										false);
 	_insertButton			= new RibbonButton(this, "Data-Insert",				[&](){ return fq(tr("Insert"));},					"data-button-insert.svg",	_entriesInsert,														[&](){return tr("Insert empty columns or rows");});
 	_removeButton			= new RibbonButton(this, "Data-Remove",				[&](){ return fq(tr("Remove"));},					"data-button-erase.svg",	_entriesDelete,														[&](){return tr("Remove columns or rows");});
@@ -136,6 +138,7 @@ void RibbonModel::addSpecialRibbonButtonsEarly()
 
 
 	_dataNewButton->setActive(true);
+	_dataInsertButton->setActive(true);
 	connect(this, &RibbonModel::dataLoadedChanged,							_dataSwitchButton,	[=](bool loaded)			{ _dataSwitchButton	->setEnabled(loaded);				});
 	connect(this, &RibbonModel::dataLoadedChanged,							_dataNewButton,		[=](bool loaded)			{ _dataNewButton	->setEnabled(!loaded);				});
 	connect(MainWindow::singleton(), &MainWindow::dataAvailableChanged,		_dataSwitchButton,	[=](bool dataAvailable)		{ _dataSwitchButton	->setActive(dataAvailable);			});
@@ -143,6 +146,7 @@ void RibbonModel::addSpecialRibbonButtonsEarly()
 	connect(this, &RibbonModel::dataLoadedChanged,		_insertButton,			&RibbonButton::setEnabled);
 	connect(this, &RibbonModel::dataLoadedChanged,		_removeButton,			&RibbonButton::setEnabled);
 	connect(this, &RibbonModel::dataLoadedChanged,		_dataResizeButton,		&RibbonButton::setEnabled);
+	
 	connect(this, &RibbonModel::synchronisationChanged, _synchroniseOnButton,	[=](bool synching){ _synchroniseOnButton->setEnabled(!synching); });
 	connect(this, &RibbonModel::synchronisationChanged, _synchroniseOffButton,	[=](bool synching){ _synchroniseOffButton->setEnabled(synching); });
 
@@ -174,6 +178,7 @@ void RibbonModel::addSpecialRibbonButtonsEarly()
 	addRibbonButtonModel(new RibbonButton(this),	size_t(RowType::Data));
 	addRibbonButtonModel(_synchroniseOnButton,		size_t(RowType::Data));
 	addRibbonButtonModel(_synchroniseOffButton,		size_t(RowType::Data));
+	addRibbonButtonModel(_dataInsertButton,			size_t(RowType::Data));
 	addRibbonButtonModel(_dataResizeButton,			size_t(RowType::Data));
 	addRibbonButtonModel(_insertButton,				size_t(RowType::Data));
 	addRibbonButtonModel(_removeButton,				size_t(RowType::Data));

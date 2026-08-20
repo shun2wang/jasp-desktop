@@ -44,7 +44,7 @@ target_include_directories(
 	${R_INCLUDE_PATH}
 	${R_HOME_PATH}/include
 	${RCPP_PATH}/include
-  ${Boost_INCLUDE_DIRS}
+	${Boost_INCLUDE_DIRS}
 	PRIVATE
 	SQLite::SQLite3
 	)
@@ -52,6 +52,11 @@ target_include_directories(
 target_link_libraries(
     CommonData
     PUBLIC
+	Qt::Core
+	Qt::Gui
+    Qt::Qml
+    Qt::Sql
+    Qt::Quick
     LibArchive::LibArchive
     SQLite::SQLite3
 	PRIVATE
@@ -64,10 +69,13 @@ if(MSVC)
 endif()
 target_compile_definitions(
   CommonData
-  PUBLIC $<$<BOOL:${JASP_PRINT_ENGINE_MESSAGES}>:PRINT_ENGINE_MESSAGES>
-		 BUILDING_JASP_ENGINE R_HOME=${R_HOME_PATH}
-		$<$<BOOL:${JASP_TIMER_USED}>:PROFILE_JASP>
-		JSONCPP_NO_LOCALE_SUPPORT	)
+  PUBLIC 
+  $<$<BOOL:${JASP_PRINT_ENGINE_MESSAGES}>:PRINT_ENGINE_MESSAGES>
+  BUILDING_JASP_ENGINE R_HOME=${R_HOME_PATH}
+  $<$<BOOL:${JASP_TIMER_USED}>:PROFILE_JASP>
+  JSONCPP_NO_LOCALE_SUPPORT	
+  JASP_USES_QT_HERE
+)
 
 if(APPLE OR WINDOWS)
   target_compile_definitions(CommonData PUBLIC BOOST_INTERPROCESS_SHARED_DIR_FUNC)
