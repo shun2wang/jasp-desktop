@@ -9,7 +9,7 @@ jobs:
       
    build-jasp:
    
-    runs-on: windows-latest
+    runs-on: windows-2022
     env:
        GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
        JASP_R_VERSION: '4.5.3'
@@ -33,7 +33,7 @@ jobs:
             target: 'desktop'
             arch: 'win64_msvc2022_64'
             cache: 'false'
-            modules: 'qtpositioning qtwebchannel qtwebengine qtwebsockets qtlanguageserver qtquickeffectmaker qtwebsockets debug_info qt5compat qtshadertools'
+            modules: 'qtpositioning qtwebchannel qtwebengine qtwebsockets qtlanguageserver qtquickeffectmaker qtwebsockets debug_info qt5compat qtshadertools qthttpserver'
             tools: 'tools_qtcreator,qt.tools.qtcreator tools_cmake tools_ninja'
 
       - name: dependencies for rtools

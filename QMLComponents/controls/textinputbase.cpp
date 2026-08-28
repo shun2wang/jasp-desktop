@@ -52,7 +52,6 @@ void TextInputBase::bindTo(const Json::Value& value)
 		int intVal;
 		if (value.isNumeric())
 			_value = value.asInt();
-
 		else if (value.isString() && QColumnUtils::getIntValue(tq(value.asString()), intVal))
 			_value = intVal;
 
