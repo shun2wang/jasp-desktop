@@ -470,6 +470,15 @@ QAbstractItemModel *Filter::providerModel()
 	return rowFilteredVarInfo();
 }
 
+ColumnEncoder * Filter::columnEncoder()
+{
+	//Desktop consumers (e.g. lavaan/JAGS syntax encoding in BoundControlRlangTextArea) must en-/decode
+	//column names against the dataset's own encoder, which Workspace::setShownDataSet keeps populated.
+	//Without this override the base VariableInfoProvider::columnEncoder() returns nullptr, causing
+	//callers to fall back to the empty process-global fallbackEncoder() (0 known columns).
+	return _data ? &_data->encoder() : nullptr;
+}
+
 
 
 QVariant Filter::provideInfo(varInfoType info, const QString& colName, int row) const

@@ -52,9 +52,15 @@ bool RCommander::runCode(const QString & code)
 	{
 		_wdWasSet = true;
 		QFileInfo currentFile(DataSetPackage::pkg()->currentFile());
-		
+
 		QString path = !currentFile.isFile() ? "~" : currentFile.dir().absolutePath();
-		_engine->runScriptOnProcess("setwd('"+path+"');\n" + code);
+
+		//Pass the working directory as a SEPARATE field instead of prepending "setwd('<path>');" to the code.
+		//The engine column-name-encodes the console script (encodeInsideStrings=true, needed for lavaan formulas
+		//in string literals); if the path were part of that script a component matching a column name would be
+		//rewritten and setwd would fail with "cannot change working directory", aborting the whole command and
+		//forcing the user to run it twice. Sent separately, the engine applies it unencoded and defensively.
+		_engine->runScriptOnProcess(code, path);
 	}
 	else
 		_engine->runScriptOnProcess(code);
@@ -194,6 +200,11 @@ void RCommander::loadModule(const QString & moduleName)
 	{
 		_engine->shutEngineDown();
 		EngineSync::singleton()->restartAKilledOrStoppedEngine(_engine);
+
+		//The restarted engine is a fresh R process whose working directory was reset (to programDir), so the
+		//data-directory working directory must be re-established on the next console run. Without this the WD
+		//would silently stay at programDir after every module switch.
+		_wdWasSet = false;
 	}
 
 	_engine->setDynamicModule(fq(moduleName));

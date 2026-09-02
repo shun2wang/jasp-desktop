@@ -457,8 +457,9 @@ void Engine::receiveRCodeMessage(const Json::Value & jsonRequest)
 				dataSetId		= jsonRequest.get("dataSetId",		-1).asInt();
 	bool		whiteListed		= jsonRequest.get("whiteListed",	true).asBool(),
 				returnLog		= jsonRequest.get("returnLog",		false).asBool();
+	std::string	workingDirectory= jsonRequest.get("workingDirectory", "").asString();
 
-	if(returnLog)	runRCodeCommander(dataSetId, rCode);
+	if(returnLog)	runRCodeCommander(dataSetId, rCode, workingDirectory);
 	else			runRCode(dataSetId, rCode, rCodeRequestId, whiteListed);
 }
 
@@ -478,7 +479,7 @@ void Engine::runRCode(int dataSetId, const std::string & rCode, int rCodeRequest
 }
 
 
-void Engine::runRCodeCommander(int dataSetId, std::string rCode)
+void Engine::runRCodeCommander(int dataSetId, std::string rCode, const std::string & workingDirectory)
 {
     DataSet * thereIsSomeDataDs = provideAndUpdateDataSet(dataSetId);
     bool thereIsSomeData = thereIsSomeDataDs && thereIsSomeDataDs->rowCount();
@@ -486,15 +487,69 @@ void Engine::runRCodeCommander(int dataSetId, std::string rCode)
 
 	static const std::string rCmdDataName = "data", rCmdFiltered = "filteredData";
 
+	//Apply the console working directory UNENCODED and DEFENSIVELY, before (and separately from) the
+	//column-name-encoded user script. The desktop sends it as its own field precisely so a path component
+	//that happens to match a column name is not rewritten by encodeRScriptCommander (encodeInsideStrings=true).
+	//Wrapping in tryCatch + dir.exists (path.expand handles '~') guarantees an inaccessible path can never
+	//abort the user's command, which previously surfaced as "cannot change working directory" and forced a
+	//second run. This runs via jaspRCPP_runScript so any diagnostics go to the engine log, not the console.
+	if(!workingDirectory.empty())
+	{
+		std::string wdEscaped;
+		wdEscaped.reserve(workingDirectory.size() + 8);
+		for(char c : workingDirectory)
+		{
+			if(c == '\\' || c == '\'')	wdEscaped += '\\';
+			wdEscaped += c;
+		}
+
+		jaspRCPP_runScript(("tryCatch({ .jaspWd <- path.expand('" + wdEscaped + "'); if(dir.exists(.jaspWd)) setwd(.jaspWd); rm(.jaspWd) }, error = function(e) invisible(NULL));").c_str());
+		Log::log() << "RCommander: applied working directory '" << workingDirectory << "', getwd() is now '" << jaspRCPP_runScriptReturnString("getwd()") << "', lastError='" << jaspRCPP_getLastErrorMsg() << "'" << std::endl;
+	}
+
+	//===== RCommander debug logging (dataSetId / data availability / raw script) =====
+	Log::log() << "===== RCommander runRCodeCommander =====\n"
+			   << "dataSetId="			<< dataSetId
+			   << ", thereIsSomeData="	<< (thereIsSomeData ? "true" : "false")
+			   << ", rowCount="			<< (thereIsSomeDataDs ? thereIsSomeDataDs->rowCount() : 0) << "\n"
+			   << "rCode BEFORE encoding:\n" << rCode << std::endl;
 
 	if(thereIsSomeData)
 	{
-		
-		
-		rCode = ColumnEncoder::columnEncoder()->encodeAll(rCode);
+		ColumnEncoder * enc = ColumnEncoder::columnEncoder();
+
+		//Dump the columnName -> encodedName map. The names listed here are exactly the columns JASP knows about
+		//for this dataset (with their .scale/.ordinal/.nominal variants); the encoded value is what the `data`
+		//data.frame columns are actually called. If a variable used in the script (e.g. a lavaan formula term
+		//like 'y') is NOT in this list it will be left untouched and lavaan will not find it in `data`.
+		std::string mapDump = "RCommander encoding map (originalName -> encoded), " + std::to_string(ColumnEncoder::columnNames().size()) + " entries:\n";
+		for(const std::string & colName : ColumnEncoder::columnNames())
+			mapDump += "\t'" + colName + "' -> '" + (enc->shouldEncode(colName) ? enc->encode(colName) : std::string("<not encodable>")) + "'\n";
+		Log::log() << mapDump << std::endl;
+
+		rCode = enc->encodeRScriptCommander(rCode);
+
+		Log::log() << "rCode AFTER encoding (this is what is sent to the R engine):\n" << rCode << std::endl;
+
 		jaspRCPP_runScript((rCmdDataName + "<- .readFullDatasetToEnd();").c_str());
+		Log::log() << "After assigning `" << rCmdDataName << "`: lastError='" << jaspRCPP_getLastErrorMsg() << "'" << std::endl;
 		jaspRCPP_runScript((rCmdFiltered + "<- .readFullFilteredDatasetToEnd();").c_str());
+		Log::log() << "After assigning `" << rCmdFiltered << "`: lastError='" << jaspRCPP_getLastErrorMsg() << "'" << std::endl;
+
+		//Inject in-context diagnostics INTO the commander script (prepended after encoding, so it is not itself encoded).
+		//This runs in the exact same environment/eval as the user's code, so it reflects the true state of `data` as
+		//lavaan sees it. The cat() output is captured with the result and decoded, so the (encoded) colnames printed here
+		//are shown with their original JASP names. If class is 'function' the `data <- ...` assignment did not persist.
+		std::string dbg =
+			"cat('===== JASP RCommander debug =====\\n');"
+			"cat('data is global var:', ('data' %in% ls(envir=globalenv())), '  class:', paste(class(get0('data')), collapse='/'), '  is.data.frame:', is.data.frame(get0('data')), '\\n');"
+			"cat('dim(data):', paste(dim(get0('data')), collapse='x'), '\\n');"
+			"cat('colnames(data):', paste(colnames(get0('data')), collapse=', '), '\\n');"
+			"cat('=================================\\n');\n";
+		rCode = dbg + rCode;
 	}
+	else
+		Log::log() << "RCommander: no data loaded, script is sent to the R engine WITHOUT column-name encoding." << std::endl;
 
 	std::string rCodeResult =	jaspRCPP_evalRCodeCommander(rCode.c_str());
 

@@ -130,6 +130,10 @@ public:
 	QAbstractItemModel		*	providerModel() override;
 	QVariant					provideInfo(varInfoType info, const QString& name = "", int row = 0)			const	override;
 	bool						absorbInfo(	varInfoType info, const QString& name,		int row, QVariant value)		override;
+	/// Desktop en-/decoding must use the filter's own dataset encoder (populated in Workspace::setShownDataSet).
+	/// The base returns nullptr, which would make consumers fall back to the empty process-global fallbackEncoder.
+	/// Defined in filter.cpp because DataSet is only forward-declared here (dataset.h includes filter.h).
+	ColumnEncoder			*	columnEncoder() override;
 	
 	
 signals:

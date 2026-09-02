@@ -157,22 +157,52 @@ void BoundControlRlangTextArea::checkSyntax()
 
 	encodedColNames.append(")");
 
+	//===== Lavaan/SEM checkSyntax debug logging =====
+	{
+		std::string knownCols;
+		for(const auto & nameType : _encoder()->currentNames())
+			knownCols += "'" + nameType.first + "' ";
+
+		std::string recognised;
+		for(const std::string & c : _noPrefixUsedColumnNames)
+			recognised += "'" + c + "'->'" + _encoder()->encode(c) + "' ";
+
+		Log::log() << "===== Lavaan checkSyntax (langType=" << int(_langType) << ", initialized=" << (_textArea->initialized() ? "true" : "false") << ") =====\n"
+				   << "raw model:\n"						<< fq(text) << "\n"
+				   << "comment-stripped model:\n"			<< stringUtils::stripRComments(fq(text)) << "\n"
+				   << "encoder currentNames ("				<< _encoder()->currentNames().size() << " known cols): " << knownCols << "\n"
+				   << "recognised (encoded) columns: "		<< (recognised.empty() ? "<NONE - encoder did not match any model variable to a dataset column>" : recognised) << "\n"
+				   << "textEncoded (sent inside quotes to R):\n" << fq(_textEncoded) << "\n"
+				   << "encodedColNames arg: "				<< fq(encodedColNames) << std::endl;
+	}
+
 	if(_textEncoded.length() > 0) {
 		QString checkCode = QString("%1('%2', %3)")
 			.arg(tq(_checkSyntaxRFunctionName()))
 			.arg(_textEncoded)
 			.arg(encodedColNames);
-		
+
+		Log::log() << "Lavaan checkCode sent to R:\n" << fq(checkCode) << std::endl;
+
 		if(_previouslyUsedTextEncoded != checkCode)
 			_textArea->runRScript(checkCode, false);
-		
+		else
+			Log::log() << "Lavaan checkCode is IDENTICAL to the previous one, so runRScript is NOT called again (rScriptDoneHandler/_setBoundValues will not fire; this can look like 'nothing happens')." << std::endl;
+
 		_previouslyUsedTextEncoded = checkCode;
 	}
+	else
+		Log::log() << "Lavaan textEncoded is EMPTY, checkLavaanModel is NOT called." << std::endl;
 
 }
 
 QString BoundControlRlangTextArea::rScriptDoneHandler(const QString & result)
 {
+	//A NON-empty result is treated as a syntax/model error: the model is NOT applied and the analysis does not run
+	//(the TextArea shows the text as a red error). An empty result means success -> _setBoundValues() applies the model.
+	Log::log() << "Lavaan " << _checkSyntaxRFunctionName() << " returned "
+			   << (result.isEmpty() ? "EMPTY (success -> applying model & running analysis)" : ("ERROR (analysis blocked): '" + fq(result) + "'")) << std::endl;
+
 	if (!result.isEmpty())
 		return result;
 
