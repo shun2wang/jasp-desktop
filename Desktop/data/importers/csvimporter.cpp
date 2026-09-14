@@ -1,29 +1,30 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
 //
-
 #include "csvimporter.h"
 #include "csv/csvimportcolumn.h"
 #include "csv/csv.h"
 #include "timers.h"
+#include "utilities/desktopcommunicator.h"
 
 using namespace std;
 
 
-CSVImporter::CSVImporter() : Importer()
+CSVImporter::CSVImporter(bool askForDelimeter) : Importer(), _askForDelimeter{askForDelimeter}
 {
 }
 
@@ -36,6 +37,61 @@ ImportDataSet* CSVImporter::loadFile(const string &locator, std::function<void(i
 	CSV csv(locator);
     csv.open();
 
+	// Try to detect delimiter first
+	char detectedDelimiter = csv.delimiter();
+	char delimiter = detectedDelimiter;
+
+	if (!_synching && _askForDelimeter)
+	{
+		try {
+			delimiter = DesktopCommunicator::singleton()->askCsvDelimiter(delimiter, QString::fromStdString(csv.firstRowsPlease()));
+		} catch (...) {
+			delimiter = detectedDelimiter;
+		}
+
+		if (!delimiter)
+			return nullptr;
+
+		DesktopCommunicator::singleton()->setKnownCsvDelimiter(delimiter);
+	}
+	else
+	{
+		char knownDelimiter = DesktopCommunicator::singleton()->knownCsvDelimiter();
+		if (knownDelimiter != '\0')
+		{
+			if (knownDelimiter != detectedDelimiter && _askForDelimeter && !_synching)
+			{
+				try {
+					delimiter = DesktopCommunicator::singleton()->askCsvDelimiter(detectedDelimiter, QString::fromStdString(csv.firstRowsPlease()));
+				} catch (...) {
+					delimiter = detectedDelimiter;
+				}
+
+				if (!delimiter)
+					return nullptr;
+
+				DesktopCommunicator::singleton()->setKnownCsvDelimiter(delimiter);
+			}
+			else
+				delimiter = knownDelimiter;
+		}
+		else if (_askForDelimeter && !_synching)
+		{
+			try {
+				delimiter = DesktopCommunicator::singleton()->askCsvDelimiter(delimiter, QString::fromStdString(csv.firstRowsPlease()));
+			} catch (...) {
+				delimiter = detectedDelimiter;
+			}
+
+			if (!delimiter)
+				return nullptr;
+
+			DesktopCommunicator::singleton()->setKnownCsvDelimiter(delimiter);
+		}
+	}
+
+
+	csv.setDelimiter(delimiter);
 	csv.readLine(colNames);
 	vector<CSVImportColumn *> importColumns;
 	importColumns.reserve(colNames.size());
@@ -46,7 +102,7 @@ ImportDataSet* CSVImporter::loadFile(const string &locator, std::function<void(i
 		string colName = *it;
         
 		if (colName == "")
-            colName = "V" + std::to_string(colNo+1);
+			colName = "V" + std::to_string(colNo+1);
 		else
 		{
 			// Colname should not be just an integer
@@ -66,33 +122,48 @@ ImportDataSet* CSVImporter::loadFile(const string &locator, std::function<void(i
 		importColumns.push_back(new CSVImportColumn(result, colName, csv.numRows()));
 	}
 
-	unsigned long long progress;
 	unsigned long long lastProgress = -1;
 
-	size_t columnCount = colNames.size();
+	size_t columnCount = importColumns.size();
 
 	stringvec line;
-	bool success = csv.readLine(line);
-
-	while (success)
+	while (csv.readLine(line))
 	{
-		progress = 50 * csv.pos() / csv.size();
+		unsigned long long progress = 50 * csv.pos() / csv.size();
 		if (progress != lastProgress)
 		{
 			progressCallback(progress);
 			lastProgress = progress;
 		}
 
-		if (line.size() != 0) //ignore empty lines
-            for(size_t i = 0; i<columnCount; i++)
-                importColumns.at(i)->addValue(i < line.size() ? line[i] : ""); //add components and add empty vals for missing columns
+		if (line.empty()) continue;
+
+		if (line.size() > columnCount)
+		{
+			size_t currentRowCount = importColumns.empty() ? 0 : importColumns[0]->size();
+
+			for (size_t i = columnCount; i < line.size(); ++i)
+			{
+				string newColName = "V" + std::to_string(i + 1);
+
+				CSVImportColumn* newColumn = new CSVImportColumn(result, newColName, csv.numRows());
+
+				for (size_t row = 0; row < currentRowCount; ++row)
+					newColumn->addValue("");
+
+				importColumns.push_back(newColumn);
+			}
+			columnCount = line.size();
+		}
+
+		for (size_t i = 0; i < columnCount; ++i)
+			importColumns[i]->addValue(i < line.size() ? line[i] : "");
 
 		line.clear();
-		success = csv.readLine(line);
 	}
 
-	for (vector<CSVImportColumn *>::iterator it = importColumns.begin(); it != importColumns.end(); ++it)
-		result->addColumn(*it);
+	for (auto* col : importColumns)
+		result->addColumn(col);
 
 	// Build dictionary for sync.
 	result->buildDictionary();

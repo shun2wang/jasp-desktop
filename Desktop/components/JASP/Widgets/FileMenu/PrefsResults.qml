@@ -11,7 +11,7 @@ PrefsScrollView
 	{
 		id:				menuHeader
 		headertext:		qsTr("Results Preferences")
-		helpfile:		"preferences/PrefsResults"
+		helpMD:			allHelp.PrefsResults
 		addMargin:		false
 	}
 
@@ -220,7 +220,7 @@ PrefsScrollView
 			onCheckedChanged:	preferencesModel.showInteractiveDefault = checked
 			height:				implicitHeight * preferencesModel.uiScale
 			toolTip:			qsTr("When enabled shows the interactive plots by default, you can always switch them in the plots own dropdown too.")
-			
+			visible:			INTERACTIVE_PLOTS
 
 			KeyNavigation.tab:		displayExactPVals
 		}

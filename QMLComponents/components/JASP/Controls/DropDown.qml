@@ -1,3 +1,37 @@
+//
+// Copyright (C) 2013-2026 University of Amsterdam
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
+//
+//
+// Copyright (C) 2013-2026 University of Amsterdam
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
+//
 import QtQuick
 import QtQuick.Controls as QTC
 import QtQuick.Layouts
@@ -209,7 +243,7 @@ ComboBoxBase
 			id:				comboBoxBackground
 			border.width:	comboBox.showBorder && !control.activeFocus ? 1					: 0
 			border.color:	comboBox.showBorder							? jaspTheme.borderColor : "transparent"
-			radius:			2
+			radius:			jaspTheme.borderRadius
 			color:			jaspTheme.controlBackgroundColor
 		}
 
@@ -224,15 +258,17 @@ ComboBoxBase
 			anchors.centerIn:	parent
 			opacity:			debug ? .3 : 1
 			visible:			comboBox.useExternalBorder
-			radius:				jaspTheme.jaspControlHighlightWidth
+			radius:				jaspTheme.borderRadius
 		}
 
 		popup: QTC.Popup
 		{
 			id:				popupRoot
 			padding:		1
-			implicitWidth:	popupView.implicitWidth + scrollBar.width + 2*padding
-			implicitHeight: Math.min(popupView.implicitHeight + 2 * padding, popupView.maxHeight)
+			implicitWidth:	contentWidth + scrollBar.width
+			implicitHeight: Math.min(contentHeight + 2 * padding, popupView.maxHeight)
+			x:				padding
+			y:				padding
 
 			enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0 } enabled: preferencesModel.animationsOn }
 
@@ -268,12 +304,14 @@ ComboBoxBase
 					clip:			true
 					anchors.fill:	parent
 	
-					property real	maxHeight: typeof mainWindowRoot	!== 'undefined' ? mainWindowRoot.height	// Case Dropdowns used in Desktop
+					property real	maxHeight: typeof mainWindowRoot	!== 'undefined' ? mainWindowRoot.height		// Case Dropdowns used in Desktop
+											 : typeof csvPreviewWindow	!== 'undefined' ? csvPreviewWindow.height	// Case CSV Preview
 											 : typeof rcmdRoot			!== 'undefined' ? rcmdRoot.height			// Case Dropdown used in R Command
 											 : typeof backgroundForms	!== 'undefined' ? backgroundForms.height	// Case Dropdowns used in Analysis forms
 											 : typeof scrollPrefs		!== 'undefined' ? scrollPrefs.height		// When its used in a Prefs* page ?
 											 : Infinity
 	
+
 					//onMaxHeightChanged:		messages.log("maxHeight is now " + maxHeight + " for " + popupView);
 	
 					Rectangle
@@ -284,6 +322,7 @@ ComboBoxBase
 						border.color:		jaspTheme.focusBorderColor
 						border.width:		2
 						color:				"transparent"
+						radius:				jaspTheme.borderRadius
 					}
 				}
 				
@@ -317,6 +356,7 @@ ComboBoxBase
 				border.color:			jaspTheme.borderColor
 				border.width:			1
 				color:					jaspTheme.fileMenuColorBackground
+				radius:					jaspTheme.borderRadius	
 			}
 		}
 
@@ -324,7 +364,7 @@ ComboBoxBase
 		{
 			implicitHeight:							jaspTheme.comboBoxHeight
 			implicitWidth:							popupView.width
-			enabled:								comboBox.enabledOptions.length == 0 || comboBox.enabledOptions.length <= index || comboBox.enabledOptions[index]
+			enabled:								(comboBox.enabledOptions.length == 0 || comboBox.enabledOptions.length <= index || comboBox.enabledOptions[index])
 
 			contentItem: Rectangle
 			{
@@ -335,7 +375,6 @@ ComboBoxBase
 				property bool isEmptyValue:			comboBox.addEmptyValue && index === 0
 				property bool showEmptyValueStyle:	!comboBox.showEmptyValueAsNormal && isEmptyValue
 				property bool showLine:				comboBox.addLineAfterEmptyValue && index === 0
-
 
 				Image
 				{

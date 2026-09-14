@@ -1,7 +1,9 @@
 #include "preferencesmodel.h"
-#include "utilities/qutils.h"
+#include "utilities/secretstore.h"
+#include "qutils.h"
 #include "utilities/settings.h"
 #include "utilities/messageforwarder.h"
+#include "utilities/appdirs.h"
 #include "jasptheme.h"
 #include "utilities/languagemodel.h"
 #include <QFontDatabase>
@@ -11,6 +13,8 @@
 #include <QQuickWindow>
 #include "githubpat.h"
 #include "gui/jaspConfiguration/jaspconfiguration.h"
+#include "gui/aipersonamodel.h"
+#include "gui/aiconfigmodel.h"
 
 using namespace std;
 
@@ -49,7 +53,13 @@ PreferencesModel::PreferencesModel(QObject *parent) :
 	}
 
 	dataLabelNAChangedSlot(dataLabelNA());
+
+	_aiPersonaModel = new AIPersonaModel(this);
 }
+
+AIPersonaModel* PreferencesModel::aiPersonaModel() const { return _aiPersonaModel; }
+
+AIConfigModel* PreferencesModel::aiConfigModel() const { return AIConfigModel::config(); }
 
 void PreferencesModel::browseSpreadsheetEditor()
 {
@@ -107,6 +117,18 @@ void PreferencesModel::browseDeveloperLibPathFolder()
 
 	if (!folder.isEmpty())
 		setDirectLibpathFolder(folder);
+}
+
+void PreferencesModel::browseEngineSandboxDir()
+{
+	QString defaultfolder = engineSandboxDir();
+	if(defaultfolder.isEmpty())
+		defaultfolder = QDir::homePath();
+
+	QString folder = MessageForwarder::browseOpenFolder(tr("Select a folder..."), defaultfolder);
+
+	if(!folder.isEmpty())
+		setEngineSandboxDir(folder);
 }
 
 void PreferencesModel::browseConfigurationFile()
@@ -198,6 +220,16 @@ GET_PREF_FUNC_BOOL(	showInteractiveDefault,		Settings::SHOW_INTERACTIVE_DEFAULT	
 
 GET_PREF_FUNC_BOOL(	autoSaveAtAll,				Settings::AUTOSAVE_ON								)
 GET_PREF_FUNC_INT(	autoSaveIntervalSec,		Settings::AUTOSAVE_INTERVAL_SEC						)
+GET_PREF_FUNC_STR(	aiCommonSystemPrompt,		Settings::AI_COMMON_SYSTEM_PROMPT					)
+	GET_PREF_FUNC_BOOL(	aiCommonSystemPromptUseCustom,	Settings::AI_COMMON_SYSTEM_PROMPT_USE_CUSTOM	)
+	GET_PREF_FUNC_BOOL(	aiAnnotationUseCustom,	Settings::AI_ANNOTATION_USE_CUSTOM		)
+	GET_PREF_FUNC_STR(	aiAnnotationPrompt,		Settings::AI_ANNOTATION_PROMPT				)
+	GET_PREF_FUNC_STR(	aiUserAvatar,			Settings::AI_USER_AVATAR						)
+	GET_PREF_FUNC_BOOL(	aiEnabled,			Settings::AI_ENABLED						)
+
+GET_PREF_FUNC_BOOL(	rpcServerEnabled,	Settings::RPC_SERVER_ENABLED				)
+GET_PREF_FUNC_STR(	rpcServerIp,		Settings::RPC_SERVER_IP					)
+GET_PREF_FUNC_INT(	rpcServerPort,		Settings::RPC_SERVER_PORT				)
 
 bool PreferencesModel::engineSandbox() const
 {
@@ -206,6 +238,11 @@ bool PreferencesModel::engineSandbox() const
 #else
 	return false;
 #endif
+}
+
+QString PreferencesModel::engineSandboxDir() const
+{
+	return Settings::value(Settings::ENGINE_SANDBOX_DIR).toString();
 }
 
 
@@ -239,7 +276,7 @@ QStringList PreferencesModel::emptyValues()		const
 
 QStringList PreferencesModel::modulesRemembered()	const
 {
-	QStringList items = Settings::value(Settings::MODULES_REMEMBERED).toString().split("|");
+	QStringList items = Settings::value(Settings::MODULES_REMEMBERED).toString().split("|", Qt::SkipEmptyParts);
 
 	return items;
 }
@@ -409,7 +446,30 @@ SET_PREF_FUNCTION(				bool,   	setStoreStateEtc,			storeStateEtc,				storeStateE
 SET_PREF_FUNCTION(				bool,   	setShowInteractiveDefault,	showInteractiveDefault,		showInteractiveDefaultChanged,	Settings::SHOW_INTERACTIVE_DEFAULT 					)
 SET_PREF_FUNCTION(				bool,   	setAutoSaveAtAll,			autoSaveAtAll,				autoSaveAtAllChanged,			Settings::AUTOSAVE_ON			  					)
 SET_PREF_FUNCTION(				int,		setAutoSaveIntervalSec,		autoSaveIntervalSec,		autoSaveIntervalSecChanged,		Settings::AUTOSAVE_INTERVAL_SEC	  					)
+SET_PREF_FUNCTION(				QString,	setAiCommonSystemPrompt,		aiCommonSystemPrompt,		aiCommonSystemPromptChanged,		Settings::AI_COMMON_SYSTEM_PROMPT					)
+	SET_PREF_FUNCTION(				bool,		setAiCommonSystemPromptUseCustom,	aiCommonSystemPromptUseCustom,	aiCommonSystemPromptUseCustomChanged,	Settings::AI_COMMON_SYSTEM_PROMPT_USE_CUSTOM	)
+		SET_PREF_FUNCTION(				bool,		setAiAnnotationUseCustom,	aiAnnotationUseCustom,	aiAnnotationUseCustomChanged,	Settings::AI_ANNOTATION_USE_CUSTOM			)
+	SET_PREF_FUNCTION(				QString,	setAiAnnotationPrompt,		aiAnnotationPrompt,		aiAnnotationPromptChanged,		Settings::AI_ANNOTATION_PROMPT				)
+	SET_PREF_FUNCTION(				QString,	setAiUserAvatar,			aiUserAvatar,			aiUserAvatarChanged,				Settings::AI_USER_AVATAR						)
+	SET_PREF_FUNCTION(				bool,		setAiEnabled,			aiEnabled,			aiEnabledChanged,				Settings::AI_ENABLED						)
 
+SET_PREF_FUNCTION(				bool,		setRpcServerEnabled,	rpcServerEnabled,	rpcServerEnabledChanged,	Settings::RPC_SERVER_ENABLED			)
+SET_PREF_FUNCTION(				QString,	setRpcServerIp,		rpcServerIp,		rpcServerIpChanged,			Settings::RPC_SERVER_IP					)
+SET_PREF_FUNCTION(				int,		setRpcServerPort,		rpcServerPort,		rpcServerPortChanged,		Settings::RPC_SERVER_PORT				)
+
+
+void PreferencesModel::resetAiDefaults()
+{
+	AIConfigModel::config()->resetToDefaults();
+	_aiPersonaModel->resetAll();
+	setAiCommonSystemPrompt(Settings::defaultValue(Settings::AI_COMMON_SYSTEM_PROMPT).toString());
+	setAiCommonSystemPromptUseCustom(Settings::defaultValue(Settings::AI_COMMON_SYSTEM_PROMPT_USE_CUSTOM).toBool());
+	setAiAnnotationUseCustom(Settings::defaultValue(Settings::AI_ANNOTATION_USE_CUSTOM).toBool());
+	setAiAnnotationPrompt(	Settings::defaultValue(Settings::AI_ANNOTATION_PROMPT).toString());
+	setAiUserAvatar(	Settings::defaultValue(Settings::AI_USER_AVATAR).toString());
+	setRpcServerEnabled(Settings::defaultValue(Settings::RPC_SERVER_ENABLED).toBool());
+	setAiEnabled(		Settings::defaultValue(Settings::AI_ENABLED).toBool());
+}
 
 void PreferencesModel::setGithubPatCustom(QString newPat)
 {
@@ -666,4 +726,18 @@ void PreferencesModel::setEngineSandbox(bool engineSandbox) {
 #endif
 		emit engineSandboxChanged(engineSandbox);
 	}
+}
+
+void PreferencesModel::setEngineSandboxDir(QString dir)
+{
+	if(dir == engineSandboxDir())
+		return;
+
+	Settings::setValue(Settings::ENGINE_SANDBOX_DIR, dir);
+	AppDirs::setSandboxDirOverride(dir); //Apply it right away so that for example newly started engines and file-dialogs use the new location, a restart is needed for the rest.
+
+#ifdef _WIN32
+	MessageForwarder::showWarning(tr("Engine Sandbox directory changed"), tr("The directory used by the Engine Sandbox has been changed, this will only take full effect after JASP is restarted."));
+#endif
+	emit engineSandboxDirChanged(dir);
 }

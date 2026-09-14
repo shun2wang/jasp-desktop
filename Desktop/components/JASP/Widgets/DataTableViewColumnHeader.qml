@@ -12,12 +12,15 @@ Rectangle
 				) 
 				? jaspTheme.itemSelectedNoFocusColor 
 				: jaspTheme.buttonColor
+	
+	border.width: 1
+	border.color: jaspTheme.borderColor
 
 	readonly	property int	__iconDim:			baseBlockDim * preferencesModel.uiScale
 
 	function getColumnTypeIcon(type)
 	{
-		return String(dataSetModel.getColumnTypesWithIcons()[type]) === "" ? "" : jaspTheme.iconPath + dataSetModel.getColumnTypesWithIcons()[type]
+		return String(dataSetModel.columnTypesWithIcons()[type]) === "" ? "" : jaspTheme.iconPath + dataSetModel.columnTypesWithIcons()[type]
 	}
 
 
@@ -87,12 +90,12 @@ Rectangle
 				customMenu.scrollOri.x	= dataTableView.contentX;
 				customMenu.scrollOri.y	= 0;
 
-				customMenu.toggle(dataTableView, props, headerRoot.x - contentX, headerRoot.y + headerRoot.height - dataTableView.contentY);
+				customMenu.toggle(headerRoot, props);
 
 				customMenu.menuScroll.x	= Qt.binding(function() { return -1 * (dataTableView.contentX - customMenu.scrollOri.x); });
 				customMenu.menuScroll.y	= 0;
 				customMenu.menuMinIsMin	= true
-				customMenu.menuMaxPos.x	= dataTableView.width + dataTableView.x
+				customMenu.sceneWidth		= Qt.binding(function() { return dataTableView.width + dataTableView.x })
 			}
 
 			hoverEnabled:		true
@@ -100,6 +103,7 @@ Rectangle
 			ToolTip.text:		qsTr("Click here to change column type")
 			ToolTip.timeout:	3000
 			ToolTip.delay:		500
+			ToolTip.toolTip.background:		Rectangle { color: jaspTheme.tooltipBackgroundColor; radius: jaspTheme.borderRadius }
 			cursorShape:		enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
 		}
 	}
@@ -186,10 +190,6 @@ Rectangle
 					filterModel.showEasyFilter = true
 					filterModel.filterVisible = true
 				}
-				
-				//A button in VariablesWindow will do this? in any case, it is kind of annoying to have the analysis always pop up instead of variableswindow...
-				//if(computedColumnType == computedColumnTypeAnalysis || computedColumnType == computedColumnTypeAnalysisNotComputed)
-				//    computedColumnsInterface.showAnalysisFormForColumn(headerText) //headerText should be columnName
 			}
 
 		}

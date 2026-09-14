@@ -19,6 +19,7 @@
 #include "textinputbase.h"
 #include "analysisform.h"
 #include "columnutils.h"
+#include "jaspdoublevalidator.h"
 
 using namespace std;
 
@@ -51,7 +52,6 @@ void TextInputBase::bindTo(const Json::Value& value)
 		int intVal;
 		if (value.isNumeric())
 			_value = value.asInt();
-
 		else if (value.isString() && QColumnUtils::getIntValue(tq(value.asString()), intVal))
 			_value = intVal;
 
@@ -164,7 +164,7 @@ void TextInputBase::bindTo(const Json::Value& value)
 
 Json::Value TextInputBase::createJson() const
 {
-	QVariant value = property("displayValue");
+	QVariant value = _value;
 	if (value.toString() == "" && !_defaultValue.isNull())
 		value = _defaultValue;
 
@@ -201,9 +201,20 @@ void TextInputBase::setUp()
 	QQuickItem::connect(this, SIGNAL(editingFinished()), this, SLOT(valueChangedSlot()));
 
 	if (form())
+	{
 		// For unknown reason, when the language is changed, QML reset the default value.
 		// We have then to set back the value from the option
 		connect(form(), &AnalysisForm::languageChanged, this, &TextInputBase::setDisplayValue);
+
+		// Sync the form's relaxInputConstraints to the validator's relaxDecimals
+		auto* jdv = findChild<JASPDoubleValidator*>();
+		if (jdv)
+		{
+			jdv->setRelaxDecimals(form()->relaxInputConstraints());
+			connect(form(), &AnalysisForm::relaxInputConstraintsChanged,
+					jdv, &JASPDoubleValidator::setRelaxDecimals);
+		}
+	}
 
 	if (_value.isNull()) // If the value is not directly set, use the default value.
 		setValue(_defaultValue, false);
@@ -400,6 +411,8 @@ void TextInputBase::valueChangedSlot()
 
 void TextInputBase::setValue(QVariant value, bool useLocale)
 {
+	if (!initialized()) // The value is not set by the user, but is read from QML or from the JASP file: never use the locale in this case.
+		useLocale = false;
 	double valueDbl;
 	if(QColumnUtils::getDoubleValue(value.toString(), valueDbl, useLocale))
 		value = valueDbl;
@@ -435,7 +448,7 @@ void TextInputBase::setDefaultValue(QVariant value)
 	if(hasChanged)
 		emit defaultValueChanged();
 
-	if(curValIsDef)
+	if(curValIsDef && initialized())
 		setValue(_defaultValue, false);
 }
 

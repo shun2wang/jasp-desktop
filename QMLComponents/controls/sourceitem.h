@@ -47,7 +47,7 @@ public:
 		ConditionVariable() {}
 	};
 
-	static const QString SourceValueLabel, SourceValueValue, SourceValueInfo;
+	static const QString SourceValueLabel, SourceValueValue, SourceValueInfo, SourceValueType;
 
 	SourceItem(
 			  JASPListControl* targetListControl
@@ -76,7 +76,6 @@ public:
 	Terms					getTerms();
 	QSet<QString>			usedControls()				const;
 	bool					connected()					const	{ return _connected;						}
-
 
 	void										connectModels();
 	void										disconnectModels();

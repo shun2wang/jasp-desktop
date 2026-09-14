@@ -1,20 +1,20 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
 //
-
 #ifndef TEMPFILES_H
 #define TEMPFILES_H
 
@@ -45,16 +45,14 @@ public:
 	static void			createSessionDir();
 	static void			clearSessionDir();
 
-	static std::string	createSpecific_clipboard(const std::string &filename);
-	static void			purgeClipboard();
-
 	static void			create(const std::string &extension, int id, std::string &root, std::string &relativePath);
 	static void			createSpecific(const std::string &name, int id, std::string &root, std::string &relativePath);
 	static std::string	createSpecific(const std::string &dir, const std::string &filename);
 	static std::string	createTmpFolder();
 
 	static std::string	sessionDirName() { return _sessionDirName; }
-	static stringvec	retrieveList(int id = -1);
+	static std::string	analysisResourcePath(int id, const std::string &filename);
+	static stringvec	retrieveList(int id = -1, const std::string &dir = "");
 	static bool			stateFileExists(int id);
 
 	static void			deleteList(const stringvec &files);
@@ -67,8 +65,7 @@ private:
 						TempFiles() {}
 	static long			_sessionId;
 	static std::string	_sessionDirName,
-						_statusFileName,
-						_clipboard;
+						_statusFileName;
 	static int			_nextFileId,
 						_nextTmpFolderId;
 };

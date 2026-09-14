@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
@@ -83,7 +83,7 @@ QString AppDirs::bundledModulesDir()
 {
 	static QString folder;
 #ifdef _WIN32
-	bool useAppdata =  DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() != RuntimeEnvironment::MSIX;
+    bool useAppdata =  DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() != RuntimeEnvironment::MSIX && DynamicRuntimeInfo::getInstance()->getRuntimeEnvironment() != RuntimeEnvironment::MSI;
 	folder = useAppdata ? programDir().absoluteFilePath("Modules") + '/' : appData(false) + "/BundledJASPModules_" + QString(AppInfo::version.asString(4).c_str()) + "_" + QString(AppInfo::gitCommit.substr(0, 7).c_str()) + "_" + QString(AppInfo::builddate.c_str()).replace(":", "-").replace(" ", "") + "/";
 #elif __APPLE__
 	 folder = programDir().absoluteFilePath("../Modules/");
@@ -112,18 +112,64 @@ QString AppDirs::documents()
 	return processPath(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
 }
 
+static QString _sandboxDirOverride = ""; //Set by JASP-Desktop from the preferences, empty means no override and the default (home) location is used.
+
+void AppDirs::setSandboxDirOverride(const QString &path)
+{
+	_sandboxDirOverride = path;
+}
+
 QString AppDirs::sandboxedDocuments()
 {
 	const QString name = "JASP_Sandbox";
-	QDir res(AppDirs::documents());
+
+	if(!_sandboxDirOverride.isEmpty()) //A custom location was set in the preferences, so use that directly as the sandbox-dir itself
+	{
+		QDir res(_sandboxDirOverride);
+		if(!res.exists())
+			res.mkpath(".");
+		return res.absolutePath();
+	}
+
+	// The home-folder is used, and not Documents, because the latter is quite often redirected (and thus synced) by OneDrive and we do not want logs, clipboard-images and the like synced there.
+	QDir res(processPath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)));
 	res.mkdir(name);
 	res.cd(name);
 	return res.absolutePath();
 }
 
+QString AppDirs::clipboardDir()
+{
+	QString path;
+#ifdef _WIN32
+	path = sandboxedDocuments();
+	path += "/Clipboard/";
+#else
+	path = tq(Dirs::tempDir()) + "/clipboard/";
+#endif
+
+	QDir clipboard(path);
+
+	if(!clipboard.exists())
+		clipboard.mkpath(".");
+
+	return path;
+}
+
+void AppDirs::purgeClipboard()
+{
+	QDir clipboard(clipboardDir());
+	clipboard.removeRecursively();
+}
+
 QString AppDirs::logDir()	
 {
-	QString path = appData();
+	QString path;
+#ifdef _WIN32
+	path = sandboxedDocuments();	//So the sandboxed Engines can write their logs there
+#else
+	path = appData();				//There is no engine-sandbox outside of Windows, so logs can simply go to the regular app-data folder and JASP_Sandbox need not be created at all
+#endif
 	path += "/Logs/";
 
 	QDir log(path);

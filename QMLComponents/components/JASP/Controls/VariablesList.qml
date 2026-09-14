@@ -533,6 +533,7 @@ VariablesListBase
 				// Use the ToolTip Attached property to avoid creating ToolTip object for each item
 				QTCONTROLS.ToolTip.visible:		mouseArea.containsMouse && !itemRectangle.containsDragItem && toolTip.trim() !== ""
 				QTCONTROLS.ToolTip.text:		toolTip
+				QTCONTROLS.ToolTip.toolTip.background:		Rectangle { color: jaspTheme.tooltipBackgroundColor; radius: jaspTheme.borderRadius }
 				Component.onCompleted:
 				{
 					if (extraItem)
@@ -657,7 +658,7 @@ VariablesListBase
 							variablesList.setSelectedItem(itemRectangle.rank)
 
 						if (itemRectangle.typeChangeable && mouse.x < icon.x + icon.width)
-							customMenu.toggle(itemRectangle, props, 0, parent.height);
+							customMenu.toggle(itemRectangle, props);
 					}
 					
 					onPressed: (mouse)=>

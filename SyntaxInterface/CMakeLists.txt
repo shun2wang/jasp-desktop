@@ -43,15 +43,19 @@ endif()
 
 target_compile_definitions(
 	SyntaxInterface
-	PUBLIC
+	PRIVATE
 	SYNTAX_INTERFACE_LIBRARY
 	JASP_R_INTERFACE_LIBRARY
 	)
 
+if(MSVC)
+	target_compile_options(SyntaxInterface PRIVATE /EHsc)
+endif()
+
 if(USE_QT_STATIC_LIBS)
 	target_compile_definitions(
 		SyntaxInterface
-		PUBLIC
+		PRIVATE
 		USE_QT_STATIC_LIBS
 	)
 endif()

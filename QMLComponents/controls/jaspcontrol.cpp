@@ -3,7 +3,7 @@
 #include "log.h"
 #include "analysisform.h"
 #include "jasptheme.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include "preferencesmodelbase.h"
 #include <QQmlProperty>
 #include <QQmlContext>
@@ -42,30 +42,30 @@ JASPControl::JASPControl(QQuickItem *parent) : QQuickItem(parent)
 {
 	setFlag(ItemIsFocusScope);
 	setActiveFocusOnTab(true);
-								 
+							 
 	//connect(this, &JASPControl::visibleChanged,			this, &JASPControl::helpMDChanged);
 	//connect(this, &JASPControl::visibleChildrenChanged,	this, &JASPControl::helpMDChanged);
 	//connect(this, &JASPControl::implicitWidthChanged,	[this] () { setWidth(implicitWidth());		if (_preferredWidthBinding) setPreferredWidth(int(implicitWidth()), true);		});
 	//connect(this, &JASPControl::implicitHeightChanged,	[this] () { setHeight(implicitHeight());	if (_preferredHeightBinding) setPreferredHeight(int(implicitHeight()), true);	});
-
-	connect(this, &JASPControl::titleChanged,			this, &JASPControl::helpMDChanged);
-	connect(this, &JASPControl::infoChanged,				this, &JASPControl::helpMDChanged);
+	
+	connect(this, &JASPControl::titleChanged,			this,		&JASPControl::helpMDChanged);
+	connect(this, &JASPControl::infoChanged,			this,		&JASPControl::helpMDChanged);
+	connect(this, &JASPControl::hasErrorChanged,		this,		&JASPControl::_hightlightBorder);
+	connect(this, &JASPControl::hasWarningChanged,		this,		&JASPControl::_hightlightBorder);
+	connect(this, &JASPControl::isDependencyChanged,	this,		&JASPControl::_hightlightBorder);
+	connect(this, &JASPControl::activeFocusChanged,		this,		&JASPControl::_hightlightBorder);
 	connect(this, &JASPControl::backgroundChanged,		[this] () { if (!_focusIndicator)		setFocusIndicator(_background); });
-	connect(this, &JASPControl::infoChanged,				[this] () { if (_toolTip.isEmpty())	setToolTip(info());					});
-	connect(this, &JASPControl::toolTipChanged,			[this] () { setShouldStealHover(!_toolTip.isEmpty());					});
-	connect(this, &JASPControl::hasErrorChanged,			this, &JASPControl::_hightlightBorder);
-	connect(this, &JASPControl::hasWarningChanged,		this, &JASPControl::_hightlightBorder);
-	connect(this, &JASPControl::isDependencyChanged,		this, &JASPControl::_hightlightBorder);
-	connect(this, &JASPControl::activeFocusChanged,		this, &JASPControl::_hightlightBorder);
+	connect(this, &JASPControl::infoChanged,			[this] () { if (_toolTip.isEmpty())		setToolTip(info());				});
+	connect(this, &JASPControl::toolTipChanged,			[this] () { setShouldStealHover(		!_toolTip.isEmpty());			});
 	connect(this, &JASPControl::indentChanged,			[this] () { QQmlProperty(this, "Layout.leftMargin", qmlContext(this)).write( (indent() && JaspTheme::currentTheme()) ? JaspTheme::currentTheme()->indentationLength() : 0); });
 	connect(this, &JASPControl::debugChanged,			[this] () { _setBackgroundColor(); _setVisible(); } );
 	connect(this, &JASPControl::parentDebugChanged,		[this] () { _setBackgroundColor(); _setVisible(); } );
-	connect(this, &JASPControl::boundValueChanged,		this, &JASPControl::_resetBindingValue);
-	connect(this, &JASPControl::activeFocusChanged,		this, &JASPControl::_setFocus);
-	connect(this, &JASPControl::activeFocusChanged,		this, &JASPControl::_notifyFormOfActiveFocus);
-								 
+	connect(this, &JASPControl::boundValueChanged,		this,		&JASPControl::_resetBindingValue);
+	connect(this, &JASPControl::activeFocusChanged,		this,		&JASPControl::_setFocus);
+	connect(this, &JASPControl::activeFocusChanged,		this,		&JASPControl::_notifyFormOfActiveFocus);
+							 
 	PreferencesModelBase* pref = PreferencesModelBase::preferences();
-								 
+							 
 	if(pref)
 		connect(pref, &PreferencesModelBase::developerModeChanged, this, [this](){ _setVisible(); });
 }
@@ -206,23 +206,20 @@ void JASPControl::componentComplete()
 	bool isDynamic = context->contextProperty("isDynamic").toBool();
 	_form = context->contextProperty("form").value<AnalysisForm*>();
 
-	if (!_form)
+	if (!isDynamic && _form)
 	{
-		// The control is used outside of a form, typically this is used by the Desktop application direclty
-		// Just call its setup function, and it is then already initialized.
-		setUp();
-		setInitialized();
-	}
-	else if (!isDynamic)
 		// For statically build controls in a form, the form self will setup the controls when the form is completely loaded
 		// (by calling the AnalysisForm::setAnalysisUp function).
 		_form->addControl(this);
+	}
 	else
 	{
 		// The control is created dynamically, this is the case for row components.
 		// They are created either from a ListView (or a TableView): when all terms of the ListView are set, the row components are created, and then initialized (via rhe ListModel::setUpRowControls function).
 		// Here the parent ListView and the key for this control is stored.
 		JASPListControl* parentlistView = nullptr;
+								 
+		emit formIsKnown(_form);
 
 		QVariant listViewVar = context->contextProperty("listView");
 		if (!listViewVar.isNull())
@@ -256,7 +253,11 @@ void JASPControl::componentComplete()
 		if (parentlistView)
 			parentlistView->addRowControl(_parentListViewKey, this);
 		else
+		{
 			setUp(); // For controls not made via a row components (as in FactorsForm), setUp must be called
+			if (!_form)
+				setInitialized();
+		}
 	}
 
 	if (_background == nullptr && _innerControl != nullptr)
@@ -464,7 +465,14 @@ void JASPControl::_hightlightBorder()
 	float	targetBorderWidth = (targetBorderColor == _defaultBorderColor) ? _defaultBorderWidth : theme->jaspControlHighlightWidth(),
 			currentBorderWidth = border->property("width").toFloat();
 
-	if (!qFuzzyCompare(currentBorderWidth, targetBorderWidth))
+	// A running animation keeps changing the width after we return here, so it must be stopped whenever it is heading
+	// somewhere else than where we want to go now. Comparing the current width alone does not catch that: an animation
+	// that has not had the chance to run yet still sits on the width it started from. That happens whenever a control
+	// is highlighted and unhighlighted within a single pass of the eventloop, as the Sections of a form are while it
+	// is being built, and it would leave the border highlighted while the color is already back to normal.
+	bool animatingElsewhere = _borderAnimation.state() == QAbstractAnimation::Running && !qFuzzyCompare(_borderAnimation.endValue().toFloat(), targetBorderWidth);
+
+	if (animatingElsewhere || !qFuzzyCompare(currentBorderWidth, targetBorderWidth))
 	{
 		_borderAnimation.stop();
 		if (qFuzzyCompare(targetBorderWidth, _defaultBorderWidth))
@@ -601,6 +609,7 @@ QString JASPControl::ControlTypeToFriendlyString(ControlType controlType)
 	case ControlType::GroupBox:						return tr("Group Box");				break;
 	case ControlType::TabView:						return tr("Tab View");				break;
 	case ControlType::VariablesForm:				return tr("Variables Form");		break;
+	case ControlType::ColorPicker:					return tr("Color Picker");			break;
 	}
 }
 
@@ -829,7 +838,7 @@ void JASPControl::rScriptDoneHandler(const QString &)
 	throw std::runtime_error("runRScript done but handler not implemented!\nImplement an override for rScriptDoneHandler\n");
 }
 
-void JASPControl::filterDoneHandler(const QString &name, const QString & error)
+void JASPControl::filterDoneHandler(int dataSetID, const QString &name, const QString & error)
 {
 	//throw std::runtime_error("runFilter done but handler not implemented!\nImplement an override for filterDoneHandler\n");
 	//No need to be annoying about it, each control that cares about a particular filter can just check it and the default does nothing.

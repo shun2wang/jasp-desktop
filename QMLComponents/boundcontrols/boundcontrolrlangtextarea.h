@@ -22,10 +22,12 @@
 #include "boundcontroltextarea.h"
 #include "controls/rsyntaxhighlighter.h"
 
+class ColumnEncoder;
+
 class BoundControlRlangTextArea : public BoundControlTextArea
 {
 public:
-	enum class RLangType {Lavaan, CSem, MetaSem};
+	enum class RLangType {Lavaan, CSem, MetaSem, RCode};
 
 	BoundControlRlangTextArea(TextAreaBase* textArea, RLangType type = RLangType::Lavaan);
 
@@ -44,6 +46,10 @@ protected:
 
 	RSyntaxHighlighter*						_rLangHighlighter		= nullptr;
 
+private:
+	ColumnEncoder *							_encoder()				const;
+
+protected:
 	stringset								_noPrefixUsedColumnNames;
 	std::map<std::string, stringset>		_prefixedUsedColumnNames;
 	QString									_textEncoded;

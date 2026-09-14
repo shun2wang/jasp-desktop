@@ -1,27 +1,26 @@
 //
-// Copyright (C) 2013-2018 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
 //
-
 #ifndef UTILS_H
 #define UTILS_H
 
 #include <string>
-#include <vector>
-#include <limits>
 #include <filesystem>
+#include <vector>
 #include <set>
 #include <map>
 
@@ -57,13 +56,11 @@ public:
 	static int64_t					currentMillis();
 	static int64_t					currentSeconds();
 	static int64_t					getFileModificationTime(const std::string &filename);
+	static int64_t					getFileModificationTime(const std::filesystem::path &filename);
 	static int64_t					getFileSize(			const std::string &filename);  // see: https://github.com/jasp-stats/jasp-issues/issues/3191
 	static void						touch(					const std::string &filename);
 	static bool						renameOverwrite(		const std::string &oldName, const std::string &newName);
 	static bool						removeFile(				const std::string &path);
-
-	static std::filesystem::path	osPath(const std::string &path);
-	static std::string				osPath(const std::filesystem::path &path);
 
 	static void						remove(stringvec &target, const stringvec &toRemove);
 	static void						sleep(int ms);
@@ -72,7 +69,6 @@ public:
 	static bool						isEqual(const double a, const double b);
 
 #ifdef _WIN32
-	static std::wstring	getShortPathWin(const std::wstring & path);
 	static std::string  wstringToString(const std::wstring & wstr);
 	static std::wstring stringToWString(const std::string & str);
 #endif

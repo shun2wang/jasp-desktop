@@ -353,7 +353,7 @@ bool RSyntax::parseRSyntaxOptions(Json::Value &options) const
 				FormulaParser::ParsedTerms parsedTerms;
 				QString error;
 
-				if (!FormulaParser::parse(option["rhs"], false, parsedTerms, error))
+				if (!FormulaParser::parse(option["rhs"], false, parsedTerms, error, form()->varInfo()->provider()))
 				{
 					addError(error);
 					return false;
@@ -405,10 +405,10 @@ QString RSyntax::transformJsonToR(const Json::Value &json)
 			result = "\"" + tq(json.asString()) + "\"";
 		break;
 		case Json::intValue:
-			result = QString::number(json.asInt());
+			result = QString::number(json.asInt64());
 		break;
 		case Json::uintValue:
-			result = QString::number(json.asUInt());
+			result = QString::number(json.asUInt64());
 		break;
 		case Json::realValue:
 			result = QString::number(json.asDouble()); //This is not taking locale into account, but as its going to R this is ok I guess?
@@ -452,7 +452,7 @@ QString RSyntax::transformJsonToR(const Json::Value &json)
 
 bool RSyntax::_areTermsVariables(ListModel* model, const Terms& terms) const
 {
-	QStringList variables = model->requestInfo(VariableInfo::VariableNames).toStringList();
+	QStringList variables = model->requestInfo(varInfoType::VariableNames).toStringList();
 
 	for (const Term& term : terms)
 		for (const QString& comp : term.components())

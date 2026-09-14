@@ -19,7 +19,7 @@
 #include "terms.h"
 
 #include <QSet>
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include "variableinfo.h"
 
 using namespace std;
@@ -521,7 +521,7 @@ Json::Value Terms::types(bool onlyChanged, const VariableInfoConsumer* info) con
 
 	auto changedType = [&, onlyChanged, info] (const QString& variable, columnType type) -> Json::Value
 	{
-		if (onlyChanged && info && (columnType)info->requestInfo(VariableInfo::VariableType, variable).toInt() == type)
+		if (onlyChanged && info && (columnType)info->requestInfo(varInfoType::VariableType, variable).toInt() == type)
 			return Json::nullValue;
 		else
 			return columnTypeToString(type);
@@ -684,8 +684,8 @@ void Terms::remove(size_t pos, size_t n)
 
 	for (; n > 0 && itr != _terms.end(); n--)
 	{
-		itr = _terms.erase(itr);
 		_valueMap.erase(itr->value());
+		itr = _terms.erase(itr);
 	}
 
 	for (; itr != _terms.end(); itr++)

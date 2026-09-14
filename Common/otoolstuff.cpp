@@ -1,3 +1,20 @@
+//
+// Copyright (C) 2013-2026 University of Amsterdam
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
+//
 #include "otoolstuff.h"
 #include "stringutils.h"
 #include <fstream>
@@ -41,7 +58,7 @@ void _moduleLibraryFixer(const std::string & moduleLibraryPath, bool engineCall,
 	printStuff = true; // If debugging please always print stuff
 #endif
 
-	std::filesystem::path	modLibpath	= Utils::osPath(moduleLibraryPath);
+	std::filesystem::path	modLibpath	= moduleLibraryPath;
 
 	std::cout << "modLibpath: " << modLibpath << std::endl;
 

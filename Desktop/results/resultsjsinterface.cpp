@@ -19,16 +19,18 @@
 #include "resultsjsinterface.h"
 
 #include <QClipboard>
+#include <QDir>
+#include <QFileInfo>
 
 #ifdef _WIN32
 #include <QPainter>
 #endif
 
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include "gui/aboutmodel.h"
 #include "tempfiles.h"
+#include "utilities/appdirs.h"
 #include "data/datasetpackage.h"
-#include <functional>
 #include "utilities/settings.h"
 #include <QMimeData>
 #include <QAction>
@@ -36,6 +38,7 @@
 #include <QApplication>
 #include "gui/preferencesmodel.h"
 #include <QThread>
+#include <QFileDialog>
 #include "log.h"
 
 ResultsJsInterface * ResultsJsInterface::_singleton = nullptr;
@@ -44,7 +47,7 @@ ResultsJsInterface::ResultsJsInterface(QObject *parent) : QObject(parent)
 {
 	_singleton = this;
 
-	connect(this, &ResultsJsInterface::zoomChanged,					this, &ResultsJsInterface::setZoomInWebEngine);
+	// connect(this, &ResultsJsInterface::zoomChanged,					this, &ResultsJsInterface::setZoomInWebEngine);
 	connect(this, &ResultsJsInterface::runJavaScriptSignalQueued,	this, &ResultsJsInterface::runJavaScriptSignal, Qt::QueuedConnection);
 	
 
@@ -65,10 +68,10 @@ void ResultsJsInterface::setZoom(double zoom)
 	emit zoomChanged();
 }
 
-void ResultsJsInterface::setZoomInWebEngine()
-{
-	runJavaScript("window.setZoom(" + QString::number(_webEngineZoom) + ")");
-}
+// void ResultsJsInterface::setZoomInWebEngine()
+// {
+// 	runJavaScript("window.setZoom(" + QString::number(_webEngineZoom) + ")");
+// }
 
 void ResultsJsInterface::setResultsLoaded(bool resultsLoaded)
 {
@@ -83,6 +86,9 @@ void ResultsJsInterface::setResultsLoaded(bool resultsLoaded)
 		QString version = AboutModel::version();
 
 		runJavaScript("window.setAppVersion('" + version + "')");
+#ifdef INTERACTIVE_PLOTS
+		runJavaScript("window.setUseInteractivePlots(true)");
+#endif
 
 		setGlobalJsValues();
 		setFontFamily();
@@ -107,7 +113,7 @@ void ResultsJsInterface::setScrollAtAll(bool scrollAtAll)
 
 void ResultsJsInterface::purgeClipboard()
 {
-	TempFiles::purgeClipboard();
+	AppDirs::purgeClipboard();
 }
 
 void ResultsJsInterface::setExactPValuesHandler(bool exact)
@@ -149,7 +155,8 @@ void ResultsJsInterface::saveTempImage(int id, QString path, QByteArray data)
 {
 	QByteArray byteArray = QByteArray::fromBase64(data);
 
-	QString fullpath = tq(TempFiles::createSpecific_clipboard(fq(path)));
+	QString fullpath = AppDirs::clipboardDir() + path;
+	QDir().mkpath(QFileInfo(fullpath).absolutePath());
 
 	QFile file(fullpath);
 	if(!file.open(QIODevice::WriteOnly))
@@ -165,6 +172,7 @@ void ResultsJsInterface::saveTempImage(int id, QString path, QByteArray data)
 void ResultsJsInterface::analysisImageEditedHandler(Analysis *analysis)
 {
 	Json::Value imgJson = analysis->imgResults();
+
 	QString	results = tq(imgJson.toStyledString());
 	results = escapeJavascriptString(results);
 	results = "window.refreshEditedImage(" + QString::number(analysis->id()) + ", JSON.parse('" + results + "'));";
@@ -173,9 +181,9 @@ void ResultsJsInterface::analysisImageEditedHandler(Analysis *analysis)
 	return;
 }
 
-void ResultsJsInterface::cancelImageEdit(int id)
+void ResultsJsInterface::cancelImageEdit(int id, const QString &name)
 {
-	runJavaScript("window.cancelImageEdit(" + QString::number(id) + ");");
+	runJavaScript("window.cancelImageEdit(" + QString::number(id) + ", '" + escapeJavascriptString(name) + "');");
 }
 
 void ResultsJsInterface::menuHiding()
@@ -274,6 +282,14 @@ void ResultsJsInterface::changeTitle(Analysis *analysis)
     runJavaScript("window.changeTitle(" + QString::number(id) + ", '" + escapeJavascriptString(title) + "')");
 }
 
+void ResultsJsInterface::changeDataSpec(Analysis *analysis)
+{
+	int		id			= analysis->id();
+	QString	dataSpec	= analysis->dataSpec();
+
+	runJavaScript("window.changeDataSpec(" + QString::number(id) + ", '" + escapeJavascriptString(dataSpec) + "')");
+}
+
 void ResultsJsInterface::overwriteUserdata(Analysis *analysis)
 {
 	size_t id = analysis->id();
@@ -290,6 +306,20 @@ void ResultsJsInterface::showAnalysis(int id)
 void ResultsJsInterface::exportSelected(const QString &filename)
 {
 	runJavaScript("window.exportHTML('" + filename + "');");
+}
+
+void ResultsJsInterface::exportAnalysisHTML(int analysisId)
+{
+	QString defaultName = QString("analysis_%1.html").arg(analysisId);
+	QString filename = QFileDialog::getSaveFileName(
+		nullptr, tr("Export Analysis"), defaultName,
+		tr("HTML files (*.html)"));
+
+	if (filename.isEmpty()) return;
+
+	runJavaScript(QString("window.exportAnalysisHTML(%1, '%2');")
+		.arg(analysisId)
+		.arg(escapeJavascriptString(filename)));
 }
 
 void ResultsJsInterface::analysisChanged(Analysis *analysis)
@@ -433,6 +463,11 @@ void ResultsJsInterface::setFontFamily()
 		QString font = PreferencesModel::prefs()->resultFont(true);
 		runJavaScript("window.setFontFamily(\"" + escapeJavascriptString(font) + "\");");
 	}
+}
+
+void ResultsJsInterface::jsLog(QString msg)
+{
+	Log::log() << "JS: " << msg.toStdString() << std::endl;
 }
 
 void ResultsJsInterface::setLocale(QString localeId, bool thousandSeps)

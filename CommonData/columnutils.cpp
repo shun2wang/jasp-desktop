@@ -1,3 +1,20 @@
+//
+// Copyright (C) 2013-2026 University of Amsterdam
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
+//
 #include "columnutils.h"
 #include "utils.h"
 //#include "emptyvalues.h"
@@ -99,16 +116,8 @@ bool ColumnUtils::getDoubleValue(const string &value, double &doubleValue, bool 
 		doubleValue = boost::lexical_cast<double>((value));
 		return true;
 	}
-	catch (...) // If it failed try to "deEuropeanise it"
+	catch (...)
 	{
-		try
-		{
-			doubleValue = boost::lexical_cast<double>(deEuropeaniseForImport(value));
-			return true;
-		}
-		catch (...) 
-		{
-		}
 	}
 
 	return false;
@@ -199,55 +208,6 @@ bool ColumnUtils::convertVecToDouble(const stringvec & values, doublevec & doubl
 	}
 	
 	return true;
-}
-
-std::string ColumnUtils::deEuropeaniseForImport(std::string value)
-{
-	int dots	= 0,
-		commas	= 0;
-
-	for (const char & k : value)
-		if		(k == '.')	dots++;
-		else if	(k == ',')	commas++;
-	
-	if(commas == 1 && dots == 0)
-		for (char & k : value)	
-			if(k == ',')
-			{
-				k = '.';
-				return value;
-			}
-	
-	if (commas > 0)
-	{
-		std::string uneurope = value;
-
-		if (dots > 0)
-		{
-			size_t	i = 0,
-					j = 0;
-
-			for (;i < value.size(); i++)
-				if (value[i] != '.')
-				{
-					uneurope[j] = value[i];
-					j++;
-				}
-
-			uneurope.resize(j);
-		}
-
-		for (size_t i = 0; i < uneurope.length(); i++)
-			if (uneurope[i] == ',')
-			{
-				uneurope[i] = '.';
-				break;
-			}
-
-		value = uneurope;
-	}
-	
-	return value;
 }
 
 std::string ColumnUtils::doubleToStringMaxPrec(double dbl, bool sepas)

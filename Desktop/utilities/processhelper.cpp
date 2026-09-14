@@ -1,10 +1,27 @@
+//
+// Copyright (C) 2013-2026 University of Amsterdam
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
+//
 #include "processhelper.h"
 #include "utilities/appdirs.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include "log.h"
 #include "dirs.h"
 
-QProcessEnvironment ProcessHelper::getProcessEnvironmentForJaspEngine(bool bootStrap)
+QProcessEnvironment ProcessHelper::getProcessEnvironmentForJaspEngine()
 {
 	QDir				programDir	= AppDirs::programDir();
 	QString				engineExe	= programDir.absoluteFilePath("JASPEngine");
@@ -53,10 +70,8 @@ QProcessEnvironment ProcessHelper::getProcessEnvironmentForJaspEngine(bool bootS
 	
 #undef ARCH_SUBPATH
 
-	if(bootStrap)
-		env.insert("R_LIBS",			programDir.absoluteFilePath("Modules/Tools/junction_bootstrap_library") + ";" + _R_HOME + "/library");
-	else
-		env.insert("R_LIBS",			programDir.absoluteFilePath("Modules/Tools/R_cpp_includes_library") + ";" + _R_HOME + "/library");
+
+	env.insert("R_LIBS",			programDir.absoluteFilePath("Modules/Tools/R_cpp_includes_library") + ";" + _R_HOME + "/library");
 
 	env.insert("R_ENVIRON",			"something-which-doesn't-exist");
 	env.insert("R_PROFILE",			"something-which-doesn't-exist");

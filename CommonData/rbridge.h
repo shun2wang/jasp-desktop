@@ -1,20 +1,20 @@
 //
-// Copyright (C) 2013-2024 University of Amsterdam
+// Copyright (C) 2013-2026 University of Amsterdam
 //
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
 //
-
 #ifndef RBRIDGE_H
 #define RBRIDGE_H
 
@@ -64,6 +64,7 @@ extern "C" {
 	const char *				STDCALL rbridge_createColumn			(const char * columnName, bool computed);
 	bool						STDCALL rbridge_deleteColumn			(const char * columnName);
 	bool						STDCALL rbridge_setColumnDataAndType	(const char* columnName, const char **	nominalData,	size_t length,	int columnType, bool computed);
+	bool						STDCALL rbridge_setDataSetData		(const char* datasetName, const char ** columnNames, const int * columnTypes, const char *** columnData, const size_t * columnLengths, size_t colCount);
 	int							STDCALL rbridge_dataSetRowCount();
 	const char *				STDCALL rbridge_encodeColumnName(		const char * in);
 	const char *				STDCALL rbridge_decodeColumnName(		const char * in);
@@ -81,8 +82,8 @@ extern "C" {
 	typedef std::function<std::string (const std::string &, int progress)> RCallback;
 
 	void				rbridge_setDataBridge(DataBridge * dataBridge);
-	void				rbridge_init(DataBridge * dataBridge, sendFuncDef sendToDesktopFunction, pollMessagesFuncDef pollMessagesFunction, ColumnEncoder * encoder, const char * resultFont, bool insideJasp = true);
-	void				rbridge_junctionHelper(bool collectNotRestore, const std::string & modulesFolder, const std::string& linkFolder, const std::string& junctionFilePath);
+	void				rbridge_clearDataBridge();
+	void				rbridge_init(DataBridge * dataBridge, sendFuncDef sendToDesktopFunction, pollMessagesFuncDef pollMessagesFunction, const char * resultFont, bool insideJasp = true);
 
 	void				rbridge_memoryCleaning();
 
@@ -95,6 +96,7 @@ extern "C" {
 	void				rbridge_detachRCodeEnv(						const std::string & dataname = "data");
 
 	void				freeRBridgeColumns();
+	void				rbridge_clearDataSet(); ///< Nulls rbridge_dataSet so it doesn't dangle after the engine unloads its workspace.
 	void				freeRBridgeColumnDescription(RBridgeColumnDescription* columns, size_t colMax);
 	void				freeLabels(char** labels, size_t nbLabels);
 
@@ -102,5 +104,6 @@ extern "C" {
 	std::string			rbridge_encodeColumnNamesInScript(		const std::string & filterCode);
 	std::string			rbridge_evalRCodeWhiteListed(			const std::string & rCode, bool setWd);
 	std::string			rbridge_evalRComputedColumn(			const std::string & rCode, const std::string & setColumnCode, const std::string & filterName);
+	std::string			rbridge_evalRComputedDataSet(			const std::string & rCode, const std::string & outputDataSetName, const std::string & filterToUse);
 	void				rbridge_setLANG(						const std::string & lang);
 #endif // RBRIDGE_H

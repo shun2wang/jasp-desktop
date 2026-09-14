@@ -1,3 +1,20 @@
+//
+// Copyright (C) 2013-2026 University of Amsterdam
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public
+// License along with this program.  If not, see
+// <http://www.gnu.org/licenses/>.
+//
 #ifndef COLUMNUTILS_H
 #define COLUMNUTILS_H
 
@@ -26,7 +43,6 @@ public:
 	static std::string			doubleToLocale(	const std::string	& value);
 
 	static void					convertEscapedUnicodeToUTF8(			std::string & inputStr);
-	static std::string			deEuropeaniseForImport(					std::string   value);		//Convert a string to a double with a dot for a separator
 
 	static std::string			doubleToString(			double dbl,		bool sepas = true, int precision = 10);
 	static std::string			doubleToStringMaxPrec(	double dbl,		bool sepas = true);

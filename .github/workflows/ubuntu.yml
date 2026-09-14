@@ -17,13 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
        GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+       JASP_R_VERSION: '4.5.3'
   
     steps:
       - uses: actions/checkout@v3
       
       - uses: r-lib/actions/setup-r@v2
         with:
-          r-version: 'release'
+          r-version: ${{ env.JASP_R_VERSION }}
       - name: Get Installed R Version
         run: echo "R_VERSION=$(R --version | head -n 1 | awk '{print $3}')" >> $GITHUB_ENV
       
@@ -36,7 +37,7 @@ jobs:
             target: 'desktop'
             arch: 'linux_gcc_64'
             cache: 'true'
-            modules: 'qtpositioning qtwebchannel qtwebengine qtwebsockets qtwebview debug_info qt5compat qtshadertools qtwaylandcompositor'
+            modules: 'qtpositioning qtwebchannel qtwebengine qtwebsockets qtwebview debug_info qt5compat qtshadertools qthttpserver qtwaylandcompositor'
             tools: 'tools_qtcreator,qt.tools.qtcreator tools_cmake tools_ninja'
             # act can not use ../ (the default) as dir, so be explicit
             dir: '${{ github.workspace }}/qtinstall'

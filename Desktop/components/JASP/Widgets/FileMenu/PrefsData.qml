@@ -12,7 +12,7 @@ PrefsScrollView
 	{
 		id:			menuHeader
 		headertext:	qsTr("Data Preferences")
-		helpfile:	"preferences/PrefsData"
+		helpMD:		allHelp.PrefsData
 		addMargin:	false
 	}
 
@@ -111,6 +111,7 @@ PrefsScrollView
 							target:					preferencesModel
 							function onCustomEditorChanged(customEditor) { customEditorText.text = customEditor; }
 						}
+						
 					}
 				}
 			}

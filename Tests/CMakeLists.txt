@@ -37,11 +37,43 @@ qt_add_executable(
   $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Desktop/JASP.exe.manifest>
 )
 
+qt_add_executable(
+  JASPTestCsvPrev
+  ${SYSTEM_TYPE}
+  testcsvpreviewmodel.h
+  testcsvpreviewmodel.cpp
+  $<$<PLATFORM_ID:Darwin>:${_R_Framework}>
+  $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Desktop/JASP.exe.manifest>
+)
+
+qt_add_executable(
+  JASPTestColumnEncoderContext
+  ${SYSTEM_TYPE}
+  testcolumnencodercontext.h
+  testcolumnencodercontext.cpp
+  $<$<PLATFORM_ID:Darwin>:${_R_Framework}>
+  $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Desktop/JASP.exe.manifest>
+)
+
+qt_add_executable(
+  JASPTestDbMigration
+  ${SYSTEM_TYPE}
+  testdatabasemigration.h
+  testdatabasemigration.cpp
+  $<$<PLATFORM_ID:Darwin>:${_R_Framework}>
+  $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Desktop/JASP.exe.manifest>
+)
+
+
+
 
 add_dependencies(JASPTest           JASPDesktopLib)
 add_dependencies(JASPTestDebugData  JASPDesktopLib)
 add_dependencies(JASPTestEngine     JASPDesktopLib)
 add_dependencies(JASPQuickTest      JASPDesktopLib)
+add_dependencies(JASPTestCsvPrev    JASPDesktopLib)
+add_dependencies(JASPTestDbMigration JASPDesktopLib)
+add_dependencies(JASPTestColumnEncoderContext Common)
 
 target_include_directories(
   JASPTest
@@ -68,6 +100,24 @@ target_include_directories(
   JASPQuickTest
   PUBLIC
   JASPDesktopLib
+)
+
+target_include_directories(
+  JASPTestCsvPrev
+  PUBLIC
+  JASPDesktopLib
+)
+
+target_include_directories(
+  JASPTestDbMigration
+  PUBLIC
+  JASPDesktopLib
+)
+
+target_include_directories(
+  JASPTestColumnEncoderContext
+  PUBLIC
+  ${PROJECT_SOURCE_DIR}/Common
 )
 
 target_link_libraries(
@@ -112,9 +162,25 @@ target_link_libraries(
   Qt::Test
 )
 
-target_compile_definitions(
-  JASPTest
-  PUBLIC TESTLIBRARY_DIR=${CMAKE_SOURCE_DIR}/Tests/TestLibrary
+target_link_libraries(
+  JASPTestCsvPrev
+  PUBLIC
+  JASPDesktopLib
+  Qt::Test
+)
+
+target_link_libraries(
+  JASPTestDbMigration
+  PUBLIC
+  JASPDesktopLib
+  Qt::Test
+)
+
+target_link_libraries(
+  JASPTestColumnEncoderContext
+  PUBLIC
+  Common
+  Qt::Test
 )
 
 target_compile_definitions(
@@ -133,6 +199,13 @@ target_compile_definitions(
 )
 
 target_compile_definitions(
+  JASPTestCsvPrev
+  PUBLIC TESTLIBRARY_DIR=${CMAKE_SOURCE_DIR}/Tests/TestLibrary
+)
+
+
+
+target_compile_definitions(
   JASPQuickTest
   PUBLIC 
   TESTLIBRARY_DIR=${CMAKE_SOURCE_DIR}/Tests/TestLibrary
@@ -141,9 +214,14 @@ target_compile_definitions(
 
 enable_testing(true)
 
-add_test(NAME testDataImport  COMMAND JASPTest)
-add_test(NAME testDebugData   COMMAND JASPTestDebugData)
-add_test(NAME testEngine      COMMAND JASPTestEngine)
-add_test(NAME testQuick       COMMAND JASPQuickTest)
+add_test(NAME testDataImport               COMMAND JASPTest)
+add_test(NAME testCsvPreview               COMMAND JASPTestCsvPrev)
+add_test(NAME testDbMigration              COMMAND JASPTestDbMigration)
+add_test(NAME testDebugData                COMMAND JASPTestDebugData)
+add_test(NAME testEngine                   COMMAND JASPTestEngine)
+add_test(NAME testQuick                    COMMAND JASPQuickTest)
+add_test(NAME testColumnEncoderContext     COMMAND JASPTestColumnEncoderContext)
+
+
 
 endif()

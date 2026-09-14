@@ -31,10 +31,14 @@ if(LINUX)
 endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/utilities/appdirs.h.in
-               ${CMAKE_CURRENT_LIST_DIR}/utilities//appdirs.h)
+               ${CMAKE_CURRENT_LIST_DIR}/utilities/appdirs.h)
 message(STATUS "appdirs.h is successfully generated...")
 
 target_compile_definitions(QMLComponents PUBLIC JASP_USES_QT_HERE)
+
+if(INTERACTIVE_PLOTS)
+target_compile_definitions(QMLComponents PUBLIC INTERACTIVE_PLOTS)
+endif()
 
 target_include_directories(
 	QMLComponents
@@ -49,8 +53,6 @@ target_include_directories(
 target_link_libraries(
 	QMLComponents
 	PUBLIC
-	Common
-	CommonData
 	Qt::Core
 	Qt::Gui
 	Qt::Widgets
@@ -61,6 +63,9 @@ target_link_libraries(
 	Qt::QuickControls2Impl
 	Qt::QuickWidgets
 	Qt::QuickTemplates2
+	PRIVATE
+	Common
+	CommonData
 )
 
 list(POP_BACK CMAKE_MESSAGE_CONTEXT)

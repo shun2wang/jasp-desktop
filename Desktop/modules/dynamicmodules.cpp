@@ -20,8 +20,7 @@
 
 #include "log.h"
 #include "dynamicmodules.h"
-#include "dynamicmodules.h"
-#include "utilities/qutils.h"
+#include "qutils.h"
 #include <QRegularExpression>
 #include <QUrl>
 #include <QUrlQuery>
@@ -71,8 +70,12 @@ bool DynamicModules::initializeModuleFromDir(std::string moduleDir, bool bundled
 
 	Modules::DynamicModule	*newMod		= new Modules::DynamicModule(QString::fromStdString(moduleDir), this, bundled, isCommon);
 
+
 	if(isCommon)
+	{
 		_commonModuleNames.insert(newMod->name());
+		newMod->setIsCommon(true);
+	}
 
 	if(!initializeModule(newMod))
 		return false;
@@ -444,10 +447,10 @@ Modules::AnalysisEntry* DynamicModules::retrieveCorrespondingAnalysisEntry(const
 		return _modules[moduleName]->retrieveCorrespondingAnalysisEntry(jsonFromJaspFile);
 
 	throw Modules::ModuleException(moduleName,
-		"Module is not available, to load this JASP file properly you will need to install it first and then retry.\n"
-		"If you do not have this module you can try the module's website: \""  + jsonFromJaspFile.get("moduleWebsite", "jasp-stats.org").asString()	 +  "\" or"
-		", if that doesn't help, you could try to contact the module's maintainer: \"" + jsonFromJaspFile.get("moduleMaintainer", "the JASP team").asString() + "\"."
-	);
+		fq(tr("Module is not available, to load this JASP file properly you will need to install it first and then retry.\n"
+		"If you do not have this module you can try our built-in module library, the module's website: \"%1\" or"
+		", if that doesn't help, you could try our github issuetracker: https://github.com/jasp-stats/jasp-issues/issues."
+	).arg(tq(jsonFromJaspFile.get("moduleWebsite", "jasp-stats.org").asString()))));
 }
 
 bool DynamicModules::isFileAnArchive(const QString &  filepath)
@@ -589,6 +592,45 @@ void DynamicModules::startWatchingDevelopersModule()
 	devModWatchFolder("R",		_devModRWatcher);
 	devModWatchFolder("help",	_devModHelpWatcher);
 	//QML is watched by Analysis itself
+}
+
+void DynamicModules::insertCommonModuleNames(std::set<std::string> commonModules) 
+{ 
+	for(const std::string & common : commonModules)
+	{
+		_commonModuleNames.insert(common); 
+		
+		if(dynamicModule(common))
+			dynamicModule(common)->setIsCommon(true);
+	}
+
+}
+
+void DynamicModules::clearCommonModules()
+{
+	_commonModuleNames.clear();
+	
+	for(auto & module : _modules)
+		module.second->setIsCommon(false);
+}
+
+void DynamicModules::refreshCommonModules(const QStringList& overrideCommon)
+{
+	clearCommonModules();
+	
+	for(const std::string & modStr : fql(overrideCommon))
+		if(dynamicModule(modStr))
+		{
+			_commonModuleNames.insert(modStr);
+			dynamicModule(modStr)->setIsCommon(true);
+		}
+	
+	//The admin-configuration merely seeds the initial module-order; once the user has stored an order of their own it is leading and must not be clobbered (OverrideCommon is an initial state, not an enforcement).
+	if(!Settings::isSet(Settings::MODULES_ORDER) && RibbonModel::singleton())
+	{
+		RibbonModel::singleton()->setModuleOrder(overrideCommon);
+		Settings::setValue(Settings::MODULES_ORDER, RibbonModel::singleton()->getModuleOrder().join('|'));
+	}
 }
 
 ///This function says it's copying something, and maybe it did that before, but it doesn't seem to be doing so now.

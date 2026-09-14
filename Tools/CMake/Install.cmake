@@ -44,10 +44,10 @@ list(APPEND CMAKE_MESSAGE_CONTEXT Install)
 #   - On macOS, gfortran is being installed by CMake, and it's being used during the build,
 #     and here we exclude it.
 set(FILES_EXCLUDE_PATTERN
-    ".*(\\.bib|\\.Rnw|\\.cpp|\\.c|\\.pdf|\\.html|\\.f|\\.dSYM|\\.log|\\.bak|\\.deb|\\.DS_Store|\\.Rhistory)$"
+    ".*(\\.bib|\\.Rnw|\\.cpp|\\.c|\\.pdf|\\.html|\\.f|\\.dSYM|\\.log|\\.bak|\\.deb|\\.DS_Store|\\.Rhistory|\\.pdb)$"
 )
 set(FOLDERS_EXCLUDE_PATTERN
-	".*(/doc|/examples|/man|/html|/demo|/i386|/bib|/gfortran|/BH|/announce|/test|/tinytest|/tests)$"
+ ".*(/doc|/examples|/man|/html|/demo|/i386|/bib|/gfortran|/BH|/announce|/test|/tinytest|/tests)$"
 )
 
 # See here, http://cmake.org/cmake/help/v3.22/variable/CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT.html
@@ -110,10 +110,10 @@ if(APPLE)
     REGEX ${R_PROGRAMS_PATTERN} EXCLUDE
   )
 
-    #copy R executables separately as PROGRAMS so they have execution permissions
-	file(GLOB R_EXECUTABLES LIST_DIRECTORIES false "${_R_Framework}/Resources/bin/*")
+  #copy R executables separately as PROGRAMS so they have execution permissions
+  file(GLOB R_EXECUTABLES LIST_DIRECTORIES false "${_R_Framework}/Resources/bin/*")
   install(
-    PROGRAMS ${R_EXECUTABLES} 
+    PROGRAMS ${R_EXECUTABLES}
     DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/bin/
   )
 
@@ -124,50 +124,50 @@ if(APPLE)
 
 
   if(CMAKE_OSX_ARCHITECTURES STREQUAL "arm64")
-	  install(
-		  FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libgfortran.5.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
-	  )
-      install(
-		  FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libgfortran.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
-	  )
-      install(
-		  FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libquadmath.0.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
-	  )
-      install(
-		  FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libquadmath.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
-	  )
-      install(
-		  FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libgcc_s.1.1.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
-	  )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libgfortran.5.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
+   )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libgfortran.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
+   )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libquadmath.0.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
+   )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libquadmath.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
+   )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/arm64/gfortran/lib/libgcc_s.1.1.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/arm64/gfortran/lib/
+   )
   endif()
   if(CMAKE_OSX_ARCHITECTURES STREQUAL "x86_64")
-	  install(
-		  FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libgfortran.5.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
-	  )
-      install(
-		  FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libgfortran.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
-	  )
-      install(
-		  FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libquadmath.0.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
-	  )
-      install(
-		  FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libquadmath.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
-	  )
-      install(
-		  FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libgcc_s.1.1.dylib
-		  DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
-	  )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libgfortran.5.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
+   )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libgfortran.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
+   )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libquadmath.0.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
+   )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libquadmath.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
+   )
+    install(
+    FILES ${_R_Framework}/Resources/opt/R/x86_64/gfortran/lib/libgcc_s.1.1.dylib
+    DESTINATION ${JASP_INSTALL_FRAMEWORKDIR}/R.Framework/Resources/opt/R/x86_64/gfortran/lib/
+   )
   endif()
-  
+
 
   # I had to do this manually, since `macdeployqt` misses it.
   # See here: https://bugreports.qt.io/browse/QTBUG-100686
@@ -180,7 +180,7 @@ if(APPLE)
     DESTINATION ${JASP_INSTALL_MODULEDIR}
     REGEX ${FILES_EXCLUDE_PATTERN} EXCLUDE
     REGEX ${FOLDERS_EXCLUDE_PATTERN} EXCLUDE)
-  
+
   install(
     FILES ${MODULES_BINARY_PATH}/modules-settings.json
     DESTINATION ${JASP_INSTALL_MODULEDIR}
@@ -243,10 +243,10 @@ if(LINUX)
   #install(DIRECTORY ${MODULES_RENV_ROOT_PATH}/
   #        DESTINATION ${JASP_INSTALL_PREFIX}/lib64/renv-root)
 
-if(NOT FLATPAK_USED) #because flatpak already puts renv-cache in /app/lib64 anyway
-  install(DIRECTORY ${MODULES_RENV_CACHE_PATH}/
+  if(NOT FLATPAK_USED) #because flatpak already puts renv-cache in /app/lib64 anyway
+    install(DIRECTORY ${MODULES_RENV_CACHE_PATH}/
           DESTINATION ${JASP_INSTALL_PREFIX}/lib64/renv-cache)
-endif()
+  endif()
 
   #Flatpak wrapper that sets some environment variables that JASP needs
   install(PROGRAMS ${CMAKE_SOURCE_DIR}/Tools/flatpak/org.jaspstats.JASP
@@ -285,7 +285,7 @@ endif()
 
   install(FILES ${CMAKE_SOURCE_DIR}/Tools/flatpak/org.jaspstats.JASP.mime.xml
           DESTINATION ${JASP_INSTALL_PREFIX}/share/mime/packages)
-  
+
   #clean up flatpak
   if(FLATPAK_USED)
     install(CODE "execute_process(COMMAND ${CMAKE_SOURCE_DIR}/Tools/flatpak/cleanFlatpak.sh WORKING_DIRECTORY ${CMAKE_BINARY_DIR})")
@@ -311,12 +311,12 @@ if(WIN32)
   # include(InstallRequiredSystemLibraries)
   # install(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION .)
 
-  install(TARGETS JASP JASPEngine ContainerFilePermissionChecker RUNTIME DESTINATION .)
+  install(TARGETS JASP JASPEngine ContainerFilePermissionChecker JunctionTool RUNTIME DESTINATION .)
 
   set(JASP_QML_FILES "${CMAKE_SOURCE_DIR}/Desktop")
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(WINDEPLOY_QT_BUILD_TYPE "--debug")
-  elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+  elseif(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
     set(WINDEPLOY_QT_BUILD_TYPE "--release")
   endif()
   configure_file(${CMAKE_SOURCE_DIR}/Tools/CMake/Deploy.win.cmake.in
@@ -361,42 +361,21 @@ if(WIN32)
     NORMALIZE
     R_BIN_PATH_NATIVE)
 
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msi/JASP.wxi.in
-                 ${CMAKE_BINARY_DIR}/JASP.wxi @ONLY)
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msi/JASP.wxs
-                 ${CMAKE_BINARY_DIR}/JASP.wxs @ONLY)
-
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msi/WIX.cmd.in
-                 ${CMAKE_BINARY_DIR}/WIX.cmd @ONLY)
-
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/zip/ZIP.cmd.in
                  ${CMAKE_BINARY_DIR}/ZIP.cmd @ONLY)
-
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/CollectJunctions.cmd.in
-                 ${CMAKE_BINARY_DIR}/CollectJunctions.cmd @ONLY)
-
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/RecreateJunctions.cmd.in
-                 ${CMAKE_BINARY_DIR}/RecreateJunctions.cmd @ONLY)
-
   #msix stuff
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-store.xml.in
                 ${CMAKE_BINARY_DIR}/AppxManifest-store.xml @ONLY)
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-store-beta.xml.in
                 ${CMAKE_BINARY_DIR}/AppxManifest-store-beta.xml @ONLY)
-  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-sideload.xml.in
-                ${CMAKE_BINARY_DIR}/AppxManifest-sideload.xml @ONLY)
+  configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-standalone.xml.in
+                ${CMAKE_BINARY_DIR}/AppxManifest-standalone.xml @ONLY)
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/AppxManifest-nightly.xml.in
                 ${CMAKE_BINARY_DIR}/AppxManifest-nightly.xml @ONLY)
   configure_file(${CMAKE_SOURCE_DIR}/Tools/windows/msix/msix.cmd.in
                 ${CMAKE_BINARY_DIR}/msix.cmd @ONLY)
   install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT MSIX EXCLUDE_FROM_ALL)
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/Tools/windows/msix/Assets DESTINATION . COMPONENT MSIX EXCLUDE_FROM_ALL)
-
-
-  execute_process(
-    WORKING_DIRECTORY ${JASP_INSTALL_PREFIX}
-    COMMAND ${CMAKE_COMMAND} -E remove -f
-            "${CMAKE_INSTALL_PREFIX}/junctions-recreated-successfully.log")
 
   install(SCRIPT ${CMAKE_BINARY_DIR}/Deploy.win.cmake)
 
@@ -407,13 +386,11 @@ if(WIN32)
     REGEX ${FOLDERS_EXCLUDE_PATTERN} EXCLUDE)
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/Resources/ DESTINATION Resources)
-
-  install(FILES ${CMAKE_SOURCE_DIR}/Desktop/icon.ico DESTINATION .)
-
-  install(
-    FILES ${CMAKE_SOURCE_DIR}/R-Interface/R/workarounds.R
-          ${CMAKE_SOURCE_DIR}/R-Interface/R/symlinkTools.R
-    DESTINATION Modules/Tools/)
+  if(PRO)
+    install(FILES ${CMAKE_SOURCE_DIR}/Desktop/icon-pro.ico DESTINATION . RENAME icon.ico)
+  else()
+    install(FILES ${CMAKE_SOURCE_DIR}/Desktop/icon.ico DESTINATION .)
+  endif()
 
   install(
     FILES ${RTOOLS_LIBGCC_S_SEH_DLL}
@@ -427,22 +404,23 @@ if(WIN32)
           ${RTOOLS_LIBBZ2_DLL}
           ${RTOOLS_LIBLZMA_DLL}
           ${RTOOLS_LIBICONV_DLL}
+          ${SYSTEM_ICU_DLL}
           ${_LIB_R_INTERFACE_DLL}
     DESTINATION .)
 
-	
-	#modules
-	install(
-		DIRECTORY ${MODULES_BINARY_PATH}/binary_pkgs ${MODULES_BINARY_PATH}/manifests ${MODULES_BINARY_PATH}/Tools
-		DESTINATION ${JASP_INSTALL_MODULEDIR}
-		REGEX ${FILES_EXCLUDE_PATTERN} EXCLUDE
-		REGEX ${FOLDERS_EXCLUDE_PATTERN} EXCLUDE)
-	
-	install(
-		FILES ${MODULES_BINARY_PATH}/modules-settings.json
-		DESTINATION ${JASP_INSTALL_MODULEDIR}
-	)
 
-  endif()
+  #modules
+  install(
+  DIRECTORY ${MODULES_BINARY_PATH}/binary_pkgs ${MODULES_BINARY_PATH}/manifests ${MODULES_BINARY_PATH}/Tools
+  DESTINATION ${JASP_INSTALL_MODULEDIR}
+  REGEX ${FILES_EXCLUDE_PATTERN} EXCLUDE
+  REGEX ${FOLDERS_EXCLUDE_PATTERN} EXCLUDE)
+
+  install(
+  FILES ${MODULES_BINARY_PATH}/modules-settings.json
+  DESTINATION ${JASP_INSTALL_MODULEDIR}
+ )
+
+endif()
 
 list(POP_BACK CMAKE_MESSAGE_CONTEXT)
