@@ -21,7 +21,8 @@ CREATE TABLE DataSets (
 	rCode				TEXT NULL, 
 	invalidated			INT NULL,
 	error				TEXT NULL, 
-	defaultInputFilter	INT NULL
+	defaultInputFilter	INT NULL,
+	rowCount		INT DEFAULT 0
 );
 
 CREATE TABLE Filters ( 

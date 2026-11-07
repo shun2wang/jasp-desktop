@@ -28,6 +28,9 @@
 #include <cassert>
 #include <ranges>
 #include "log.h"
+#include <algorithm>
+#include <sstream>
+#include <vector>
 
 DatabaseInterface * DatabaseInterface::_singleton	= nullptr;
 
@@ -41,6 +44,16 @@ const std::string DatabaseInterface::_dbConstructionSql =
 // The actual definition can be found in "internalDbDefinition.sql"!
 #include "internalDbDefinition.h"
 ;
+
+std::string DatabaseInterface::valuesTableName(int dataSetId) const
+{
+	return "DataSet_" + std::to_string(dataSetId) + "_Values";
+}
+
+std::string DatabaseInterface::filterValuesTableName(int dataSetId) const
+{
+	return "DataSet_" + std::to_string(dataSetId) + "_FilterValues";
+}
 
 const std::string DatabaseInterface::_dbIndexesSql =
 #include "createIndexes.h"
@@ -188,6 +201,11 @@ void DatabaseInterface::_upgradeDBStatements(Version originalVersion)
 		runStatements("ALTER TABLE DataSets ADD COLUMN csvDelimiter INT DEFAULT 0;");
 	if(!tableHasColumn("DataSets", "importLocale"))
 		runStatements("ALTER TABLE DataSets ADD COLUMN importLocale TEXT DEFAULT \"\";");
+	// --- Value-table schema -------------------------------------------------
+	if(!tableHasColumn("DataSets", "rowCount"))
+		runStatements("ALTER TABLE DataSets ADD COLUMN rowCount INT DEFAULT 0;");
+
+	_migrateToValueSchema(originalVersion);
 
 
 }
@@ -213,37 +231,44 @@ DatabaseInterface::~DatabaseInterface()
 int DatabaseInterface::dataSetInsert(const std::string & dataFilePath, long dataFileTimestamp, const std::string & description, const std::string & databaseJson, const std::string & emptyValuesJson, bool dataSynch, char csvDelimiter, const std::string & importLocale)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::dataSetInsert);
-	
-	
-	std::function<void(sqlite3_stmt *stmt)>  prepare = [&](sqlite3_stmt *stmt)
+
+	std::function<void(sqlite3_stmt *stmt)> prepare = [&](sqlite3_stmt *stmt)
 	{
 		sqlite3_bind_text(stmt, 1, dataFilePath.c_str(),	dataFilePath.length(),		SQLITE_TRANSIENT);
-		sqlite3_bind_int64(stmt,	2, dataFileTimestamp);
+		sqlite3_bind_int64(stmt,2, dataFileTimestamp);
 		sqlite3_bind_text(stmt, 3, description.c_str(),		description.length(),		SQLITE_TRANSIENT);
 		sqlite3_bind_text(stmt, 4, databaseJson.c_str(),	databaseJson.length(),		SQLITE_TRANSIENT);
 		sqlite3_bind_text(stmt, 5, emptyValuesJson.c_str(), emptyValuesJson.length(),	SQLITE_TRANSIENT);
 		sqlite3_bind_int(stmt,	6, dataSynch);
 		sqlite3_bind_int(stmt,	7, csvDelimiter);
 		sqlite3_bind_text(stmt, 8, importLocale.c_str(),	importLocale.length(),		SQLITE_TRANSIENT);
-
 	};
 
 	transactionWriteBegin();
 	int id = -1;
 	try
 	{
-		id = runStatementsId("INSERT INTO DataSets (dataFilePath, dataFileTimestamp, description, databaseJson, emptyValuesJson, dataFileSynch, csvDelimiter, importLocale) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id;", prepare);
+		id = runStatementsId(
+			"INSERT INTO DataSets (dataFilePath, dataFileTimestamp, description, databaseJson, emptyValuesJson, "
+			"dataFileSynch, csvDelimiter, importLocale, rowCount) "
+			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0) RETURNING id;", prepare);
 
-		if(tableExists(dataSetName(id)))
-			throw std::runtime_error("Table '" + dataSetName(id) + "' already exists!");
-		else
-			Log::log() << "Creating table " << dataSetName(id) << std::endl;
-		runStatements("CREATE TABLE " + dataSetName(id) + " (rowNumber INTEGER PRIMARY KEY);"); // Can be overwritten through dataSetCreateTable
+		if(id <= 0)
+			throw std::runtime_error("dataSetInsert: could not insert a new DataSets row.");
+
+		if(tableExists(valuesTableName(id)))
+			throw std::runtime_error("Table '" + valuesTableName(id) + "' already exists!");
+
+		runStatements("CREATE TABLE " + valuesTableName(id) +
+			" (columnId INTEGER NOT NULL, rowNumber INTEGER NOT NULL, value NUM, "
+			"  PRIMARY KEY (columnId, rowNumber)) WITHOUT ROWID;");
+
+		runStatements("CREATE TABLE " + filterValuesTableName(id) +
+			" (filterId INTEGER NOT NULL, rowNumber INTEGER NOT NULL, value INT NOT NULL DEFAULT 1, "
+			"  PRIMARY KEY (filterId, rowNumber)) WITHOUT ROWID;");
 	}
 	catch(const std::exception &)
 	{
-		//A failure here must not leave the write transaction open (->_transactionWriteDepth leak) nor an
-		//orphan DataSets row behind. Clean up the partial row/table, unwind the transaction, and rethrow.
 		if(id > 0)
 		{
 			try { dataSetDelete(id); } catch(...) {}
@@ -368,7 +393,7 @@ int DatabaseInterface::dataSetColCount(int dataSetId)
 int DatabaseInterface::dataSetRowCount(int dataSetId)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::dataSetRowCount);
-	return singleton()->runStatementsId("SELECT COUNT(*) FROM DataSet_"+std::to_string(dataSetId));
+	return singleton()->runStatementsId("SELECT rowCount FROM DataSets WHERE id="+std::to_string(dataSetId));
 }
 
 void DatabaseInterface::dataSetSetRowCount(int dataSetId, size_t rowCount)
@@ -376,45 +401,47 @@ void DatabaseInterface::dataSetSetRowCount(int dataSetId, size_t rowCount)
 	JASPTIMER_SCOPE(DatabaseInterface::dataSetSetRowCount);
 	transactionWriteBegin();
 
-	int curCount = dataSetRowCount(dataSetId);
+	const int64_t curCount = dataSetRowCount(dataSetId);
 
-	const std::string DS = dataSetName(dataSetId);
-
-	if(rowCount >= curCount)
+	runStatements("UPDATE DataSets SET rowCount=? WHERE id=?;", [&](sqlite3_stmt *stmt)
 	{
-		const std::string & insertDefaultVals = "INSERT INTO "+DS+" DEFAULT VALUES;";
+		sqlite3_bind_int64(stmt, 1, (int64_t)rowCount);
+		sqlite3_bind_int(stmt,   2, dataSetId);
+	});
 
-		_runStatementsRepeatedly(insertDefaultVals, 
-			[&](bindParametersType ** bindParam, size_t row)
-			{ 
-				(*bindParam) = nullptr; 
-				return curCount + row < rowCount; 
-			});
+	if((int64_t)rowCount < curCount)
+	{
+		// Removing rows: prune value tables (rare; acceptable scan by rowNumber).
+		runStatements("DELETE FROM " + valuesTableName(dataSetId) +
+					  " WHERE rowNumber > " + std::to_string(rowCount) + ";");
+		runStatements("DELETE FROM " + filterValuesTableName(dataSetId) +
+					  " WHERE rowNumber > " + std::to_string(rowCount) + ";");
 	}
-	else
-		runStatements("DELETE FROM "+DS+" WHERE rowNumber > " + std::to_string(rowCount) + ";");
-	
+
 	transactionWriteEnd();
 }
 
-void DatabaseInterface::filterClear(int id)
+void DatabaseInterface::filterClear(int filterId)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::filterClear);
-	int dataSet = filterGetDataSetId(id);
-
-	runStatements("UPDATE " + dataSetName(dataSet) + " SET " + filterTableName(id) + " = 1;");
+	const int ds = filterGetDataSetId(filterId);
+	if(ds != -1)
+		runStatements("DELETE FROM " + filterValuesTableName(ds) + " WHERE filterId=?;",
+					[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, filterId); });
 }
 
-void DatabaseInterface::filterDelete(int filterIndex)
+void DatabaseInterface::filterDelete(int filterId)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::filterDelete);
 	transactionWriteBegin();
 
-	int dataSetId = filterGetDataSetId(filterIndex);
+	const int ds = filterGetDataSetId(filterId);
 
-	if(dataSetId != -1)
-		runStatements("ALTER TABLE " + dataSetName(dataSetId) + " DROP COLUMN " + filterTableName(filterIndex) + ";");
-	runStatements("DELETE FROM Filters WHERE id = " + std::to_string(filterIndex) + ";");
+	if(ds != -1)
+		runStatements("DELETE FROM " + filterValuesTableName(ds) + " WHERE filterId=?;",
+					[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, filterId); });
+
+	runStatements("DELETE FROM Filters WHERE id = " + std::to_string(filterId) + ";");
 
 	transactionWriteEnd();
 }
@@ -435,8 +462,9 @@ int DatabaseInterface::filterInsert(int dataSetId, const std::string & rFilter, 
 
 	transactionWriteBegin();
 	
-	int id = runStatementsId("INSERT INTO Filters (dataSet, rFilter, generatedFilter, constructorJson, constructorR, name) VALUES (?, ?, ?, ?, ?, ?) RETURNING rowid;", prepare);
-	runStatements("ALTER TABLE " + dataSetName(dataSetId) + " ADD " + filterTableName(id) +" INT NOT NULL DEFAULT 1;");
+	const int id = runStatementsId(
+				"INSERT INTO Filters (dataSet, rFilter, generatedFilter, constructorJson, constructorR, name) "
+				"VALUES (?, ?, ?, ?, ?, ?) RETURNING rowid;", prepare);
 	
 	transactionWriteEnd();
 
@@ -503,31 +531,40 @@ std::string DatabaseInterface::filterGetName(int filterIndex)
 	return errorMsg;
 }
 
-bool DatabaseInterface::filterSelect(int filterIndex, boolvec & bools)
+bool DatabaseInterface::filterSelect(int filterId, boolvec & bools)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::filterSelect);
 	bool changed = false;
 
 	transactionReadBegin();
 
-	int dataSet = filterGetDataSetId(filterIndex);
+	const int ds = filterGetDataSetId(filterId);
 
-	if(dataSet != -1)
+	if(ds != -1)
 	{
-
-		const size_t rows = dataSetRowCount(dataSet);
+		const size_t rows = dataSetRowCount(ds);
 
 		changed = changed || rows != bools.size();
 
 		bools.resize(rows);
+		std::fill(bools.begin(), bools.end(), true);
 
-		runStatements("SELECT " + filterTableName(filterIndex) + " FROM " + dataSetName(dataSet) + " ORDER BY rowNumber;",
-		[&](sqlite3_stmt *){ }, [&](size_t row, sqlite3_stmt * stmt)
-		{
-			int val			= sqlite3_column_int(stmt, 0);
-				changed		= changed || bools[row] != bool(val);
-				bools[row]	= val;
-		});
+		runStatements("SELECT rowNumber, value FROM " + filterValuesTableName(ds) +
+					  " WHERE filterId=? AND rowNumber<=? ORDER BY rowNumber",
+			[&](sqlite3_stmt *stmt) {
+				sqlite3_bind_int(stmt,   1, filterId);
+				sqlite3_bind_int64(stmt, 2, (int64_t)rows);
+			},
+			[&](size_t, sqlite3_stmt *stmt) {
+				const int64_t rn  = sqlite3_column_int64(stmt, 0);
+				const bool    val = sqlite3_column_int(stmt, 1) != 0;
+				const size_t  idx = (size_t)(rn - 1);
+				if(idx < bools.size())
+				{
+					if(bools[idx] != val) changed = true;
+					bools[idx] = val;
+				}
+			});
 	}
 
 	transactionReadEnd();
@@ -636,33 +673,46 @@ int DatabaseInterface::filterGetRevision(int filterIndex)
 	return runStatementsId("SELECT revision FROM Filters	WHERE id=?;", [&](sqlite3_stmt *stmt) { sqlite3_bind_int(stmt, 1, filterIndex); });
 }
 
-void DatabaseInterface::filterWrite(int filterIndex, const std::vector<bool> & values)
+void DatabaseInterface::filterWrite(int filterId, const std::vector<bool> & values)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::filterWrite);
 
 	transactionWriteBegin();
-	
-	int dataSet = filterGetDataSetId(filterIndex);
 
-	const std::string updateFilterPrefix = "UPDATE " + dataSetName(dataSet) + " SET " + filterTableName(filterIndex) + "= ?  WHERE rowNumber = ?;" ;
+	const int ds = filterGetDataSetId(filterId);
 
-	size_t rowOutside;
-	
-	bindParametersType _bindParams = [&](sqlite3_stmt *stmt)
+	if(ds != -1 && !values.empty())
 	{
-		sqlite3_bind_int(stmt, 1, values[rowOutside]);
-		sqlite3_bind_int(stmt, 2, rowOutside+1);
-	};
-	
-	_runStatementsRepeatedly(updateFilterPrefix, [&](bindParametersType ** bindParams, size_t row)
-	{
-		rowOutside = row;
-		(*bindParams) = &_bindParams;
-		
-		return row < values.size();
-	});
+		runStatements("DELETE FROM " + filterValuesTableName(ds) + " WHERE filterId=?;",
+			[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, filterId); });
 
-	filterIncRevision(filterIndex);
+		// Only store non-default (false) values. Batch the INSERTs to keep the statement small.
+		std::vector<size_t> zeroRows;
+		zeroRows.reserve(values.size());
+		for(size_t i = 0; i < values.size(); i++)
+			if(!values[i]) zeroRows.push_back(i);
+
+		const size_t BATCH = 500;
+		for(size_t offset = 0; offset < zeroRows.size(); offset += BATCH)
+		{
+			const size_t end = std::min(offset + BATCH, zeroRows.size());
+			std::stringstream ss;
+			ss << "INSERT INTO " << filterValuesTableName(ds)
+			   << " (filterId, rowNumber, value) VALUES ";
+			for(size_t k = offset; k < end; k++)
+			{
+				if(k > offset) ss << ",";
+				ss << "(?," << (zeroRows[k] + 1) << ",0)";
+			}
+			const size_t count = end - offset;
+			runStatements(ss.str(), [&](sqlite3_stmt *stmt) {
+				for(size_t k = 0; k < count; k++)
+					sqlite3_bind_int(stmt, (int)(k + 1), filterId);
+			});
+		}
+	}
+
+	filterIncRevision(filterId);
 
 	transactionWriteEnd();
 }
@@ -713,20 +763,21 @@ intvec DatabaseInterface::columnsInsert(int dataSetId, int count, int index, con
 		}, & processRow);
 	
 
-	if(alterTable) //If not then via dataSetCreateTable
-	{
-		std::stringstream statement;
-		
-		for(int id : ids)
-			statement	<< "ALTER TABLE " << dataSetName(dataSetId)
-						<< " ADD  "		<< columnBaseName(id)
-						<< " NUM  NULL;\n";
-		
-		runStatements(statement.str());
-	}
+	// Value-table architecture: no ALTER TABLE needed. Values live in DataSet_<id>_Values.
+	// The labels will be added separately later. so we disable bellow,
 	
-	//The labels will be added separately later
-
+	// if(alterTable) //If not then via dataSetCreateTable
+	// {
+	// 	std::stringstream statement;
+		
+	// 	for(int id : ids)
+	// 		statement	<< "ALTER TABLE " << dataSetName(dataSetId)
+	// 					<< " ADD  "		<< columnBaseName(id)
+	// 					<< " NUM  NULL;\n";
+		
+	// 	runStatements(statement.str());
+	// }
+	
 	transactionWriteEnd();
 	return ids;
 }
@@ -734,24 +785,10 @@ intvec DatabaseInterface::columnsInsert(int dataSetId, int count, int index, con
 
 void DatabaseInterface::dataSetCreateTable(DataSet * dataSet)
 {
-	intset filters = dataSetGetFilters(dataSet->id());
-	assert(filters.size() > 0);
-	
-	runStatements("DROP TABLE " + dataSetName(dataSet->id()) + ";");
-		
-	std::stringstream statements;
-	statements		<<  "CREATE TABLE " + dataSetName(dataSet->id())
-					<<	" (rowNumber INTEGER PRIMARY KEY";
-	
-	for(int id : filters)
-		statements	<<	", "+ filterTableName(id) + " INT NOT NULL DEFAULT 1";
-	
-	for(Column * column : dataSet->columns())
-		statements << ", " << columnBaseName(column->id()) << " NUM NULL";
-
-	statements << ");";
-	
-	runStatements(statements.str());
+	runStatements("DELETE FROM " + valuesTableName(dataSet->id()) + ";");
+	runStatements("DELETE FROM " + filterValuesTableName(dataSet->id()) + ";");
+	runStatements("UPDATE DataSets SET rowCount=0 WHERE id=?;",
+			[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, dataSet->id()); });
 }
 
 int DatabaseInterface::columnGetDataSetId(int columnId)
@@ -806,83 +843,133 @@ void DatabaseInterface::dataSetBatchedValuesUpdate(DataSet * data, Columns colum
 {
 	JASPTIMER_SCOPE(DatabaseInterface::dataSetBatchedValuesUpdate);
 
+	if(!data) return;
+	if(columns.empty()) columns = data->columns();
+
 	transactionWriteBegin();
 
-	// But maybe we should update instead, maybe it speeds up the application?
-	//As this data isnt synced anyway this shouldnt be a problem because it'd be invalidated after a single edit anyway
-	runStatements("DELETE FROM " + dataSetName(data->id()) + " WHERE rowNumber > " + std::to_string(columns.size() == 0 ? 0 : columns.front()->rowCount()));
+	const int ds = data->id();
+	const std::string vt = valuesTableName(ds);
 
-	std::stringstream statement;
-	
-	statement << "INSERT OR REPLACE INTO " << dataSetName(data->id()) << " (";
-
-	//Add columnnames for data we want to insert
-	for(Column * col : columns)
+	// 1) Delete existing values for these columns in one shot.
+	if(!columns.empty())
 	{
-		assert(col->data() == data); //Little sanity check
-		statement << "Column_" << col->id() << ", ";
+		std::stringstream del;
+		del << "DELETE FROM " << vt << " WHERE columnId IN (";
+		bool first = true;
+		for(Column * col : columns)
+		{
+			if(!first) del << ",";
+			del << col->id();
+			first = false;
+		}
+		del << ");";
+		runStatements(del.str());
 	}
 
-	//And the filtername and rowNumber
-        statement << filterTableName(data->defaultFilter()->id()) << ", " << "rowNumber) VALUES (";
-
-	for(size_t i=0; i<columns.size(); i++)
-		statement << "?, ";
-	statement << "?, ?);"; //filter and rowNumber
-
-	//We put a size_t outside the bindParamStore lambda to set it without having to change the signature
-	size_t rowOutside=0;
-	bindParametersType bindParamStore = [&](sqlite3_stmt * stmt)
+	// 2) Per-column bulk insert (skipping missing values).
+	const size_t totalCols = columns.size();
+	size_t doneCols = 0;
+	for(Column * col : columns)
 	{
-		size_t i=1;
-		for(Column * col : columns)
-			if(col->hasLabels())
-			{
-				sqlite3_bind_int(		stmt,	i++, col->ints()[rowOutside]);
-			}
+		const bool hasLabels	= col->hasLabels();
+		const size_t rowCount	= col->rowCount();
+
+		size_t nextRow		= 0;
+		size_t rowOutside	= 0;
+		bindParametersType bind = [&](sqlite3_stmt *stmt)
+		{
+			sqlite3_bind_int(stmt,   1, col->id());
+			sqlite3_bind_int64(stmt, 2, (int64_t)rowOutside + 1);
+			if(hasLabels)
+				sqlite3_bind_int(stmt, 3, col->ints()[rowOutside]);
 			else
 			{
-				const std::string & str = col->strs()[rowOutside];
-				if(str.empty())
-					_doubleTroubleBinder(stmt, i++, col->dbls()[rowOutside]);
+				const std::string & s = col->strs()[rowOutside];
+				if(s.empty())
+					_doubleTroubleBinder(stmt, 3, col->dbls()[rowOutside]);
 				else
-					sqlite3_bind_text(stmt, i++, str.c_str(), str.length(), SQLITE_TRANSIENT);
+					sqlite3_bind_text(stmt, 3, s.c_str(), (int)s.size(), SQLITE_TRANSIENT);
 			}
+		};
 
-		sqlite3_bind_int(stmt,	i++, data->defaultFilter()->filtered()[rowOutside]);
-		sqlite3_bind_int(stmt,	i++, rowOutside+1);
-	};
+		auto isMissing = [&](size_t r) -> bool {
+			if(hasLabels) return col->ints()[r] == EmptyValues::missingValueInteger;
+			return std::isnan(col->dbls()[r]) && col->strs()[r].empty();
+		};
 
-	const float rowsInverse		= 1.0 / float(data->rowCount());
-	const int	updateInterval	= std::max(1, data->rowCount() / 100);
-	int			prevUpdate		= 0;
-
-	_runStatementsRepeatedly(
-		statement.str(),
-		[&](bindParametersType ** bindParameters, size_t row)
-		{
-			if(row >= data->rowCount())
-				return false;
-
-			rowOutside = row;
-
-			if(prevUpdate + updateInterval <= rowOutside)
+		_runStatementsRepeatedly(
+			"INSERT INTO " + vt + " (columnId, rowNumber, value) VALUES (?, ?, ?)",
+			[&](bindParametersType ** bp, size_t)
 			{
-				progressCallback(float(rowOutside) * rowsInverse);
-				prevUpdate = rowOutside;
+				while(nextRow < rowCount && isMissing(nextRow)) nextRow++;
+				if(nextRow >= rowCount) return false;
+				rowOutside = nextRow;
+				nextRow++;
+				*bp = &bind;
+				return true;
+			});
+
+		doneCols++;
+		progressCallback(0.9f * float(doneCols) / float(totalCols));
+	}
+
+	// 3) Default filter values (only store non-default = false).
+	if(data->defaultFilter() && data->defaultFilter()->id() > 0)
+	{
+		const int fid = data->defaultFilter()->id();
+		runStatements("DELETE FROM " + filterValuesTableName(ds) + " WHERE filterId=?;",
+			[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, fid); });
+
+		const auto & filtered = data->defaultFilter()->filtered();
+		const size_t filterRows = std::min<size_t>(filtered.size(), (size_t)data->rowCount());
+
+		std::vector<size_t> zeroRows;
+		zeroRows.reserve(filterRows);
+		for(size_t i = 0; i < filterRows; i++)
+			if(!filtered[i]) zeroRows.push_back(i);
+
+		const size_t BATCH = 500;
+		for(size_t offset = 0; offset < zeroRows.size(); offset += BATCH)
+		{
+			const size_t end = std::min(offset + BATCH, zeroRows.size());
+			std::stringstream ss;
+			ss << "INSERT INTO " << filterValuesTableName(ds) << " (filterId, rowNumber, value) VALUES ";
+			for(size_t k = offset; k < end; k++)
+			{
+				if(k > offset) ss << ",";
+				ss << "(?," << (zeroRows[k] + 1) << ",0)";
 			}
+			const size_t count = end - offset;
+			runStatements(ss.str(), [&](sqlite3_stmt *stmt) {
+				for(size_t k = 0; k < count; k++)
+					sqlite3_bind_int(stmt, (int)(k + 1), fid);
+			});
+		}
+	}
 
-			(*bindParameters) = &bindParamStore;
+	// 4) Record the new row count on DataSets.
+	runStatements("UPDATE DataSets SET rowCount=? WHERE id=?;", [&](sqlite3_stmt *stmt)
+	{
+		sqlite3_bind_int64(stmt, 1, (int64_t)data->rowCount());
+		sqlite3_bind_int(stmt,   2, ds);
+	});
 
-			return true;
-		});
-		
+	progressCallback(1.0f);
+
 	transactionWriteEnd();
+}
+
+void DatabaseInterface::dataSetBatchedValuesUpdate(DataSet * data, std::function<void(float)> progressCallback)
+{
+	dataSetBatchedValuesUpdate(data, data ? data->columns() : Columns(), progressCallback);
 }
 
 void DatabaseInterface::dataSetBatchedValuesLoad(DataSet *data, std::function<void(float)> progressCallback)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::dataSetBatchedValuesLoad);
+
+	if(!data) return;
 
 	if(data->defaultFilter()->id() == -1)
 		data->defaultFilter()->setId(dataSetGetDefaultFilter(data->id()));
@@ -891,130 +978,103 @@ void DatabaseInterface::dataSetBatchedValuesLoad(DataSet *data, std::function<vo
 		return;
 
 	transactionReadBegin();
-	
-	//Set up some functions and such for concurrent loading:
-	std::mutex	progressMutex;
-	size_t 		totalRows	= data->rowCount(), // for progressbar
-				progressRow = 0,
-				lastRow		= 0;
-	
-	
-	std::function<void(float)> localProgressBar = [&progressMutex, &progressRow, &totalRows, &lastRow, &progressCallback](int rows)
-	{
-		progressMutex.lock();
-		progressRow += rows;
-		
-		const size_t rowPercent = std::max(1, int(totalRows) / 100);
-		
-		if(progressRow - lastRow > rowPercent || progressRow >= totalRows - 1)
-		{
-			progressCallback(float(progressRow) / float(totalRows));
-			lastRow = progressRow;
-		}
 
-		progressMutex.unlock();
-	};
-	
-	auto loadBatchOfColumns = [this, data, &localProgressBar](Columns group, size_t groupNum)
+	const int ds = data->id();
+	const std::string vt  = valuesTableName(ds);
+	const std::string fvt = filterValuesTableName(ds);
+	const size_t rows = data->rowCount();
+
+	// Resize columns
+	for(Column * col : data->columns())
+		col->setRowCount(rows);
+
+	// Default filter
+	if(data->defaultFilter()->id() > 0)
 	{
-		std::stringstream statement;
-	
-		statement << "SELECT ";
-	
+		data->defaultFilter()->setRowCount(rows);
+
+		for(size_t i = 0; i < rows; i++)
+			data->defaultFilter()->setFilterValueNoDB(i, true);
+
+		runStatements(
+			"SELECT rowNumber, value FROM " + fvt + " WHERE filterId=? AND rowNumber<=? ORDER BY rowNumber",
+			[&](sqlite3_stmt *stmt) {
+				sqlite3_bind_int(stmt,   1, data->defaultFilter()->id());
+				sqlite3_bind_int64(stmt, 2, (int64_t)rows);
+			},
+			[&](size_t, sqlite3_stmt *stmt) {
+				const int64_t rn = sqlite3_column_int64(stmt, 0);
+				if((size_t)(rn - 1) < rows)
+					data->defaultFilter()->setFilterValueNoDB((size_t)(rn - 1), sqlite3_column_int(stmt, 1) != 0);
+			});
+	}
+
+	// Parallel column loading
+	std::mutex progressMutex;
+	size_t progressDone = 0;
+	const size_t totalCols = data->columns().size();
+
+	auto loadBatchOfColumns = [this, vt, rows, &progressMutex, &progressDone, totalCols, &progressCallback](Columns group)
+	{
 		for(Column * col : group)
 		{
-			assert(col->id() > -1);
-			statement << "Column_" << col->id() << ", ";
-		}
-	
-		statement << filterTableName(data->defaultFilter()->id()) << " FROM " << dataSetName(data->id()) << " ORDER BY rowNumber";
-	
-		std::function<void(sqlite3_stmt *stmt)>  prepare = [&](sqlite3_stmt *stmt) {};
-	
-		const int	rowCount	= std::max(0, dataSetRowCount(data->id()));
-	
-		for(Column * col : group)
-			col->setRowCount(rowCount);
-	
-		if(groupNum == 0)
-			data->defaultFilter()->setRowCount(rowCount);
-	
-		const size_t rowPercent = std::max(1, int(rowCount) / 100);
-	
-		size_t prevRowSent = 0;
-		
-		std::function<void(size_t, sqlite3_stmt *stmt)> processRow = [&](size_t row, sqlite3_stmt *stmt)
-		{
-			if(row % rowPercent == 0 || row == rowCount - 1)
-			{
-				localProgressBar(row-prevRowSent);
-				prevRowSent = row;
-			}
-	
-			int colCount = sqlite3_column_count(stmt);
-	
-			assert(colCount == group.size() + 1);
-	
-			for(size_t colI=0; colI<group.size(); colI++)
-			{
-				
-				Column * col = group[colI];
-				
-				if(col->hasLabels())
-				{
-					int valueDb = !sqlite3_column_text(	stmt, colI) ? EmptyValues::missingValueInteger : sqlite3_column_int(stmt, colI);
-					
-					col->setValue(row, valueDb,		false);
-				}
-				else
-				{
-					std::string		dbStr;
-					double			dbDbl = _doubleTroubleReader(stmt, colI, &dbStr);
-		
-					col->_strs[row] = dbStr;
-					col->_dbls[row] = dbDbl;
-				}
-			}
-	
-			if(groupNum == 0)
-				data->defaultFilter()->setFilterValueNoDB(row, sqlite3_column_int(stmt, colCount - 1));
-		};
-	
-		runStatements(statement.str(), prepare, processRow);
-	};
-	
-	//Ok, split up columns into some groups so we can use multiple threads
-	
-	size_t	groupCount	= std::max((unsigned int)1, std::thread::hardware_concurrency()),
-			groupSize	= data->columns().size() / groupCount,
-			groupSize0	= data->columns().size() - groupSize * (groupCount-1);
-			totalRows	= data->rowCount() * groupCount; // for progressbar
-			
+			runStatements(
+				"SELECT rowNumber, value FROM " + vt + " WHERE columnId=? AND rowNumber<=? ORDER BY rowNumber",
+				[&](sqlite3_stmt *stmt) {
+					sqlite3_bind_int(stmt,   1, col->id());
+					sqlite3_bind_int64(stmt, 2, (int64_t)rows);
+				},
+				[&](size_t, sqlite3_stmt *stmt) {
+					const int64_t rn = sqlite3_column_int64(stmt, 0);
+					const size_t  i  = (size_t)(rn - 1);
+					if(i >= (size_t)col->rowCount()) return;
+					if(col->hasLabels())
+					{
+						int v = (sqlite3_column_type(stmt, 1) == SQLITE_NULL)
+							? EmptyValues::missingValueInteger
+							: sqlite3_column_int(stmt, 1);
+						col->setValue(i, v, false);
+					}
+					else
+					{
+						std::string s;
+						double d = _doubleTroubleReader(stmt, 1, &s);
+						col->_strs[i] = s;
+						col->_dbls[i] = d;
+					}
+				});
 
-	std::vector<std::thread>	threads;
-	
-	size_t	curCol	= 0,
-			nextEnd = groupSize0;
-	
-	for(size_t group=0; group < groupCount; group++)
+			std::lock_guard<std::mutex> lg(progressMutex);
+			progressDone++;
+			progressCallback(float(progressDone) / float(totalCols));
+		}
+	};
+
+	const size_t threadCount = std::max<size_t>(1, std::thread::hardware_concurrency());
+	const size_t groupSize	= totalCols / threadCount;
+	const size_t groupSize0	= totalCols - groupSize * (threadCount - 1);
+
+	std::vector<std::thread> threads;
+	size_t curCol = 0, nextEnd = groupSize0;
+
+	for(size_t g = 0; g < threadCount; g++)
 	{
 		Columns cols;
 		for(; curCol < nextEnd; curCol++)
 			cols.push_back(data->column(curCol));
-		
-		
-		threads.push_back(std::thread([cols, group, &loadBatchOfColumns,this]()
+
+		threads.push_back(std::thread([this, cols, &loadBatchOfColumns]()
 		{
 			preloadInterfaceForThread();
-			loadBatchOfColumns(cols, group);
+			loadBatchOfColumns(cols);
 		}));
-		
+
 		nextEnd += groupSize;
 	}
-	
+
 	for(std::thread & t : threads)
 		t.join();
-		
+
 	transactionReadEnd();
 }
 
@@ -1103,31 +1163,31 @@ void DatabaseInterface::columnSetValues(int columnId, const intvec &ints)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::columnSetValues ints);
 	transactionWriteBegin();
-	
-	const int			dataSetId = columnGetDataSetId(columnId);
-	
-	const std::string	updateStatement = "UPDATE Dataset_" + std::to_string(dataSetId)	+ " SET Column_"  + std::to_string(columnId) + "=? WHERE rowNumber=?";
 
-	size_t				rowOutside;
-	bindParametersType	bindParamStore;
+	const int ds = columnGetDataSetId(columnId);
+	const std::string vt = valuesTableName(ds);
+
+	runStatements("DELETE FROM " + vt + " WHERE columnId=?;",
+		[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, columnId); });
+
+	size_t nextRow		= 0;
+	size_t rowOutside	= 0;
+	bindParametersType bind = [&](sqlite3_stmt *stmt)
+	{
+		sqlite3_bind_int(stmt,   1, columnId);
+		sqlite3_bind_int64(stmt, 2, (int64_t)rowOutside + 1);
+		sqlite3_bind_int(stmt,   3, ints[rowOutside]);
+	};
 
 	_runStatementsRepeatedly(
-		updateStatement,
-		[&](bindParametersType ** bindParameters, size_t row)
+		"INSERT INTO " + vt + " (columnId, rowNumber, value) VALUES (?, ?, ?)",
+		[&](bindParametersType ** bp, size_t)
 		{
-			if(row == ints.size())
-				return false;
-
-			rowOutside = row;
-
-			bindParamStore = [&](sqlite3_stmt * stmt)
-			{
-				sqlite3_bind_int(	stmt,	1, ints[rowOutside]);
-				sqlite3_bind_int(	stmt,	2, rowOutside+1);
-			};
-
-			(*bindParameters) = &bindParamStore;
-
+			while(nextRow < ints.size() && ints[nextRow] == EmptyValues::missingValueInteger) nextRow++;
+			if(nextRow >= ints.size()) return false;
+			rowOutside = nextRow;
+			nextRow++;
+			*bp = &bind;
 			return true;
 		});
 
@@ -1136,36 +1196,36 @@ void DatabaseInterface::columnSetValues(int columnId, const intvec &ints)
 
 void DatabaseInterface::columnSetValues(int columnId, const doublevec &dbls, const stringvec &strs)
 {
-	JASPTIMER_SCOPE(DatabaseInterface::columnSetValues ints);
+	JASPTIMER_SCOPE(DatabaseInterface::columnSetValues dbls);
 	transactionWriteBegin();
-	
-	const int			dataSetId = columnGetDataSetId(columnId);
-	
-	const std::string	updateStatement = "UPDATE Dataset_" + std::to_string(dataSetId)	+ " SET Column_"  + std::to_string(columnId) + "=? WHERE rowNumber=?";
 
-	size_t				rowOutside;
-	bindParametersType	bindParamStore;
+	const int ds = columnGetDataSetId(columnId);
+	const std::string vt = valuesTableName(ds);
+
+	runStatements("DELETE FROM " + vt + " WHERE columnId=?;",
+		[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, columnId); });
+
+	size_t nextRow		= 0;
+	size_t rowOutside	= 0;
+	bindParametersType bind = [&](sqlite3_stmt *stmt)
+	{
+		sqlite3_bind_int(stmt,   1, columnId);
+		sqlite3_bind_int64(stmt, 2, (int64_t)rowOutside + 1);
+		if(!std::isnan(dbls[rowOutside]))
+			_doubleTroubleBinder(stmt, 3, dbls[rowOutside]);
+		else
+			sqlite3_bind_text(stmt, 3, strs[rowOutside].c_str(), (int)strs[rowOutside].size(), SQLITE_TRANSIENT);
+	};
 
 	_runStatementsRepeatedly(
-		updateStatement,
-		[&](bindParametersType ** bindParameters, size_t row)
+		"INSERT INTO " + vt + " (columnId, rowNumber, value) VALUES (?, ?, ?)",
+		[&](bindParametersType ** bp, size_t)
 		{
-			if(row == dbls.size())
-				return false;
-
-			rowOutside = row;
-
-			bindParamStore = [&](sqlite3_stmt * stmt)
-			{
-				if(!std::isnan(dbls[rowOutside]))
-					_doubleTroubleBinder(	stmt,	1, dbls[rowOutside]);
-				else
-					sqlite3_bind_text(		stmt,	1, strs[rowOutside].c_str(), strs[rowOutside].size(), SQLITE_TRANSIENT);
-				sqlite3_bind_int(			stmt,	2, rowOutside+1);
-			};
-
-			(*bindParameters) = &bindParamStore;
-
+			while(nextRow < dbls.size() && std::isnan(dbls[nextRow]) && strs[nextRow].empty()) nextRow++;
+			if(nextRow >= dbls.size()) return false;
+			rowOutside = nextRow;
+			nextRow++;
+			*bp = &bind;
 			return true;
 		});
 
@@ -1174,31 +1234,29 @@ void DatabaseInterface::columnSetValues(int columnId, const doublevec &dbls, con
 
 void DatabaseInterface::columnSetValue(int columnId, size_t row, int valueInt)
 {
-	const int dataSetId = columnGetDataSetId(columnId);
-	
-	const std::string updateStatement = "UPDATE Dataset_" + std::to_string(dataSetId)	+ " SET Column_"  + std::to_string(columnId) + "=? WHERE rowNumber=?";
-
-	runStatements(updateStatement, [&](sqlite3_stmt * stmt)
-	{
-		sqlite3_bind_int(		stmt,	1, valueInt);
-		sqlite3_bind_int(		stmt,	2, row+1);
-	});
+	const int ds = columnGetDataSetId(columnId);
+	runStatements("INSERT OR REPLACE INTO " + valuesTableName(ds) + " (columnId, rowNumber, value) VALUES (?, ?, ?);",
+		[&](sqlite3_stmt *stmt)
+		{
+			sqlite3_bind_int(stmt,   1, columnId);
+			sqlite3_bind_int64(stmt, 2, (int64_t)row + 1);
+			sqlite3_bind_int(stmt,   3, valueInt);
+		});
 }
 
 void DatabaseInterface::columnSetValue(int columnId, size_t row, double valueDbl, const std::string & valueStr)
 {
-	const int dataSetId = columnGetDataSetId(columnId);
-	
-	const std::string updateStatement = "UPDATE Dataset_" + std::to_string(dataSetId)	+ " SET Column_"  + std::to_string(columnId) + "=? WHERE rowNumber=?";
-
-	runStatements(updateStatement, [&](sqlite3_stmt * stmt)
-	{
-		if(!std::isnan(valueDbl))
-			_doubleTroubleBinder(	stmt,	1, valueDbl);
-		else
-			sqlite3_bind_text(		stmt,	1, valueStr.c_str(), valueStr.size(), SQLITE_TRANSIENT);
-		sqlite3_bind_int(			stmt,	2, row+1);
-	});
+	const int ds = columnGetDataSetId(columnId);
+	runStatements("INSERT OR REPLACE INTO " + valuesTableName(ds) + " (columnId, rowNumber, value) VALUES (?, ?, ?);",
+		[&](sqlite3_stmt *stmt)
+		{
+			sqlite3_bind_int(stmt,   1, columnId);
+			sqlite3_bind_int64(stmt, 2, (int64_t)row + 1);
+			if(!std::isnan(valueDbl))
+				_doubleTroubleBinder(stmt, 3, valueDbl);
+			else
+				sqlite3_bind_text(stmt, 3, valueStr.c_str(), (int)valueStr.size(), SQLITE_TRANSIENT);
+		});
 }
 
 void DatabaseInterface::_doubleTroubleBinder(sqlite3_stmt * stmt, int param, double dbl)
@@ -1275,65 +1333,57 @@ size_t DatabaseInterface::columnGetLabelCount(int columnId)
 }
 
 
-void DatabaseInterface::columnGetValues(int columnId, intvec & ints,	const std::string & postFix)
+void DatabaseInterface::columnGetValues(int columnId, intvec & ints, const std::string & /*postFix*/)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::columnGetValues);
 	transactionReadBegin();
 
-	std::function<void(sqlite3_stmt *stmt)>  prepare = [&](sqlite3_stmt *stmt)
-	{
-		sqlite3_bind_int(stmt, 1, columnId);
-	};
+	const int ds = columnGetDataSetId(columnId);
+	const size_t rows = dataSetRowCount(ds);
 
-	int				dataSet		= columnGetDataSetId(columnId);
-	const size_t	rowCount	= dataSetRowCount(dataSet);
+	ints.assign(rows, EmptyValues::missingValueInteger);
 
-	ints.resize(rowCount);
-
-	std::function<void(size_t, sqlite3_stmt *stmt)> processRow = [&](size_t row, sqlite3_stmt *stmt)
-	{
-		int colCount = sqlite3_column_count(stmt);
-
-		assert(colCount == 1);
-
-		ints[row] = sqlite3_column_int(		stmt, 0);
-	};
-
-	runStatements("SELECT " + columnBaseName(columnId, postFix) + " FROM " + dataSetName(dataSet) + " ORDER BY rowNumber;", prepare, processRow);
+	runStatements("SELECT rowNumber, value FROM " + valuesTableName(ds) +
+				  " WHERE columnId=? AND rowNumber<=? ORDER BY rowNumber",
+		[&](sqlite3_stmt *stmt) {
+			sqlite3_bind_int(stmt,   1, columnId);
+			sqlite3_bind_int64(stmt, 2, (int64_t)rows);
+		},
+		[&](size_t, sqlite3_stmt *stmt) {
+			const int64_t rn = sqlite3_column_int64(stmt, 0);
+			if(sqlite3_column_type(stmt, 1) != SQLITE_NULL && (size_t)(rn - 1) < ints.size())
+				ints[(size_t)(rn - 1)] = sqlite3_column_int(stmt, 1);
+		});
 
 	transactionReadEnd();
 }
 
-void DatabaseInterface::columnGetValues(int columnId, doublevec &dbls, stringvec &strs,	const std::string & postFix)
+void DatabaseInterface::columnGetValues(int columnId, doublevec &dbls, stringvec &strs, const std::string & /*postFix*/)
 {
-	JASPTIMER_SCOPE(DatabaseInterface::columnGetValues);
+	JASPTIMER_SCOPE(DatabaseInterface::columnGetValues dbls);
 	transactionReadBegin();
 
-	std::function<void(sqlite3_stmt *stmt)>  prepare = [&](sqlite3_stmt *stmt)
-	{
-		sqlite3_bind_int(stmt, 1, columnId);
-	};
+	const int ds = columnGetDataSetId(columnId);
+	const size_t rows = dataSetRowCount(ds);
 
-	int				dataSet		= columnGetDataSetId(columnId);
-	const size_t	rowCount	= dataSetRowCount(dataSet);
+	dbls.assign(rows, EmptyValues::missingValueDouble);
+	strs.assign(rows, "");
 
-	dbls.resize(rowCount);
-	strs.resize(rowCount);
-
-	std::function<void(size_t, sqlite3_stmt *stmt)> processRow = [&](size_t row, sqlite3_stmt *stmt)
-	{
-		int colCount = sqlite3_column_count(stmt);
-
-		assert(colCount == 1);
-		
-		double				dbl = _doubleTroubleReader(		stmt, 0);
-		const std::string & str = _wrap_sqlite3_column_text(stmt, 0);
-
-		strs[row] = !std::isnan(dbl) ? "" : str;
-		dbls[row] = dbl;
-	};
-
-	runStatements("SELECT " + columnBaseName(columnId, postFix) + " FROM " + dataSetName(dataSet) + " ORDER BY rowNumber;", prepare, processRow);
+	runStatements("SELECT rowNumber, value FROM " + valuesTableName(ds) +
+				  " WHERE columnId=? AND rowNumber<=? ORDER BY rowNumber",
+		[&](sqlite3_stmt *stmt) {
+			sqlite3_bind_int(stmt,   1, columnId);
+			sqlite3_bind_int64(stmt, 2, (int64_t)rows);
+		},
+		[&](size_t, sqlite3_stmt *stmt) {
+			const int64_t rn = sqlite3_column_int64(stmt, 0);
+			const size_t  i  = (size_t)(rn - 1);
+			if(i >= dbls.size()) return;
+			std::string s;
+			double d = _doubleTroubleReader(stmt, 1, &s);
+			dbls[i] = d;
+			strs[i] = std::isnan(d) ? s : "";
+		});
 
 	transactionReadEnd();
 }
@@ -1431,26 +1481,19 @@ void DatabaseInterface::columnDelete(int columnId, bool cleanUpRest)
 	JASPTIMER_SCOPE(DatabaseInterface::columnDelete);
 	transactionWriteBegin();
 
-	//First lets drop the columns in the dataSet
-	int dataSetId	= columnGetDataSetId(columnId),
-		columnIndex	= columnIndexForId(columnId);
+	const int dataSetId		= columnGetDataSetId(columnId);
+	const int columnIndex	= cleanUpRest ? columnIndexForId(columnId) : -1;
 
-	if(cleanUpRest)
+	runStatements("DELETE FROM " + valuesTableName(dataSetId) + " WHERE columnId=?;",
+		[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, columnId); });
+	runStatements("DELETE FROM Labels WHERE columnId=?;",
+		[&](sqlite3_stmt *stmt){ sqlite3_bind_int(stmt, 1, columnId); });
+	runStatements("DELETE FROM Columns WHERE dataSet=? AND id=?;", [&](sqlite3_stmt *stmt)
 	{
-
-		const std::string & alterDatasetPrefix = "ALTER TABLE Dataset_"  + std::to_string(dataSetId)	+ " ";
-		const std::string & addColumnFragment  = "DROP COLUMN  " + columnBaseName(columnId);
-
-		runStatements(alterDatasetPrefix + addColumnFragment + ";");
-	}
-
-	//Delete column entry
-	runStatements("DELETE FROM Columns WHERE dataSet=? AND id=?;", [&](sqlite3_stmt * stmt)
-	{
-		sqlite3_bind_int(stmt,	1, dataSetId);
-		sqlite3_bind_int(stmt,	2, columnId);
+		sqlite3_bind_int(stmt, 1, dataSetId);
+		sqlite3_bind_int(stmt, 2, columnId);
 	});
-	
+
 	if(cleanUpRest)
 		columnIndexDecrements(dataSetId, columnIndex);
 
@@ -2269,8 +2312,14 @@ void DatabaseInterface::dataSetDelete(int dataSetId)
 {
 	JASPTIMER_SCOPE(DatabaseInterface::dataSetDelete);
 	transactionWriteBegin();
+
 	runStatements("DELETE FROM DataSets WHERE id = " + std::to_string(dataSetId) + ";");
-	runStatements("DROP TABLE " + dataSetName(dataSetId) + ";");
+	runStatements("DROP TABLE IF EXISTS " + valuesTableName(dataSetId) + ";");
+	runStatements("DROP TABLE IF EXISTS " + filterValuesTableName(dataSetId) + ";");
+	runStatements("DELETE FROM Labels  WHERE columnId IN (SELECT id FROM Columns WHERE dataSet=" + std::to_string(dataSetId) + ");");
+	runStatements("DELETE FROM Columns WHERE dataSet=" + std::to_string(dataSetId) + ";");
+	runStatements("DELETE FROM Filters WHERE dataSet=" + std::to_string(dataSetId) + ";");
+
 	transactionWriteEnd();
 }
 
@@ -2550,6 +2599,91 @@ sqlite3 * DatabaseInterface::_db()
 	return dbFound;
 }
 
+void DatabaseInterface::_migrateToValueSchema(Version originalVersion)
+{
+	const bool keepLegacyForDo019Fix = (originalVersion != Version() && originalVersion < "0.19");
+	const intset ids = dataSetIds();
+	
+	for(int ds : ids)
+	{
+		const std::string oldTable		= dataSetName(ds);
+		const std::string newTable		= valuesTableName(ds);
+		const std::string newFilterTbl	= filterValuesTableName(ds);
+	
+		if(!tableExists(newTable))
+			runStatements("CREATE TABLE " + newTable +
+				" (columnId INTEGER NOT NULL, rowNumber INTEGER NOT NULL, value NUM, "
+				"  PRIMARY KEY (columnId, rowNumber)) WITHOUT ROWID;");
+	
+		if(!tableExists(newFilterTbl))
+			runStatements("CREATE TABLE " + newFilterTbl +
+				" (filterId INTEGER NOT NULL, rowNumber INTEGER NOT NULL, value INT NOT NULL DEFAULT 1, "
+				"  PRIMARY KEY (filterId, rowNumber)) WITHOUT ROWID;");
+	
+		// Backfill rowCount from the wide table if we still have it.
+		if(tableExists(oldTable))
+		{
+			const int rc = runStatementsId("SELECT COUNT(*) FROM " + oldTable + ";");
+			runStatements("UPDATE DataSets SET rowCount=? WHERE id=?;",
+				[&](sqlite3_stmt *s){ sqlite3_bind_int(s, 1, rc); sqlite3_bind_int(s, 2, ds); });
+		}
+	
+		// do019Fix needs the legacy wide table; skip the data migration, keep the table.
+		if(keepLegacyForDo019Fix)
+			continue;
+	
+		if(!tableExists(oldTable))
+			continue; // already migrated
+	
+		// Columns -> values
+		intset colIds;
+		runStatements(
+			"SELECT id FROM Columns WHERE dataSet=? ORDER BY colIdx;",
+			[&](sqlite3_stmt *s){ sqlite3_bind_int(s, 1, ds); },
+			[&](size_t, sqlite3_stmt *s){ colIds.insert(sqlite3_column_int(s, 0)); });
+	
+		for(int colId : colIds)
+		{
+			const std::string cn = "Column_" + std::to_string(colId);
+			if(!tableHasColumn(oldTable, cn)) continue;
+			runStatements(
+				"INSERT INTO " + newTable + " (columnId, rowNumber, value) "
+				"SELECT " + std::to_string(colId) + ", rowNumber, " + cn +
+				" FROM " + oldTable + " WHERE " + cn + " IS NOT NULL;");
+		}
+	
+		// Filters -> filter values (defaults are 1, so only store != 1)
+		intset filterIds;
+		runStatements(
+			"SELECT id FROM Filters WHERE dataSet=?;",
+			[&](sqlite3_stmt *s){ sqlite3_bind_int(s, 1, ds); },
+			[&](size_t, sqlite3_stmt *s){ filterIds.insert(sqlite3_column_int(s, 0)); });
+	
+		for(int fId : filterIds)
+		{
+			const std::string fn = "Filter_" + std::to_string(fId);
+			if(!tableHasColumn(oldTable, fn)) continue;
+			runStatements(
+				"INSERT INTO " + newFilterTbl + " (filterId, rowNumber, value) "
+				"SELECT " + std::to_string(fId) + ", rowNumber, " + fn +
+				" FROM " + oldTable + " WHERE " + fn + " != 1;");
+		}
+	
+		runStatements("DROP TABLE " + oldTable + ";");
+	}
+}
+
+// Optional: drop legacy wide tables that were deliberately kept for older files.
+void DatabaseInterface::_dropLegacyWideTables()
+{
+for(int ds : dataSetIds())
+{
+	const std::string oldTable = dataSetName(ds);
+	if(tableExists(oldTable))
+		runStatements("DROP TABLE " + oldTable + ";");
+}
+}
+
 void DatabaseInterface::create()
 {
 	JASPTIMER_SCOPE(DatabaseInterface::create);
@@ -2588,6 +2722,11 @@ isItReallyALabel:
 		transactionWriteBegin();
 		runStatements(_dbConstructionSql);
 		runStatements(_dbIndexesSql);
+		
+		// Fallback: ensure rowCount exists even if internalDbDefinition.h was not regenerated.
+		if(!tableHasColumn("DataSets", "rowCount"))
+			runStatements("ALTER TABLE DataSets ADD COLUMN rowCount INT DEFAULT 0;");
+		
 		transactionWriteEnd();
 		
 		constructionWorked = true;
@@ -2809,17 +2948,22 @@ void DatabaseInterface::transactionReadEnd()
 void DatabaseInterface::truncateAllTables()
 {
 	JASPTIMER_SCOPE(DatabaseInterface::truncateAllTables);
+
+	for(int ds : dataSetIds())
+	{
+		runStatements("DROP TABLE IF EXISTS " + valuesTableName(ds) + ";");
+		runStatements("DROP TABLE IF EXISTS " + filterValuesTableName(ds) + ";");
+		runStatements("DROP TABLE IF EXISTS " + dataSetName(ds) + ";");
+	}
+
 	runStatements(R"MultiPower(
-	DELETE FROM Labels;
-	DELETE FROM Columns;
-	DELETE FROM Filters;
-	DELETE FROM DataSets;
-	DELETE FROM Workspace;
-	VACUUM;
-)MultiPower");
-	
-	
-	
+							DELETE FROM Labels;
+							DELETE FROM Columns;
+							DELETE FROM Filters;
+							DELETE FROM DataSets;
+							DELETE FROM Workspace;
+							VACUUM;
+						)MultiPower");
 }
 
 

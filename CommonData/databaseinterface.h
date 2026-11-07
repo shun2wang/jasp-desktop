@@ -41,43 +41,18 @@ public:
 	~dbMalformedException() {}
 };
 
-///Single point of interaction with sqlite, can later be turned into an interface for supporting other sql
+/// Single point of interaction with sqlite.
 ///
-/// This class represents the abstraction layer between DataSetPackage and the SQLite backend
-/// Originally the intent was to also write it agnostic towards the actual data representation
-/// So only using basic datatypes for interaction.
-/// But performance considerations changed that equation, so to make bulk datatransfer possible
-/// DataSet and Column are used directly. This could later also be done with other models of course.
-///
-/// The initial structure of a fresh database can be found in _dbConstructionSql and contains some general tables:
-/// DataSets, Filters, Columns and Labels
-/// Whenever a dataset is created it gets its own entry in DataSets describing it
-/// and also a table named as for instance: DataSet_0 is created.
-///
-/// This DataSet_# table intially only contains a default filter column (for which an entry is made in Filters)
-///
-/// Then when columns are loaded/added each gets an entry in Columns describing it.
-/// DataSet_# then also adds 2 columns for each actual column, both initially filled with NULLs
-/// An integers column for ordinal and nominal(text) columns, and basically any future column with labels (those labels might be integers)
-/// A double column for scalar columns, and perhaps later monetary or time related columns
-///
-/// As values are set they can be stored value for value (during manual editing) or bulked.
-/// This is then represented in the linked column(s) in DataSet_#
-/// 
-/// The tables DataSets, Filters and Columns all have a field "revision"
-/// This is incremented whenever a change is made. So if a single value in a column changes
-/// its corresponding Column has "revision++". If a column is removed or added the same
-/// "revision++" is done for DataSets. As for Filters, im sure you get the gist of it.
-/// 
-/// As each side (Desktop and Engine) both have datastructures that map to these tables,
-/// they also have a "revision" field and so they can, and do, regurlarly check for it to synchronise
-/// their loaded data.
-/// 
-/// General table structure (an example with a single dataset and support for a single filter
-/// 
-/// DataSets [ id, info... ] -> DataSet_1 [ row, Filter_1, Column_1_INT, Column_1_DBL, Column_2_int, ... ]
-///		|---------------------> Filters [id, info...] 
-///		|---------------------> Column  [id, info...] -> Labels [ id, columnId, info... ]
+/// Storage layout (value-table architecture):
+///   DataSets                                  – one row per dataset, includes rowCount
+///   Filters                                   – one row per filter
+///   Columns                                   – one row per column
+///   Labels                                    – one row per label of a labelled column
+///   DataSet_<id>_Values       (columnId, rowNumber, value)  WITHOUT ROWID
+///   DataSet_<id>_FilterValues (filterId, rowNumber, value)  WITHOUT ROWID
+/// The two per-dataset tables replace the old "very wide" DataSet_<id> table; each
+/// column/filter is stored contiguously (clustered by columnId/filterId), and the number
+/// of columns is no longer bounded by SQLITE_MAX_COLUMN.
 /// 
 class DatabaseInterface
 {
@@ -234,7 +209,13 @@ private:
 	double		_doubleTroubleReader(sqlite3_stmt *stmt, int colI, std::string * textReturn = nullptr);					///< The reading counterpart to _doubleTroubleBinder to convert string representations of NAN, INF and NEG_INF back to double
 	void		_runStatements(				const std::string & statements,						std::function<void(sqlite3_stmt *stmt)> *	bindParameters = nullptr,	std::function<void(size_t row, sqlite3_stmt *stmt)> *	processRow = nullptr, bool ignoreFails = false);	///< Runs several sql statements without looking at the results. Unless processRow is not NULL, then this is called for each row.
 	void		_runStatementsRepeatedly(	const std::string & statements, std::function<bool(	std::function<void(sqlite3_stmt *stmt)> **	bindParameters, size_t row)> bindParameterFactory, std::function<void(size_t row, size_t repetition, sqlite3_stmt *stmt)> * processRow = nullptr, bool ignoreFails = false);
-
+	
+	// Value-table helpers (to migrate the db architecture)
+	std::string valuesTableName(			int dataSetId) const;
+	std::string filterValuesTableName(		int dataSetId) const;
+	void		_migrateToValueSchema(		Version originalVersion);
+	void		_dropLegacyWideTables();
+	
 	void		create();					///< Creates a new sqlite database in sessiondir and loads it
 
 	std::map<std::thread::id, sqlite3*>		_dbs;
