@@ -119,6 +119,8 @@ FocusScope
 		id:					myFlickable
 		z:					-1
 		clip:				true
+		boundsBehavior:		Flickable.StopAtBounds
+		boundsMovement:		Flickable.StopAtBounds
 
 		anchors.top:		parent.top
 		anchors.left:		parent.left

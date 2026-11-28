@@ -148,11 +148,11 @@ TableViewBase
 			if (maxColumn < 0 || maxColumn > model.columnCount())
 			{
 				var maxNumberWidth = theView.rowNumberWidth;
-				addLeftButton.x = Qt.binding(function() { return 1 + item.x - iconSize/2 - myFlickable.contentX } )
-				addLeftButton.y = Qt.binding(function() { return item.y + item.height/2 - iconSize/2 } )
+				addLeftButton.x = Qt.binding(function() { return 1 + theView.columnX(colSelected) - iconSize/2 - myFlickable.contentX } )
+				addLeftButton.y = Qt.binding(function() { return theView.viewportY + item.height/2 - iconSize/2 } )
 				addLeftButton.visible = Qt.binding(function() { return (addLeftButton.x + iconSize/2 > theView.rowNumberWidth) && (addLeftButton.x + iconSize/2 < tableView.width + 1) } )
-				addRightButton.x = Qt.binding(function() { return 1 + item.x + item.width - iconSize/2 - myFlickable.contentX } )
-				addRightButton.y = Qt.binding(function() { return item.y + item.height/2 - iconSize/2 } )
+				addRightButton.x = Qt.binding(function() { return 1 + theView.columnX(colSelected) + item.width - iconSize/2 - myFlickable.contentX } )
+				addRightButton.y = Qt.binding(function() { return theView.viewportY + item.height/2 - iconSize/2 } )
 				addRightButton.visible = Qt.binding(function() { return (addRightButton.x + iconSize/2 > theView.rowNumberWidth) && (addRightButton.x + iconSize/2 < tableView.width + 1) } )
 			}
 			else
@@ -162,7 +162,7 @@ TableViewBase
 			}
 			if (minColumn < model.columnCount())
 			{
-				deleteButton.x = Qt.binding(function() { return item.x + item.width/2 - iconSize/2 - myFlickable.contentX } )
+				deleteButton.x = Qt.binding(function() { return theView.columnX(colSelected) + item.width/2 - iconSize/2 - myFlickable.contentX } )
 				deleteButton.visible = Qt.binding(function() { return (deleteButton.x + iconSize/2 > theView.rowNumberWidth ) && (deleteButton.x + iconSize/2 < tableView.width + 1) } )
 			}
 			else
@@ -314,11 +314,9 @@ TableViewBase
 					MouseArea
 					{
 						anchors.fill: parent
-						onClicked: 
+						onClicked:
 						{
-							if (tableView.colSelected === columnIndex)
-								columnIndex = -1
-							tableView.colSelected = columnIndex;
+							tableView.colSelected = tableView.colSelected === columnIndex ? -1 : columnIndex
 						}
 					}
 				}
@@ -343,11 +341,9 @@ TableViewBase
 					MouseArea
 					{
 						anchors.fill: parent
-						onClicked: 
+						onClicked:
 						{
-							if (tableView.rowSelected === rowIndex)
-								rowIndex = -1
-							tableView.rowSelected = rowIndex;
+							tableView.rowSelected = tableView.rowSelected === rowIndex ? -1 : rowIndex
 						}
 					}
 				}

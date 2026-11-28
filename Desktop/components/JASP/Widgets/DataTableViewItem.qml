@@ -88,7 +88,7 @@ Item
 			{
 				var shiftPressed	= Boolean(mouse.modifiers & Qt.ShiftModifier)
 				var controlPressed	= Boolean(mouse.modifiers & Qt.ControlModifier)
-				var rightPressed	= Boolean(mouse.buttons & Qt.RightButton)
+				var rightPressed	= mouse.button === Qt.RightButton
 				var isSelected		= dataTableView.view.isSelected(rowIndex, columnIndex)
 					
 				if(!rightPressed)
@@ -112,14 +112,15 @@ Item
 
 	}
 
+	// The visible selection highlight is drawn by the TableView delegate
+	// wrapper (DataSetViewTable.qml) directly from the model role, so that it
+	// follows scrolling and selection changes without any C++ bookkeeping.
+	// This is only the geometry anchor for the mouse area and popup menu.
 	Rectangle
 	{
 		id:				itemHighlight
-		visible:		ribbonModel.dataMode && (dataTableView.selection && dataTableView.selection.hasSelection && dataTableView.view.isSelected(rowIndex, columnIndex))
-
-		color:			jaspTheme.itemHighlight
-		opacity:		1.0
-		z:				-1
+		visible:			false
+		z:					-1
 
 		anchors
 		{
@@ -132,3 +133,4 @@ Item
 	}
 
 }
+

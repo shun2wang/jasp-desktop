@@ -734,6 +734,7 @@ void ColumnModel::setRowWidth(double len)
 	
 	_rowWidth = len;
 	emit rowWidthChanged();
+	emit headerDataChanged(Qt::Horizontal, 0, columnCount() - 1);
 	refresh();
 }
 

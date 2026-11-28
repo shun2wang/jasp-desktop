@@ -1,8 +1,5 @@
 #include "datasetviewbase.h"
 
-#include <QSGFlatColorMaterial>
-#include <QSGGeometry>
-#include <QSGNode>
 #include "timers.h"
 #include "log.h"
 #include "preferencesmodelbase.h"
@@ -11,19 +8,126 @@
 #include <iostream>
 #include <QGuiApplication>
 #include <QClipboard>
+#include <QQuickWindow>
 #include "utils.h"
 #include "emptyvalues.h"
+#include <cmath>
 
+
+DataSetViewTableModel::DataSetViewTableModel(DataSetViewBase *owner, Kind kind)
+	: QIdentityProxyModel(owner), _owner(owner), _kind(kind)
+{
+	static const QStringList roles = {
+		"itemText", "itemData", "itemEnabled", "itemTextEdit", "itemShadowText", "itemLabel", "itemValue",
+		"itemActive", "itemEditable", "itemSelected", "itemFiltered", "itemInputType", "itemLines",
+		"rowIndex", "columnIndex", "rowNumber", "headerText", "virtual", "columnTitle", "columnDescription", "columnIsComputed",
+		"columnIsInvalidated", "computedColumnType", "columnIsFiltered", "columnError", "columnType",
+		"isDynamic", "tableView", "dataviewer"
+	};
+	int role = Qt::UserRole + 10000;
+	for(const QString &name : roles)
+		_extraRoles.insert(role++, name.toUtf8());
+}
+
+// Both axes must track the source count for ALL kinds: QIdentityProxyModel
+// forwards the source's structural-change notifications (rows/columns about
+// to be inserted/removed, moved...) with the source's index ranges verbatim,
+// and QAbstractItemModel asserts those ranges against this model's own
+// rowCount/columnCount. A RowHeaders model that claims 1 column therefore
+// asserts/crashes on every column removal. The rendered axis is limited to 1
+// by the consuming TableView's rows/columns properties in DataSetViewTable.qml.
+int DataSetViewTableModel::rowCount(const QModelIndex &parent) const
+{
+	if(parent.isValid() || !sourceModel())
+		return 0;
+	return sourceModel()->rowCount(parent);
+}
+
+int DataSetViewTableModel::columnCount(const QModelIndex &parent) const
+{
+	if(parent.isValid() || !sourceModel())
+		return 0;
+	return sourceModel()->columnCount(parent);
+}
+
+QVariant DataSetViewTableModel::data(const QModelIndex &index, int role) const
+{
+	if(!index.isValid() || !sourceModel())
+		return {};
+	if(role == Qt::DisplayRole)
+		return _kind == Kind::Cells ? QIdentityProxyModel::data(index, role) : QVariant();
+	if(!_extraRoles.contains(role))
+		return QIdentityProxyModel::data(index, role);
+
+	const QString roleName = QString::fromUtf8(_extraRoles.value(role));
+	if(roleName == "isDynamic") return true;
+	if(roleName == "rowIndex") return index.row();
+	if(roleName == "columnIndex") return index.column();
+	if(roleName == "tableView") return QVariant::fromValue<QObject *>(_owner->tableViewItem());
+	if(roleName == "dataviewer") return QVariant::fromValue<QObject *>(_owner);
+
+	if(_kind == Kind::Cells)
+		return _owner->cellData(index.row(), index.column()).value(roleName);
+	if(_kind == Kind::RowHeaders)
+		return _owner->rowHeaderData(index.row()).value(roleName);
+	return _owner->columnHeaderData(index.column()).value(roleName);
+}
+
+QHash<int, QByteArray> DataSetViewTableModel::roleNames() const
+{
+	QHash<int, QByteArray> roles = QIdentityProxyModel::roleNames();
+	roles.insert(_extraRoles);
+	return roles;
+}
+
+void DataSetViewTableModel::notifyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+{
+	if(!sourceModel() || !topLeft.isValid() || !bottomRight.isValid())
+		return;
+
+	static const QHash<QByteArray, QByteArray> roleAliases = {
+		{"label", "itemLabel"}, {"value", "itemValue"}, {"shadowDisplay", "itemShadowText"},
+		{"noSepaDisplay", "itemTextEdit"}, {"selected", "itemSelected"}, {"filter", "itemFiltered"},
+		{"itemInputValue", "itemInputType"}, {"display", "itemText"}
+	};
+	const QHash<int, QByteArray> sourceRoles = sourceModel()->roleNames();
+	QVector<int> translatedRoles;
+	const QVector<int> sourceChanges = roles.isEmpty() ? sourceRoles.keys() : roles;
+	for(int role : sourceChanges)
+	{
+		const QByteArray name = role == Qt::DisplayRole ? QByteArray("display") : sourceRoles.value(role);
+		const int translatedRole = _extraRoles.key(roleAliases.value(name, name), -1);
+		if(translatedRole >= 0 && !translatedRoles.contains(translatedRole))
+			translatedRoles.append(translatedRole);
+	}
+
+	// QIdentityProxyModel already forwards the source roles. Add only the
+	// historical aliases that cannot be represented by the source role list.
+	if(!translatedRoles.isEmpty())
+		emit dataChanged(index(topLeft.row(), _kind == Kind::RowHeaders ? 0 : topLeft.column()),
+						 index(bottomRight.row(), _kind == Kind::RowHeaders ? 0 : bottomRight.column()), translatedRoles);
+}
+
+void DataSetViewTableModel::notifyHeaderDataChanged(Qt::Orientation orientation, int first, int last)
+{
+	if(!sourceModel() || first < 0 || last < first)
+		return;
+
+	if(orientation == Qt::Vertical && _kind == Kind::RowHeaders)
+		emit dataChanged(index(first, 0), index(last, 0));
+	else if(orientation == Qt::Horizontal && _kind == Kind::ColumnHeaders)
+		emit dataChanged(index(0, first), index(0, last));
+}
 
 DataSetViewBase::DataSetViewBase(QQuickItem *parent)
 	: QQuickItem (parent)
+	, _cellModel(new DataSetViewTableModel(this, DataSetViewTableModel::Kind::Cells))
+	, _rowHeaderModel(new DataSetViewTableModel(this, DataSetViewTableModel::Kind::RowHeaders))
+	, _columnHeaderModel(new DataSetViewTableModel(this, DataSetViewTableModel::Kind::ColumnHeaders))
 	, _selectionModel(new QItemSelectionModel(nullptr, this))
 {
-	setFlag(QQuickItem::ItemHasContents);
 	//setFlag(QQuickItem::ItemIsFocusScope);
 
-	_material.setColor(Qt::gray);
-	
 	_delayViewportChangedTimer = new QTimer(this);
 	_delayViewportChangedTimer->setInterval(0);
 	_delayViewportChangedTimer->setSingleShot(true);
@@ -54,6 +158,9 @@ DataSetViewBase::DataSetViewBase(QQuickItem *parent)
 	connect(this,						&DataSetViewBase::itemSizeChanged,					this, &DataSetViewBase::reloadTextItems);
 	connect(this,						&DataSetViewBase::itemSizeChanged,					this, &DataSetViewBase::reloadRowNumbers);
 	connect(this,						&DataSetViewBase::itemSizeChanged,					this, &DataSetViewBase::reloadColumnHeaders);
+
+	connect(this,						&DataSetViewBase::editingChanged,					this, &DataSetViewBase::updateDelegateData);
+	connect(this,						&DataSetViewBase::editCoordinatesChanged,			this, &DataSetViewBase::updateDelegateData);
 	
 	connect(this,						&DataSetViewBase::selectionChanged,					this, &DataSetViewBase::selectionMinChanged);
 	connect(this,						&DataSetViewBase::selectionChanged,					this, &DataSetViewBase::selectionMaxChanged);
@@ -61,6 +168,7 @@ DataSetViewBase::DataSetViewBase(QQuickItem *parent)
 	connect(PreferencesModelBase::preferences(), &PreferencesModelBase::uiScaleChanged,		this, &DataSetViewBase::resetItems,				Qt::QueuedConnection);
 	connect(PreferencesModelBase::preferences(), &PreferencesModelBase::interfaceFontChanged,this, &DataSetViewBase::resetItems,			Qt::QueuedConnection);
 
+	connect(_selectionModel,			&QItemSelectionModel::selectionChanged,				this, &DataSetViewBase::selectionDataChanged);
 	connect(_selectionModel,			&QItemSelectionModel::selectionChanged,				this, &DataSetViewBase::selectionChanged);
 	
 	connect(this,						&QQuickItem::visibleChanged,						this, [this](){ if(isVisible()) modelWasReset(); }, Qt::QueuedConnection);
@@ -69,9 +177,78 @@ DataSetViewBase::DataSetViewBase(QQuickItem *parent)
 	
 }
 
+bool DataSetViewBase::event(QEvent *event)
+{
+	if(event->type() == QEvent::Polish)
+		initializeTableView();
+	return QQuickItem::event(event);
+}
+
+void DataSetViewBase::componentComplete()
+{
+	QQuickItem::componentComplete();
+	initializeTableView();
+}
+
+void DataSetViewBase::initializeTableView()
+{
+	if(_tableView)
+		return;
+	if(!qmlEngine(this))
+	{
+		return;
+	}
+
+	QQmlComponent component(qmlEngine(this), QUrl("qrc:/jasp-stats.org/imports/JASP/Controls/components/JASP/Controls/DataSetViewTable.qml"));
+	if(component.isError())
+	{
+		Log::log() << "Cannot load TableView renderer: " << component.errorString() << std::endl;
+		return;
+	}
+	QQmlContext *context = new QQmlContext(qmlContext(this), this);
+	context->setContextProperty("dataSetViewController", this);
+	_tableView = qobject_cast<QQuickItem*>(component.create(context));
+	if(!_tableView)
+	{
+		Log::log() << "Cannot create TableView renderer: " << component.errorString() << std::endl;
+		delete context;
+		return;
+	}
+	iAmParent(_tableView);
+	_tableView->setZ(-5);
+	auto updateGeometry = [this]()
+	{
+		if(_tableView)
+		{
+			_tableView->setPosition(QPointF(_viewportX, _viewportY));
+			_tableView->setSize(QSizeF(std::max(0.0, _viewportW), std::max(0.0, _viewportH)));
+		}
+	};
+	connect(this, &DataSetViewBase::viewportXChanged, this, updateGeometry);
+	connect(this, &DataSetViewBase::viewportYChanged, this, updateGeometry);
+	connect(this, &DataSetViewBase::viewportWChanged, this, updateGeometry);
+	connect(this, &DataSetViewBase::viewportHChanged, this, updateGeometry);
+	updateGeometry();
+}
+
+void DataSetViewBase::reloadTableView()
+{
+	if(!_tableView)
+		return;
+	QMetaObject::invokeMethod(_tableView, "synchronize", Qt::QueuedConnection);
+}
+
 void DataSetViewBase::setModel(QAbstractItemModel * model)
 {
+	if(_model == model)
+		return;
+	if(_model)
+		disconnect(_model, nullptr, this, nullptr);
+	clearEdit();
 	_model = model;
+	_cellModel->setSourceModel(model);
+	_rowHeaderModel->setSourceModel(model);
+	_columnHeaderModel->setSourceModel(model);
 
 	if (model)
 	{
@@ -102,6 +279,16 @@ void DataSetViewBase::setModel(QAbstractItemModel * model)
 
 		emit modelChanged();
 	}
+	else
+	{
+		_selectionModel->setModel(nullptr);
+		_cellSizes.clear();
+		_dataColsMaxWidth.clear();
+		_colXPositions.clear();
+		setWidth(0);
+		setHeight(0);
+		emit modelChanged();
+	}
 }
 
 void DataSetViewBase::setRolenames()
@@ -123,6 +310,200 @@ int DataSetViewBase::getRole(const std::string &roleName) const
 		return it->second;
 }
 
+
+QVariantMap DataSetViewBase::cellData(int row, int column) const
+{
+	QVariantMap result;
+	if(!_model)
+		return result;
+	const QModelIndex index = _model->index(row, column);
+	if(!index.isValid())
+	{
+		static int invalidWarned = 0;
+		if(invalidWarned++ < 5)
+		return result;
+	}
+	const auto flags = _model->flags(index);
+	if(_model->flags(index) & Qt::ItemIsEditable || _storedDisplayText.count(row) == 0 || _storedDisplayText.find(row)->second.count(column) == 0)
+		const_cast<DataSetViewBase*>(this)->_storedDisplayText[row][column] = _model->data(index, Qt::DisplayRole).toString();
+	result.insert("itemText", _storedDisplayText.find(row)->second.find(column)->second);
+	result.insert("itemData", _model->data(index));
+	result.insert("itemEnabled", bool(flags & Qt::ItemIsEnabled));
+	result.insert("itemTextEdit", _model->data(index, getRole("noSepaDisplay")));
+	result.insert("itemShadowText", _model->data(index, getRole("shadowDisplay")));
+	result.insert("itemLabel", _model->data(index, getRole("label")));
+	result.insert("itemValue", _model->data(index, getRole("value")));
+	result.insert("itemActive", const_cast<DataSetViewBase*>(this)->isFiltered(row, column));
+	result.insert("itemEditable", bool(flags & Qt::ItemIsEditable));
+	const QVariant selected = _model->data(index, getRole("selected"));
+	result.insert("itemSelected", selected.isValid() && selected.userType() != QMetaType::UnknownType ? selected.toBool() : _selectionModel->isSelected(index));
+	result.insert("itemFiltered", _model->data(index, getRole("filter")));
+	result.insert("itemInputType", _model->data(index, getRole("itemInputValue")));
+	result.insert("itemLines", _model->data(index, getRole("lines")));
+	return result;
+}
+
+QVariantMap DataSetViewBase::rowHeaderData(int row) const
+{
+	if(!_model)
+		return {};
+	return {
+		{"rowNumber", _model->headerData(row, Qt::Vertical, Qt::DisplayRole)},
+		{"virtual", const_cast<DataSetViewBase*>(this)->isRowVirtual(row)},
+		{"headerText", _model->headerData(row, Qt::Vertical).toString()},
+		{"itemLines", 15}
+	};
+}
+
+QVariantMap DataSetViewBase::columnHeaderData(int column) const
+{
+	if(!_model)
+		return {};
+	return {
+		{"headerText", _model->headerData(column, Qt::Horizontal).toString()},
+		{"columnTitle", _model->headerData(column, Qt::Horizontal, getRole("title"))},
+		{"columnDescription", _model->headerData(column, Qt::Horizontal, getRole("description"))},
+		{"columnIsComputed", _model->headerData(column, Qt::Horizontal, getRole("columnIsComputed")).toBool()},
+		{"columnIsInvalidated", _model->headerData(column, Qt::Horizontal, getRole("computedColumnIsInvalidated")).toBool()},
+		{"computedColumnType", _model->headerData(column, Qt::Horizontal, getRole("computedColumnType")).toInt()},
+		{"columnIsFiltered", _model->headerData(column, Qt::Horizontal, getRole("filter")).toBool()},
+		{"columnError", _model->headerData(column, Qt::Horizontal, getRole("computedColumnError")).toString()},
+		{"columnType", _model->headerData(column, Qt::Horizontal, getRole("columnType")).toInt()},
+		{"virtual", const_cast<DataSetViewBase*>(this)->isColumnVirtual(column)},
+		{"itemLines", 15}
+	};
+}
+
+QQuickItem *DataSetViewBase::cellItem(int row, int column) const
+{
+	return _cellItems.key(QPoint(column, row), nullptr);
+}
+
+QQuickItem * DataSetViewBase::createDelegate(const QString &kind, QQmlComponent *component, QQuickItem *parent, int row, int column)
+{
+	if(!component || !parent || !_model)
+		return nullptr;
+
+	// Parent the delegate context on the QML file that instantiated this view
+	// (DataTableView.qml), so ids like dataTableView/ribbonModel/columnModel
+	// resolve exactly like they did when delegates were created there directly.
+	QQmlContext *context = new QQmlContext(qmlContext(this), this);
+	if(kind == "cell")
+		setStyleDataItem(context, isFiltered(row, column), column, row);
+	else if(kind == "row")
+		setStyleDataRowNumber(context, row);
+	else if(kind == "column")
+		setStyleDataColumnHeader(context, column);
+	else
+	{
+		delete context;
+		return nullptr;
+	}
+
+	context->setContextProperty("rowIndex", row);
+	context->setContextProperty("columnIndex", column);
+	context->setContextProperty("isDynamic", true);
+	context->setContextProperty("tableView", _tableViewItem);
+	context->setContextProperty("dataviewer", this);
+
+	QQmlIncubator incubator(QQmlIncubator::Synchronous);
+	component->create(incubator, context);
+	QQuickItem *	item = qobject_cast<QQuickItem *>(incubator.object());
+	if(incubator.isError() || !item)
+	{
+		for(const QQmlError &error : incubator.errors())
+			Log::log() << "Delegate incubation error: " << error.toString().toStdString() << std::endl;
+		Log::log() << "Cannot create " << kind.toStdString() << " delegate at row " << row << ", column " << column << std::endl;
+		delete incubator.object();
+		delete context;
+		return nullptr;
+	}
+
+	item->setParentItem(parent);
+	setDelegateGeometry(kind, item, row, column);
+	_delegateContexts.insert(item, context);
+	if(kind == "cell")
+		_cellItems.insert(item, QPoint(column, row));
+	else if(kind == "row")
+		_rowNumberItems.insert(row, item);
+	else
+		_columnHeaderItems.insert(column, item);
+
+
+	connect(item, &QObject::destroyed, this, [this, item]()
+	{
+		_cellItems.remove(item);
+		for(auto it = _rowNumberItems.begin(); it != _rowNumberItems.end();)
+			it.value() == item ? it = _rowNumberItems.erase(it) : ++it;
+		for(auto it = _columnHeaderItems.begin(); it != _columnHeaderItems.end();)
+			it.value() == item ? it = _columnHeaderItems.erase(it) : ++it;
+		delete _delegateContexts.take(item);
+	});
+
+	return item;
+}
+
+void DataSetViewBase::destroyDelegate(const QString &kind, QQuickItem *item)
+{
+	if(!item)
+		return;
+
+	QQmlContext *context = _delegateContexts.take(item);
+	disconnect(item, nullptr, this, nullptr);
+	_cellItems.remove(item);
+	for(auto it = _rowNumberItems.begin(); it != _rowNumberItems.end();)
+		it.value() == item ? it = _rowNumberItems.erase(it) : ++it;
+	for(auto it = _columnHeaderItems.begin(); it != _columnHeaderItems.end();)
+		it.value() == item ? it = _columnHeaderItems.erase(it) : ++it;
+
+	item->setFocus(false);
+	item->setVisible(false);
+	delete item;
+	delete context;
+}
+
+void DataSetViewBase::setDelegateGeometry(const QString &kind, QQuickItem *item, int row, int column)
+{
+	if(!item)
+		return;
+
+	item->setX(kind == "cell" ? _itemHorizontalPadding : 0);
+	item->setY(kind == "cell" ? _itemVerticalPadding : 0);
+	item->setWidth(kind == "row" ? _rowNumberMaxWidth : std::max(0.0, columnWidth(column) - (kind == "cell" ? 2 * _itemHorizontalPadding : 0)));
+	item->setHeight(std::max(0.0, _dataRowsMaxHeight - (kind == "cell" ? 2 * _itemVerticalPadding : 0)));
+	item->setVisible(kind != "cell" || !_editing || _prevEditRow != row || _prevEditCol != column);
+}
+
+void DataSetViewBase::updateDelegateData()
+{
+	for(auto it = _delegateContexts.constBegin(); it != _delegateContexts.constEnd(); ++it)
+	{
+		QQuickItem *item = it.key();
+		QQmlContext *context = it.value();
+		const QPoint cell = _cellItems.value(item, QPoint(-1, -1));
+		if(cell.x() >= 0)
+		{
+			setStyleDataItem(context, isFiltered(cell.y(), cell.x()), cell.x(), cell.y());
+			setDelegateGeometry("cell", item, cell.y(), cell.x());
+			continue;
+		}
+
+		const int row = _rowNumberItems.key(item, -1);
+		if(row >= 0)
+		{
+			setStyleDataRowNumber(context, row);
+			setDelegateGeometry("row", item, row, 0);
+			continue;
+		}
+
+		const int column = _columnHeaderItems.key(item, -1);
+		if(column >= 0)
+		{
+			setStyleDataColumnHeader(context, column);
+			setDelegateGeometry("column", item, 0, column);
+		}
+	}
+}
 
 QSizeF DataSetViewBase::getColumnSize(int col)
 {
@@ -160,68 +541,28 @@ QSizeF DataSetViewBase::getRowHeaderSize()
 
 void DataSetViewBase::clearCaches()
 {
-	JASPTIMER_SCOPE(DataSetViewBase::clearCaches);
-	Log::log() << "DataSetViewBase::clearCaches\n" << std::flush;
-	
-	for(auto storage : {_textItemStorage, _rowNumberStorage, _columnHeaderStorage})
-		while(storage.size() > 0)
-		{
-			const ItemContextualized * ic = storage.top();
-			storage.pop();
-			delete ic;
-		}
-	
-	_textItemStorage		= {};
-	_rowNumberStorage		= {};
-	_columnHeaderStorage	= {};
+	// TableView owns the wrapper items. Force a layout so they are recreated
+	// with a fresh font context, without orphaning live delegates in the maps.
+	reloadTableView();
 }
 
 void DataSetViewBase::modelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
 {
-	if(!isVisible())
+	if(!isVisible() || !_model || !topLeft.isValid() || !bottomRight.isValid() || topLeft.column() < 0 || topLeft.column() >= _model->columnCount() || topLeft.column() >= int(_cellSizes.size()))
 		return;
-	
+
+	_cellModel->notifyDataChanged(topLeft, bottomRight, roles);
+	updateDelegateData();
+
 	const int	colMin = std::max(0,						topLeft.column()),
-				colMax = std::min(_model->columnCount(),	bottomRight.column()),
+				colMax = std::min(_model->columnCount() - 1,	bottomRight.column()),
 				rowMin = std::max(0,						topLeft.row()),
-				rowMax = std::min(_model->rowCount(),		bottomRight.row());
+				rowMax = std::min(_model->rowCount() - 1,	bottomRight.row());
 
 	QSizeF calcSize = getColumnSize(colMin);
 
 	if (_cacheItems || int(_cellSizes[size_t(colMin)].width() * 10) != int(calcSize.width() * 10)) //If we cache items we are not expecting the user to make regular manual changes to the data, so if something changes we can do a reset. Otherwise we are in TableView and we do it only when the column size changes.
 		calculateCellSizes();
-	else if (roles.contains(getRole("selected")) || roles.contains(Qt::DisplayRole))
-	{
-		// This is a special case for the VariablesWindows & TableView: caching mixed up the items, so it can't be used
-		// but the selected context property must be updated for VariablesWindows
-		// and the itemText must be updated for Grid TableView (used in Plot Editor).
-		for (int col = colMin; col <= colMax; col++)
-			for (int row = rowMin; row <= rowMax; row++)
-			{
-				ItemContextualized* itemCon = _cellTextItems[col][row];
-				QModelIndex modelIndex = _model->index(row, col);
-
-				if (itemCon)
-				{
-					QQmlContext* context = itemCon->context;
-					if (roles.contains(getRole("selected")))
-						context->setContextProperty("itemSelected",	_model->data(modelIndex, getRole("selected")));
-					
-					context->setContextProperty("itemFiltered",		_model->data(modelIndex, getRole("filter")));
-					
-					if (roles.contains(Qt::DisplayRole) || roles.contains(getRole("value")) || roles.contains(getRole("label")) || roles.contains(getRole("shadowDisplay"))|| roles.contains(getRole("noSepaDisplay")))
-					{
-						//Changes here should be considered also for DataSetViewBase::setStyleDataItem:
-						context->setContextProperty("itemText",			_model->data(modelIndex));
-						context->setContextProperty("itemEnabled",		bool(_model->flags(modelIndex) & Qt::ItemIsEnabled));
-						context->setContextProperty("itemTextEdit",		_model->data(modelIndex, getRole("noSepaDisplay")));
-						context->setContextProperty("itemShadowText",	_model->data(modelIndex, getRole("shadowDisplay")));
-						context->setContextProperty("itemLabel",		_model->data(modelIndex, getRole("label")));
-						context->setContextProperty("itemValue",		_model->data(modelIndex, getRole("value")));
-					}
-				}
-			}
-	}
 
 	if (editing() && (topLeft == bottomRight)) // In case of Undo/Redo set the focus on the correspondig cell
 		positionEditItem(topLeft.row(), topLeft.column());
@@ -238,21 +579,23 @@ void DataSetViewBase::modelDataChanged(const QModelIndex &topLeft, const QModelI
 
 }
 
-void DataSetViewBase::modelHeaderDataChanged(Qt::Orientation, int, int)
+void DataSetViewBase::modelHeaderDataChanged(Qt::Orientation orientation, int first, int last)
 {
 	if(isVisible())
+	{
+		_rowHeaderModel->notifyHeaderDataChanged(orientation, first, last);
+		_columnHeaderModel->notifyHeaderDataChanged(orientation, first, last);
 		calculateCellSizes();
+	}
 }
 
 void DataSetViewBase::modelAboutToBeReset()
 {
-	_storedLineFlags.clear();
 	_storedDisplayText.clear();
 }
 
 void DataSetViewBase::modelWasReset()
 {
-	Log::log() << "DataSetViewBase::modelWasReset()" << std::endl;
 	if(isVisible())
 		calculateCellSizes();
 
@@ -283,30 +626,37 @@ void DataSetViewBase::calculateCellSizesAndClear(bool clearStorage)
 	
 	_cellSizes.clear();
 	_dataColsMaxWidth.clear();
-	_storedLineFlags.clear();
 	_storedDisplayText.clear();
 
-	storeAllItems();
+	if(clearStorage)
+		clearCaches();
 	
-	//if(clearStorage)
-	//	clearCaches();
-
 	if(_model == nullptr) return;
 
 	_cellSizes.resize(_model->columnCount());
 	_colXPositions.resize(_model->columnCount());
-	_cellTextItems.clear();
 
 	for(int col=0; col<_model->columnCount(); col++)
 		_cellSizes[col] = getColumnSize(col);
 
+	// Snap the total row height (content + padding) to whole device pixels: a
+	// fractional height makes the 1px grid lines land between device pixels,
+	// which the rasterizer smears into 2px lines every other row (esp. visible
+	// on Windows at 125%/150%), and it desyncs the C++-positioned editor/highlight
+	// from the TableView-positioned cells.
+	qreal devicePixelRatio = window() && window()->screen() ? window()->devicePixelRatio() : 1.0;
+	qreal snappedRowHeight = std::round((_cellSizes.empty() ? 0 : _cellSizes[0].height()) * devicePixelRatio) / devicePixelRatio + _itemVerticalPadding * 2;
+	snappedRowHeight = std::round(snappedRowHeight * devicePixelRatio) / devicePixelRatio;
+	if(snappedRowHeight <= 0)
+		snappedRowHeight = 1;
+
 	_dataColsMaxWidth.resize(_model->columnCount());
 
 	for(int col=0; col<_model->columnCount(); col++)
-		_dataColsMaxWidth[col] = _cellSizes[col].width() + _itemHorizontalPadding * 2;
+		_dataColsMaxWidth[col] = std::round((_cellSizes[col].width() + _itemHorizontalPadding * 2) * devicePixelRatio) / devicePixelRatio;
 
-	setHeaderHeight(_model->columnCount() == 0 ? 0 : _cellSizes[0].height() + _itemVerticalPadding * 2);
-	setRowNumberWidth(getRowHeaderSize().width());
+	setHeaderHeight(_model->columnCount() == 0 ? 0 : snappedRowHeight);
+	setRowNumberWidth(std::round(getRowHeaderSize().width() * devicePixelRatio) / devicePixelRatio);
 
 	
 	float w = _rowNumberMaxWidth;
@@ -334,6 +684,8 @@ void DataSetViewBase::calculateCellSizesAndClear(bool clearStorage)
 
 	//emit itemSizeChanged(); //This calls reloadTextItems, reloadRowNumbers and reloadColumnHeaders and those all call viewPortChanged. Which recreates them all every time if necessary... Nobody else seems to emit this signal anywhere so I dont see the point. Ill replace it with viewPortChanged
 
+	reloadTableView();
+	updateDelegateData();
 	viewportChangedDelayed();
 }
 
@@ -358,7 +710,6 @@ void DataSetViewBase::viewportChanged()
 #endif
 
 	determineCurrentViewPortIndices();
-    storeOutOfViewItems();
 	
 	if(_viewportW >= 0 && _viewportH >= 0)
 	{
@@ -413,99 +764,6 @@ void DataSetViewBase::determineCurrentViewPortIndices()
 	JASPTIMER_STOP(DataSetViewBase::determineCurrentViewPortIndices);
 }
 
-void DataSetViewBase::storeOutOfViewItems(bool all)
-{
-	JASPTIMER_SCOPE(DataSetViewBase::storeOutOfViewItems);
-
-    {
-		ItemCxsByColRow cleanList;
-
-        for(auto & subVec : _cellTextItems)
-        {
-            for(auto & intTextItem : subVec.second)
-            {
-                if(intTextItem.second)
-                {
-                    int col = subVec.first,
-                        row = intTextItem.first;
-
-                    if(all || col < _currentViewportColMin || col > _currentViewportColMax || row < _currentViewportRowMin || row > _currentViewportRowMax)
-                    {
-                        intTextItem.second->item->setVisible(false);
-						intTextItem.second->item->setParentItem(nullptr);
-
-                        if (_cacheItems)		_textItemStorage.push(intTextItem.second);
-                        else					delete intTextItem.second;
-                    }
-                    else
-                    {
-                        cleanList[col][row] = intTextItem.second;
-                    }
-                }
-            }
-        }
-
-       _cellTextItems = cleanList;
-    }
-
-    {
-		ItemCxsByIndex cleanList;
-
-        for(auto & intItem : _columnHeaderItems)
-        {
-            int col = intItem.first;
-
-            if(all || col < _currentViewportColMin || col > _currentViewportColMax)
-            {
-                intItem.second->item->setVisible(false);
-				intItem.second->item->setParentItem(nullptr);
-
-                if (_cacheItems)		_columnHeaderStorage.push(intItem.second);
-                else					delete intItem.second;
-            }
-            else
-                cleanList[col]  = intItem.second;
-        }
-
-        _columnHeaderItems = cleanList;
-    }
-
-
-    {
-		ItemCxsByIndex cleanList;
-
-        for(auto & intItem : _rowNumberItems)
-        {
-            int row = intItem.first;
-
-            if(all || row < _currentViewportRowMin || row > _currentViewportRowMax)
-            {
-                intItem.second->item->setVisible(false);
-				intItem.second->item->setParentItem(nullptr);
-
-                if (_cacheItems)		_rowNumberStorage.push(intItem.second);
-                else					delete intItem.second;
-            }
-            else
-                cleanList[row] = intItem.second;
-        }
-
-        _rowNumberItems = cleanList;
-    }
-}
-
-void DataSetViewBase::addLine(float x0, float y0, float x1, float y1)
-{
-	if(_lines.size() < _linesActualSize + 4)
-		_lines.resize(_lines.size() + 64);
-
-	//_linesActualSize must always be a multiple of 4 because:
-	_lines[_linesActualSize++] = x0;
-	_lines[_linesActualSize++] = y0;
-	_lines[_linesActualSize++] = x1;
-	_lines[_linesActualSize++] = y1;
-}
-
 QSizeF DataSetViewBase::getTextSize(const QString & text) const
 {
 	return JaspTheme::fontMetrics().size(Qt::TextSingleLine, text);
@@ -518,136 +776,8 @@ void DataSetViewBase::buildNewLinesAndCreateNewItems()
 	if(_currentViewportColMax == -1 ||  _currentViewportColMin == -1 || _currentViewportRowMax == -1 || _currentViewportRowMin == -1)
 		return;
 
-#ifdef ADD_LINES_PLEASE
-	_linesActualSize = 0;
-	size_t expectedLinesSize = (_currentViewportColMax - _currentViewportColMin) * (_currentViewportRowMax - _currentViewportRowMin) * 4 * 2;
-	if(_lines.size() < expectedLinesSize)
-		_lines.resize(expectedLinesSize);
-#endif
-
-	//and now we should create some new ones!
-
-	float	maxXForVerticalLine	= _viewportX + _viewportW - extraColumnWidth(), //To avoid seeing lines through add computed column button
-			maxYForVerticalLine = _viewportY + _dataRowsMaxHeight;
-
-	JASPTIMER_RESUME(DataSetViewBase::buildNewLinesAndCreateNewItems_GRID);
-
-	for(int col=_currentViewportColMin; col<_currentViewportColMax; col++)
-		for(int row=_currentViewportRowMin; row<_currentViewportRowMax; row++)
-		{
-			float	pos0x(				_colXPositions[col]		),
-					pos0y((1 + row) *	_dataRowsMaxHeight		),
-					pos1x(pos0x +		_dataColsMaxWidth[col]	),
-					pos1y((2 + row) *	_dataRowsMaxHeight		);
-
-			JASPTIMER_RESUME(DataSetViewBase::buildNewLinesAndCreateNewItems_GRID_DATA);
-			if(_storedLineFlags.count(row) == 0 || _storedLineFlags[row].count(col) == 0)
-				_storedLineFlags[row][col] = static_cast<unsigned char>(_model->data(_model->index(row, col), getRole("lines")).toInt());
-			unsigned char lineFlags = _storedLineFlags[row][col];
-			JASPTIMER_STOP(DataSetViewBase::buildNewLinesAndCreateNewItems_GRID_DATA);
-
-			/*
-			 *			---------- up ----------
-			 *			|left|            |right|
-			 *			--------- down ---------
-			 */
-			bool	left	= (lineFlags & 1) > 0	&& pos0x  > _rowNumberMaxWidth + _viewportX,
-					right	= (lineFlags & 2) > 0	&& pos1x  > _rowNumberMaxWidth + _viewportX,
-					up		= (lineFlags & 4) > 0	&& pos0y  > _dataRowsMaxHeight + _viewportY,
-					down	= (lineFlags & 8) > 0	&& pos1y  > _dataRowsMaxHeight + _viewportY;
-
-#ifdef SHOW_ITEMS_PLEASE
-			if(!(editing() && row == _prevEditRow && col == _prevEditCol))
-				createTextItem(row, col);
-#endif
-
-
-#ifdef ADD_LINES_PLEASE
-			if(up)		addLine(pos1x, pos0y, pos0x, pos0y);
-			if(down)	addLine(pos0x, pos1y, pos1x, pos1y);
-
-
-			if(left)
-			{
-				if(pos0x > maxXForVerticalLine)	addLine(pos0x, std::max(pos1y, maxYForVerticalLine),	pos0x, std::max(pos0y, maxYForVerticalLine));
-				else							addLine(pos0x, pos1y,									pos0x, pos0y);
-			}
-
-			if(right)
-			{
-				if(pos1x > maxXForVerticalLine) addLine(pos1x, std::max(pos0y, maxYForVerticalLine),	pos1x, std::max(pos1y, maxYForVerticalLine));
-				else							addLine(pos1x, pos0y,									pos1x, pos1y);
-			}
-#endif
-		}
-
-	JASPTIMER_STOP(DataSetViewBase::buildNewLinesAndCreateNewItems_GRID);
-
-#ifdef ADD_LINES_PLEASE
-	addLine(_viewportX ,					_viewportY,							_viewportX ,					_viewportY + _viewportH);
-	addLine(_viewportX + _rowNumberMaxWidth,	_viewportY,							_viewportX + _rowNumberMaxWidth,	_viewportY + _viewportH);
-
-	addLine(_viewportX,							_viewportY ,					_viewportX + _viewportW,			_viewportY);
-	addLine(_viewportX,							_viewportY + _dataRowsMaxHeight,	_viewportX + _viewportW,			_viewportY + _dataRowsMaxHeight);
-
-	//if(_extraColumnItem != nullptr && !expandDataSet())
-	//{
-	//	addLine(_viewportX + _viewportW - extraColumnWidth(),	_viewportY,		_viewportX + _viewportW - extraColumnWidth(),	_viewportY + _dataRowsMaxHeight);
-	//	addLine(_viewportX + _viewportW,						_viewportY,		_viewportX + _viewportW,						_viewportY + _dataRowsMaxHeight);
-	//}z
-#endif
-
-	for(int row=_currentViewportRowMin; row<_currentViewportRowMax; row++)
-	{
-		if(createRowNumber(row))
-		{
-
-#ifdef ADD_LINES_PLEASE
-			float	pos0x(_viewportX),
-					pos0y((1 + row) * _dataRowsMaxHeight),
-					pos1x(_viewportX + _rowNumberMaxWidth),
-					pos1y((2 + row) * _dataRowsMaxHeight);
-
-			if(pos0y > _dataRowsMaxHeight + _viewportY)
-				addLine(pos0x, pos0y, pos1x, pos0y);
-
-
-			if(row == _model->rowCount() - 1 && pos1y > _dataRowsMaxHeight + _viewportY)
-				addLine(pos0x, pos1y, pos1x, pos1y);
-#endif
-		}
-	}
-
-	for(int col=_currentViewportColMin; col<_currentViewportColMax; col++)
-	{
-
-		createColumnHeader(col);
-
-#ifdef ADD_LINES_PLEASE
-		float	pos0x(_colXPositions[col]),
-				pos0y(_viewportY),
-				pos1x(pos0x + _dataColsMaxWidth[col]),
-				pos1y(pos0y + _dataRowsMaxHeight);
-
-		if(pos0x  > _rowNumberMaxWidth + _viewportX && pos0x <= maxXForVerticalLine)
-			addLine(pos0x, pos0y, pos0x, pos1y);
-
-
-		if(col == _model->columnCount() - 1 && pos1x  > _rowNumberMaxWidth + _viewportX && pos1x <= maxXForVerticalLine)
-			addLine(pos1x, pos0y, pos1x, pos1y);
-		
-		if(pos0x  > _rowNumberMaxWidth + _viewportX && pos1x > pos0x && pos1x <= maxXForVerticalLine)
-		{
-			addLine(pos0x, pos0y, pos1x, pos0y);
-			addLine(pos0x, pos1y, pos1x, pos1y);
-		}
-		
-#endif
-	}
-
-#ifdef ADD_LINES_PLEASE
-	_linesWasChanged = true;
-#endif
+	// Grid lines, delegates, corner and editor are all rendered by the QML
+	// TableView layer now (DataSetViewTable.qml draws cell borders).
 
 	createleftTopCorner();
 	updateExtraColumnItem();
@@ -666,329 +796,6 @@ void DataSetViewBase::iAmParent(QQuickItem * item)
 		item->moveToThread(QThread::currentThread());
 	item->setParent(this);
 	item->setParentItem(this);
-}
-
-QQuickItem * DataSetViewBase::createTextItem(int row, int col)
-{
-	JASPTIMER_RESUME(DataSetViewBase::createTextItem);
-
-#ifdef DATASETVIEW_DEBUG_CREATION
-	Log::log() << "createTextItem(\t"<<row<<",\t"<<col<<") called!\titemStore contains #"<< _textItemStorage.size() << "\n" << std::flush;
-#endif
-
-	if((_cellTextItems.count(col) == 0 && _cellTextItems[col].count(row) == 0) || _cellTextItems[col][row] == nullptr)
-	{
-
-		if(_itemDelegate == nullptr)
-		{
-			_itemDelegate = new QQmlComponent(qmlEngine(this));
-			_itemDelegate->setData("import QtQuick \nText { text: itemText; color: itemActive ? 'black' : 'grey'; verticalAlignment: Text.AlignVCenter; }", QUrl());
-
-			emit itemDelegateChanged();
-		}
-
-		QQuickItem			* textItem	= nullptr;
-		ItemContextualized	* itemCon	= nullptr;
-
-		bool active = isFiltered(row, col);
-
-		if(_textItemStorage.size() > 0)
-		{
-			JASPTIMER_RESUME(DataSetViewBase::createTextItem textItemStorage has something);
-#ifdef DATASETVIEW_DEBUG_CREATION
-			Log::log() << "createTextItem("<<row<<", "<<col<<") from storage!\n" << std::flush;
-#endif
-			itemCon = _textItemStorage.top();
-			textItem = itemCon->item;
-			iAmParent(textItem);
-			
-			_textItemStorage.pop();
-			setStyleDataItem(itemCon->context, active, col, row);
-			JASPTIMER_STOP(DataSetViewBase::createTextItem textItemStorage has something);
-		}
-		else
-		{
-			JASPTIMER_RESUME(DataSetViewBase::createTextItem textItemStorage has NOTHING);
-#ifdef DATASETVIEW_DEBUG_CREATION
-			Log::log() << "createTextItem("<<row<<", "<<col<<") ex nihilo!\n" << std::flush;
-#endif
-			QQmlIncubator localIncubator(QQmlIncubator::Synchronous);
-			itemCon = new ItemContextualized(setStyleDataItem(nullptr, active, col, row));
-			_itemDelegate->create(localIncubator, itemCon->context);
-
-			if(localIncubator.isError())
-				throw std::runtime_error("Something went wrong incubating an item delegate for tableview!");
-
-			textItem = qobject_cast<QQuickItem*>(localIncubator.object());
-			itemCon->item = textItem;
-			iAmParent(textItem);
-			
-
-			JASPTIMER_STOP(DataSetViewBase::createTextItem textItemStorage has NOTHING);
-		}
-
-		JASPTIMER_RESUME(DataSetViewBase::createTextItem setValues);
-
-		setTextItemInfo(row, col, textItem);
-
-		_cellTextItems[col][row] = itemCon;
-		
-
-		JASPTIMER_STOP(DataSetViewBase::createTextItem setValues);
-	}
-
-	JASPTIMER_STOP(DataSetViewBase::createTextItem);
-
-	return _cellTextItems[col][row]->item;
-}
-
-void DataSetViewBase::setTextItemInfo(int row, int col, QQuickItem * textItem)
-{
-	JASPTIMER_SCOPE(DataSetViewBase::setTextItemInfo);
-	
-	double	desiredX = _colXPositions.size()	> col ? _colXPositions[col]		: 0,
-			desiredW = _dataColsMaxWidth.size() > col ? _dataColsMaxWidth[col]	: 0;
-
-	textItem->setHeight(_dataRowsMaxHeight		- (2 * _itemVerticalPadding));
-	textItem->setWidth(desiredW					- (2 * _itemHorizontalPadding));
-
-	textItem->setX(desiredX							+ _itemHorizontalPadding);
-	textItem->setY(((row + 1) * _dataRowsMaxHeight)	+ _itemVerticalPadding);
-
-	textItem->setZ(-4.5);
-	textItem->setVisible(true);
-	iAmParent(textItem);
-}
-
-void DataSetViewBase::storeTextItem(int row, int col, bool cleanUp)
-{
-	if((_cellTextItems.count(col) == 0 && _cellTextItems[col].count(row) == 0) || _cellTextItems[col][row] == nullptr) return;
-
-#ifdef DATASETVIEW_DEBUG_CREATION
-	Log::log() << "storeTextItem("<<row<<", "<<col<<") in storage!\n" << std::flush;
-#endif
-
-	JASPTIMER_RESUME(DataSetViewBase::storeTextItem);
-
-	ItemContextualized * textItem = _cellTextItems[col][row];
-	_cellTextItems[col][row] = nullptr;
-
-	if(cleanUp)
-	{
-		_cellTextItems[col].erase(row);
-
-		if(_cellTextItems[col].size() == 0)
-			_cellTextItems.erase(col);
-	}
-
-	textItem->item->setFocus(		false);
-	textItem->item->setVisible(		false);
-	textItem->item->setParentItem(	nullptr);
-
-	if (_cacheItems)		_textItemStorage.push(textItem);
-	else					delete textItem;
-
-	JASPTIMER_STOP(DataSetViewBase::storeTextItem);
-}
-
-
-
-QQuickItem * DataSetViewBase::createRowNumber(int row)
-{
-	//Log::log() << "createRowNumber("<<row<<") called!\n" << std::flush;
-
-	if(rowNumberWidth() == 0)
-		return nullptr;
-
-	if(_rowNumberDelegate == nullptr)
-	{
-		_rowNumberDelegate = new QQmlComponent(qmlEngine(this));
-		_rowNumberDelegate->setData("import QtQuick \nItem {\n"
-			"Rectangle	{ color: jaspTheme.uiBackground;	anchors.fill: parent }\n"
-			"Text		{ text: rowNumber; anchors.centerIn: parent; color: jaspTheme.textEnabled; }\n"
-		"}", QUrl());
-
-		emit rowNumberDelegateChanged();
-	}
-
-	QQuickItem * rowNumber = nullptr;
-	ItemContextualized * itemCon = nullptr;
-
-	if(_rowNumberItems.count(row) == 0  || _rowNumberItems[row] == nullptr)
-	{
-		if(_rowNumberStorage.size() > 0)
-		{
-#ifdef DATASETVIEW_DEBUG_CREATION
-			Log::log() << "createRowNumber("<<row<<") from storage!\n" << std::flush;
-#endif
-			 itemCon = _rowNumberStorage.top();
-			_rowNumberStorage.pop();
-			rowNumber = itemCon->item;
-			iAmParent(rowNumber);
-
-			setStyleDataRowNumber(itemCon->context,
-								  _model->headerData(row, Qt::Orientation::Vertical).toString(),
-								  row);
-		}
-		else
-		{
-#ifdef DATASETVIEW_DEBUG_CREATION
-			Log::log() << "createRowNumber("<<row<<") ex nihilo!\n" << std::flush;
-#endif
-			QQmlIncubator localIncubator(QQmlIncubator::Synchronous);
-			itemCon = new ItemContextualized(setStyleDataRowNumber(nullptr,
-																   _model->headerData(row, Qt::Orientation::Vertical).toString(),
-																   row));
-
-			_rowNumberDelegate->create(localIncubator, itemCon->context);
-			rowNumber = qobject_cast<QQuickItem*>(localIncubator.object());
-			itemCon->item = rowNumber;
-			iAmParent(rowNumber);
-		}
-
-		//rowNumber->setProperty("text", QString::fromStdString(std::to_string(row + 1))); //Nobody wants zero-based rows...
-
-		rowNumber->setHeight(_dataRowsMaxHeight	- 2);
-		rowNumber->setWidth(_rowNumberMaxWidth	- 2);
-
-		rowNumber->setVisible(true);
-
-		_rowNumberItems[row] = itemCon;
-	}
-	else
-		rowNumber = _rowNumberItems[row]->item;
-
-	rowNumber->setX(1 + _viewportX);
-	rowNumber->setY(1 + _dataRowsMaxHeight * (1 + row));
-	rowNumber->setZ(-4);
-	
-	
-
-	return _rowNumberItems[row]->item;
-}
-
-void DataSetViewBase::storeRowNumber(int row)
-{
-	if(_rowNumberItems.count(row) == 0  || _rowNumberItems[row] == nullptr) return;
-
-#ifdef DATASETVIEW_DEBUG_CREATION
-	Log::log() << "storeRowNumber("<<row<<") in storage!\n" << std::flush;
-#endif
-
-	ItemContextualized * rowNumber = _rowNumberItems[row];
-	_rowNumberItems[row] = nullptr;
-
-	_rowNumberItems.erase(row);
-
-	rowNumber->item->setVisible(false);
-	rowNumber->item->setParentItem(nullptr);
-	
-
-	if (_cacheItems)		_rowNumberStorage.push(rowNumber);
-	else					delete rowNumber;
-}
-
-
-QQuickItem * DataSetViewBase::createColumnHeader(int col)
-{
-	//Log::log() << "createColumnHeader("<<col<<") called!\n" << std::flush;
-
-	if(_columnHeaderDelegate == nullptr)
-	{
-		_columnHeaderDelegate = new QQmlComponent(qmlEngine(this));
-		_columnHeaderDelegate->setData("import QtQuick \nItem {\n"
-			"Rectangle	{ color: jaspTheme.uiBackground;	anchors.fill: parent }\n"
-			"Text		{ text: headerText; anchors.centerIn: parent; color: jaspTheme.textEnabled; }\n"
-		"}", QUrl());
-
-		emit columnHeaderDelegateChanged();
-	}
-
-
-	QQuickItem * columnHeader = nullptr;
-	ItemContextualized * itemCon = nullptr;
-
-	if(_columnHeaderItems.count(col) == 0  || _columnHeaderItems[col] == nullptr)
-	{
-		if(_columnHeaderStorage.size() > 0)
-		{
-#ifdef DATASETVIEW_DEBUG_CREATION
-			Log::log() << "createColumnHeader("<<col<<") from storage!\n" << std::flush;
-#endif
-			itemCon = _columnHeaderStorage.top();
-			_columnHeaderStorage.pop();
-			columnHeader = itemCon->item;
-			iAmParent(columnHeader);
-
-			setStyleDataColumnHeader(itemCon->context,
-									_model->headerData(col, Qt::Orientation::Horizontal).toString(),
-									col,
-									_model->headerData(col, Qt::Orientation::Horizontal, getRole("columnIsComputed")	).toBool(),
-									_model->headerData(col, Qt::Orientation::Horizontal, getRole("computedColumnIsInvalidated")).toBool(),
-									_model->headerData(col, Qt::Orientation::Horizontal, getRole("filter")				).toBool(),
-									_model->headerData(col, Qt::Orientation::Horizontal, getRole("computedColumnError")	).toString(),
-									_model->headerData(col, Qt::Orientation::Horizontal, getRole("columnType")			).toInt(),
-									_model->headerData(col, Qt::Orientation::Horizontal, getRole("computedColumnType"	)	).toInt());
-		}
-		else
-		{
-#ifdef DATASETVIEW_DEBUG_CREATION
-			Log::log() << "createColumnHeader("<<col<<") ex nihilo!\n" << std::flush;
-#endif
-			QQmlIncubator localIncubator(QQmlIncubator::Synchronous);
-			itemCon = new ItemContextualized(setStyleDataColumnHeader(
-												nullptr,
-												_model->headerData(col, Qt::Orientation::Horizontal).toString(),
-												col,
-												_model->headerData(col, Qt::Orientation::Horizontal, getRole("columnIsComputed")	).toBool(),
-												_model->headerData(col, Qt::Orientation::Horizontal, getRole("computedColumnIsInvalidated")).toBool(),
-												_model->headerData(col, Qt::Orientation::Horizontal, getRole("filter")				).toBool(),
-												_model->headerData(col, Qt::Orientation::Horizontal, getRole("computedColumnError")	).toString(),
-												_model->headerData(col, Qt::Orientation::Horizontal, getRole("columnType")			).toInt(),
-												_model->headerData(col, Qt::Orientation::Horizontal, getRole("computedColumnType")	).toInt()));
-
-			_columnHeaderDelegate->create(localIncubator, itemCon->context);
-			columnHeader = qobject_cast<QQuickItem*>(localIncubator.object());
-			itemCon->item = columnHeader;
-			iAmParent(columnHeader);
-		}
-
-
-		columnHeader->setHeight(_dataRowsMaxHeight		);
-		columnHeader->setWidth(_dataColsMaxWidth[col]	);
-
-		columnHeader->setVisible(true);
-
-		_columnHeaderItems[col] = itemCon;
-	}
-	else
-		columnHeader = _columnHeaderItems[col]->item;
-
-	columnHeader->setX(_colXPositions[col]);
-	columnHeader->setY(_viewportY);
-	columnHeader->setZ(-4);
-
-	return columnHeader;
-}
-
-void DataSetViewBase::storeColumnHeader(int col)
-{
-	if(_columnHeaderItems.count(col) == 0  || _columnHeaderItems[col] == nullptr) return;
-
-#ifdef DATASETVIEW_DEBUG_CREATION
-	Log::log() << "storeColumnHeader("<<col<<") in storage!\n" << std::flush;
-#endif
-
-	ItemContextualized * columnHeader = _columnHeaderItems[col];
-	_columnHeaderItems[col] = nullptr;
-
-	_columnHeaderItems.erase(col);
-
-	columnHeader->item->setVisible(false);
-	columnHeader->item->setParentItem(nullptr);
-
-	if (_cacheItems)		_columnHeaderStorage.push(columnHeader);
-	else					delete columnHeader;
 }
 
 QQuickItem * DataSetViewBase::createleftTopCorner()
@@ -1056,17 +863,10 @@ void DataSetViewBase::destroyEditItem(bool createItem)
 	delete _editItemContextual;
 	_editItemContextual				= nullptr;
 
-	if(createItem && !(_prevEditRow == -1 || _prevEditCol == -1))
+	if(createItem && _prevEditRow >= 0 && _prevEditCol >= 0)
 	{
-		Log::log() << "Restoring text item for old edit item at " << _prevEditRow << ", " << _prevEditCol << std::endl;
-		QQuickItem * item = createTextItem(_prevEditRow, _prevEditCol);
-
-		size_t col=_prevEditCol, row=_prevEditRow;
-
-		//A delay might help the focus problem? No it doesnt...
-		//QTimer::singleShot(10, _cellTextItems[col][row]->item, [col, row, this](){ if (_cellTextItems.contains(col) && _cellTextItems[col].contains(row) && _cellTextItems[col][row]->item) _cellTextItems[col][row]->item->forceActiveFocus(); });
-
-		//Log::log() << "Restored text item has _storedDisplayText[" << _prevEditRow << "][" << _prevEditCol << "]: '" << _storedDisplayText[_prevEditRow][_prevEditCol] << "'" << std::endl;
+		if(QQuickItem *item = cellItem(_prevEditRow, _prevEditCol))
+			item->setVisible(true);
 	}
 	else
 		Log::log() << "Not creating text item" << std::endl;
@@ -1107,9 +907,8 @@ void DataSetViewBase::positionEditItem(int row, int col)
 
 		//forceActiveFocus();
 
-		Log::log() << "Destroying old text item (row=" << row << ", col=" << col << ") and creating edit item + context" << std::endl;
-		storeTextItem(row, col, true);
-		_prevEditRow = row; //Store info to recreate it later
+		// The cell delegate remains owned by TableView and is hidden by C++ while editing.
+		_prevEditRow = row; //Keep the coordinates for the editor and restoration
 		_prevEditCol = col;
 		
 		emit editCoordinatesChanged();
@@ -1130,8 +929,25 @@ void DataSetViewBase::positionEditItem(int row, int col)
 		//Log::log() << "Edit item has          _storedDisplayText[" << row << "][" << col << "]: '" << _storedDisplayText[row][col] << "'" << std::endl;
 	}
 
-	setTextItemInfo(row, col, _editItemContextual->item); //Will set it visible
+	positionItem(row, col, _editItemContextual->item); //Will set it visible
 	//_editItemContextual->item->setFocus(true);
+}
+
+void DataSetViewBase::positionItem(int row, int col, QQuickItem *item)
+{
+	if(!item)
+		return;
+
+	//The view itself is a content item of the surrounding Flickable and scrolls
+	//with it, so the editor is placed in content coordinates (no viewport
+	//compensation), just like the old C++ text items were.
+	item->setPosition(QPointF(columnX(col) + _itemHorizontalPadding,
+							_dataRowsMaxHeight + row * _dataRowsMaxHeight + _itemVerticalPadding));
+	item->setSize(QSizeF(std::max(0.0, columnWidth(col) - 2 * _itemHorizontalPadding),
+					   std::max(0.0, _dataRowsMaxHeight - 2 * _itemVerticalPadding)));
+	item->setZ(-4.5);
+	item->setVisible(true);
+	iAmParent(item);
 }
 
 void DataSetViewBase::setExtraColumnX()
@@ -1172,10 +988,10 @@ void DataSetViewBase::pollSelectScroll(int row, int col)
 	//Log::log() << "DataSetViewBase::pollSelectScroll row=" << mouseIndex.row() << "col=" << mouseIndex.column() << std::endl;
 
 
-	int		minMouseCol = col == -1 ? _currentViewportColMin :	col - b,
-			maxMouseCol = col == -1 ? _currentViewportColMin :	col + b,
+		int		minMouseCol = col == -1 ? _currentViewportColMin :	col - b,
+			maxMouseCol = col == -1 ? _currentViewportColMax :	col + b,
 			minMouseRow = row == -1 ? _currentViewportRowMin :	row - b,
-			maxMouseRow = row == -1 ? _currentViewportRowMin :	row + b;
+			maxMouseRow = row == -1 ? _currentViewportRowMax :	row + b;
 
 	bool	maybeBudgeLeft	= minMouseCol <= 	_currentViewportColMin + _viewportMargin,
 			maybeBudgeRight	= maxMouseCol >		_currentViewportColMax - _viewportMargin,
@@ -1213,12 +1029,21 @@ void DataSetViewBase::selectAll()
 {
 	JASPTIMER_SCOPE(DataSetViewBase::selectAll);
 	clearEdit();
+	if(!_model || _model->rowCount() == 0 || _model->columnCount() == 0)
+	{
+		_selectionModel->clearSelection();
+		return;
+	}
 	_selectionModel->select(QItemSelection(_model->index(0, 0), _model->index(_model->rowCount()-1, _model->columnCount()-1)), QItemSelectionModel::Current | QItemSelectionModel::ClearAndSelect);
 }
 
 void DataSetViewBase::select(int row, int col, bool shiftPressed, bool ctrlCmdPressed)
 {
 	JASPTIMER_SCOPE(DataSetViewBase::select);
+	if(!_model || _model->rowCount() == 0 || _model->columnCount() == 0)
+	{
+		return;
+	}
 	
 	bool	wholeRow	= col < 0,
 			wholeCol	= row < 0;
@@ -1229,8 +1054,8 @@ void DataSetViewBase::select(int row, int col, bool shiftPressed, bool ctrlCmdPr
 		return;
 	}
 	
-					row = std::max(0, row);
-					col = std::max(0, col);
+					row = std::clamp(row, 0, _model->rowCount() - 1);
+					col = std::clamp(col, 0, _model->columnCount() - 1);
 
 	QModelIndex		tl	= _model->index(row,					col),
 					br	= _model->index(row,					col);
@@ -1307,6 +1132,25 @@ void DataSetViewBase::selectHover(int row, int col)
 {
 	JASPTIMER_SCOPE(DataSetViewBase::selectHover);
 	pollSelectScroll(row, col);
+}
+
+void DataSetViewBase::notifyItemSelected(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+	if(!_model || !topLeft.isValid() || !bottomRight.isValid())
+		return;
+
+	emit _cellModel->dataChanged(_cellModel->index(topLeft.row(), topLeft.column()),
+								_cellModel->index(bottomRight.row(), bottomRight.column()),
+								{DataSetViewTableModel::ItemSelectedRole});
+}
+
+void DataSetViewBase::selectionDataChanged(const QItemSelection &selected, const QItemSelection &deselected)
+{
+	for(const QItemSelectionRange &range : deselected)
+		notifyItemSelected(range.topLeft(), range.bottomRight());
+	for(const QItemSelectionRange &range : selected)
+		notifyItemSelected(range.topLeft(), range.bottomRight());
+	updateDelegateData();
 }
 
 QPoint DataSetViewBase::selectionMin() const
@@ -1421,20 +1265,22 @@ void DataSetViewBase::clearEdit()
 		commitLastEdit();
 		destroyEditItem();
 		setEditing(false);
+		updateDelegateData(); //unhide the cell delegate that was being edited
 	}
 }
 
 
 void DataSetViewBase::edit(int row, int col)
 {
-	if (row == -1 || col == -1)
+	if(!_model || row < 0 || col < 0 || row >= _model->rowCount() || col >= _model->columnCount())
 		return;
 
 	_selectionModel->setCurrentIndex(_model->index(row, col), QItemSelectionModel::Current);
 
 	clearEdit();
-	
+
 	setEditing(true);
+	updateDelegateData(); //hide the cell delegate that is being edited
 	positionEditItem(row, col);
 }
 
@@ -1513,7 +1359,8 @@ QQmlContext * DataSetViewBase::setStyleDataItem(QQmlContext * previousContext, b
 	previousContext->setContextProperty("itemValue",		_model->data(modelIndex, getRole("value")));
 	previousContext->setContextProperty("itemActive",		active);
 	previousContext->setContextProperty("itemEditable",		isEditable);
-	previousContext->setContextProperty("itemSelected",		_model->data(modelIndex, getRole("selected")));
+	const QVariant selected = _model->data(modelIndex, getRole("selected"));
+	previousContext->setContextProperty("itemSelected",		selected.isValid() && selected.userType() != QMetaType::UnknownType ? selected.toBool() : _selectionModel->isSelected(modelIndex));
 	previousContext->setContextProperty("itemFiltered",		_model->data(modelIndex, getRole("filter")));
 	previousContext->setContextProperty("itemInputType",	_model->data(modelIndex, getRole("itemInputValue")));
 	previousContext->setContextProperty("columnIndex",		static_cast<int>(col));
@@ -1526,35 +1373,29 @@ QQmlContext * DataSetViewBase::setStyleDataItem(QQmlContext * previousContext, b
 	return previousContext;
 }
 
-QQmlContext * DataSetViewBase::setStyleDataRowNumber(QQmlContext * previousContext, QString text, int row)
+QQmlContext * DataSetViewBase::setStyleDataRowNumber(QQmlContext * previousContext, int row)
 {
 	if(previousContext == nullptr)
 		previousContext = new QQmlContext(qmlContext(this), this);
 
+	const QVariantMap values = rowHeaderData(row);
 	previousContext->setContextProperty("rowIndex",			row);
-	previousContext->setContextProperty("rowNumber",		_model->headerData(row, Qt::Vertical, Qt::DisplayRole)); //gives original row, could be different from rowIndex if filtered-out-values arent visible
-	previousContext->setContextProperty("virtual",			isRowVirtual(row));
-	previousContext->setContextProperty("headerText",		text);
+	previousContext->setContextProperty("rowNumber",		values.value("rowNumber")); //gives original row, could be different from rowIndex if filtered-out-values arent visible
+	previousContext->setContextProperty("virtual",			values.value("virtual"));
+	previousContext->setContextProperty("headerText",		values.value("headerText"));
 
 	return previousContext;
 }
 
-QQmlContext * DataSetViewBase::setStyleDataColumnHeader(QQmlContext * previousContext, QString text, int column, bool isComputed, bool isInvalidated, bool isFiltered, QString computedError, int columnType, int computedColumnType)
+QQmlContext * DataSetViewBase::setStyleDataColumnHeader(QQmlContext * previousContext, int column)
 {
 	if(previousContext == nullptr)
 		previousContext = new QQmlContext(qmlContext(this), this);
 
-	previousContext->setContextProperty("headerText",			text);
-	previousContext->setContextProperty("columnIndex",			column);
-	previousContext->setContextProperty("columnTitle",			_model->headerData(column, Qt::Horizontal, getRole("title")));
-	previousContext->setContextProperty("columnDescription",	_model->headerData(column, Qt::Horizontal, getRole("description")));
-	previousContext->setContextProperty("columnIsComputed",		isComputed);
-	previousContext->setContextProperty("columnIsInvalidated",	isInvalidated);
-	previousContext->setContextProperty("computedColumnType",	computedColumnType);
-	previousContext->setContextProperty("columnIsFiltered",		isFiltered);
-	previousContext->setContextProperty("columnError",			computedError);
-	previousContext->setContextProperty("columnType",			columnType);
-	previousContext->setContextProperty("virtual",				isColumnVirtual(column));
+	const QVariantMap values = columnHeaderData(column);
+	for(auto it = values.constBegin(); it != values.constEnd(); ++it)
+		previousContext->setContextProperty(it.key(), it.value());
+	previousContext->setContextProperty("columnIndex", column);
 
 	return previousContext;
 }
@@ -1658,38 +1499,23 @@ void DataSetViewBase::setCacheItems(bool cacheItems)
 		return;
 
 	_cacheItems = cacheItems;
-		
-	emit cacheItemsChanged();
 
-	calculateCellSizesAndClear(!_cacheItems);
+	emit cacheItemsChanged();
 }
 
 void DataSetViewBase::reloadTextItems()
 {
-	//Store all current items
-	for(int col=_previousViewportColMin; col< _previousViewportColMax; col++)
-		for(int row=_previousViewportRowMin; row<_previousViewportRowMax; row++)
-			storeTextItem(row, col);
-
-	viewportChangedDelayed(); //rerun to get new items
+	reloadTableView();
 }
 
 void DataSetViewBase::reloadRowNumbers()
 {
-	//Store all current items
-	for(int row=_previousViewportRowMin; row<_previousViewportRowMax; row++)
-		storeRowNumber(row);
-
-	viewportChangedDelayed(); //rerun to get new items
+	reloadTableView();
 }
 
 void DataSetViewBase::reloadColumnHeaders()
 {
-	//Store all current items
-	for(int col=_previousViewportColMin; col< _previousViewportColMax; col++)
-		storeColumnHeader(col);
-
-	viewportChangedDelayed(); //rerun to get new items
+	reloadTableView();
 }
 
 
@@ -1707,106 +1533,6 @@ void DataSetViewBase::myParentChanged(QQuickItem * newParentItem)
 	void heightChanged();
 */
 }
-
-#ifdef ADD_LINES_PLEASE
-QSGNode * DataSetViewBase::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
-{
-	//JASPTIMER_RESUME(DataSetViewBase::updatePaintNode);
-	if (width() <= 0 || height() <= 0) {
-		delete oldNode;
-		return 0;
-	}
-
-	//if(recalculateCellSizes) calculateCellContentSizes();
-	//const QRectF rect = boundingRect();
-
-
-	const int linesPerNode = 2048;
-
-	if(oldNode)
-	{
-		delete oldNode;
-		oldNode = nullptr;
-	}
-
-	if(!oldNode)				oldNode = new QSGNode();
-	else if(!_linesWasChanged)	return oldNode;
-
-
-	QSGGeometryNode * currentNode = static_cast<QSGGeometryNode*>(oldNode->firstChild());
-
-	oldNode->markDirty(QSGNode::DirtyGeometry);
-
-
-	for(int lineIndex=0; lineIndex < _linesActualSize;)
-	{
-		bool justAdded = false;
-
-		if(currentNode == nullptr)
-		{
-			currentNode = new QSGGeometryNode;
-
-			currentNode->setFlag(QSGNode::OwnsMaterial, false);
-			currentNode->setFlag(QSGNode::OwnsGeometry, true);
-			currentNode->setMaterial(&_material);
-			currentNode->setRenderOrder(100);
-
-			justAdded = true;
-
-			oldNode->markDirty(QSGNode::DirtyNodeAdded);
-		}
-
-		int geomSize = std::min(linesPerNode, (int)(_linesActualSize - lineIndex) / 4); //_lines is floats x, y, x, y so each set of 4 is a single line.
-		geomSize *= 2;
-
-		QSGGeometry *geometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), geomSize);
-		geometry->setLineWidth(1); //ignored anyway
-		geometry->setDrawingMode(QSGGeometry::DrawLines);
-
-		assert(sizeof(float) * 2 == geometry->sizeOfVertex());
-
-		float * vertexData = static_cast<float*>(geometry->vertexData());
-
-		memcpy(vertexData, _lines.data() + lineIndex, geomSize * 2 * sizeof(float));
-		lineIndex += 2 * geomSize;
-
-		currentNode->setGeometry(geometry);
-
-		if(justAdded)
-			oldNode->appendChildNode(currentNode);
-
-		currentNode = static_cast<QSGGeometryNode*>(currentNode->nextSibling());
-	}
-
-/*
-	std::queue<QSGGeometryNode*> killThem;
-
-	while(currentNode != nullptr) //superfluous children! Lets kill em
-	{
-		killThem.push(currentNode);
-		currentNode = static_cast<QSGGeometryNode*>(currentNode->nextSibling());
-	}
-
-	while(killThem.size() > 0)
-	{
-		QSGGeometryNode * childToDie = killThem.front();
-		killThem.pop();
-
-		//oldNode->removeChildNode(childToDie);
-		//oldNode->markDirty(QSGNode::DirtyNodeRemoved);
-
-		std::cout << "DELETING STUFF" << std::endl;
-
-		delete childToDie;
-	}*/
-
-	_linesWasChanged = false;
-
-	//JASPTIMER_STOP(DataSetViewBase::updatePaintNode);
-
-	return oldNode;
-}
-#endif
 
 QPoint DataSetViewBase::editCoordinates() const
 {
